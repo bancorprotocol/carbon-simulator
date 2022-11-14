@@ -172,7 +172,7 @@ class ExactBase(BaseRouter, ABC):
             try:
                 assert (
                     round(ttl_values[i], 12) == x
-                ), "In and out don't match."
+                ), f"In and out don't match. {round(ttl_values[i],12)} {x} {round(ttl_values[i], 12)-x}"
             except AssertionError as e:
                 #self.logger.error(e)
                 raise e
