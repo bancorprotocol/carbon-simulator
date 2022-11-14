@@ -74,7 +74,7 @@ class BaseRouter:
     # if False (default), errors are caught and returned in the result dict
     raiseonerror: bool = False
 
-    assert_precision: int = 5
+    assert_precision: int = 4
 
     @property
     def indexes(self) -> list:

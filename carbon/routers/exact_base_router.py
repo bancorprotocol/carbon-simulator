@@ -166,8 +166,8 @@ class ExactBase(BaseRouter, ABC):
                 ttl_inputs[i] = inpts
 
         tmp_x = self._assert_precision(x)
-        tmp_inputs = self._assert_precision(ttl_inputs[-1])
-        tmp_values = self._assert_precision(ttl_values[-1])
+        tmp_inputs = self._assert_precision(ttl_inputs[indices[-1]])
+        tmp_values = self._assert_precision(ttl_values[indices[-1]])
         if is_by_target:
             try:
                 assert (
