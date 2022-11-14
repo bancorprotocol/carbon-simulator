@@ -17,11 +17,10 @@ Carbon is decentralized exchange infrastructure that gives users the ability to 
 
 This simulator has been developed by **Bancor Research** to assist in the design, testing, and validation of Carbon strategies. It can be run interactively in a Jupyter notebook environment, or via Python scripting.
 
-The permament URL for this repo is [github.com/bancorprotocol/carbon-simulator][repo]. The Carbon project website is at [carbondefi.xyz][carbon]. On this site you will find in particular the [Litepaper][litepaper], the full [Whitepaper][whitepaper], and the [patent application][patent]. 
+The permament URL for this repo is [github.com/bancorprotocol/carbon-simulator][repo]. The Carbon project website is at [carbondefi.xyz][carbon]. On this site you will find in particular the [Litepaper][litepaper] and the [patent application][patent]. 
 
 [carbon]:https://carbondefi.xyz
 [litepaper]:https://carbondefi.xyz/r/LitePaper.pdf
-[whitepaper]:https://carbondefi.xyz/r/WhitePaper.pdf
 [patent]:https://carbondefi.xyz/r/Patent.pdf
 [repo]:https://github.com/bancorprotocol/carbon-simulator/
 

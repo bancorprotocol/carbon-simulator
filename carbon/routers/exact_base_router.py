@@ -89,7 +89,7 @@ class ExactBase(BaseRouter, ABC):
         dropped_indices = []
         while not completed_trade:
 
-            dropped_indices += list(final_swaps.keys())
+            dropped_indices = list(final_swaps.keys())
 
             if is_by_target:
                 delta = sum([i for i in final_swaps.values()])
@@ -113,7 +113,9 @@ class ExactBase(BaseRouter, ABC):
                 ]
                 position_subset = [i for i in self.indexes if i not in dropped_indices]
                 if len(position_subset) == 0:
-                    print("[match] ----Warning: empty subset-----")
+                    # this happens when there are no liquidity positions left
+                    # this does not merit a forced warning
+                    #print("[match] ----Warning: empty subset-----")
                     break
                 partial_swaps.clear()
                 for i in position_subset:
@@ -165,13 +167,32 @@ class ExactBase(BaseRouter, ABC):
                 ttl_values[i] = ttl
                 ttl_inputs[i] = inpts
 
+## Assert that input matches output - i.e no partial trades
+        if is_by_target:
+            try:
+                assert (
+                    round(ttl_values[i], 12) == x
+                ), "In and out don't match."
+            except AssertionError as e:
+                #self.logger.error(e)
+                raise e
+        else:
+            try:
+                assert (
+                    round(ttl_inputs[i], 12) == x
+                ), "In and out don't match."
+            except AssertionError as e:
+                #self.logger.error(e)
+                raise e
+
+## Assert that there is sufficient liquidity for by source
         if not is_by_target:
             try:
                 assert (
                     round(ttl_inputs[i], 12) - x >= 0
                 ), "Insufficient liquidity across all user positions to support this trade."
             except AssertionError as e:
-                self.logger.error(e)
+                #self.logger.error(e)
                 raise e
 
         # Package Results

@@ -4,8 +4,8 @@ wrapper UI class for the Carbon simulation
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.0"
-__date__ = "13/Nov/2022"
+__version__ = "1.0 beta3"
+__date__ = "14/Nov/2022"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict
@@ -14,6 +14,7 @@ from tabulate import tabulate
 
 from ..order import Order
 from ..pair import CarbonPair
+from ..carbon_order_ui import CarbonOrderUI
 from ..routers import ExactRouterX0Y0N
 from decimal import Decimal
 import pandas as pd
@@ -120,16 +121,17 @@ class CarbonSimulatorUI:
 
         # enter order
         order_params = {
-            "tkn": tkn,  # the token being sold
-            "y_int": amt,  # the capacity of the curve
-            "_y": amt,  # the initial holding is of the curve (in `tkn`)
-            "p_low": p_lo,  # the lower end of the range (`tkn` numeraire)
-            "p_high": p_hi,  # the upper end of the range (`tkn` numeraire)
-            "pair_name": carbon_pair.pair_iso,  # the iso name of the pair
-            "pair": carbon_pair,  # the CarbonPair object
-            "id": id1,  # the id of the new curve generated
-            "linked_to_id": id2,  # the id to which this curve is linked (=id if single curve)
+            "tkn": tkn,                             # the token being sold
+            "y_int": amt,                           # the capacity of the curve
+            "_y": amt,                              # the initial holding is of the curve (in `tkn`)
+            "p_low": p_lo,                          # the lower end of the range (`tkn` numeraire); also p_b
+            "p_high": p_hi,                         # the upper end of the range (`tkn` numeraire); also p_a
+            "pair_name": carbon_pair.pair_iso,      # the iso name of the pair
+            "pair": carbon_pair,                    # the CarbonPair object
+            "id": id1,                              # the id of the new curve generated
+            "linked_to_id": id2,                    # the id to which this curve is linked (=id if single curve)
         }
+        
         self.orders[id1] = Order(**order_params)
         return id1
 
@@ -173,13 +175,13 @@ class CarbonSimulatorUI:
                 )
 
             orders = self._to_pandas(self.orders[order_id], decimals=self.decimals)
+            orderuis = {order_id: CarbonOrderUI.from_order(self.orders[order_id])}
 
         except Exception as e:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-        return {"success": True, "orders": orders}
-
+        return {"success": True, "orders": orders, "orderuis": orderuis}
     add_sgl_pos = add_order
 
     def add_strategy(
@@ -196,7 +198,7 @@ class CarbonSimulatorUI:
         """
         adds two linked orders (one buy, one sell; aka a "strategy")
 
-        :tkn:           the token that is sold in the range psell_start, eg "ETH"*
+        :tkn:           the token that is sold in the range psell_start/_end, eg "ETH"*
         :amt_sell:      the amount of `tkn` that is available for sale in range psell_start/psell_end
         :psell_start:   start of the sell `tkn` range*, quoted in the price convention of `pair`
         :psell_end:     ditto end
@@ -247,13 +249,16 @@ class CarbonSimulatorUI:
                     for o in [self.orders[id1], self.orders[id2]]
                 ]
             )
+            orderuis = {
+                id1: CarbonOrderUI.from_order(self.orders[id1]),
+                id2: CarbonOrderUI.from_order(self.orders[id2]),
+            }
 
         except Exception as e:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-        return {"success": True, "orders": orders}
-
+        return {"success": True, "orders": orders, "orderuis": orderuis}
     add_linked_pos = add_strategy
 
     def delete_order(self, position_id):
@@ -294,7 +299,6 @@ class CarbonSimulatorUI:
         return (
             [position_id, linked_position_id] if linked_position_id else [position_id]
         )
-
     delete_pos = delete_order
     delete_strategy = delete_order
 
@@ -586,6 +590,7 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
+    trader_sells = amm_buys
 
     def amm_sells(
         self,
@@ -632,28 +637,33 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-
     trader_buys = amm_sells
-    trader_sells = amm_buys
-
+    
     @staticmethod
-    def _to_pandas(order: pd.DataFrame, decimals: int = 6) -> pd.DataFrame:
+    def _to_pandas(order: Order, decimals: int = 6) -> pd.DataFrame:
         """
         Exports Order values for inspection...
         """
+        #print("[_to_pandas]", order.pair)
+        
+        orderui = CarbonOrderUI.from_order(order)
+        #print("[_to_pandas]", orderui)
         dic = {
             "id": order.id,
             "pair": order.pair_name,
-            "tkn_name": order.tkn,
-            "y_int": round(order.y_int, decimals),
-            "y": round(order.y, decimals),
+            "tkn": order.tkn,
+            #"y_int": round(order.y_int, decimals),
+            #"y": round(order.y, decimals),
+            "y_int": float(order.y_int),
+            "y": float(order.y),
             "y_unit": order.tkn,
-            "p_start": round(
-                order.pair.convert_price(order.p_high, order.tkn), decimals
-            ),
-            "p_end": round(order.pair.convert_price(order.p_low, order.tkn), decimals),
+            #"p_start": round(order.pair.convert_price(order.p_high, order.tkn), decimals),
+            #"p_end": round(order.pair.convert_price(order.p_low, order.tkn), decimals),
+            "p_start": float(order.pair.convert_price(order.p_high, order.tkn)),
+            "p_end": float(order.pair.convert_price(order.p_low, order.tkn)),
+            "p_marg": orderui.p_marg,
             "p_unit": order.pair.price_convention,
-            "linked_to_id": order.linked_to_id,
+            "lid": order.linked_to_id,
         }
         return pd.DataFrame(dic, index=[order.id])
 
@@ -686,8 +696,11 @@ class CarbonSimulatorUI:
                         for o in applicable_orders
                     ]
                 )
+                orderuis = {o.id: CarbonOrderUI.from_order(o) for o in applicable_orders}
+        
             else:
                 orders = pd.DataFrame({})
+                orderuis = dict()
 
             if len(self.trades) > 0:
                 trades = pd.concat([pd.DataFrame(self.trades[i]) for i in self.trades])
@@ -705,6 +718,7 @@ class CarbonSimulatorUI:
                 )
             return {
                 "orders": orders,
+                "orderuis": orderuis,
                 "trades": trades if inclhistory else False,
             }
 
