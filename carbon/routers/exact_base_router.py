@@ -113,10 +113,8 @@ class ExactBase(BaseRouter, ABC):
                 ]
                 position_subset = [i for i in self.indexes if i not in dropped_indices]
                 if len(position_subset) == 0:
-                    # this happens when there are no liquidity positions left
-                    # this does not merit a forced warning
-                    #print("[match] ----Warning: empty subset-----")
                     break
+
                 partial_swaps.clear()
                 for i in position_subset:
                     if is_by_target:
@@ -167,32 +165,28 @@ class ExactBase(BaseRouter, ABC):
                 ttl_values[i] = ttl
                 ttl_inputs[i] = inpts
 
-## Assert that input matches output - i.e no partial trades
+        tmp_x = self._assert_precision(x)
+        tmp_inputs = self._assert_precision(ttl_inputs[-1])
+        tmp_values = self._assert_precision(ttl_values[-1])
         if is_by_target:
             try:
                 assert (
-                    round(ttl_values[i], 12) == x
-                ), f"In and out don't match. {round(ttl_values[i],12)} {x} {round(ttl_values[i], 12)-x}"
+                    tmp_values == tmp_x
+                ), f"In and out don't match. {tmp_values} {tmp_x} {float(tmp_values) - float(tmp_x)}"
             except AssertionError as e:
-                #self.logger.error(e)
                 raise e
         else:
             try:
-                assert (
-                    round(ttl_inputs[i], 12) == x
-                ), "In and out don't match."
+                assert tmp_inputs == tmp_x, "In and out don't match."
             except AssertionError as e:
-                #self.logger.error(e)
                 raise e
 
-## Assert that there is sufficient liquidity for by source
         if not is_by_target:
             try:
                 assert (
-                    round(ttl_inputs[i], 12) - x >= 0
+                    float(tmp_inputs) - float(tmp_x) >= 0
                 ), "Insufficient liquidity across all user positions to support this trade."
             except AssertionError as e:
-                #self.logger.error(e)
                 raise e
 
         # Package Results

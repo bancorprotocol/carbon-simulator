@@ -74,6 +74,8 @@ class BaseRouter:
     # if False (default), errors are caught and returned in the result dict
     raiseonerror: bool = False
 
+    assert_precision: int = 5
+
     @property
     def indexes(self) -> list:
         """
@@ -87,6 +89,15 @@ class BaseRouter:
         Values based on linear modelling of Barak gas estimates 20221003
         """
         return round(float(val), num_decimals)
+
+    def _assert_precision(self, value: DecFloatInt) -> str:
+        """
+        Slices a value to a given precision and returns it as a string.
+        """
+        if "." in str(value):
+            v = str(value).split(".")
+            return v[0] + "." + v[1][:self.assert_precision]
+        return value
 
     @staticmethod
     def prod(lst: List[DecFloatInt]) -> DecFloatInt:
