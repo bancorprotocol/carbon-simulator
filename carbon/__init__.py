@@ -3,5 +3,5 @@ from .routers import (
 )
 from .simulators import CarbonSimulatorUI
 
-__version__ = "1.0 beta1"
+__version__ = "1.0 beta2"
 __date__ = "13/Nov/2022"
