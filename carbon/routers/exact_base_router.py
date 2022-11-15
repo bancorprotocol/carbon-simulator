@@ -39,10 +39,10 @@ class ExactBase(BaseRouter, ABC):
             return False
 
     def match_by_src(
-        self,
-        x: DecFloatInt,
-        is_by_target: bool = False,
-        check_sufficient_liquidity: bool = True,
+            self,
+            x: DecFloatInt,
+            is_by_target: bool = False,
+            check_sufficient_liquidity: bool = True,
     ) -> List[Action]:
         """
         Alias for match method in the case of a source amount.
@@ -54,10 +54,10 @@ class ExactBase(BaseRouter, ABC):
         )
 
     def match_by_target(
-        self,
-        x: DecFloatInt,
-        is_by_target: bool = True,
-        check_sufficient_liquidity: bool = True,
+            self,
+            x: DecFloatInt,
+            is_by_target: bool = True,
+            check_sufficient_liquidity: bool = True,
     ) -> List[Action]:
         """
         Alias for match method in the case of a target amount.
@@ -69,13 +69,13 @@ class ExactBase(BaseRouter, ABC):
         )
 
     def match(
-        self,
-        x: DecFloatInt,
-        is_by_target: bool = True,
-        completed_trade: bool = False,
-        trade: Callable = None,
-        cmp: Callable = None,
-        check_sufficient_liquidity: bool = True,
+            self,
+            x: DecFloatInt,
+            is_by_target: bool = True,
+            completed_trade: bool = False,
+            trade: Callable = None,
+            cmp: Callable = None,
+            check_sufficient_liquidity: bool = True,
     ) -> List[Action]:
         """
         Main logic for the exact methods (both SBY and Y0X0N variable implementations).
@@ -89,7 +89,7 @@ class ExactBase(BaseRouter, ABC):
         dropped_indices = []
         while not completed_trade:
 
-            dropped_indices += list(final_swaps.keys())
+            dropped_indices = list(final_swaps.keys())
 
             if is_by_target:
                 delta = sum([i for i in final_swaps.values()])
@@ -113,8 +113,8 @@ class ExactBase(BaseRouter, ABC):
                 ]
                 position_subset = [i for i in self.indexes if i not in dropped_indices]
                 if len(position_subset) == 0:
-                    print("[match] ----Warning: empty subset-----")
                     break
+
                 partial_swaps.clear()
                 for i in position_subset:
                     if is_by_target:
@@ -164,14 +164,30 @@ class ExactBase(BaseRouter, ABC):
             else:
                 ttl_values[i] = ttl
                 ttl_inputs[i] = inpts
+        sum_ttl_inputs = sum([v for k,v in ttl_inputs.items()])
+        sum_ttl_values = sum([v for k,v in ttl_values.items()])
+
+        if is_by_target:
+            try:
+                assert (
+                        Decimal(sum_ttl_values)/Decimal(x) >= Decimal('0.001')
+                ), f"In and out don't match. {ttl_values[i]} {x} {float(ttl_values[i]) - float(x)}"
+            except AssertionError as e:
+                print(f"[match] Assertion failed {e}")
+                raise e
+        else:
+            try:
+                assert Decimal(sum_ttl_inputs)/Decimal(x) >= Decimal('0.001'), "In and out don't match."
+            except AssertionError as e:
+                print(f"[match] Assertion failed {e}")
+                raise e
 
         if not is_by_target:
             try:
                 assert (
-                    round(ttl_inputs[i], 12) - x >= 0
+                        float(sum_ttl_inputs) - float(x) >= 0
                 ), "Insufficient liquidity across all user positions to support this trade."
             except AssertionError as e:
-                self.logger.error(e)
                 raise e
 
         # Package Results

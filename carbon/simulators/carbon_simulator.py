@@ -4,8 +4,8 @@ wrapper UI class for the Carbon simulation
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.0"
-__date__ = "13/Nov/2022"
+__version__ = "1.0 beta4"
+__date__ = "15/Nov/2022"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict
@@ -14,9 +14,11 @@ from tabulate import tabulate
 
 from ..order import Order
 from ..pair import CarbonPair
+from ..carbon_order_ui import CarbonOrderUI
 from ..routers import ExactRouterX0Y0N
 from decimal import Decimal
 import pandas as pd
+import numpy as np
 
 
 class CarbonSimulatorUI:
@@ -41,7 +43,15 @@ class CarbonSimulatorUI:
         self._pos_id = itertools.count()
         self.verbose = verbose
         self.debug = False  # setting this to True enables debug output
-        self.pair = pair
+
+        if isinstance(pair, CarbonPair):
+            #print("[__init__] CarbonPair provided", pair)
+            self.pair = pair.pair_iso
+            self._carbon_pair = pair
+        else:
+            self.pair = pair
+            self._carbon_pair = None
+        
         self.raiseonerror = raiseonerror
         self.numtrades = 0
         self.decimals = decimals
@@ -55,22 +65,54 @@ class CarbonSimulatorUI:
                 f"[__init__] pair={pair}, verbose={verbose}, raiseonerror={raiseonerror}"
             )
 
-    def _get_carbon_pair(self, pair: str, tkn: str) -> Tuple[CarbonPair, str]:
+    @property
+    def default_basetoken(self):
         """
-        PRIVATE - helper functon determining the pair from function params and class defaults
+        returns the default base token of the sim (only if initialised with CarbonPair)
+        """
+        return self._carbon_pair.tknb if self._carbon_pair else None
+    tknb = default_basetoken
 
-        :pair:      a string determining the pair
-        :tkn:       one token that is part of the pair
-        :returns:   a tuple (CarbonPairStatic object, tkn) or raises
+    @property
+    def default_quotetoken(self):
         """
+        returns the default quote token of the sim (only if initialised with CarbonPair)
+        """
+        return self._carbon_pair.tknq if self._carbon_pair else None
+    tknq = default_quotetoken
+
+    def get_carbon_pair(self, pair: str=None, tkn: str=None) -> Tuple[CarbonPair, str]:
+        """
+        helper functon determining the pair from function params and class defaults
+
+        :pair:      a string determining the pair, or CarbonPair (which is simply returned)
+        :tkn:       one token that is part of the pair
+        :returns:   CarbonPairStatic object, or raises
+        """
+        if isinstance(pair, CarbonPair):
+            return pair
+
         if pair is None:
+            if self._carbon_pair:
+                # no pair is given here, we have a carbon pair in the defaults -> that's it
+                return self._carbon_pair
             pair = self.pair
+            
         if pair is None:
             raise ValueError(
                 "Trading pair must be provided either in function call or in simulation defaults"
             )
-        return CarbonPair.from_isopair_and_tkn(pair, tkn), tkn.upper()
+        return CarbonPair.from_isopair_and_tkn(pair, tkn)
 
+    @property
+    def carbon_pair(self):
+        """return the default CarbonPair associated with this object, or None"""
+        try:
+            cp = self.get_carbon_pair()
+            return cp
+        except:
+            return None
+            
     def price_convention(self, pair, tkn):
         """
         gets the price convention associated with `pair`
@@ -80,7 +122,7 @@ class CarbonSimulatorUI:
                     token parts; no other semantic meaning
         :returns:   a string describing the price convention (eg "USDC per ETH")
         """
-        carbon_pair, tkn = self._get_carbon_pair(pair, tkn)
+        carbon_pair = self.get_carbon_pair(pair, tkn)
         return carbon_pair.price_convention
 
     def _add_pos(
@@ -120,24 +162,25 @@ class CarbonSimulatorUI:
 
         # enter order
         order_params = {
-            "tkn": tkn,  # the token being sold
-            "y_int": amt,  # the capacity of the curve
-            "_y": amt,  # the initial holding is of the curve (in `tkn`)
-            "p_low": p_lo,  # the lower end of the range (`tkn` numeraire)
-            "p_high": p_hi,  # the upper end of the range (`tkn` numeraire)
-            "pair_name": carbon_pair.pair_iso,  # the iso name of the pair
-            "pair": carbon_pair,  # the CarbonPair object
-            "id": id1,  # the id of the new curve generated
-            "linked_to_id": id2,  # the id to which this curve is linked (=id if single curve)
+            "tkn": tkn,                             # the token being sold
+            "y_int": amt,                           # the capacity of the curve
+            "_y": amt,                              # the initial holding is of the curve (in `tkn`)
+            "p_low": p_lo,                          # the lower end of the range (`tkn` numeraire); also p_b
+            "p_high": p_hi,                         # the upper end of the range (`tkn` numeraire); also p_a
+            "pair_name": carbon_pair.pair_iso,      # the iso name of the pair
+            "pair": carbon_pair,                    # the CarbonPair object
+            "id": id1,                              # the id of the new curve generated
+            "linked_to_id": id2,                    # the id to which this curve is linked (=id if single curve)
         }
+        
         self.orders[id1] = Order(**order_params)
         return id1
 
-    def add_order(
+    def add_sellorder(
         self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: str = None
     ) -> Dict[str, Any]:
         """
-        adds a single position for sale of tkn (aka an "order")
+        adds a sell order for tkn
 
         :tkn:           the token that is being added to the position, eg "ETH"; it is the token being sold*
         :amt:           the amount of `tkn` that is added to the position
@@ -151,7 +194,7 @@ class CarbonSimulatorUI:
         try:
 
             # validate tkn, pair and get CarbonPair object (raises if tkn not part of pair)
-            carbon_pair, tkn = self._get_carbon_pair(pair, tkn)
+            carbon_pair = self.get_carbon_pair(pair, tkn)
 
             # create order tracking ids
             id1 = self._posid
@@ -173,14 +216,15 @@ class CarbonSimulatorUI:
                 )
 
             orders = self._to_pandas(self.orders[order_id], decimals=self.decimals)
+            orderuis = {order_id: CarbonOrderUI.from_order(self.orders[order_id])}
 
         except Exception as e:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-        return {"success": True, "orders": orders}
-
-    add_sgl_pos = add_order
+        return {"success": True, "orders": orders, "orderuis": orderuis}
+    add_sgl_pos = add_sellorder
+    add_order = add_sellorder
 
     def add_strategy(
         self,
@@ -196,7 +240,7 @@ class CarbonSimulatorUI:
         """
         adds two linked orders (one buy, one sell; aka a "strategy")
 
-        :tkn:           the token that is sold in the range psell_start, eg "ETH"*
+        :tkn:           the token that is sold in the range psell_start/_end, eg "ETH"*
         :amt_sell:      the amount of `tkn` that is available for sale in range psell_start/psell_end
         :psell_start:   start of the sell `tkn` range*, quoted in the price convention of `pair`
         :psell_end:     ditto end
@@ -212,7 +256,7 @@ class CarbonSimulatorUI:
         try:
 
             # validate tkn, pair and get CarbonPair object (raises if tkn not part of pair)
-            carbon_pair, tkn = self._get_carbon_pair(pair, tkn)
+            carbon_pair = self.get_carbon_pair(pair, tkn)
             tkn2 = carbon_pair.other(tkn)
 
             # create order tracking ids
@@ -247,13 +291,16 @@ class CarbonSimulatorUI:
                     for o in [self.orders[id1], self.orders[id2]]
                 ]
             )
+            orderuis = {
+                id1: CarbonOrderUI.from_order(self.orders[id1]),
+                id2: CarbonOrderUI.from_order(self.orders[id2]),
+            }
 
         except Exception as e:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-        return {"success": True, "orders": orders}
-
+        return {"success": True, "orders": orders, "orderuis": orderuis}
     add_linked_pos = add_strategy
 
     def delete_order(self, position_id):
@@ -294,7 +341,6 @@ class CarbonSimulatorUI:
         return (
             [position_id, linked_position_id] if linked_position_id else [position_id]
         )
-
     delete_pos = delete_order
     delete_strategy = delete_order
 
@@ -586,6 +632,7 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
+    trader_sells = amm_buys
 
     def amm_sells(
         self,
@@ -632,28 +679,33 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-
     trader_buys = amm_sells
-    trader_sells = amm_buys
-
+    
     @staticmethod
-    def _to_pandas(order: pd.DataFrame, decimals: int = 6) -> pd.DataFrame:
+    def _to_pandas(order: Order, decimals: int = 6) -> pd.DataFrame:
         """
         Exports Order values for inspection...
         """
+        #print("[_to_pandas]", order.pair)
+        
+        orderui = CarbonOrderUI.from_order(order)
+        #print("[_to_pandas]", orderui)
         dic = {
             "id": order.id,
             "pair": order.pair_name,
-            "tkn_name": order.tkn,
-            "y_int": round(order.y_int, decimals),
-            "y": round(order.y, decimals),
+            "tkn": order.tkn,
+            #"y_int": round(order.y_int, decimals),
+            #"y": round(order.y, decimals),
+            "y_int": float(order.y_int),
+            "y": float(order.y),
             "y_unit": order.tkn,
-            "p_start": round(
-                order.pair.convert_price(order.p_high, order.tkn), decimals
-            ),
-            "p_end": round(order.pair.convert_price(order.p_low, order.tkn), decimals),
+            #"p_start": round(order.pair.convert_price(order.p_high, order.tkn), decimals),
+            #"p_end": round(order.pair.convert_price(order.p_low, order.tkn), decimals),
+            "p_start": float(order.pair.convert_price(order.p_high, order.tkn)),
+            "p_end": float(order.pair.convert_price(order.p_low, order.tkn)),
+            "p_marg": orderui.p_marg,
             "p_unit": order.pair.price_convention,
-            "linked_to_id": order.linked_to_id,
+            "lid": order.linked_to_id,
         }
         return pd.DataFrame(dic, index=[order.id])
 
@@ -686,8 +738,11 @@ class CarbonSimulatorUI:
                         for o in applicable_orders
                     ]
                 )
+                orderuis = {o.id: CarbonOrderUI.from_order(o) for o in applicable_orders}
+        
             else:
                 orders = pd.DataFrame({})
+                orderuis = dict()
 
             if len(self.trades) > 0:
                 trades = pd.concat([pd.DataFrame(self.trades[i]) for i in self.trades])
@@ -705,6 +760,7 @@ class CarbonSimulatorUI:
                 )
             return {
                 "orders": orders,
+                "orderuis": orderuis,
                 "trades": trades if inclhistory else False,
             }
 
@@ -712,6 +768,37 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
+
+    ASDICT = "asdict"
+    ASDF = "asdf"
+    def liquidity(self, format=ASDICT):
+        """
+        returns the aggregate liquidity positions by pair and token, in units of the respective token(!)
+
+        :asdf:      if True, returns the results as dataframe, otherwise as dict
+
+        NOTE: if you pairs are provided in both directions (eg ETHUSDC and USDCETH), which is bad
+        practice in any case, then those liquidity positions are not aggregated and the result
+        must be corrected manually
+        """
+        try:
+            df = pd.pivot_table(
+                self.state()["orders"], 
+                values=["y"], 
+                index=["pair", "tkn"], 
+                aggfunc=np.sum
+            )
+        except KeyError:
+            return None 
+
+        if format == self.ASDF:
+            return df
+        dct = df.to_dict(orient='dict')["y"] # yields {("ETHUSDC", ETH): ...}
+        pairs = set(k[0] for k in dct)  # yields {"ETHUSDC", "ETHDAI", ...}
+        result = {p:{k[1]:v for k,v in dct.items() if k[0]==p} for p in pairs} # yields {"ETHUSDC": {"ETH": ..., "USDC": ...}, ...}
+        if format == self.ASDICT:
+            return result
+        raise ValueError(f"Unknown format {format}")
 
     @property
     def _posid(self) -> int:
@@ -724,7 +811,7 @@ class CarbonSimulatorUI:
         """
         PRIVATE - handles trade tkn, pair validations
         """
-        carbon_pair, tkn = self._get_carbon_pair(pair, tkn)
+        carbon_pair = self.get_carbon_pair(pair, tkn)
         return tkn, carbon_pair.other(tkn), carbon_pair
 
     def _assert_tkn_is_in_positions(self, tkn: str):
@@ -758,4 +845,5 @@ class CarbonSimulatorUI:
         return len(self.orders)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair='{self.pair}')"
+        pair = self._carbon_pair if self._carbon_pair else self.pair
+        return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair='{pair}')"
