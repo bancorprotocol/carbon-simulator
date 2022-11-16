@@ -116,6 +116,28 @@ Sim.trader_sells("ETH", 1)
 # USDC account.
 Sim.state()["orders"]
 ````
+# Branches and versioning
+
+## 
+This repo contains three key branches, `main`, `beta` and `dev`. Their respective properties are as follows:
+
+- `main`. The main branch is the main release branch of this project. It may not contain all bleeding edge features, but it has been tested thoroughly (but see the disclaimer on top). The main branch will never be rewritten.
+
+- `beta`. The beta branch is the branch to go for if you are interested in the latest features of the project. It will have usually passed the test suite, so should not be broken in obvious ways. The beta branch may be rewritten from time to time.
+
+- `dev`. The dev branch contains the latest features. The test suit will not usually run before pushing to dev, so this branch may be broken. Also you should expect it to be rewritten.
+
+## Versioning
+
+We attempt to use [semantic versioning][semver] (`major.minor.patch`), so the major number is changed on backward incompatible API changes, the minor number on compatible changes, and the patch number for minor patches.
+
+The API in this respect is defined as _"all public methods in the `SimulationUI`"_ object, as well as those in the objects it returns (currently `CarbonPair` and `CarbonOrderUI`). 
+
+The in-library location of those objects is _not_ part of the API, they need to be imported from the top level. There may be additional objects in the top-level of the library that are not currently considered part of the API. As of version 1.0, those objects are `ExactRouterX0Y0N` and `analytics` which we do not currently consider in a state suitable for semantic versioning. 
+
+Modules may have version numbers of their own. Those are mostly for use of the dev team and they do not follow any specific policies.
+
+[semver]:https://semver.org/
 
 # Change log
 
