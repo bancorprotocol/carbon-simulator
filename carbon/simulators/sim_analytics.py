@@ -15,10 +15,11 @@ Most functions are also exposed at module level, so alternatively you can do
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.0 beta1"
-__date__ = "15/Nov/2022"
+__version__ = "1.0 beta2-2"
+__date__ = "16/Nov/2022"
 
 import numpy as np
+import pandas as pd
 from collections import namedtuple
 from ..pair import CarbonPair
 from matplotlib import pyplot as plt
@@ -40,31 +41,40 @@ class Analytics:
         """
         calculates the midpoints: (x0, x1, x2, ...) -> (avg(x0,x1), avg(x1,x2), ...)
         """
-        return np.array([0.5*(x1+x2) for x1,x2 in zip(r, r[1:])])
-
-    @staticmethod
-    def safemul(x1, x2, raiseval=None):
-        "returns x1*x2, or `raiseval` if raise"
-        try:
-            return x1*x2
-        except:
-            print("[safemul] error", x1, x2)
-            return raiseval
+        return Analytics.vec([0.5*(x1+x2) for x1,x2 in zip(r, r[1:])])
 
     @staticmethod
     def diff(vec):
         """
         calculates the differences: (x0, x1, x2, ...) -> (x1-x0, x2-x1, ...)
         """
-        return np.diff(vec)
+        return Analytics.vec(np.diff(vec))
+        # return np.diff(vec)
 
     @staticmethod
     def vec(v):
         """
-        converts iterable into vector (alias for np.array)
-        """
-        return np.array(v)
+        converts iterable into vector*
 
+        *currently our vector format is np.array; however, this is NOT guaranteed and we may
+        switch over to a difference vector implementation the allows for basic vector operations
+        (component-wise +-*/ using the usual syntax)
+        """
+        return pd.Series(v)
+        # return np.array(v)
+
+    @staticmethod
+    def vecdot(v1, v2):
+        """implements the dot product (sumproduct)"""
+        return v1.fillna(0).dot(v2.fillna(0))
+        # try:
+        #     return np.dot(v1, v2)
+        # except TypeError:
+        #     v1a = [0 if x is None else x for x in v1]
+        #     v2a = [0 if x is None else x for x in v2]
+        #     print(f"[vecdot] typeerror {v1} {v2}; using {v1a} {v2a}")
+        #     return np.dot(v1a, v2a)
+            
     EPSILON = 0.0001
     EPSILON2 = 0.00001
     @classmethod
@@ -88,7 +98,8 @@ class Analytics:
         vec = np.linspace(0,xmax, nint+1)
         vec[0] = eps
         vec[-1] = (1-eps2) * xmax
-        return vec
+        return cls.vec(vec)
+        # return vec
 
     BID_BOOK = "amm_buys"
     BID = BID_BOOK
@@ -195,10 +206,10 @@ class Analytics:
 
 orders_nt = namedtuple("orders_nt", 'tkn, amt, p_start, p_end')
 midpoints = Analytics.midpoints
-safemul = Analytics.safemul
 linspace = Analytics.linspace
 diff = Analytics.diff
 vec = Analytics.vec
+vecdot = Analytics.vecdot
 
 class OrderBook():
     """
@@ -237,8 +248,8 @@ class OrderBook():
     ASK = "ASK_amm_sells_src_tkn"
     BID = "BID_amm_buys_src_tkn"
     def __init__(self, src_amounts, trg_amounts, src_tkn="SRC", trg_tkn="TRG", bidask=ASK):
-        self.src_amounts = np.array(src_amounts)
-        self.trg_amounts = np.array(trg_amounts)
+        self.src_amounts = Analytics.vec(src_amounts)
+        self.trg_amounts = Analytics.vec(trg_amounts)
         self.src_tkn = src_tkn
         self.trg_tkn = trg_tkn
         self.bidask = bidask
@@ -291,14 +302,14 @@ class OrderBook():
         """
         the marginal in amounts (amt1-amt0, amt2-amt1, ...)
         """
-        return np.diff(self.trg_amounts)
+        return Analytics.diff(self.trg_amounts)
 
     @property
     def marg_src_amounts(self):
         """
         the marginal out amounts (amt1-amt0, amt2-amt1, ...)
         """
-        return np.diff(self.src_amounts)
+        return Analytics.diff(self.src_amounts)
 
     @property
     def prices(self):
@@ -353,11 +364,11 @@ class OrderBook():
         """
         returns the differences of marginal prices (dp1-dp0, dp2-dp1, ...)
 
-        Note: the dot product `np.dot(dmarg_prices, ob_liquidity)`, which corresponds
+        Note: the dot product `Analytics.vecdot(dmarg_prices, ob_liquidity)`, which corresponds
         to the area under the curve, is approximately the entire liquidity in the curve, 
         ie the same as `max(trg_amounts)`
         """
-        result = np.diff(self.marg_prices)
+        result = Analytics.diff(self.marg_prices)
         if self.reverse_book:
             result = - result
         return result
@@ -460,7 +471,7 @@ class OrderBook():
         #plt.legend()
         plt.xlim(xmin,xmax)
         plt.ylim(0,ymax)
-        return f"plotted order book ({int(np.dot(ob.dmarg_prices,y)):,})"
+        return f"plotted order book ({int(Analytics.vecdot(ob.dmarg_prices,y)):,})"
 
 
     def __repr__(self):
@@ -469,13 +480,16 @@ class OrderBook():
  
 class OrderBookSimple():
     """
-    this class represents a (numerical) order book
+    DEPRECATED* this class represents a (numerical) order book
     
     :out_amounts:       a vector of trade sizes (outflows from the PoV of the AMM)
     :in_amounts:        a vector of tokens received in those trades (ditto inflows)
     :out_tkn:           the name of the token going out
     :in_tkn:            ditto going in
 
+    *This class is deprecated in favor of OrderBook which exposes the same functionality
+    but also works for buying the quote token, not only for selling it. It will be removed
+    in a future release.
 
     The OrderBook class in particular prepares the data to draw a number
     of charts, eg with the matplotlib command
@@ -501,8 +515,8 @@ class OrderBookSimple():
 
     """
     def __init__(self, out_amounts, in_amounts, out_tkn="OUT", in_tkn="IN"):
-        self.out_amounts = np.array(out_amounts)
-        self.in_amounts = np.array(in_amounts)
+        self.out_amounts = Analytics.vec(out_amounts)
+        self.in_amounts = Analytics.vec(in_amounts)
         self.out_tkn = out_tkn
         self.in_tkn = in_tkn
     
@@ -511,14 +525,14 @@ class OrderBookSimple():
         """
         the marginal in amounts (amt1-amt0, amt2-amt1, ...)
         """
-        return np.diff(self.in_amounts)
+        return Analytics.diff(self.in_amounts)
 
     @property
     def marg_out_amounts(self):
         """
         the marginal out amounts (amt1-amt0, amt2-amt1, ...)
         """
-        return np.diff(self.out_amounts)
+        return Analytics.diff(self.out_amounts)
 
     @property
     def prices(self):
@@ -573,11 +587,11 @@ class OrderBookSimple():
         """
         returns the differences of marginal prices (dp1-dp0, dp2-dp1, ...)
 
-        Note: the dot product `np.dot(dmarg_prices, ob_liquidity)`, which corresponds
+        Note: the dot product `Analytics.vecdot(dmarg_prices, ob_liquidity)`, which corresponds
         to the area under the curve, is approximately the entire liquidity in the curve, 
         ie the same as `max(in_amounts)`
         """
-        return np.diff(self.marg_prices)
+        return Analytics.diff(self.marg_prices)
     
     @property
     def ob_liquidity_u(self):
