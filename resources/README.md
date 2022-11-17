@@ -3,12 +3,13 @@
 ## Contents
 
 - `whitepaper`: resources related to the Carbon whitepaper
+- `examples`: more examples for using the Carbon library
 
 
 
 ## Links to other resources
 
-- [carbondefi.xyz website][site]
+- [carbondefi.xyz][site] CarbonCalculations
 
 - [litepaper][litepaper]
 
