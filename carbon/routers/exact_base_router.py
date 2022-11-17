@@ -182,17 +182,18 @@ class ExactBase(BaseRouter, ABC):
               f"goal={goal_value}, " \
               f"actual={actual_value}, " \
               f"is_by_target={is_by_target}"
-        self.logger.info(msg)
+        self.logger.debug(msg)
+        #print("[match]", msg)
 
-        if perc_error > 0.0001 and False:
+        if perc_error > 0.0001:
             err_message = f"[match] imprecise matching: err={perc_error} (goal={goal_value}, actual={actual_value}, is_by_target={is_by_target}) "
             print(err_message)
             if perc_error < 0.01:
-                self.logger.info(err_message)
+                self.logger.info(err_message)       # message logged as info <1%...
             elif perc_error < 0.05:
-                self.logger.warning(err_message)
+                self.logger.warning(err_message)    # ...as warning 1-5%...
             else:
-                self.logger.error(err_message)
+                self.logger.error(err_message)      # ...and error/raise >5%
                 raise RuntimeError(err_message)
             assert perc_error < 0.10, err_message
 
