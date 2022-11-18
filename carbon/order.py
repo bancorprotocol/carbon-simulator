@@ -118,9 +118,6 @@ class Order:
 
     @property
     def n(self) -> Decimal:
-        """
-        Placeholder...
-        """
         p_high: Decimal = self.p_high
         p_low: Decimal = self.p_low
         return (
@@ -140,12 +137,10 @@ class Order:
     # Use the dataclass post-init method to initialize all variable sets
     def __post_init__(self):
 
-        if not self.pair.has_token(self.tkn):
-            raise RuntimeError("token not part of pair", self.tkn, self.pair)
-
-        self.p_high = Decimal(self.p_high)
-        self.p_low = Decimal(self.p_low)
-        self.y_int = Decimal(self.y_int)
+        if self.p_high is not None and self.p_low is not None:
+            self.p_high = Decimal(self.p_high)
+            self.p_low = Decimal(self.p_low)
+            self.y_int = Decimal(self.y_int)
 
         if self.auto_convert_variables:
 
