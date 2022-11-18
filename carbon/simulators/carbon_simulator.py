@@ -158,7 +158,7 @@ class CarbonSimulatorUI:
             pp = p_lo
             p_lo = p_hi
             p_hi = pp
-            print("WARNING: swapped start and end of the range")
+            print(f"WARNING: swapped start and end of the range, p_lo={p_lo}, p_hi={p_hi}")
 
         # enter order
         order_params = {
@@ -689,6 +689,14 @@ class CarbonSimulatorUI:
         #print("[_to_pandas]", order.pair)
         
         orderui = CarbonOrderUI.from_order(order)
+
+        p_start = float(order.pair.convert_price(order.p_high, order.tkn))
+        p_end = float(order.pair.convert_price(order.p_low, order.tkn))
+        if p_start > p_end:
+            p = p_start
+            p_start = p_end
+            p_end = p
+
         #print("[_to_pandas]", orderui)
         dic = {
             "id": order.id,
@@ -701,8 +709,8 @@ class CarbonSimulatorUI:
             "y_unit": order.tkn,
             #"p_start": round(order.pair.convert_price(order.p_high, order.tkn), decimals),
             #"p_end": round(order.pair.convert_price(order.p_low, order.tkn), decimals),
-            "p_start": float(order.pair.convert_price(order.p_high, order.tkn)),
-            "p_end": float(order.pair.convert_price(order.p_low, order.tkn)),
+            "p_start": p_start,
+            "p_end": p_end,
             "p_marg": orderui.p_marg,
             "p_unit": order.pair.price_convention,
             "lid": order.linked_to_id,
