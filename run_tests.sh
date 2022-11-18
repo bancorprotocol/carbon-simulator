@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Use `bash run_test.sh run_tests.py` to run all tests
+# Take the first argument with $1
+pytest carbon/tests $1
