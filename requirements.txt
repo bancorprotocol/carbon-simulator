@@ -4,3 +4,5 @@ matplotlib
 jupyter
 tabulate
 setuptools
+pytest-mpl
+pytest
