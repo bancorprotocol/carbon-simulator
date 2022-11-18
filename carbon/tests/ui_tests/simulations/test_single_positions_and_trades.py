@@ -1,10 +1,10 @@
-"""Derrived from `passed_t` notebook test-1"""
+"""Derrived from `passed_tests` notebook test-1"""
 from carbon import CarbonSimulatorUI
 
 
 def test_add_sgl_pos_concentrated_on_one_point():
     """
-    Derrived from `passed_t` notebook test-1
+    Derrived from `passed_tests` notebook test-1
     """
     Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
     assert Sim.add_sgl_pos("ETH", 100, 2000, 2000)["orders"].to_dict() == {
@@ -24,7 +24,7 @@ def test_add_sgl_pos_concentrated_on_one_point():
 
 def test_amm_cannot_buy_eth_with_no_usdc():
     """
-    Derrived from `passed_t` notebook test-1
+    Derrived from `passed_tests` notebook test-1
     """
     Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
     Sim.add_sgl_pos("ETH", 100, 2000, 2000)
@@ -35,7 +35,7 @@ def test_amm_cannot_buy_eth_with_no_usdc():
 
 def test_amm_can_sell_eth_at_curve_price():
     """
-    Derrived from `passed_t` notebook test-1
+    Derrived from `passed_tests` notebook test-1
     """
     Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
     Sim.add_sgl_pos("ETH", 100, 2000, 2000)
@@ -63,7 +63,7 @@ def test_amm_can_sell_eth_at_curve_price():
 
 def test_can_add_multiple_single_positions():
     """
-    Derrived from `passed_t` notebook test-4
+    Derrived from `passed_tests` notebook test-4
     """
     Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
     test_cases = [
@@ -78,7 +78,7 @@ def test_can_add_multiple_single_positions():
 
 def test_no_pair_provided():
     """
-    Derrived from `passed_t` notebook test-6
+    Derrived from `passed_tests` notebook test-6
     """
     Sim = CarbonSimulatorUI(verbose=True)
     result = Sim.add_sgl_pos("ETH", 100, 2000, 2000)
@@ -91,7 +91,7 @@ def test_no_pair_provided():
 
 def test_geometric_mean_in_one_step():
     """
-    Derrived from `passed_t` notebook test-10
+    Derrived from `passed_tests` notebook test-10
     """
     Sim = CarbonSimulatorUI(verbose=True)
     Sim.add_sgl_pos("ETH", 100, 2000, 3000, "ETHUSDC")
@@ -102,7 +102,7 @@ def test_geometric_mean_in_one_step():
 
 def test_geometric_mean_in_two_steps():
     """
-    Derrived from `passed_t` notebook test-10
+    Derrived from `passed_tests` notebook test-10
     """
     Sim = CarbonSimulatorUI(verbose=True)
     Sim.add_sgl_pos("ETH", 100, 2000, 3000, "ETHUSDC")

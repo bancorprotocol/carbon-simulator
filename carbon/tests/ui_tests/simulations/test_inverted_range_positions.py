@@ -3,7 +3,7 @@ from carbon import CarbonSimulatorUI
 
 def test_inverted_range_positions_1():
     """
-    Derrived from `passed_t` notebook test-13
+    Derrived from `passed_tests` notebook test-13
     """
     Sim = CarbonSimulatorUI(verbose=True)
     Sim.add_sgl_pos("ETH", 10, 2000, 3000, pair="ETHUSDC")
@@ -14,7 +14,7 @@ def test_inverted_range_positions_1():
 
 def test_inverted_range_positions_2():
     """
-    Derrived from `passed_t` notebook test-13
+    Derrived from `passed_tests` notebook test-13
     """
     Sim = CarbonSimulatorUI(verbose=True)
     result = Sim.add_linked_pos("BAT", 10, 12.0, 10, 0, 5, 7.5, pair="BATMAN")

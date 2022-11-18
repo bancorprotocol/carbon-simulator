@@ -4,7 +4,7 @@ import pandas as pd
 
 def test_liquidity_as_dataframe():
     """
-    Derrived from `passed_t` notebook test-34
+    Derrived from `passed_tests` notebook test-34
     """
     Sim = CarbonSimulatorUI(verbose=True)
     Sim.add_order("ETH", 10, 2000, 3000, "ETHUSDC")
@@ -45,7 +45,7 @@ def test_liquidity_as_dataframe():
 
 def test_liquidity_as_dict():
     """
-    Derrived from `passed_t` notebook test-34
+    Derrived from `passed_tests` notebook test-34
     """
     Sim = CarbonSimulatorUI(verbose=True)
     Sim.add_order("ETH", 10, 2000, 3000, "ETHUSDC")
