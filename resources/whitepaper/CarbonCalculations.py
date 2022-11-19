@@ -15,8 +15,8 @@
 # ---
 
 from sympy import *
-__VERSION__ = "2.2"
-__DATE__ = "2/Nov/2022"
+__VERSION__ = "3.1"
+__DATE__ = "20/Nov/2022"
 
 
 # # Carbon Calculations
@@ -32,7 +32,9 @@ def isolate(eqn, var,ix=0):
 
 x,x0,xint,dx,Dx = symbols("x x_0 x_{int} dx \Delta{x}")
 y,y0,yint,dy,Dy = symbols("y y_0 y_{int} dy \Delta{y}")
-P,Pmarg,Px,Py,Q,Gam,w = symbols("P_0 P_{marg} P_x P_y Q \Gamma w")                                            
+P,Pmarg,Px,Py,Q,Gam,w = symbols("P_0 P_{marg} P_x P_y Q \Gamma w") 
+xasym, yasym, kappa, k = symbols("x_{asym} y_{asym} \kappa k")
+P0=P
 
 # This is the **Pool Invariant Equation** in its canonic **risk asset** form using $P, x_0, \Gamma$
 
@@ -65,12 +67,17 @@ QGDE
 GQE = isolate(QGDE, Gam)
 GQE
 
-# This is a useful identity between a certain expression of $\Gamma$ and a certain expression of $Q$.
+# Those are useful identities between a certain expression of $\Gamma$ and certain expressions of $Q$ and vice versa
 
 GFQE = Eq((2-Gam)/(1-Gam),(1+1/sqrt(Q)))
 GFQE
 
-(GFQE.lhs-GFQE.rhs).subs(Gam, 1-sqrt(Q)).simplify()
+(GFQE.lhs-GFQE.rhs).subs(Gam, GQE.rhs).simplify()
+
+# For the below, note that $Q=\sqrt[4]{w}$, ie the fourth root of the width of the range
+
+GFQ2E = Eq((Gam-1)/Gam, ((Gam-1)/Gam).subs(Gam, GQE.rhs).simplify())
+GFQ2E
 
 # ## Other Parametrizations
 
@@ -104,20 +111,22 @@ PXYE
 PXYiE = Eq(P, yint/xint)
 PXYiE
 
-# $Q$ is related to the ratio of the intercept prices
+# $Q$ is related to the ratio of the intercept prices (smaller value in numerator)
 
-QPE = Eq(Q, sqrt(Py/Px))
+QPE = Eq(Q, sqrt(Px/Py))
 QPE
 
-# In fact, if we define $w$ as the (percentage) **range width**
+# In fact, if we define $w>1$ as the (percentage) **range width** (bigger value in numerator)
 
-WDE = Eq(w, QPE.rhs**2)
+WDE = Eq(w, 1/QPE.rhs**2)
 WDE
 
-# then that width is simply Q squared
+# then that width is simply the inverse Q squared
 
-WE = Eq(w, QPE.lhs**2)
+WE = Eq(w, 1/QPE.lhs**2)
 WE
+
+WE.lhs.subs(w, WDE.rhs)-WE.rhs.subs(Q, QPE.rhs)
 
 # Also the reference price is the geometric average of the intercept prices
 
@@ -180,6 +189,42 @@ MPQXiE
 
 MPQYiE = MPERev.subs(GQE.lhs,GQE.rhs).subs(y0, solve(YiQE, y0)[0]).simplify()
 MPQYiE
+
+# ### Asymptotic form of the invariant equation and scaling
+
+# The invariant equation is a hyperbola with the asymptotes $x_{asym}, y_{asym}$. Note that in the formulas below for $0<\Gamma<1$ we find that $1-1/\Gamma<0$, meaning the asymptotes are negative values
+
+PIA1E = Eq( (x-xasym)*(y-yasym),kappa)
+PIA1E
+
+XADE = Eq(xasym, x0*(1-1/Gam))
+XADE
+
+YADE = Eq(yasym, y0*(1-1/Gam))
+YADE
+
+YAXDE = Eq(yasym, (y0*(1-1/Gam)).subs(y0, P0*x0))
+YAXDE
+
+# In the above invariant equation we can substitute the above definitions of the quantities, and we substitute $y$ from the original pool invariant equation. This allows us to compute $\kappa$
+
+KPDE = PIA1E.subs(xasym, XADE.rhs).subs(yasym, YAXDE.rhs).subs(y, PIE.rhs).simplify()
+KPDE
+
+# We remind ourselves that $P_0x_0^2=x_0y_0$ which yields the equation below. 
+
+KPYDE = Eq(KPDE.lhs,KPDE.rhs.subs(P0, y0/x0).simplify())
+KPYDE
+
+# This is important, because we remember that the constant-product equation can be written as $xy=k=x_0y_0$. We also remind ourselves that $\sqrt k$ is financially meaningful, and therefore $1/\Gamma$ can be interpreted as pool leverage factor.
+
+PLE = Eq(kappa, k/Gam**2)
+PLE
+
+# The scaling factor $1/\Gamma$ can be written as function of the pool width $P_y/P_x$ as
+
+GSE = Eq(sqrt(kappa)/sqrt(k), (1/Gam).subs(Gam, GQE.rhs).subs(Q, QPE.rhs))
+GSE
 
 # ### Rho and r parametrizations
 
@@ -249,8 +294,10 @@ try:
     from .formulalib import Formulas, __VERSION__ as _fversion, __DATE__ as _fdate
 except:
     from formulalib import Formulas, __VERSION__ as _fversion, __DATE__ as _fdate
+FORMULAS = Formulas(version=__VERSION__,date=__DATE__)
 print(f"formulalib Version v{_fversion} ({_fdate})")
-FORMULAS = Formulas()
+print(f"FORMULAS Version v{FORMULAS.version} ({FORMULAS.date})")
+
 
 # ### Core equations
 
@@ -268,19 +315,19 @@ FORMULAS.add(
 
 FORMULAS.add(
     "PIQE", PIQE, 
-    "Pool Invariant Equation (Q-form)", 
+    "Pool Invariant Equation (Q form)", 
     "expressed as Q equals function of x,y with the intercepts as parameters", 
 )
 
 FORMULAS.add(
     "PIQ2E", PIQ2E, 
-    "Pool Invariant Equation (Q-form)", 
+    "Pool Invariant Equation (Q form)", 
     "expressed as Q equals function of x,y with the intercepts as parameters (alternitive form)", 
 )
 
 FORMULAS.add(
     "PIRE", PIRE, 
-    "Pool Invariant Equation (r)", 
+    "Pool Invariant Equation (r form)", 
     "expressed as y as a function of r and parameters P, x0, Gamma", 
 )
 
@@ -288,6 +335,12 @@ FORMULAS.add(
     "PIRIE", PIRIE, 
     "Pool Invariant Equation (rho)", 
     "expressed as y as a function of rho and parameters P, x0, Gamma", 
+)
+
+FORMULAS.add(
+    "PIA1E", PIA1E, 
+    "Pool Invariant Equation (asymptotic)", 
+    "expressed as hyperbola equation with asymptotes and kappa", 
 )
 
 FORMULAS.add(
@@ -357,15 +410,21 @@ FORMULAS.add(
 )
 
 FORMULAS.add(
-    "RXE", RXE, 
-    "Ratio equation (x/x0)", 
-    "Defines r as the ratio x/x0", 
+    "PLE", PLE, 
+    "Pool leverage equation", 
+    "Establishes relationship between kappa, k, Gamma", 
 )
 
 FORMULAS.add(
-    "RXIE", RXIE, 
-    "Inverse ratio equation (x0/x)", 
-    "Defines rho as the ratio x0/x", 
+    "KPYDE", KPYDE, 
+    "Alternative definition equation for kappa", 
+    "Defines kappa in terms of x0, y0, Gamma$", 
+)
+
+FORMULAS.add(
+    "GSE", GSE, 
+    "Gamma scaling equation", 
+    "Defines the scaling factor 1/Gamma as function of the range size Py/Px", 
 )
 
 FORMULAS.add(
@@ -482,4 +541,40 @@ FORMULAS.add(
     "YiPE", XiPE, 
     "yint from P", 
     "yint as function of Px and Py", 
+)
+
+FORMULAS.add(
+    "XADE", XADE, 
+    "Definition equation for xasym", 
+    "Defines $x_{asym}$ in terms of x0, Gamma", 
+)
+
+FORMULAS.add(
+    "YADE", YADE, 
+    "Definition equation for yasym", 
+    "Defines $y_{asym}$ in terms of y0, Gamma", 
+)
+
+FORMULAS.add(
+    "YAXDE", YAXDE, 
+    "Alternative definition equation for yasym", 
+    "Defines $y_{asym}$ in terms of x0, P0, Gamma", 
+)
+
+FORMULAS.add(
+    "KPDE", KPDE, 
+    "Definition equation for kappa$", 
+    "Defines $\kappa$ in terms of x0, P0, Gamma", 
+)
+
+FORMULAS.add(
+    "RXE", RXE, 
+    "Ratio equation (x/x0)", 
+    "Defines r as the ratio x/x0", 
+)
+
+FORMULAS.add(
+    "RXIE", RXIE, 
+    "Inverse ratio equation (x0/x)", 
+    "Defines rho as the ratio x0/x", 
 )

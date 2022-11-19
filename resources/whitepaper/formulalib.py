@@ -10,13 +10,13 @@ Manage SymPy formulas and convert them into LaTeX, Desmos etc
 - v1.4: namespace funcs, more accessors
 - v2.0: changing the equation tag (breaking interface change)
 - v2.1: allowing combination of two Formulas objects
-- v2.2.1: __getitem__, to_desmos, eval
+- v2.2: __getitem__, to_desmos, eval, date & version
 
 :copyright:     (c) Copyright Stefan LOESCH / topaze.blue 2022; ALL RIGHTS RESERVED
 :canonicurl:    https://github.com/topazeblue/TopazePublishing/blob/main/code/src/formulalib.py
 """
-__VERSION__ = "2.1.2"
-__DATE__ = "17/Nov/2022"
+__VERSION__ = "2.2"
+__DATE__ = "20/Nov/2022"
 
 import re as _re
 from collections import namedtuple as _namedtuple
@@ -41,8 +41,11 @@ class Formulas():
     """
     container object for SymPy formulas and equations; also a text filter*
     
-    :fdict:          the formula dictionary (key -> sympy formula or equation)
-    :raiseonerror:   if True (default), reading a non-existent key raises an error; False returns None
+    :fdict:             the formula dictionary (key -> sympy formula or equation)
+    :defaultns:         the default name space (default: None)
+    :version:           the version number of this formula object (useful when imported)
+    :date:              ditto version date
+    :raiseonerror:      if True (default), reading a non-existent key raises an error; False returns None
     
     This object provides a thin interface layer for accessing the formula data (including comments
     that describe the formula). It also allows for regex replacements where a specific pattern is
@@ -52,10 +55,12 @@ class Formulas():
     replaces equation tags (typicall in md files) with its latex representation; the filter is
     implemented via the `filter` function, and more importantly via __call__
     """
-    def __init__(s, raiseonerror=True):
+    def __init__(s, raiseonerror=True, defaultns=None, version=None, date=None):
         s._fdict = dict()
         s.raiseonerror = raiseonerror
         s.defaultns = None
+        s.version = version
+        s.date = date
     
     def setdefaultns(s, ns=None):
         """
