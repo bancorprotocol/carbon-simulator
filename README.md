@@ -34,6 +34,7 @@ You may run into missing modules that need to be installed via pip. In this case
 [cse]:https://github.com/bancorprotocol/carbon-simulator/blob/main/CarbonSim-Example.ipynb
 [rqt]:https://github.com/bancorprotocol/carbon-simulator/blob/main/requirements.txt
 
+
 ## Project setup
 
 The project should be able to run in any [Python3 environment][python] with the correct dependencies [installed via pip][pip]. If you start from a [Conda installation][conda], most dependencies should already be available. Nevertheless we recommend [setting up a virtual environment][venv] to ensure libraries installed for this project do not collide with other Python modules installed on the system.
@@ -80,6 +81,7 @@ $ jupyter notebook
 
 As the `carbon` library is now installed on your system, you can run the simulation code from anywhere whilst the virtual environment is active.
 
+
 ## Usage
 
 There are numerous usage examples in the Jupyter notebooks in the root directory of this project, and we refer to those for more elaborate examples. A very basic example for a simulation is the one from [`CarbonSim-Example.ipynb`][cse]:
@@ -118,14 +120,13 @@ Sim.state()["orders"]
 ````
 # Branches and versioning
 
-## 
-This repo contains three key branches, `main`, `beta` and `dev`. Their respective properties are as follows:
+## Branches
+This repo contains two key branches, `main`, and `beta`. Their respective properties are as follows:
 
 - `main`. The main branch is the main release branch of this project. It may not contain all bleeding edge features, but it has been tested thoroughly (but see the disclaimer on top). The main branch will never be rewritten.
 
 - `beta`. The beta branch is the branch to go for if you are interested in the latest features of the project. It will have usually passed the test suite, so should not be broken in obvious ways. The beta branch may be rewritten from time to time.
 
-- `dev`. The dev branch contains the latest features. The test suit will not usually run before pushing to dev, so this branch may be broken. Also you should expect it to be rewritten.
 
 ## Versioning
 
