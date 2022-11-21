@@ -1,0 +1,7 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+
+cp -v ../../CarbonTheory/papers/code/src/CarbonCalculations.ipynb whitepaper/CarbonCalculations.ipynb
+cp -v ../../CarbonTheory/papers/code/src/CarbonCalculations.py whitepaper/CarbonCalculations.py
+cp -v ../../CarbonTheory/papers/code/src/taglib.py whitepaper/taglib.py
+cp -v ../../CarbonTheory/papers/code/src/formulalib.py whitepaper/formulalib.py

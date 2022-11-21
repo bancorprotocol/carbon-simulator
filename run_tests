@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "$(dirname "$0")"
 
 # Use `bash run_test.sh run_tests.py` to run all tests
 # Take the first argument with $1
