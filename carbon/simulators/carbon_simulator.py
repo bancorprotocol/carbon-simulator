@@ -8,7 +8,7 @@ __version__ = "1.0"
 __date__ = "21/Nov/2022"
 
 import itertools
-from typing import Callable, Any, Tuple, Dict
+from typing import Callable, Any, Tuple, Dict, List
 
 from tabulate import tabulate
 
@@ -51,7 +51,7 @@ class CarbonSimulatorUI:
         else:
             self.pair = pair
             self._carbon_pair = None
-        
+
         self.raiseonerror = raiseonerror
         self.numtrades = 0
         self.decimals = decimals
@@ -97,7 +97,7 @@ class CarbonSimulatorUI:
                 # no pair is given here, we have a carbon pair in the defaults -> that's it
                 return self._carbon_pair
             pair = self.pair
-            
+
         if pair is None:
             raise ValueError(
                 "Trading pair must be provided either in function call or in simulation defaults"
@@ -112,7 +112,7 @@ class CarbonSimulatorUI:
             return cp
         except:
             return None
-            
+
     def price_convention(self, pair, tkn):
         """
         gets the price convention associated with `pair`
@@ -172,7 +172,7 @@ class CarbonSimulatorUI:
             "id": id1,                              # the id of the new curve generated
             "linked_to_id": id2,                    # the id to which this curve is linked (=id if single curve)
         }
-        
+
         self.orders[id1] = Order(**order_params)
         return id1
 
@@ -354,6 +354,7 @@ class CarbonSimulatorUI:
         execute: bool = True,
         limit_price: Any = None,
         inpair: bool = True,
+        use_positions: List[int] = None,
     ) -> Dict[str, Any]:
         """
         PRIVATE - executes a trade
@@ -367,6 +368,7 @@ class CarbonSimulatorUI:
         :limit_price:           the limit price of the order (this price or better from point of view
                                 of the trader, not the AMM!), quoted in convention of the pair
         :inpair:                if True, only match within pair; if False (default), route through all available pairs
+        :use_positions:         the positions to use for the trade (default: all positions)
 
         *amt is always effectively a positive amount; however, if `trade_action` is `match_by_target` then it must
         be provided as a negative number, and if `match_by_src` as positive number
@@ -390,9 +392,9 @@ class CarbonSimulatorUI:
                 and self.orders[k].tkn == tkn
                 if self.orders[k].y > 0
             ]
-
-            applicable_orders = [v for k, v in self.orders.items() if k in order_ids]
-            id_map = {i: order_ids[i] for i in range(len(order_ids))}
+            use_positions = use_positions if use_positions is not None else order_ids
+            applicable_orders = [v for k, v in self.orders.items() if k in order_ids and k in use_positions]
+            id_map = {i: applicable_orders[i].id for i in range(len(applicable_orders))}
 
             if self.debug:
                 print("[_trade] order_ids", order_ids)
@@ -596,6 +598,7 @@ class CarbonSimulatorUI:
         execute: bool = True,
         inpair: bool = True,
         limit_price: Any = None,
+        use_positions: List[int] = None,
     ) -> Dict[str, Any]:
         """
         the AMM buys (and the trader sells) `amt` > 0 of `tkn`
@@ -607,11 +610,14 @@ class CarbonSimulatorUI:
         :inpair:        if True, only match within pair; if False (default), route through all available pairs
         :limit_price:   the limit price of the order (this price or better from point of view
                         of the trader, not the AMM!), quoted in convention of the pair
+        :use_positions: the positions to use for the trade (default: all positions)
         """
+
         try:
+
             if amt < 0:
                 print(f"[amm_buys] negative amount {amt}; calling amm_sells")
-                return self.amm_sells(tkn, -amt, pair, execute, inpair, limit_price)
+                return self.amm_sells(tkn, -amt, pair, execute, inpair, limit_price, use_positions)
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
             tkn, tkno, carbon_pair = self._get_tkn_and_validate(tkn, pair)
@@ -627,6 +633,7 @@ class CarbonSimulatorUI:
                 execute=execute,
                 limit_price=limit_price,
                 inpair=inpair,
+                use_positions=use_positions
             )
         except Exception as e:
             if self.raiseonerror:
@@ -642,6 +649,7 @@ class CarbonSimulatorUI:
         execute: bool = True,
         inpair: bool = True,
         limit_price: Any = None,
+        use_positions: List[int] = None
     ) -> Dict[str, Any]:
         """
         the AMM sells (and the trader buys) `amt` > 0 of `tkn`
@@ -653,11 +661,13 @@ class CarbonSimulatorUI:
         :inpair:        if True, only match within pair; if False (default), route through all available pairs
         :limit_price:   the limit price of the order (this price or better from point of view
                         of the trader, not the AMM!), quoted in convention of the pair
+        :use_positions: the positions to use for the trade (default: all positions)
         """
         try:
+
             if amt < 0:
                 print(f"[amm_sells] negative amount {amt}; calling amm_buys")
-                return self.amm_buys(tkn, -amt, pair, execute, inpair, limit_price)
+                return self.amm_buys(tkn, -amt, pair, execute, inpair, limit_price, use_positions)
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
             tkn, tkno, carbon_pair = self._get_tkn_and_validate(tkn, pair)
@@ -673,6 +683,7 @@ class CarbonSimulatorUI:
                 execute=execute,
                 limit_price=limit_price,
                 inpair=inpair,
+                use_positions=use_positions
             )
 
         except Exception as e:
@@ -680,14 +691,14 @@ class CarbonSimulatorUI:
                 raise
             return {"success": False, "error": str(e), "exception": e}
     trader_buys = amm_sells
-    
+
     @staticmethod
     def _to_pandas(order: Order, decimals: int = 6) -> pd.DataFrame:
         """
         Exports Order values for inspection...
         """
         #print("[_to_pandas]", order.pair)
-        
+
         orderui = CarbonOrderUI.from_order(order)
         #print("[_to_pandas]", orderui)
         dic = {
@@ -847,3 +858,4 @@ class CarbonSimulatorUI:
     def __repr__(self):
         pair = self._carbon_pair if self._carbon_pair else self.pair
         return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair='{pair}')"
+
