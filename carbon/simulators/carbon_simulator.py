@@ -4,8 +4,8 @@ wrapper UI class for the Carbon simulation
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.0 beta4"
-__date__ = "15/Nov/2022"
+__version__ = "1.0"
+__date__ = "21/Nov/2022"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict
