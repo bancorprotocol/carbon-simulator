@@ -43,6 +43,7 @@ class ExactBase(BaseRouter, ABC):
             x: DecFloatInt,
             is_by_target: bool = False,
             check_sufficient_liquidity: bool = True,
+            threshold_orders: int = 10,
     ) -> List[Action]:
         """
         Alias for match method in the case of a source amount.
@@ -58,6 +59,7 @@ class ExactBase(BaseRouter, ABC):
             x: DecFloatInt,
             is_by_target: bool = True,
             check_sufficient_liquidity: bool = True,
+            threshold_orders: int = 10,
     ) -> List[Action]:
         """
         Alias for match method in the case of a target amount.
@@ -76,6 +78,7 @@ class ExactBase(BaseRouter, ABC):
             trade: Callable = None,
             cmp: Callable = None,
             check_sufficient_liquidity: bool = True,
+            threshold_orders: int = 10,
     ) -> List[Action]:
         """
         Main logic for the exact methods (both SBY and Y0X0N variable implementations).
@@ -216,6 +219,7 @@ class ExactBase(BaseRouter, ABC):
                 output=self.frmt(outputs[indices[i]]),
                 total_output=self.frmt(ttl_values[i]),
                 total_input=self.frmt(ttl_inputs[i]),
+                threshold_orders=threshold_orders,
             )
             for i in indexes
         ]
