@@ -15,7 +15,7 @@ from tabulate import tabulate
 from ..order import Order
 from ..pair import CarbonPair
 from ..carbon_order_ui import CarbonOrderUI
-from ..routers import ExactRouterX0Y0N
+from ..routers import ExactRouterX0Y0N, AlphaRouter
 from decimal import Decimal
 import pandas as pd
 import numpy as np
@@ -39,6 +39,7 @@ class CarbonSimulatorUI:
         pair: Any = None,
         raiseonerror: bool = False,
         decimals: int = 6,
+        matching_method: str = "exact",
     ):
         self._pos_id = itertools.count()
         self.verbose = verbose
@@ -55,7 +56,11 @@ class CarbonSimulatorUI:
         self.raiseonerror = raiseonerror
         self.numtrades = 0
         self.decimals = decimals
-        self.matcher = ExactRouterX0Y0N(verbose=False, debug=False)
+        self.matcher = (
+            ExactRouterX0Y0N(verbose=False) if matching_method == "exact"
+            else AlphaRouter(verbose=False) if matching_method == 'alpha' 
+            else None
+        )        
         self.orders = {}
         self.vault = {}
         self.trades = {}
@@ -355,6 +360,8 @@ class CarbonSimulatorUI:
         limit_price: Any = None,
         inpair: bool = True,
         use_positions: List[int] = None,
+        threshold_orders: int = 10,
+
     ) -> Dict[str, Any]:
         """
         PRIVATE - executes a trade
@@ -369,6 +376,7 @@ class CarbonSimulatorUI:
                                 of the trader, not the AMM!), quoted in convention of the pair
         :inpair:                if True, only match within pair; if False (default), route through all available pairs
         :use_positions:         the positions to use for the trade (default: all positions)
+        :threshold_orders:      the maximum number of order to be routed through using the alpha router
 
         *amt is always effectively a positive amount; however, if `trade_action` is `match_by_target` then it must
         be provided as a negative number, and if `match_by_src` as positive number
@@ -405,7 +413,10 @@ class CarbonSimulatorUI:
             self.matcher.orders = applicable_orders
 
             # route the trade
-            routes = trade_action(amt)
+            routes = trade_action(
+                x = amt,
+                threshold_orders=threshold_orders
+                )
 
             # retrieve the final route
             final_route = routes[-1]
@@ -539,6 +550,9 @@ class CarbonSimulatorUI:
                     "p_unit": [
                         f"{tknq} per {tknb}"
                     ],  # the units in which price is quote (eg USD per ETH)
+                    "threshold_orders": [
+                        threshold_orders
+                    ], # the maximum number of order to be routed through using the alpha router
                 }
                 ct += 1
                 if self.debug:
@@ -573,6 +587,7 @@ class CarbonSimulatorUI:
                 "nroutes": [num_trades],
                 "price": [price_avg],
                 "p_unit": [f"{tknq} per {tknb}"],
+                "threshold_orders": [threshold_orders],
             }
 
             # Get the trade info results
@@ -598,18 +613,20 @@ class CarbonSimulatorUI:
         execute: bool = True,
         inpair: bool = True,
         limit_price: Any = None,
+        threshold_orders: int = 10,
         use_positions: List[int] = None,
     ) -> Dict[str, Any]:
         """
         the AMM buys (and the trader sells) `amt` > 0 of `tkn`
 
-        :tkn:           the token bought by the AMM and sold by the trader, eg "ETH"
-        :amt:           the amount bought by the AMM and sold by the trader (must be positive)
-        :pair:          the token pair to which the trade corresponds, eg "ETHUSD"
-        :execute:       if True (default), the trade is executed; otherwise only routing is shown
-        :inpair:        if True, only match within pair; if False (default), route through all available pairs
-        :limit_price:   the limit price of the order (this price or better from point of view
-                        of the trader, not the AMM!), quoted in convention of the pair
+        :tkn:               the token bought by the AMM and sold by the trader, eg "ETH"
+        :amt:               the amount bought by the AMM and sold by the trader (must be positive)
+        :pair:              the token pair to which the trade corresponds, eg "ETHUSD"
+        :execute:           if True (default), the trade is executed; otherwise only routing is shown
+        :inpair:            if True, only match within pair; if False (default), route through all available pairs
+        :limit_price:       the limit price of the order (this price or better from point of view
+                            of the trader, not the AMM!), quoted in convention of the pair
+        :threshold_orders:  the maximum number of order to be routed through using the alpha router
         :use_positions: the positions to use for the trade (default: all positions)
         """
 
@@ -617,7 +634,15 @@ class CarbonSimulatorUI:
 
             if amt < 0:
                 print(f"[amm_buys] negative amount {amt}; calling amm_sells")
-                return self.amm_sells(tkn, -amt, pair, execute, inpair, limit_price, use_positions)
+                return self.amm_sells(
+                    tkn = tkn,
+                    amt = -amt,
+                    pair = pair,
+                    execute = execute,
+                    inpair = inpair,
+                    limit_price = limit_price,
+                    threshold_orders = threshold_orders,
+                    )
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
             tkn, tkno, carbon_pair = self._get_tkn_and_validate(tkn, pair)
@@ -633,6 +658,7 @@ class CarbonSimulatorUI:
                 execute=execute,
                 limit_price=limit_price,
                 inpair=inpair,
+                threshold_orders=threshold_orders,
                 use_positions=use_positions
             )
         except Exception as e:
@@ -649,25 +675,35 @@ class CarbonSimulatorUI:
         execute: bool = True,
         inpair: bool = True,
         limit_price: Any = None,
+        threshold_orders: int = 10,
         use_positions: List[int] = None
     ) -> Dict[str, Any]:
         """
         the AMM sells (and the trader buys) `amt` > 0 of `tkn`
 
-        :tkn:           the token sold by the AMM and bought by the trader, eg "ETH"
-        :amt:           the amount sold by the AMM and bought by the trader (must be positive)
-        :pair:          the token pair to which the trade corresponds, eg "ETHUSD"
-        :execute:       if True (default), the trade is executed; otherwise only routing is shown
-        :inpair:        if True, only match within pair; if False (default), route through all available pairs
-        :limit_price:   the limit price of the order (this price or better from point of view
-                        of the trader, not the AMM!), quoted in convention of the pair
+        :tkn:               the token sold by the AMM and bought by the trader, eg "ETH"
+        :amt:               the amount sold by the AMM and bought by the trader (must be positive)
+        :pair:              the token pair to which the trade corresponds, eg "ETHUSD"
+        :execute:           if True (default), the trade is executed; otherwise only routing is shown
+        :inpair:            if True, only match within pair; if False (default), route through all available pairs
+        :limit_price:       the limit price of the order (this price or better from point of view
+                            of the trader, not the AMM!), quoted in convention of the pair
+        :threshold_orders:  the maximum number of order to be routed through using the alpha router 
         :use_positions: the positions to use for the trade (default: all positions)
         """
         try:
 
             if amt < 0:
                 print(f"[amm_sells] negative amount {amt}; calling amm_buys")
-                return self.amm_buys(tkn, -amt, pair, execute, inpair, limit_price, use_positions)
+                return self.amm_buys(
+                    tkn = tkn,
+                    amt = -amt,
+                    pair = pair,
+                    execute = execute,
+                    inpair = inpair,
+                    limit_price = limit_price,
+                    threshold_orders = threshold_orders,
+                    )
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
             tkn, tkno, carbon_pair = self._get_tkn_and_validate(tkn, pair)
@@ -683,6 +719,7 @@ class CarbonSimulatorUI:
                 execute=execute,
                 limit_price=limit_price,
                 inpair=inpair,
+                threshold_orders=threshold_orders,
                 use_positions=use_positions
             )
 
