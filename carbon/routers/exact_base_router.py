@@ -185,6 +185,14 @@ class ExactBase(BaseRouter, ABC):
         self.logger.debug(msg)
         #print("[match]", msg)
 
+        if not is_by_target:
+            try:
+                assert (
+                        float(actual_value) - float(goal_value) >= 0
+                ), "Insufficient liquidity across all user positions to support this trade."
+            except AssertionError as e:
+                raise e
+
         if perc_error > 0.0001:
             err_message = f"[match] imprecise matching: err={perc_error} (goal={goal_value}, actual={actual_value}, is_by_target={is_by_target}) "
             print(err_message)
@@ -196,14 +204,6 @@ class ExactBase(BaseRouter, ABC):
                 self.logger.error(err_message)      # ...and error/raise >5%
                 raise RuntimeError(err_message)
             assert perc_error < 0.10, err_message
-
-        if not is_by_target:
-            try:
-                assert (
-                        float(sum_ttl_inputs) - float(x) >= 0
-                ), "Insufficient liquidity across all user positions to support this trade."
-            except AssertionError as e:
-                raise e
 
         # Package Results
         match_method = "by_src" if not is_by_target else "by_target"
