@@ -79,20 +79,23 @@ class ExactBase(BaseRouter, ABC):
             cmp: Callable = None,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = 10,
+            use_positions_matchlevel: List[int] = [],
     ) -> List[Action]:
         """
         Main logic for the exact methods (both SBY and Y0X0N variable implementations).
         This method determines the ideal distribution of the input, and calculates the corresponding output.
         """
+
         if is_by_target:
             if check_sufficient_liquidity:
-                self.sufficient_liquidity_exists(x)
-
+                self.sufficient_liquidity_exists(x, use_positions_matchlevel)
         partial_swaps = final_swaps = {}
         dropped_indices = []
         while not completed_trade:
-
-            dropped_indices = list(final_swaps.keys())
+            if use_positions_matchlevel == []:
+                dropped_indices = list(final_swaps.keys())
+            else:
+                dropped_indices = [i for i in self.indexes if i not in use_positions_matchlevel] + list(final_swaps.keys())
 
             if is_by_target:
                 delta = sum([i for i in final_swaps.values()])
@@ -149,7 +152,7 @@ class ExactBase(BaseRouter, ABC):
             self.logger.debug(
                 f"final_swaps: {[(k, self.frmt(v)) for k, v in final_swaps.items()]} \n"
             )
-
+        
         # Format Results
         final_swaps = {**final_swaps, **partial_swaps}
         outputs = {k: v for k, v in final_swaps.items() if v != 0}

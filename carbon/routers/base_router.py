@@ -98,11 +98,13 @@ class BaseRouter:
         """
         return math.prod(lst)
 
-    def sufficient_liquidity_exists(self, x: DecFloatInt) -> bool:
+    def sufficient_liquidity_exists(self, x: DecFloatInt, use_positions_matchlevel) -> bool:
         """
         Method to check if there is sufficient liquidity to handle the trade.
         """
-        available_liquidity = sum([self.orders[i].y for i in self.indexes])
+        if use_positions_matchlevel == []:
+            use_positions_matchlevel = self.indexes
+        available_liquidity = sum([self.orders[i].y for i in use_positions_matchlevel])
         try:
             assert (
                 available_liquidity - abs(x) >= 0
