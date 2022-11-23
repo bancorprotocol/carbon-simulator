@@ -361,6 +361,7 @@ class CarbonSimulatorUI:
         inpair: bool = True,
         use_positions: List[int] = None,
         threshold_orders: int = 10,
+        use_positions_matchlevel: List[int] = [],
 
     ) -> Dict[str, Any]:
         """
@@ -615,6 +616,7 @@ class CarbonSimulatorUI:
         limit_price: Any = None,
         threshold_orders: int = 10,
         use_positions: List[int] = None,
+        use_positions_matchlevel: List[int] = [],
     ) -> Dict[str, Any]:
         """
         the AMM buys (and the trader sells) `amt` > 0 of `tkn`
@@ -659,7 +661,8 @@ class CarbonSimulatorUI:
                 limit_price=limit_price,
                 inpair=inpair,
                 threshold_orders=threshold_orders,
-                use_positions=use_positions
+                use_positions=use_positions,
+                use_positions_matchlevel=use_positions_matchlevel,
             )
         except Exception as e:
             if self.raiseonerror:
@@ -676,7 +679,8 @@ class CarbonSimulatorUI:
         inpair: bool = True,
         limit_price: Any = None,
         threshold_orders: int = 10,
-        use_positions: List[int] = None
+        use_positions: List[int] = None,
+        use_positions_matchlevel: List[int] = [],
     ) -> Dict[str, Any]:
         """
         the AMM sells (and the trader buys) `amt` > 0 of `tkn`
@@ -720,7 +724,9 @@ class CarbonSimulatorUI:
                 limit_price=limit_price,
                 inpair=inpair,
                 threshold_orders=threshold_orders,
-                use_positions=use_positions
+                use_positions=use_positions,
+                use_positions_matchlevel=use_positions_matchlevel,
+
             )
 
         except Exception as e:

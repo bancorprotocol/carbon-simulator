@@ -194,10 +194,12 @@ class AlphaRouter(BaseRouter):
 
 
         # (step 4.)
-        self.exact_router.orders = [self.orders[i] for i in top_n(threshold_orders)]
+        self.exact_router.orders = self.orders
+        use_positions_matchlevel = top_n(threshold_orders)
         return self.exact_router.match(
             x=x,
             is_by_target=is_by_target,
             check_sufficient_liquidity=check_sufficient_liquidity, 
-            threshold_orders=threshold_orders
+            threshold_orders=threshold_orders, 
+            use_positions_matchlevel=use_positions_matchlevel
             )
