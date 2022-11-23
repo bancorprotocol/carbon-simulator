@@ -15,14 +15,16 @@ Most functions are also exposed at module level, so alternatively you can do
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.0 beta2-2"
-__date__ = "16/Nov/2022"
+__version__ = "1.1"
+__date__ = "23/Nov/2022"
 
 import numpy as np
 import pandas as pd
 from collections import namedtuple
 from ..pair import CarbonPair
 from matplotlib import pyplot as plt
+from math import isnan
+    
 
 class Analytics:
     """
@@ -101,6 +103,30 @@ class Analytics:
         return cls.vec(vec)
         # return vec
 
+    @staticmethod
+    def isnonenan(x):
+        """
+        returns true if None or Nan, False else
+        """
+        if x is None: return True
+        try:
+            return isnan(x)
+        except:
+            return False
+    
+    @classmethod
+    def truncate(cls, s1, s2):
+        """
+        truncates both series to the same length, removing NaN / None from the end of the second
+        
+        :s1:                shortened if need be to the length of s2
+        :s2:                truncated of NaN / None at the end
+        :returns:           truncated (s1, s2)
+        """
+        s2r = cls.vec(x for x in s2 if not cls.isnonenan(x))
+        s1r = s1[:len(s2r)]
+        return s1r, s2r
+
     BID_BOOK = "amm_buys"
     BID = BID_BOOK
     ASK_BOOK = "amm_sells"
@@ -165,7 +191,7 @@ class Analytics:
         :src_size:          the amount of the source tkn being sold or bought (always positive!)
         :buysell:           either AMM_SELLS_BASETOKEN or AMM_BUYS_BASETOKEN
         :sim:               the CarbonSimulatorUI object (from self.sim if None)
-        :carbon_pair:       the corresponding pair as CarbonPair object(if none, use sim defaults)
+        :carbon_pair:       the corresponding pair as CarbonPair object (if none, use sim defaults)
         """
         if sim is None: sim = self.sim
         if carbon_pair is None:
@@ -200,7 +226,6 @@ class Analytics:
             print(f"[simulate_trades] trading src={src_size} trg={result} [pair={pair}, tknb={tkn} {buysell}]")
         return result
             
-
     def __repr__(self):
         return f"{self.__class__.__name__}(sim={self.sim})"
 
@@ -210,6 +235,8 @@ linspace = Analytics.linspace
 diff = Analytics.diff
 vec = Analytics.vec
 vecdot = Analytics.vecdot
+truncate = Analytics.truncate
+isnonenan = Analytics.isnonenan
 
 class OrderBook():
     """
@@ -248,6 +275,7 @@ class OrderBook():
     ASK = "ASK_amm_sells_src_tkn"
     BID = "BID_amm_buys_src_tkn"
     def __init__(self, src_amounts, trg_amounts, src_tkn="SRC", trg_tkn="TRG", bidask=ASK):
+        src_amounts, trg_amounts = Analytics.truncate(src_amounts, trg_amounts)
         self.src_amounts = Analytics.vec(src_amounts)
         self.trg_amounts = Analytics.vec(trg_amounts)
         self.src_tkn = src_tkn
@@ -260,17 +288,29 @@ class OrderBook():
         else:
             raise ValueError(f"illegal value for bidask {bidask}")
 
+    @property
+    def base_tkn(self):
+        """returns the base token (=self.src_tkn)"""
+        return self.src_tkn
+
+    @property
+    def quote_tkn(self):
+        """returns the quote token (=self.trg_tkn)"""
+        return self.trg_tkn
 
     def explain(self):
         """
         human-readable explanation 
         """
-        msg1 = f"Source token = {self.src_tkn}, target token = {self.trg_tkn}."
-        bs = "sells" if self.bidask == self.ASK else "buys"
-        msg2 = f"AMM {bs} {self.src_tkn} for {self.trg_tkn}."
-        msg3 = f"Prices are quoted in {self.prices_u}."
-        msg4 = f"Order book amounts are quoted in {self.ob_liquidity_u}."
-        return "\n".join([msg1, msg2, msg3, msg4])
+        ba    = 'ASK' if self.bidask==self.ASK else 'BID'
+        msg0  = f"This is the {ba} book."
+        msg1  = f"Source token = {self.src_tkn}, target token = {self.trg_tkn}."
+        bs    = "sells" if self.bidask == self.ASK else "buys"
+        msg2  = f"AMM {bs} {self.src_tkn} for {self.trg_tkn}."
+        msg3  = f"Base token = {self.base_tkn}, quote token = {self.quote_tkn}."
+        msg3b = f"Prices are quoted in {self.prices_u}."
+        msg4  = f"Order book amounts are quoted in {self.ob_liquidity_u}."
+        return "\n".join([msg0, msg1, msg2, msg3, msg3b, msg4])
 
     @property
     def src_token_outin(self):
@@ -342,7 +382,7 @@ class OrderBook():
         """
         unit of `prices`, `marg_prices`, etc
         """
-        return f"{self.trg_tkn} per {self.src_tkn}"
+        return f"{self.quote_tkn} per {self.base_tkn}"
     marg_prices_u = prices_u
 
     def pricesr_u(self, reverse=True):
@@ -404,9 +444,17 @@ class OrderBook():
         return Analytics.midpoints(vec)
     mp = midpoints
 
+    COLOR_BID = "g"
+    COLOR_ASK = "r"
+
+    @property
+    def colorba(self):
+        """returns the correct color depending on bid/ask"""
+        return self.COLOR_BID if self.bidask==self.BID else self.COLOR_ASK
+    
     def plot_token_amount_chart(self):
         """
-        plots the token amount chart based on the order book `ob`
+        plots the token amount chart based on the order book in self
         """
         ob=self
         x = ob.src_amounts
@@ -422,7 +470,7 @@ class OrderBook():
 
     def plot_price_charto(self):
         """
-        plots the price chart based on the order book `ob`
+        plots the price chart based on the order book in self
         """
         ob=self
         x1 = ob.src_amounts
@@ -440,7 +488,7 @@ class OrderBook():
 
     def plot_price_chart(self, reverse=False):
         """
-        plots the price chart based on the order book `ob`
+        plots the price chart based on the order book in self
         """
         ob=self
         x1 = ob.src_amounts
@@ -456,19 +504,28 @@ class OrderBook():
         plt.legend()
         return "plotted marginal and effective prices against trade size"
 
-    def plot_orderbook_chart(self, xmin=None, xmax=None, ymax=None):
+    def plot_orderbook_chart(self, xmin=None, xmax=None, ymax=None, otherob=None):
         """
-        plots order book chart based on the order book `ob`
+        plots order book chart based on the order book in self
+        
+        :otherob:   if given, also plot the other orderbook into the same chart
         """
         ob=self
         y = ob.ob_liquidity
         x = ob.ob_prices
-        plt.plot(x, y, marker=".", label="Orders")
-        plt.title(f"Order book ({ob.amm_bidask}; AMM {ob.amm_buysell_src} {ob.src_tkn}, {ob.amm_buysell_trg} {ob.trg_tkn})")
+        plt.plot(x, y, marker=".", color=self.colorba, label=f"{ob.amm_bidask}")
+        if otherob:
+            yo = otherob.ob_liquidity
+            xo = otherob.ob_prices
+            plt.plot(xo, yo, marker=".", color=otherob.colorba, label=f"{otherob.amm_bidask}")
+
+        fragment = "{ob.amm_bidask}; " if not otherob else ""
+        plt.title(f"Order book ({fragment}AMM {ob.amm_buysell_src} {ob.src_tkn}, {ob.amm_buysell_trg} {ob.trg_tkn})")
         plt.xlabel(f"Price ({ob.ob_prices_u})")
         plt.ylabel(f"Liquidity ({ob.ob_liquidity_u})")
         plt.grid()
-        #plt.legend()
+        if otherob:
+            plt.legend()
         plt.xlim(xmin,xmax)
         plt.ylim(0,ymax)
         return f"plotted order book ({int(Analytics.vecdot(ob.dmarg_prices,y)):,})"
