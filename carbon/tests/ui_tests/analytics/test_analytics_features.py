@@ -36,7 +36,7 @@ def test_orderbook_explain():
     OB = al.OrderBook(src_amounts, trg_amounts, "ETH", "USDC")
     assert (
             OB.explain()
-            == "Source token = ETH, target token = USDC.\nAMM sells ETH for USDC.\nPrices are quoted in USDC per ETH.\nOrder book amounts are quoted in ETH."
+            == "This is the ASK book.\nSource token = ETH, target token = USDC.\nAMM sells ETH for USDC.\nBase token = ETH, quote token = USDC.\nPrices are quoted in USDC per ETH.\nOrder book amounts are quoted in ETH."
     )
 
 
