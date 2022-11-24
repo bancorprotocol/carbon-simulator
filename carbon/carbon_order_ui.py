@@ -4,8 +4,8 @@ represents a single, unidirectional carbon order and provides convenience method
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.0"
-__date__ = "15/Nov/2022"
+__version__ = "1.1"
+__date__ = "24/Nov/2022"
 
 try:
     from .pair import CarbonPair
@@ -53,6 +53,7 @@ class CarbonOrderUI:
     yint: float
     y: float
     def __post_init__(self):
+        self.tkn = self.tkn.upper()
         if not self.pair.has_token(self.tkn):
             raise RuntimeError("token not part of pair", self.tkn, self.pair)
         self.pb_raw = self.B * self.B
@@ -131,7 +132,7 @@ class CarbonOrderUI:
     @classmethod
     def from_order(cls, order):
         """
-        alternative constructor, an Order object
+        alternative constructor, from an Order object
 
         :order:     the order object
         """
@@ -184,7 +185,7 @@ class CarbonOrderUI:
         return self.pair.price_convention()
 
     def descr(self, full=False):
-        """provides a description of the range"""
+        """provides a description of the order and curve"""
         s1 = f"Sell {self.tkn} buy {self.pair.other(self.tkn)}"
         s2 = f"from {self.pa:.4f} to {self.pb:.4f} {self.price_convention()}"
         s2 = f"from {self.pa:.4f} to {self.pb:.4f} {self.price_convention}"
@@ -209,3 +210,98 @@ class CarbonOrderUI:
             dydx = ((self.B + self.S * self.y/self.yint))**2
         result = dydx if self.pair.has_quotetoken(self.tkn) else 1/dydx
         return result
+    
+    @property
+    def total_liquidity(self):
+        """
+        returns the total liquidity of the position, and the token in which it is quoted
+
+        :returns:       (liquidity, token)
+        """
+        return self.y, self.tkn
+    
+    def liquidity_approx(self, price1, price2, tkn=None, asperc=False):
+        """
+        returns the approximate liquidity between start and end, in tkn
+
+        :price1/2:      the start and end price of the range (in any order; quoted in price convention of pair)
+        :tkn:           the token in which the liquidity is quoted (if None: base token)
+        :asperc:        if True, return percentage total liquidity rather than tkn number; default is False
+        :returns:       the liquidity in [price1, price2], quoted in tkn (or percent)
+        """
+
+        # ensure that price1 <= price2
+        if price1 > price2:
+            pp = price2
+            price2 = price1
+            price1 = pp
+
+        if tkn is None:
+            tkn = self.pair.basetoken
+            #print(f"[liquidity_approx] token set to {tkn}")
+            
+        # # now we need to go through all the different arrangements of the range
+        # # we first compute the percentage coverage, which simply is the percentage
+            
+        # # price1>pmax -> completely above the range
+        # if price1 > self.pmax:
+        #     perc = 0.
+        
+        # # price2<pmin -> completely below the range
+        # elif price2 < self.pmin:
+        #     perc = 0.
+
+        # # price1 <= pmin
+        # elif price1 <= self.pmin:
+
+        #     # price1 <= min and price2 >= max -> 100%
+        #     if price2 >= self.pmax:
+        #         perc = 1.
+        #     else:
+        #         perc = (price2 - self.pmin)/(self.pmax - self.pmin)
+
+        # # price2 >= pmax and price1>pmin
+        # elif price2 >= self.pmax:
+
+        #     perc = (self.pmax - price1)/(self.pmax - self.pmin)
+
+        # # price2 < pmax and price1 > pmin
+        # else:
+
+        #     perc = (price2 - price1)/(self.pmax - self.pmin)
+
+        # self.pmax == self.pmin -> 100% in range, otherwise out
+        if self.pmax == self.pmin:
+            if price1 == price2:
+                perc2 = 1. if price1 == self.pmax else 0
+            else:
+                perc2 = 1. if price1 <= self.pmax and price2 > self.pmax else 0
+            price = self.pmax
+            #print(f"perc2={perc2}, price={price}", price1, price2, self.pmin, price1==self.pmax, price2==self.pmax)
+        
+        # price1 > self.pmax or price2 < self.pmin -> completely above or below the range
+        elif price1 >= self.pmax or price2 <= self.pmin:
+            perc2 = 0
+        
+        # alternatively: restrict p1,p2 to the ranges and calculate the coverage
+        else:
+            if price1 < self.pmin: price1 = self.pmin
+            if price2 > self.pmax: price2 = self.pmax
+            perc2 = (price2 - price1)/(self.pmax - self.pmin)
+            price = sqrt(price1*price2)
+        
+        if asperc:
+            return perc2
+        
+        if perc2 == 0:
+            return 0
+
+        # liquidity
+        liq0 = self.y
+        liq0_tkn = self.tkn
+
+        # convert price into the correct quantity
+        liq = self.pair.convert(amtfrom=liq0, tknfrom=liq0_tkn, tknto=tkn, price=price)
+        
+        return liq*perc2
+        
