@@ -15,8 +15,8 @@ Most functions are also exposed at module level, so alternatively you can do
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.1"
-__date__ = "23/Nov/2022"
+__version__ = "1.2"
+__date__ = "24/Nov/2022"
 
 import numpy as np
 import pandas as pd
@@ -444,6 +444,70 @@ class OrderBook():
         return Analytics.midpoints(vec)
     mp = midpoints
 
+    @staticmethod
+    def calc_liquidity_approx(orderuis, prices, pair, reverse=True, purgezero=True):
+        """
+        calculates the approximate liquidity of all positions
+        
+        :orderuis:      the dict returned by Sim.state()["orderuis"]
+                        
+        :prices:        the price range over which to calculate the liquidity
+                        eg np.linspace(500,3000, 100)
+        :pair:          the pair (CarbonPair object) for which to calculate the liquidity
+                        eg CarbonPair(tknb="ETH", tknq="USDC"); note that the curve 
+                        price convention MUST be the same as the one in orderuis
+        :reverse:       if True (default), calculate the liquidity in terms of quote token
+                        (eg USDC); otherwise calculate it in terms of base token (eg ETH)
+        :purgezero:     if True (default), replace zeroes with None
+        :returns:       example {"ask":list, "bid":list, "prices":list, "pair":CarbonPair
+                        "price_u":"USDC per ETH", "liqtkn_u":"USDC", "reverse": True}
+        """
+        if not isinstance(pair, CarbonPair):
+            raise ValueError("Pair must be a CarbonPair", pair)
+        
+        pair_iso = pair.pair_iso
+        tkn_ask = pair.tknb
+        tkn_bid = pair.tknq
+        print(f"[calc_liquidity_approx] pair:{pair_iso}", tkn_ask, tkn_bid)
+        
+        curves_ask = [
+            r for r in orderuis.values() 
+            if r.pair.pair_iso == pair_iso and r.tkn == tkn_ask
+        ]
+        curves_bid = [
+            r for r in orderuis.values() 
+            if r.pair.pair_iso == pair_iso and r.tkn == tkn_bid
+        ]
+        print(f"[calc_liquidity_approx] ask:{len(curves_ask)} bid:{len(curves_bid)}")
+        
+        tkn = pair.tknq if reverse else pair.tknb
+        print(f"[calc_liquidity_approx] tkn={tkn}")
+        liq_ask = [
+            sum(r.liquidity_approx(p1, p2, tkn)/(p2-p1) for r in  curves_ask) 
+            for p1, p2 in zip(prices, prices[1:])
+        ]
+        liq_bid = [
+            sum(r.liquidity_approx(p1, p2, tkn)/(p2-p1) for r in  curves_bid) 
+            for p1, p2 in zip(prices, prices[1:])
+        ]
+        pp = [0.5*(p1+p2) for p1, p2 in zip(prices, prices[1:])]
+        
+        if purgezero:
+            liq_ask = [x if x else None for x in liq_ask]
+            liq_bid = [x if x else None for x in liq_bid]
+            
+        return {
+            "bid":      liq_bid, 
+            "ask":      liq_ask,
+            "prices":   pp,
+            "pair":     pair,
+            "price_u":  pair.price_convention,
+            "liqtkn_u": tkn,
+            "reverse":  reverse,
+        }
+
+
+
     COLOR_BID = "g"
     COLOR_ASK = "r"
 
@@ -519,8 +583,8 @@ class OrderBook():
             xo = otherob.ob_prices
             plt.plot(xo, yo, marker=".", color=otherob.colorba, label=f"{otherob.amm_bidask}")
 
-        fragment = "{ob.amm_bidask}; " if not otherob else ""
-        plt.title(f"Order book ({fragment}AMM {ob.amm_buysell_src} {ob.src_tkn}, {ob.amm_buysell_trg} {ob.trg_tkn})")
+        fragment = f" ({ob.amm_bidask})" if not otherob else " (bid and ask)"
+        plt.title(f"Order book{fragment}")
         plt.xlabel(f"Price ({ob.ob_prices_u})")
         plt.ylabel(f"Liquidity ({ob.ob_liquidity_u})")
         plt.grid()
@@ -530,7 +594,25 @@ class OrderBook():
         plt.ylim(0,ymax)
         return f"plotted order book ({int(Analytics.vecdot(ob.dmarg_prices,y)):,})"
 
+    @staticmethod
+    def plot_approx_orderbook_chart(l):
+        """
+        plots approximate order book chart
+        
+        :l:   result returned from calc_liquidity_approx()
+        """
+        plt.title(f"Approximate Order Book (tknb={l['pair'].tknb}, tknq={l['pair'].tknq})")
+        plt.xlabel(f"Price ({l['price_u']})")
+        plt.ylabel(f"Liquidity ({l['liqtkn_u']})")
+        plt.plot(l['prices'], l['bid'], color="g", label="bid")
+        plt.plot(l['prices'], l['ask'], color="r", label="ask")
+        plt.grid()
+        plt.legend()
 
     def __repr__(self):
         return f"{self.__class__.__name__}(<src={self.src_tkn} trg={self.trg_tkn} bidask={self.bidask} rev={self.reverse_book}; {len(self.src_amounts)-1} records>)"
+
+calc_liquidity_approx       = OrderBook.calc_liquidity_approx
+plot_approx_orderbook_chart = OrderBook.plot_approx_orderbook_chart
+
 
