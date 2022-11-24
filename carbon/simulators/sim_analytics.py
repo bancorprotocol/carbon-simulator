@@ -418,7 +418,7 @@ class OrderBook():
         """
         returns the units of ob_liquidity
         """
-        return f"{self.src_tkn}"
+        return f"{self.trg_tkn}"
 
     @property
     def ob_prices(self):
