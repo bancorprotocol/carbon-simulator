@@ -4,8 +4,8 @@ represents a Carbon token pair; mostly helps with not getting confused on price 
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.2.1"
-__date__ = "13/Nov/2022"
+__version__ = "1.2.2"
+__date__ = "24/Nov/2022"
 from dataclasses import dataclass
 
 
@@ -30,6 +30,7 @@ class CarbonPair:
         self.tknb = self.tknb.upper()
         self.tknq = self.tknq.upper()
 
+    
     @classmethod
     def from_isopair_and_tkn(cls, isopair, tkn=None):
         """
@@ -128,17 +129,27 @@ class CarbonPair:
         """
         return self.__class__(self.tknq, self.tknb)
 
+    @property
+    def basetoken(self):
+        """alias for tknb"""
+        return self.tknb 
+    
     def has_basetoken(self, tkn):
         """
         returns True if `tkn` is the base token of the pair, otherwise False
         """
-        return tkn == self.tknb
+        return tkn == self.basetoken
 
+    @property
+    def quotetoken(self):
+        """alias for tknq"""
+        return self.tknq 
+    
     def has_quotetoken(self, tkn):
         """
         returns True if `tkn` is the quote token of the pair, otherwise False
         """
-        return tkn == self.tknq
+        return tkn == self.quotetoken
 
     def has_token(self, tkn):
         """
