@@ -57,9 +57,8 @@ class CarbonSimulatorUI:
         self.numtrades = 0
         self.decimals = decimals
         self.matcher = (
-            ExactRouterX0Y0N(verbose=False) if matching_method == "exact"
-            else AlphaRouter(verbose=False) if matching_method == 'alpha' 
-            else None
+            AlphaRouter(verbose=False) if matching_method == 'alpha' 
+            else ExactRouterX0Y0N(verbose=False)
         )        
         self.orders = {}
         self.vault = {}
