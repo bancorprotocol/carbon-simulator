@@ -1,4 +1,7 @@
-![Carbon Logo](logo-carbon.jpeg)
+<p align="center">
+<img width="100%" src="https://drive.google.com/uc?export=view&id=10y3NKbbk7yt7cZDMszMt04g6NquTEa4p" alt="Carbon Logo" />
+</p>
+
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 # Carbon Simulator
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -144,5 +147,6 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 
 # Change log
 
-- **v1.1** - more advanced analytics, order books
+- **v1.2** - order books
+- **v1.1** - more advanced analytics
 - **v1.0** - initial release
