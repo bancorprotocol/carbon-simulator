@@ -3,6 +3,7 @@ import itertools
 from .exact_router_x0y0n import ExactRouterX0Y0N
 from .base_router import *
 import pandas as pd
+from typing import Any
 
 
 @dataclass
@@ -57,7 +58,7 @@ class AlphaRouter(BaseRouter):
         x: DecFloatInt,
         is_by_target: bool = True,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 100,
+        threshold_orders: Any = None,
     ) -> List[Action]:
         """
         The match by target function specfic to the Alpha router that:
@@ -78,6 +79,10 @@ class AlphaRouter(BaseRouter):
              to return the optimal distribution for the full inputAmount
              evaluated within the threshold number of orders.
         """
+
+        if threshold_orders == None:
+            threshold_orders = 10
+
         # (step 1.)
         # Scale the inputAmount x by the number of threshold orders and perform
         # the hypothetical trade
@@ -152,7 +157,7 @@ class AlphaRouter(BaseRouter):
         x: DecFloatInt,
         is_by_target: bool = False,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 100,
+        threshold_orders: int = 10,
     ) -> List[Action]:
         """
         The match by target function specfic to the Alpha router that:
@@ -265,7 +270,7 @@ class AlphaRouter(BaseRouter):
         trade: Callable = None,
         cmp: Callable = None,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 100,
+        threshold_orders: int = 10,
     ) -> List[Action]:
         """
         Main algorithm to handle matching a trade amount against the curves/orders.

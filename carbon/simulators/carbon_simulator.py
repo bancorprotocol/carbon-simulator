@@ -359,7 +359,7 @@ class CarbonSimulatorUI:
         limit_price: Any = None,
         inpair: bool = True,
         use_positions: List[int] = None,
-        threshold_orders: int = 10,
+        threshold_orders: Any = None,
         use_positions_matchlevel: List[int] = [],
 
     ) -> Dict[str, Any]:
@@ -613,7 +613,7 @@ class CarbonSimulatorUI:
         execute: bool = True,
         inpair: bool = True,
         limit_price: Any = None,
-        threshold_orders: int = 10,
+        threshold_orders: Any = None,
         use_positions: List[int] = None,
         use_positions_matchlevel: List[int] = [],
     ) -> Dict[str, Any]:
@@ -677,7 +677,7 @@ class CarbonSimulatorUI:
         execute: bool = True,
         inpair: bool = True,
         limit_price: Any = None,
-        threshold_orders: int = 10,
+        threshold_orders: Any = None,
         use_positions: List[int] = None,
         use_positions_matchlevel: List[int] = [],
     ) -> Dict[str, Any]:
