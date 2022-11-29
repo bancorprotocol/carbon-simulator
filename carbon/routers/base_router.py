@@ -115,7 +115,7 @@ class BaseRouter:
 
     @abstractmethod
     def amt_by_target(
-        self, subject: int, dx: DecFloatInt, position_subset: List[int]
+        self, subject: int, dx: DecFloatInt, position_subset: List[int] = None
     ) -> DecFloatInt:
         """
         Enforced method to handle getting the input amount for a given target amount.
@@ -124,7 +124,7 @@ class BaseRouter:
 
     @abstractmethod
     def amt_by_src(
-        self, subject: int, dx: DecFloatInt, position_subset: List[int]
+        self, subject: int, dx: DecFloatInt, position_subset: List[int] = None
     ) -> DecFloatInt:
         """
         Enforced method to handle getting the target amount for a given source amount.
