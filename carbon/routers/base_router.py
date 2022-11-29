@@ -51,7 +51,7 @@ class Action:
     total_input: DecFloatInt = 0
     total_price: DecFloatInt = 0
     match_method: str = ""
-    threshold_orders: int = 10
+    threshold_orders: int = 100
 
 
 @dataclass
@@ -140,7 +140,7 @@ class BaseRouter:
         trade: Callable = None,
         cmp: Callable = None,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 10,
+        threshold_orders: int = 100,
     ) -> List[Action]:
         """
         Main algorithm to handle matching a trade amount against the curves/orders.
@@ -153,7 +153,7 @@ class BaseRouter:
         x: DecFloatInt,
         is_by_target: bool = False,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 10,
+        threshold_orders: int = 100,
     ) -> List[Action]:
         """
         Alias for match method in the case of a source amount.
@@ -166,7 +166,7 @@ class BaseRouter:
         x: DecFloatInt,
         is_by_target: bool = True,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 10,
+        threshold_orders: int = 100,
     ) -> List[Action]:
         """
         Alias for match method in the case of a target amount.
