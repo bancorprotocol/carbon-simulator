@@ -15,8 +15,8 @@ Most functions are also exposed at module level, so alternatively you can do
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.2"
-__date__ = "24/Nov/2022"
+__version__ = "2.0"
+__date__ = "30/Nov/2022"
 
 import numpy as np
 import pandas as pd
@@ -80,7 +80,7 @@ class Analytics:
     EPSILON = 0.0001
     EPSILON2 = 0.00001
     @classmethod
-    def linspace(cls, xmax, nint=10, eps=None, eps2=None):
+    def linspace0(cls, xmax, nint=10, eps=None, eps2=None):
         """
         generates a linearly spaced vector of floats (0+eps, x1, x2, ... xmax*(1-eps2))
 
@@ -102,6 +102,15 @@ class Analytics:
         vec[-1] = (1-eps2) * xmax
         return cls.vec(vec)
         # return vec
+
+    @classmethod
+    def linspace(cls, *args, **kwargs):
+        """
+        alias for numpy linspace, but returning a vec()
+        
+        eg linspace(10,20,3) -> vec([10,15,20])
+        """
+        return cls.vec(np.linspace(*args, **kwargs)) 
 
     @staticmethod
     def isnonenan(x):
@@ -231,6 +240,7 @@ class Analytics:
 
 orders_nt = namedtuple("orders_nt", 'tkn, amt, p_start, p_end')
 midpoints = Analytics.midpoints
+linspace0 = Analytics.linspace0
 linspace = Analytics.linspace
 diff = Analytics.diff
 vec = Analytics.vec
@@ -452,7 +462,7 @@ class OrderBook():
         :orderuis:      the dict returned by Sim.state()["orderuis"]
                         
         :prices:        the price range over which to calculate the liquidity
-                        eg np.linspace(500,3000, 100)
+                        eg al.linspace(500,3000,100)
         :pair:          the pair (CarbonPair object) for which to calculate the liquidity
                         eg CarbonPair(tknb="ETH", tknq="USDC"); note that the curve 
                         price convention MUST be the same as the one in orderuis
