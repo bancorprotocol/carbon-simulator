@@ -469,7 +469,7 @@ class OrderBook():
     mp = midpoints
 
     @staticmethod
-    def calc_liquidity_approx(orderuis, prices, pair, reverse=True, purgezero=True):
+    def calc_liquidity_approx(orderuis, prices, pair, ignore_state=True, reverse=True, purgezero=True):
         """
         calculates the approximate liquidity of all positions
         
@@ -480,6 +480,7 @@ class OrderBook():
         :pair:          the pair (CarbonPair object) for which to calculate the liquidity
                         eg CarbonPair(tknb="ETH", tknq="USDC"); note that the curve 
                         price convention MUST be the same as the one in orderuis
+        :ignore_state:  if True (default), ignore the state y, and just look at the raw range
         :reverse:       if True (default), calculate the liquidity in terms of quote token
                         (eg USDC); otherwise calculate it in terms of base token (eg ETH)
         :purgezero:     if True (default), replace zeroes with None
@@ -492,7 +493,7 @@ class OrderBook():
         pair_iso = pair.pair_iso
         tkn_ask = pair.tknb
         tkn_bid = pair.tknq
-        print(f"[calc_liquidity_approx] pair:{pair_iso}", tkn_ask, tkn_bid)
+        #print(f"[calc_liquidity_approx] pair:{pair_iso}", tkn_ask, tkn_bid)
         
         curves_ask = [
             r for r in orderuis.values() 
@@ -502,16 +503,16 @@ class OrderBook():
             r for r in orderuis.values() 
             if r.pair.pair_iso == pair_iso and r.tkn == tkn_bid
         ]
-        print(f"[calc_liquidity_approx] ask:{len(curves_ask)} bid:{len(curves_bid)}")
+        #print(f"[calc_liquidity_approx] ask:{len(curves_ask)} bid:{len(curves_bid)}")
         
         tkn = pair.tknq if reverse else pair.tknb
-        print(f"[calc_liquidity_approx] tkn={tkn}")
+        #print(f"[calc_liquidity_approx] tkn={tkn}")
         liq_ask = [
-            sum(r.liquidity_approx(p1, p2, tkn)/(p2-p1) for r in  curves_ask) 
+            sum(r.liquidity_approx(p1, p2, tkn, ignore_state=ignore_state)/(p2-p1) for r in  curves_ask) 
             for p1, p2 in zip(prices, prices[1:])
         ]
         liq_bid = [
-            sum(r.liquidity_approx(p1, p2, tkn)/(p2-p1) for r in  curves_bid) 
+            sum(r.liquidity_approx(p1, p2, tkn, ignore_state=ignore_state)/(p2-p1) for r in  curves_bid) 
             for p1, p2 in zip(prices, prices[1:])
         ]
         pp = [0.5*(p1+p2) for p1, p2 in zip(prices, prices[1:])]

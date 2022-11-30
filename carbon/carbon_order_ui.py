@@ -139,7 +139,7 @@ class CarbonOrderUI:
             pair=pair, 
             tkn=tkn, 
             B=B, 
-            S= S, 
+            S=S, 
             yint=yint, 
             y=y
         )
@@ -619,23 +619,37 @@ class CarbonOrderUI:
     @property
     def total_liquidity(self):
         """
-        returns the total liquidity of the position, and the token in which it is quoted
+        returns the total liquidity `y` of the position, and the token in which it is quoted
 
         :returns:       (liquidity, token)
         """
         return self.y, self.tkn
-    
-    def liquidity_approx(self, price1, price2, tkn=None, asperc=False):
+
+    @property
+    def max_liquidity(self):
         """
-        returns the approximate liquidity between start and end, in tkn
+        returns the max liquidity 'yint` of the (unexpanded) position, and the token in which it is quoted
+
+        :returns:       (liquidity, token)
+        """
+        return self.yint, self.tkn
+    
+    def liquidity_approx(self, price1, price2, tkn=None, asperc=False, ignore_state=True):
+        """
+        returns the approximate liquidity between price1 and price2 (any order), in tkn
 
         :price1/2:      the start and end price of the range (in any order; quoted in price convention of pair)
         :tkn:           the token in which the liquidity is quoted (if None: base token)
         :asperc:        if True, return percentage total liquidity rather than tkn number; default is False
         :returns:       the liquidity in [price1, price2], quoted in tkn (or percent)
+        :ignore_state:  if True (default), ignore the state y, and just look at the raw range
         """
 
+        #print(f"[liquidity_approx] ignore_state={ignore_state}")
         # ensure that price1 <= price2
+        if self.disabled:
+            return 0
+            
         if price1 > price2:
             pp = price2
             price2 = price1
@@ -676,23 +690,29 @@ class CarbonOrderUI:
         #     perc = (price2 - price1)/(self.pmax - self.pmin)
 
         # self.pmax == self.pmin -> 100% in range, otherwise out
-        if self.disabled:
-            return 0
-            
+        # print("[liquidity_approx]", price1, price2, self.pmin, self.pmax )
+
+        # Case 1: pmax == pmin means we have a zero width range...
         if self.pmax == self.pmin:
+            
             if price1 == price2:
                 perc2 = 1. if price1 == self.pmax else 0
             else:
                 perc2 = 1. if price1 <= self.pmax and price2 > self.pmax else 0
+
+            # if we take state y into account, the liquidity gets reduced accordingly
+            if not ignore_state:
+                perc2 = perc2 * self.y / self.yint
             price = self.pmax
             #print(f"perc2={perc2}, price={price}", price1, price2, self.pmin, price1==self.pmax, price2==self.pmax)
-
-        # price1 > self.pmax or price2 < self.pmin -> completely above or below the range
+        
+        # Case 2: price1 > self.pmax or price2 < self.pmin -> completely above or below the range...
         elif price1 >= self.pmax or price2 <= self.pmin:
             perc2 = 0
 
-        # alternatively: restrict p1,p2 to the ranges and calculate the coverage
+        # Case 3: alternatively, restrict p1,p2 to the ranges and calculate the coverage
         else:
+            # TODO: WE ARE NOT YET TAKING Y/Yint into account here!!!
             if price1 < self.pmin: price1 = self.pmin
             if price2 > self.pmax: price2 = self.pmax
             perc2 = (price2 - price1)/(self.pmax - self.pmin)
@@ -705,7 +725,7 @@ class CarbonOrderUI:
             return 0
 
         # liquidity
-        liq0 = self.y
+        liq0 = self.yint
         liq0_tkn = self.tkn
 
         # convert price into the correct quantity
