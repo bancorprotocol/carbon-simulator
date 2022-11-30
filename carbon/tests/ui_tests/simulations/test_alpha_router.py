@@ -3,7 +3,7 @@ from carbon import CarbonSimulatorUI
 
 def test_alpha_routing_trade_by_src():
     """
-    Derrived from notebook 4-1
+    Derived from notebook 4-1
     """
     AlphaSim = CarbonSimulatorUI(pair="ETHUSDC", verbose=False, matching_method='alpha')
     strat = ['ETH', 10, 2000, 2500, 1000, 2800, 2700]
@@ -22,7 +22,7 @@ def test_alpha_routing_trade_by_src():
 
 def test_alpha_routing_trade_by_target():
     """
-    Derrived from notebook 4-1
+    Derived from notebook 4-1
     """
     AlphaSim = CarbonSimulatorUI(pair="ETHUSDC", verbose=False, matching_method='alpha')
     strat = ['ETH', 10, 2000, 2500, 1000, 2800, 2700]

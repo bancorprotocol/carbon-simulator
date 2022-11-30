@@ -8,7 +8,7 @@ from carbon import CarbonPair, CarbonSimulatorUI, analytics as al
 
 def test_orderbook_explain():
     """
-    Derrived from `passed_tests` notebook demo-3-2
+    Derived from `passed_tests` notebook demo-3-2
     """
     Sim = CarbonSimulatorUI(
         pair=CarbonPair("ETH", "USDC"), verbose=False, raiseonerror=True
@@ -42,7 +42,7 @@ def test_orderbook_explain():
 
 def test_orderbook_plot_token_amount_chart_text():
     """
-    Derrived from `passed_tests` notebook demo-3-2
+    Derived from `passed_tests` notebook demo-3-2
     """
     Sim = CarbonSimulatorUI(
         pair=CarbonPair("ETH", "USDC"), verbose=False, raiseonerror=True
@@ -80,7 +80,7 @@ def test_orderbook_plot_token_amount_chart_text():
 #                                tolerance=100)
 # def test_orderbook_plot_token_amount_chart():
 #     """
-#     Derrived from `passed_tests` notebook demo-3-2
+#     Derived from `passed_tests` notebook demo-3-2
 #     """
 #     Sim = CarbonSimulatorUI(pair=CarbonPair("ETH", "USDC"), verbose=False, raiseonerror=True)
 #     CA = al.Analytics(Sim, verbose=True)

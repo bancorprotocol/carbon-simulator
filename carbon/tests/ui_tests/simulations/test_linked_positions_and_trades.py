@@ -1,10 +1,10 @@
-"""Derrived from `passed_tests` notebook test-2"""
+"""Derived from `passed_tests` notebook test-2"""
 from carbon import CarbonSimulatorUI
 
 
 def test_add_linked_pos_concentrated_on_one_point():
     """
-    Derrived from `passed_tests` notebook test-2
+    Derived from `passed_tests` notebook test-2
     """
     Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
     assert Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)[
@@ -26,7 +26,7 @@ def test_add_linked_pos_concentrated_on_one_point():
 
 def test_amm_cannot_buy_eth_with_no_usdc():
     """
-    Derrived from `passed_tests` notebook test-2
+    Derived from `passed_tests` notebook test-2
     """
     Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
     Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
@@ -37,7 +37,7 @@ def test_amm_cannot_buy_eth_with_no_usdc():
 
 def test_amm_can_sell_eth_at_curve_price():
     """
-    Derrived from `passed_tests` notebook test-1
+    Derived from `passed_tests` notebook test-1
     """
     Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
     Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
@@ -66,7 +66,7 @@ def test_amm_can_sell_eth_at_curve_price():
 
 def test_amm_cannot_sell_with_insufficient_liquidity_1():
     """
-    Derrived from `passed_tests` notebook test-3
+    Derived from `passed_tests` notebook test-3
     """
     Sim = CarbonSimulatorUI(pair="ETHUSDC", verbose=True)
     Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
@@ -80,7 +80,7 @@ def test_amm_cannot_sell_with_insufficient_liquidity_1():
 
 def test_amm_cannot_sell_with_insufficient_liquidity_2():
     """
-    Derrived from `passed_tests` notebook test-3
+    Derived from `passed_tests` notebook test-3
     """
     Sim = CarbonSimulatorUI(pair="ETHUSDC", verbose=True)
     Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
@@ -97,7 +97,7 @@ def test_amm_cannot_sell_with_insufficient_liquidity_2():
 
 def test_amm_sells_both_directions():
     """
-    Derrived from `passed_tests` notebook test-12
+    Derived from `passed_tests` notebook test-12
     """
     Sim = CarbonSimulatorUI(pair="ETHUSDC", verbose=True)
     Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
