@@ -14,7 +14,7 @@ extras_require = {}
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
 
 setup(
-    name="carbon",
+    name="carbon-simulator",
     version=version,
     author="Bancor Network",
     author_email="mike@bancor.network",
