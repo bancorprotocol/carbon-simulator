@@ -8,6 +8,8 @@
 
 [![PyPI version](https://badge.fury.io/py/carbon-simulator.svg)](https://badge.fury.io/py/carbon-simulator)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Binder main](https://img.shields.io/badge/binder-main-blue)](https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator/main?labpath=CarbonSim-LitepaperExamples.ipynb)
+[![Binder beta](https://img.shields.io/badge/binder-beta-blue)](https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator/beta?labpath=CarbonSim-LitepaperExamples.ipynb)
 
 **Warning**
 
@@ -22,19 +24,19 @@ Carbon is decentralized exchange infrastructure that gives users the ability to 
 
 This simulator has been developed by **Bancor Research** to assist in the design, testing, and validation of Carbon strategies. It can be run interactively in a Jupyter notebook environment, or via Python scripting.
 
-The permament URL for this repo is [github.com/bancorprotocol/carbon-simulator][repo]. The Carbon project website is at [carbondefi.xyz][carbon]. On this site you will find in particular the [Litepaper][litepaper] and the [patent application][patent]. 
+The permament URL for this repo is [github.com/bancorprotocol/carbon-simulator][repo], and there is also a [PyPi package][pypi]. The Carbon project website is at [carbondefi.xyz][carbon]. On this site you will find in particular the [Litepaper][litepaper] and the [patent application][patent]. 
 
 [carbon]:https://carbondefi.xyz
 [litepaper]:https://carbondefi.xyz/r/LitePaper.pdf
 [patent]:https://carbondefi.xyz/r/Patent.pdf
 [repo]:https://github.com/bancorprotocol/carbon-simulator/
-
+[pypi]:https://pypi.org/project/carbon-simulator/
 
 ## Getting started
 
-If you already have Python and Jupyter installed, you can launch a Jupyter instance in the root directory of the project and run the notebook [`CarbonSim-Example.ipynb`][cse], or any of the other notebooks in that directory. 
+If you already have Python and Jupyter installed, you can launch a Jupyter instance in the root directory of the project by running `jupyter notebook` and then opening the notebook [`CarbonSim-Example.ipynb`][cse], or any of the other notebooks in that directory. 
 
-You may run into missing modules that need to be installed via pip. In this case, either install them manually based on the list in the [`requirements.txt`][rqt] or refer to the instructions below.
+You may run into missing modules that need to be installed via pip. In this case, either install them manually based on the list in the [`requirements.txt`][rqt] or refer to the instructions below. We also recommend to install [JupyText][jupytext].
 
 [cse]:https://github.com/bancorprotocol/carbon-simulator/blob/main/CarbonSim-Example.ipynb
 [rqt]:https://github.com/bancorprotocol/carbon-simulator/blob/main/requirements.txt
@@ -51,6 +53,9 @@ Whilst this simulation is designed to run in any Python environment, we strongly
 [python]:https://www.python.org/downloads/
 [conda]:https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 [pip]:https://pip.pypa.io/en/stable/cli/pip_install/
+[jupytext]:https://jupytext.readthedocs.io/en/latest/
+
+
 
 
 ### Method 1. Quick setup
@@ -72,7 +77,21 @@ or by installing the required modules manually.
 
 The upside of this method is that you get started quickly and easily. The downside is that the `carbon` library may only work for notebooks and scripts located in the root directory of this project.
 
-### Method 2. Installation
+
+### Method 2. Pip install
+
+We are publishing this repo to [pypi:carbon-simulator][pypi] so you can install it with the usual
+
+````{tab} PyPI
+$ pip install carbon-simulator
+````
+
+This installs the latest version published on the `main` branch of the repo, as well as all dependencies. We also recommend installing [JupyText][jupytext] for easier management of the notebooks. In the unexpected case of conflicts with your local installation, consider using a [virtual environment][venv].
+
+When installing this way there will not be any example workbooks provided. We recommend downloading the workbooks from [here][repo] to get started, starting with [`CarbonSim-Example.ipynb`][cse].
+
+
+### Method 3. Installation via setup
 
 This method will install the `carbon` package as well as all its dependencies on your system. We highly recommend to do this [in a virtual environment][venv], in which case no permanent changes will be made. To install the simulator, navigate to the top level project directory, and run the installation process via
 ````{tab} PyPI
