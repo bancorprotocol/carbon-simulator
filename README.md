@@ -147,6 +147,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 
 # Change log
 
+- **v1.3** - more order books, alpha router, thresholds; demo 3-2 and 4-1
 - **v1.2** - order books
 - **v1.1** - more advanced analytics
 - **v1.0** - initial release
