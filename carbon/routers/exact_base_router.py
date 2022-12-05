@@ -92,7 +92,7 @@ class ExactBase(BaseRouter, ABC):
         partial_swaps = final_swaps = {}
         dropped_indices = []
         while not completed_trade:
-            if use_positions_matchlevel == []:
+            if len(use_positions_matchlevel) == 0:
                 dropped_indices = list(final_swaps.keys())
             else:
                 dropped_indices = [i for i in self.indexes if i not in use_positions_matchlevel] + list(final_swaps.keys())

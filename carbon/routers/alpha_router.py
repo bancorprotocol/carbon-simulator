@@ -4,6 +4,7 @@ from .exact_router_x0y0n import ExactRouterX0Y0N
 from .base_router import *
 import pandas as pd
 from typing import Any
+import numpy as np
 
 
 @dataclass
@@ -29,7 +30,7 @@ class AlphaRouter(BaseRouter):
             return x0 / y0
 
     def amt_by_target(
-        self, subject: int, dx: DecFloatInt, position_subset: List[int] = None
+            self, subject: int, dx: DecFloatInt, position_subset: List[int] = None
     ) -> DecFloatInt:
         """
         An alternative trade by target function that performs a hypothetical
@@ -46,24 +47,24 @@ class AlphaRouter(BaseRouter):
 
         if self.use_floor_division:
             return (
-                dx * y_int**2 // ((S * y + B * y_int) * (S * y + B * y_int - S * dx))
+                    dx * y_int ** 2 // ((S * y + B * y_int) * (S * y + B * y_int - S * dx))
             )
         else:
             return (
-                dx * y_int**2 / ((S * y + B * y_int) * (S * y + B * y_int - S * dx))
+                    dx * y_int ** 2 / ((S * y + B * y_int) * (S * y + B * y_int - S * dx))
             )
 
     def match_by_target(
-        self,
-        x: DecFloatInt,
-        is_by_target: bool = True,
-        check_sufficient_liquidity: bool = True,
-        threshold_orders: Any = None,
+            self,
+            x: DecFloatInt,
+            is_by_target: bool = True,
+            check_sufficient_liquidity: bool = True,
+            threshold_orders: int = None,
     ) -> List[Action]:
         """
         The match by target function specfic to the Alpha router that:
 
-        a1.) Run the inputAmount divided by the threshold_orders (to scale size)
+        a1.) Run the inputAmount
              through all orders of appropriate pairs and return the hypothetical
              outputAmount for that order. Ignores whether or not there is
              sufficient liquidity associated with these orders.
@@ -84,10 +85,9 @@ class AlphaRouter(BaseRouter):
             threshold_orders = 10
 
         # (step 1.)
-        # Scale the inputAmount x by the number of threshold orders and perform
-        # the hypothetical trade
+
         hypothetical_output_amts = {
-            i: self.amt_by_target(dx=x / threshold_orders, subject=i) for i in self.indexes
+            i: self.amt_by_target(dx=x, subject=i) for i in self.indexes
         }
 
         # (step 2.)
@@ -95,7 +95,7 @@ class AlphaRouter(BaseRouter):
         ordered_amts = {
             j: hypothetical_output_amts[j]
             for j in sorted(
-                self.indexes, key=lambda i: hypothetical_output_amts[i], reverse=False
+                self.indexes, key=lambda i: hypothetical_output_amts[i], reverse=True
             )
         }
 
@@ -103,18 +103,39 @@ class AlphaRouter(BaseRouter):
         # Get the available liquidity and return the minimum list of orders with
         # sufficient liquidity to fulfill the inputAmount
         ordered_associated_liquidity = [self.orders[i].y for i in ordered_amts.keys()]
-        top_n = lambda n: list(
-            itertools.takewhile(
-                lambda i: sum(ordered_associated_liquidity) >= x,
-                itertools.islice(ordered_amts.keys(), n),
-            )
+
+        results = pd.DataFrame(
+            [
+                hypothetical_output_amts.keys(),
+                hypothetical_output_amts.values(),
+                ordered_associated_liquidity,
+            ],
+            index=[
+                "indexes",
+                "hypothetical_output_amts",
+                "ordered_associated_liquidity",
+            ],
         )
-        # print(top_n(threshold_orders))
+        results = results.T.copy()
+        results.sort_values(
+            by=["hypothetical_output_amts", 'indexes'], ascending=[False, True], inplace=True
+        )
+
+        results.loc[:, 'sliding_index'] = [np.array(win.values.tolist(), dtype=object) for win in
+                                           results.indexes.rolling(threshold_orders, min_periods=threshold_orders)]
+        results.loc[:, 'sliding_available_value'] = results.ordered_associated_liquidity.rolling(threshold_orders,
+                                                                                                 min_periods=threshold_orders).sum()
+
+        results.fillna(0, inplace=True)
+        results.reset_index(inplace=True, drop=True)
+        # print(tabulate(results,headers=list(results.columns)))
+        top_n_threshold_orders = \
+        [results.sliding_index[i] for i in results.index if results.sliding_available_value[i] >= abs(x)][0]
 
         # (step 4.)
         # Constrain the exact router to just the top n threshold orders and match
         self.exact_router.orders = self.orders
-        use_positions_matchlevel = top_n(threshold_orders)
+        use_positions_matchlevel = top_n_threshold_orders  # top_n(threshold_orders)
         return self.exact_router.match(
             x=x,
             is_by_target=is_by_target,
@@ -124,7 +145,7 @@ class AlphaRouter(BaseRouter):
         )
 
     def amt_by_src(
-        self, subject: int, dx: DecFloatInt, position_subset: List[int] = None
+            self, subject: int, dx: DecFloatInt, position_subset: List[int] = None
     ) -> DecFloatInt:
         """
         An alternative trade by source function that performs a hypothetical
@@ -141,28 +162,28 @@ class AlphaRouter(BaseRouter):
 
         if self.use_floor_division:
             return (
-                dx
-                * (S * y + B * y_int) ** 2
-                // (S * dx * (S * y + B * y_int) + y_int**2)
+                    dx
+                    * (S * y + B * y_int) ** 2
+                    // (S * dx * (S * y + B * y_int) + y_int ** 2)
             )
         else:
             return (
-                dx
-                * (S * y + B * y_int) ** 2
-                / (S * dx * (S * y + B * y_int) + y_int**2)
+                    dx
+                    * (S * y + B * y_int) ** 2
+                    / (S * dx * (S * y + B * y_int) + y_int ** 2)
             )
 
     def match_by_src(
-        self,
-        x: DecFloatInt,
-        is_by_target: bool = False,
-        check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 10,
+            self,
+            x: DecFloatInt,
+            is_by_target: bool = False,
+            check_sufficient_liquidity: bool = True,
+            threshold_orders: int = None,
     ) -> List[Action]:
         """
         The match by target function specfic to the Alpha router that:
 
-        a1.) Run the inputAmount divided by the threshold_orders (to scale size)
+        a1.) Run the inputAmount
              through all orders of appropriate pairs and return the hypothetical
              outputAmount for that order. Ignores whether or not there is
              sufficient liquidity associated with these orders.
@@ -179,21 +200,9 @@ class AlphaRouter(BaseRouter):
              evaluated within the threshold number of orders.
         """
         # (step 1.)
-        # Scale the inputAmount x by the number of threshold orders and perform
-        # the hypothetical trade
         # print(x)
         hypothetical_output_amts = {i: self.amt_by_src(dx=x, subject=i) for i in self.indexes}
         # print(hypothetical_output_amts)
-
-        # (step 2.)
-        # Order the amounts
-        # ordered_amts = {
-        #     j: hypothetical_output_amts[j]
-        #     for j in sorted(
-        #         self.indexes, key=lambda i: hypothetical_output_amts[i], reverse=True
-        #     )
-        # }
-        # print(ordered_amts)
 
         # (step 3.)
         # Get the available liquidity and return the minimum list of orders with
@@ -239,22 +248,24 @@ class AlphaRouter(BaseRouter):
         )
         results = results.T.copy()
         results.sort_values(
-            by="hypothetical_output_amts", ascending=False, inplace=True
+            by=["hypothetical_output_amts", 'indexes'], ascending=[False, True], inplace=True
         )
-        # print(tabulate(results,headers=list(results.columns)))
 
-        top_n = lambda n: list(
-            itertools.takewhile(
-                lambda i: sum(results.available_value) >= x,
-                itertools.islice(results.indexes, n),
-            )
-        )
-        # print(top_n(threshold_orders))
+        results.loc[:, 'sliding_index'] = [np.array(win.values.tolist(), dtype=object) for win in
+                                           results.indexes.rolling(threshold_orders, min_periods=threshold_orders)]
+        results.loc[:, 'sliding_available_value'] = results.available_value.rolling(threshold_orders,
+                                                                                    min_periods=threshold_orders).sum()
+
+        results.fillna(0, inplace=True)
+        results.reset_index(inplace=True, drop=True)
+        # print(tabulate(results,headers=list(results.columns)))\
+        top_n_threshold_orders = \
+        [results.sliding_index[i] for i in results.index if results.sliding_available_value[i] >= abs(x)][0]
 
         # (step 4.)
         # Constrain the exact router to just the top n threshold orders and match
         self.exact_router.orders = self.orders
-        self.use_positions_matchlevel = top_n(threshold_orders)
+        self.use_positions_matchlevel = top_n_threshold_orders  # top_n(threshold_orders)
         return self.match(
             x=x,
             is_by_target=is_by_target,
@@ -263,14 +274,14 @@ class AlphaRouter(BaseRouter):
         )
 
     def match(
-        self,
-        x: DecFloatInt,
-        is_by_target: bool = True,
-        completed_trade: bool = False,
-        trade: Callable = None,
-        cmp: Callable = None,
-        check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 10,
+            self,
+            x: DecFloatInt,
+            is_by_target: bool = True,
+            completed_trade: bool = False,
+            trade: Callable = None,
+            cmp: Callable = None,
+            check_sufficient_liquidity: bool = True,
+            threshold_orders: int = None,
     ) -> List[Action]:
         """
         Main algorithm to handle matching a trade amount against the curves/orders.

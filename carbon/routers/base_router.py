@@ -102,7 +102,7 @@ class BaseRouter:
         """
         Method to check if there is sufficient liquidity to handle the trade.
         """
-        if use_positions_matchlevel == []:
+        if len(use_positions_matchlevel) == 0:
             use_positions_matchlevel = self.indexes
         available_liquidity = sum([self.orders[i].y for i in use_positions_matchlevel])
         try:
@@ -140,7 +140,7 @@ class BaseRouter:
         trade: Callable = None,
         cmp: Callable = None,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 100,
+        threshold_orders: int = None,
     ) -> List[Action]:
         """
         Main algorithm to handle matching a trade amount against the curves/orders.
@@ -153,7 +153,7 @@ class BaseRouter:
         x: DecFloatInt,
         is_by_target: bool = False,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 100,
+        threshold_orders: int = None,
     ) -> List[Action]:
         """
         Alias for match method in the case of a source amount.
@@ -166,7 +166,7 @@ class BaseRouter:
         x: DecFloatInt,
         is_by_target: bool = True,
         check_sufficient_liquidity: bool = True,
-        threshold_orders: int = 100,
+        threshold_orders: int = None,
     ) -> List[Action]:
         """
         Alias for match method in the case of a target amount.
