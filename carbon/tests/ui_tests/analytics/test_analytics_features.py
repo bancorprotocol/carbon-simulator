@@ -62,7 +62,7 @@ def test_orderbook_plot_token_amount_chart_text():
         Sim.add_order(o.tkn, o.amt, o.p_start, o.p_end)
 
     max_liquidity = Sim.liquidity()["ETHUSDC"]["ETH"]
-    src_amounts = al.linspace(max_liquidity, 20)
+    src_amounts = al.linspace0(max_liquidity, 20)
     CA.simulate_trades(60, CA.ASK)
     CA.simulate_trades(70, CA.ASK)
     trg_amounts = al.vec([CA.simulate_trades(size, CA.ASK) for size in src_amounts])

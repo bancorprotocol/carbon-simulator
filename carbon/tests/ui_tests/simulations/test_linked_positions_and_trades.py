@@ -60,7 +60,6 @@ def test_amm_can_sell_eth_at_curve_price():
         "nroutes": {0: 1},
         "price": {0: "2000.0"},
         "p_unit": {0: "ETH per USDC"},
-        'threshold_orders': {0: None},
     }
 
 
