@@ -2,9 +2,9 @@
 <img width="100%" src="https://drive.google.com/uc?export=view&id=10y3NKbbk7yt7cZDMszMt04g6NquTEa4p" alt="Carbon Logo" />
 </p>
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 # Carbon Simulator
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
 [![PyPI version](https://badge.fury.io/py/carbon-simulator.svg)](https://badge.fury.io/py/carbon-simulator)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -24,13 +24,17 @@ Carbon is decentralized exchange infrastructure that gives users the ability to 
 
 This simulator has been developed by **Bancor Research** to assist in the design, testing, and validation of Carbon strategies. It can be run interactively in a Jupyter notebook environment, or via Python scripting.
 
-The permament URL for this repo is [github.com/bancorprotocol/carbon-simulator][repo], and there is also a [PyPi package][pypi]. The Carbon project website is at [carbondefi.xyz][carbon]. On this site you will find in particular the [Litepaper][litepaper] and the [patent application][patent]. 
+The permament Github URL for this repo is [`bancorprotocol/carbon-simulator`][repo]. There is a second repo that is optimised for [Binder][binderdoc] and that is located at [`bancorprotocol/carbon-simulator-binder`][repob]. The latter uses the version of the library in the [PyPi package][pypi], so it may be a week or two behind. The Carbon project website is at [carbondefi.xyz][carbon]. On this site you will find in particular the [litepaper][litepaper], [whitepaper][whitepaper], and [information disclosure][patent] for the patent application. 
 
 [carbon]:https://carbondefi.xyz
-[litepaper]:https://carbondefi.xyz/r/LitePaper.pdf
-[patent]:https://carbondefi.xyz/r/Patent.pdf
+[litepaper]:https://carbondefi.xyz/litepaper
+[whitepaper]:https://carbondefi.xyz/whitepaper
+[patent]:https://carbondefi.xyz/patent
 [repo]:https://github.com/bancorprotocol/carbon-simulator/
+[repob]:https://github.com/bancorprotocol/carbon-simulator-binder/
 [pypi]:https://pypi.org/project/carbon-simulator/
+[binder]:https://mybinder.org
+[binderdoc]:https://mybinder.readthedocs.io/en/latest/
 
 ## Getting started
 
@@ -75,7 +79,7 @@ $ pip install -r requirements.txt
 
 or by installing the required modules manually. 
 
-The upside of this method is that you get started quickly and easily. The downside is that the `carbon` library may only work for notebooks and scripts located in the root directory of this project.
+The upside of this method is that you get started quickly and easily, and -- more importantly -- you have access to all the bleeding feautures in the `beta` branch should you choose to check out beta instead of main. It also allows you to easily make changes to the library code. The downside is that the `carbon` library may only work for notebooks and scripts located in the root directory of this project.
 
 
 ### Method 2. Pip install
@@ -88,7 +92,7 @@ $ pip install carbon-simulator
 
 This installs the latest version published on the `main` branch of the repo, as well as all dependencies. We also recommend installing [JupyText][jupytext] for easier management of the notebooks. In the unexpected case of conflicts with your local installation, consider using a [virtual environment][venv].
 
-When installing this way there will not be any example workbooks provided. We recommend downloading the workbooks from [here][repo] to get started, starting with [`CarbonSim-Example.ipynb`][cse].
+When installing this way there will not be any example workbooks provided. We recommend downloading the workbooks from [here][repo] to get started, starting with [`CarbonSim-Example.ipynb`][cse]. Note that you will only have access to the features in the `main` branch of the repo in this case.
 
 
 ### Method 3. Installation via setup
@@ -103,7 +107,7 @@ Then again you launch a Jupyter session running the following command
 $ jupyter notebook
 ````
 
-As the `carbon` library is now installed on your system, you can run the simulation code from anywhere whilst the virtual environment is active.
+As the `carbon` library is now installed on your system, you can run the simulation code from anywhere whilst the virtual environment is active. Note that outside the project directory, you only have access the `main` branch of the repo. Inside the project director it _should_ pick up whatever branch you have checked out, but this may depend on your system configuration.
 
 
 ## Usage
@@ -147,14 +151,14 @@ Sim.state()["orders"]
 ## Branches
 This repo contains two key branches, `main`, and `beta`. Their respective properties are as follows:
 
-- `main`. The main branch is the main release branch of this project. It may not contain all bleeding edge features, but it has been tested thoroughly (but see the disclaimer on top). The main branch will never be rewritten.
+- `main`. The main branch is the main release branch of this project, and this is the only branch that is available on [PyPi][pypi]. It is currently updated from beta every 1-2 weeks. The main branch will never be rewritten.
 
-- `beta`. The beta branch is the branch to go for if you are interested in the latest features of the project. It will have usually passed the test suite, so should not be broken in obvious ways. The beta branch may be rewritten from time to time.
+- `beta`. The beta branch contains the latest features of the project. It will have usually passed the test suite, so should not be broken in obvious ways. The beta branch will usually be rewritten before it is merged into main, which happens every 1-2 weeks.
 
 
 ## Versioning
 
-We attempt to use [semantic versioning][semver] (`major.minor.patch`), so the major number is changed on backward incompatible API changes, the minor number on compatible changes, and the patch number for minor patches.
+We use [semantic versioning][semver] (`major.minor.patch`), so the major number is changed on backward incompatible API changes, the minor number on compatible changes, and the patch number for minor patches.
 
 The API in this respect is defined as _"all public methods in the `SimulationUI`"_ object, as well as those in the objects it returns (currently `CarbonPair` and `CarbonOrderUI`). 
 
@@ -166,6 +170,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 
 # Change log
 
+- **v1.5** - ...
 - **v1.4** - analytics, routers, examples and demos, binder badges
 - **v1.3** - more order books, alpha router, thresholds; demo 3-2 and 4-1
 - **v1.2** - order books
