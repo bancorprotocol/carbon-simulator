@@ -15,5 +15,5 @@ from .simulators import CarbonSimulatorUI
 from .simulators import sim_analytics as analytics
 
 
-__version__ = "1.5-beta0"
+__version__ = "1.5-beta1"
 __date__ = "6/Dec/2022"
