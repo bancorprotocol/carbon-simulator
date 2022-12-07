@@ -6,8 +6,9 @@ Licensed under MIT
 
 VERSION HISTORY
 v1.0.1 - introduced constants for matching method
+v1.0.2 - exclude_future
 """
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __date__ = "7/Dec/2022"
 
 import itertools
@@ -35,6 +36,7 @@ class CarbonSimulatorUI:
     :matching_method:   if MATCH_EXCACT (default), the exact matching algorithm is used; otherwise 
                         choices are MATCH_FAST and MATCH_ALPHA
     :decimals:          the number of decimals to which the output is rounded
+    :exclude_future:    if True (default), excludes future and experimental features
     """
 
     MATCH_EXACT = "exact"
@@ -48,10 +50,12 @@ class CarbonSimulatorUI:
             raiseonerror: bool = False,
             decimals: int = 6,
             matching_method: str = MATCH_EXACT,
+            exclude_future: bool = True,
     ):
         self._pos_id = itertools.count()
         self.verbose = verbose
         self.debug = False  # setting this to True enables debug output
+        self.exclude_future = exclude_future
 
         if isinstance(pair, CarbonPair):
             # print("[__init__] CarbonPair provided", pair)
@@ -82,6 +86,23 @@ class CarbonSimulatorUI:
             print(
                 f"[__init__] pair={pair}, verbose={verbose}, raiseonerror={raiseonerror}"
             )
+
+    class ExcludedFutureFunctionality(ValueError):
+        """
+        exception raised when functionality requested is considered future, and `excludefuture` is True
+        """
+        pass
+
+    def _raise_if_future_restricted(self, msg=None, *args, **kwargs):
+        """
+        raises ExcludedFutureFunctionality exception if self.exclude_future is True
+
+        :msg, args, kwargs:     arguments for the exception
+        """
+        if self.exclude_future:
+            if msg is None: 
+                msg = "Feature disabled (us `exclude_future = False` to enable)"
+            raise self.ExcludedFutureFunctionality(msg, *args, **kwargs)
 
     @property
     def default_basetoken(self):
@@ -930,4 +951,4 @@ class CarbonSimulatorUI:
 
     def __repr__(self):
         pair = self._carbon_pair if self._carbon_pair else self.pair
-        return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair='{pair}', mm='{self._mm}')"
+        return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair='{pair}', mm='{self._mm}', xf={self.exclude_future})"
