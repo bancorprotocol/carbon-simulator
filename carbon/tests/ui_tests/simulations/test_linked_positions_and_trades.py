@@ -7,7 +7,7 @@ def test_add_linked_pos_concentrated_on_one_point():
     Derived from `passed_tests` notebook test-2
     """
     Sim = CarbonSimulatorUI(pair="USDC/ETH", verbose=True)
-    assert Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)[
+    assert Sim.add_strategy("ETH", 100, 2000, 2000, 0, 1000, 1000)[
         "orders"
     ].to_dict() == {
         "id": {0: 0, 1: 1},
@@ -29,7 +29,7 @@ def test_amm_cannot_buy_eth_with_no_usdc():
     Derived from `passed_tests` notebook test-2
     """
     Sim = CarbonSimulatorUI(pair="USDC/ETH", verbose=True)
-    Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
+    Sim.add_strategy("ETH", 100, 2000, 2000, 0, 1000, 1000)
     result = Sim.amm_buys("ETH", 10)
     assert result["success"] is False
     assert result["error"] == "token USDC has no non-empty liquidity positions"
@@ -40,7 +40,7 @@ def test_amm_can_sell_eth_at_curve_price():
     Derived from `passed_tests` notebook test-1
     """
     Sim = CarbonSimulatorUI(pair="USDC/ETH", verbose=True)
-    Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
+    Sim.add_strategy("ETH", 100, 2000, 2000, 0, 1000, 1000)
     result = Sim.amm_sells("ETH", 10)
     assert result["success"] is True
     assert result["trades"].to_dict() == {
@@ -68,7 +68,7 @@ def test_amm_cannot_sell_with_insufficient_liquidity_1():
     Derived from `passed_tests` notebook test-3
     """
     Sim = CarbonSimulatorUI(pair="ETH/USDC", verbose=True)
-    Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
+    Sim.add_strategy("ETH", 100, 2000, 2000, 0, 1000, 1000)
     result = Sim.amm_sells("ETH", 200)
     assert result["success"] is False
     assert (
@@ -82,7 +82,7 @@ def test_amm_cannot_sell_with_insufficient_liquidity_2():
     Derived from `passed_tests` notebook test-3
     """
     Sim = CarbonSimulatorUI(pair="ETH/USDC", verbose=True)
-    Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
+    Sim.add_strategy("ETH", 100, 2000, 2000, 0, 1000, 1000)
     Sim.amm_sells("ETH", 10)
 
     # Having sold 10 ETH already, it can now not sell another 90+
@@ -99,7 +99,7 @@ def test_amm_sells_both_directions():
     Derived from `passed_tests` notebook test-12
     """
     Sim = CarbonSimulatorUI(pair="ETH/USDC", verbose=True)
-    Sim.add_linked_pos("ETH", 100, 2000, 2000, 0, 1000, 1000)
+    Sim.add_strategy("ETH", 100, 2000, 2000, 0, 1000, 1000)
 
     # Sell the entire ETH position. This gives us 200,000 USDC which expands the curve
     result = Sim.amm_sells("ETH", 100)

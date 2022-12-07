@@ -23,7 +23,7 @@ def test_liquidity_as_dataframe():
     Sim.add_strategy("ETH", 20, 2010, 3010, 5100, 1010, 910, "ETH/DAI")
     Sim.add_strategy("ETH", 30, 2020, 3020, 5200, 1020, 920, "ETH/DAI")
     Sim.add_strategy("ETH", 40, 2030, 3030, 5300, 1030, 930, "ETH/DAI")
-    Sim.add_sgl_pos("ETH", 10, 3000, 2000, pair="ETH/USDC")
+    Sim.add_order("ETH", 10, 3000, 2000, pair="ETH/USDC")
 
     df = Sim.liquidity(Sim.ASDF)
     dct = df.to_dict(orient="dict")["y"]
@@ -64,7 +64,7 @@ def test_liquidity_as_dict():
     Sim.add_strategy("ETH", 20, 2010, 3010, 5100, 1010, 910, "ETH/DAI")
     Sim.add_strategy("ETH", 30, 2020, 3020, 5200, 1020, 920, "ETH/DAI")
     Sim.add_strategy("ETH", 40, 2030, 3030, 5300, 1030, 930, "ETH/DAI")
-    Sim.add_sgl_pos("ETH", 10, 3000, 2000, pair="ETH/USDC")
+    Sim.add_order("ETH", 10, 3000, 2000, pair="ETH/USDC")
 
     dic = Sim.liquidity(Sim.ASDICT)
     assert isinstance(dic, dict)
