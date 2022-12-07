@@ -3,9 +3,12 @@ represents a Carbon token pair; mostly helps with not getting confused on price 
 
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
+
+VERSION HISTORY
+v2.0 -- changed constructor to allow for slashpair string
 """
-__version__ = "1.2.2"
-__date__ = "24/Nov/2022"
+__version__ = "2.0"
+__date__ = "7/Dec/2022"
 from dataclasses import dataclass
 
 
@@ -14,8 +17,9 @@ class CarbonPair:
     """
     static information about a carbon token pair
 
-    :tknb:      the base token (risk token) of the pair, eg ETH*
-    :tknq:      the quote token (numeraire token) of the pair, eg USDC*
+    :slashpair:     the pair string in TKNB/TKNQ form, eg "ETH/USDC"
+    :tknb:          the base token (risk token) of the pair, eg ETH*
+    :tknq:          the quote token (numeraire token) of the pair, eg USDC*
 
     * the differentiation between numeraire and risk tokens matter only for price quotes:
     in a given pair, _all_ prices will be quote as tknn per tknr, eg USDC per ETH
@@ -23,12 +27,34 @@ class CarbonPair:
     see also https://www.investopedia.com/terms/i/isocurrencycode.asp for ISO currency code
     """
 
-    tknb: str
-    tknq: str
+    slashpair: str = None
+    tknb: str = None 
+    tknq: str = None
 
     def __post_init__(self):
-        self.tknb = self.tknb.upper()
-        self.tknq = self.tknq.upper()
+
+        if self.slashpair:
+            #print("[CarbonPair] slashpair has been provided", self.slashpair, self.tknb, self.tknq)
+            if self.tknb or self.tknq:
+                if self.tknb:
+                    raise ValueError(
+                        f"Parameters are pair, tknb, tknq; did you mean `tknb='{self.slashpair}', tknq='{self.tknb}'` ?",
+                        self.slashpair, self.tknb, self.tknq)
+                raise ValueError("Must not provide both pair and tknb, tknq", self.slashpair, self.tknb, self.tknq)
+            self.slashpair = self.slashpair.upper()
+            try:
+                self.tknb, self.tknq = self.slashpair.split("/")
+            except:
+                raise ValueError("Illegal slashpair", self.slashpair)
+            #print("[CarbonPair] {self.slashpair} -> tknb={self.tknb}, tknq={self.tknq}")        
+        
+        else:
+            #print("[CarbonPair] tknb, tknq has hopefully been provided", self.tknb, self.tknq)
+            if self.tknb is None or self.tknq is None:
+                raise ValueError("If pair is None must provide tknb, tknq", self.slashpair, self.tknb, self.tknq)            
+            self.tknb = self.tknb.upper()
+            self.tknq = self.tknq.upper()
+            self.slashpair = f"{self.tknb}/{self.tknq}"
 
     
     @classmethod
@@ -75,8 +101,41 @@ class CarbonPair:
                     "Invalid token specification (tkn inside isopair)", isopair, tkn
                 )
 
-        return cls(tknb, tknq)
+        return cls(tknb=tknb, tknq=tknq)
 
+    @classmethod
+    def from_slashpair(cls, slashpair):
+        """
+        creates a pair from a slashstring (tknb/tknq, eg "ETH/USDC")
+
+        :slashpair:     the pair, in the format tknb/tknq, eg "ETH/USDC"
+        """
+
+    @classmethod
+    def create(cls, arg1=None, arg2=None):
+        """
+        alternative constructor, allowing various paramerisations
+
+        EXAMPLES
+
+        p = Carbonpair.create("ETH/USDC")   # Method1: from slashpair
+        Carbonpair.create(p)                # Method 2: from other CarbonPair
+        Carbonpair.create("ETH", "USDC")    # Method 3: quote token, base token
+        Carbonpair.create()                 # None
+        """
+
+        if arg1 is None and arg2 is None:
+            return None
+
+        if isinstance(arg1, cls):
+            if not arg2 is None:
+                raise ValueError("Second argument must be None if arg1 is pair", arg1, arg2)
+            return arg1
+        if arg2 is None:
+            return cls(arg1)
+        return cls(tknb=arg1, tknq=arg2)
+
+    
     @property
     def price_convention(self):
         """
@@ -84,27 +143,28 @@ class CarbonPair:
         """
         return f"{self.tknq} per {self.tknb}"
 
-    @property
-    def pair_id(self):
-        """
-        returns the canonic Carbon id of the pair
+    # @property
+    # def pair_id(self):
+    #     """
+    #     returns the canonic Carbon id of the pair
 
-        The Carbon ID of the pair is the concatenation of the token names
-        in alphabetical order, in upper case, separated by colon.
-        A carbon id does not imply any specific quote conventions
-        """
-        if self.tknb < self.tknq:
-            return f"{self.tknb}:{self.tknq}"
-        return f"{self.tknq}:{self.tknb}"
+    #     The Carbon ID of the pair is the concatenation of the token names
+    #     in alphabetical order, in upper case, separated by colon.
+    #     A carbon id does not imply any specific quote conventions
+    #     """
+    #     if self.tknb < self.tknq:
+    #         return f"{self.tknb}:{self.tknq}"
+    #     return f"{self.tknq}:{self.tknb}"
 
-    @property
-    def pair_id_is_reversed(self):
-        """
-        returns True iff Carbon id is reversed compared to iso
+    # @property
+    # def pair_id_is_reversed(self):
+    #     """
+    #     returns True iff Carbon id is reversed compared to iso
 
-        if the carbon id is TKN1:TKN2 then ISO id of TKN1TKN2 will yield False, and TKN2TKN1 True
-        """
-        return self.tknb > self.tknq
+    #     if the carbon id is TKN1:TKN2 then ISO id of TKN1TKN2 will yield False, and TKN2TKN1 True
+    #     """
+    #     return self.tknb > self.tknq
+
 
     @property
     def pair_iso(self):
@@ -114,6 +174,11 @@ class CarbonPair:
         *see https://www.investopedia.com/terms/i/isocurrencycode.asp
         """
         return f"{self.tknb}{self.tknq}"
+
+    @property
+    def pair_slash(self):
+        """convenience access for slashpair"""
+        return self.slashpair
 
     @property
     def pair_slash(self):
@@ -127,7 +192,7 @@ class CarbonPair:
         """
         returns the pair with base and quote token reversed
         """
-        return self.__class__(self.tknq, self.tknb)
+        return self.__class__(tknb=self.tknq, tknq=self.tknb)
 
     @property
     def basetoken(self):
