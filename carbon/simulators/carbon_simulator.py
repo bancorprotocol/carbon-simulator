@@ -156,7 +156,7 @@ class CarbonSimulatorUI:
         carbon_pair = self.get_carbon_pair(pair)
         return carbon_pair.price_convention
 
-    def _add_pos(
+    def _add_order(
             self,
             tkn: str,
             amt: Any,
@@ -193,21 +193,21 @@ class CarbonSimulatorUI:
 
         # enter order
         order_params = {
-            "tkn": tkn,  # the token being sold
-            "y_int": amt,  # the capacity of the curve
-            "_y": amt,  # the initial holding is of the curve (in `tkn`)
-            "p_low": p_lo,  # the lower end of the range (`tkn` numeraire); also p_b
-            "p_high": p_hi,  # the upper end of the range (`tkn` numeraire); also p_a
-            "pair_name": carbon_pair.pair_iso,  # the iso name of the pair
-            "pair": carbon_pair,  # the CarbonPair object
-            "id": id1,  # the id of the new curve generated
-            "linked_to_id": id2,  # the id to which this curve is linked (=id if single curve)
+            "tkn": tkn,                                 # the token being sold
+            "y_int": amt,                               # the capacity of the curve
+            "_y": amt,                                  # the initial holding is of the curve (in `tkn`)
+            "p_low": p_lo,                              # the lower end of the range (`tkn` numeraire); also p_b
+            "p_high": p_hi,                             # the upper end of the range (`tkn` numeraire); also p_a
+            "pair_name": carbon_pair.pair_iso,          # the iso name of the pair
+            "pair": carbon_pair,                        # the CarbonPair object
+            "id": id1,                                  # the id of the new curve generated
+            "linked_to_id": id2,                        # the id to which this curve is linked (=id if single curve)
         }
 
         self.orders[id1] = Order(**order_params)
         return id1
 
-    def add_sellorder(
+    def add_order(
             self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: str = None
     ) -> Dict[str, Any]:
         """
@@ -238,7 +238,7 @@ class CarbonSimulatorUI:
 
             # ugly hack, but somehow we need to switch lo and hi to have the
             # boundary closer to the money always first
-            order_id = self._add_pos(
+            order_id = self._add_order(
                 tkn, amt, p_end_c, p_start_c, carbon_pair, id1, id1
             )
 
@@ -257,8 +257,8 @@ class CarbonSimulatorUI:
             return {"success": False, "error": str(e), "exception": e}
         return {"success": True, "orders": orders, "orderuis": orderuis}
 
-    add_sgl_pos = add_sellorder
-    add_order = add_sellorder
+    #add_sgl_pos = add_sellorder
+    #add_order = add_sellorder
 
     def add_strategy(
             self,
@@ -308,10 +308,10 @@ class CarbonSimulatorUI:
 
             # ugly hack but the 1/2 range boundaries are in the wrong order
             # we want the closer boundary first
-            self._add_pos(
+            self._add_order(
                 tkn, amt_sell, psell_end_c, psell_start_c, carbon_pair, id1, id2
             )
-            self._add_pos(
+            self._add_order(
                 tkn2, amt_buy, pbuy_end_c, pbuy_start_c, carbon_pair, id2, id1
             )
 
@@ -339,7 +339,7 @@ class CarbonSimulatorUI:
             return {"success": False, "error": str(e), "exception": e}
         return {"success": True, "orders": orders, "orderuis": orderuis}
 
-    add_linked_pos = add_strategy
+    #add_linked_pos = add_strategy
 
     def delete_order(self, position_id):
         """
@@ -380,7 +380,7 @@ class CarbonSimulatorUI:
             [position_id, linked_position_id] if linked_position_id else [position_id]
         )
 
-    delete_pos = delete_order
+    #delete_pos = delete_order
     delete_strategy = delete_order
 
     def _trade(
