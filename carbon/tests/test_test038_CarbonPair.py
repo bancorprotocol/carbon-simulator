@@ -94,7 +94,7 @@ def test_test038_carbonpair():
     pp = CarbonPair.create(p)
     print(pp)
     assert(str(pp) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
-    assert(not pp is p)
+    assert(pp is p)
 
     try:
         pp = CarbonPair.create(p, "ETH")

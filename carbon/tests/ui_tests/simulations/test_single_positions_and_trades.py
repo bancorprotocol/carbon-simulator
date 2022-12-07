@@ -6,7 +6,7 @@ def test_add_sgl_pos_concentrated_on_one_point():
     """
     Derived from `passed_tests` notebook test-1
     """
-    Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
+    Sim = CarbonSimulatorUI(pair="USDC/ETH", verbose=True)
     assert Sim.add_sgl_pos("ETH", 100, 2000, 2000)["orders"].to_dict() == {
         "id": {0: 0},
         "pair": {0: "USDCETH"},
@@ -26,7 +26,7 @@ def test_amm_cannot_buy_eth_with_no_usdc():
     """
     Derived from `passed_tests` notebook test-1
     """
-    Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
+    Sim = CarbonSimulatorUI(pair="USDC/ETH", verbose=True)
     Sim.add_sgl_pos("ETH", 100, 2000, 2000)
     result = Sim.amm_buys("ETH", 2)
     assert result["success"] is False
@@ -37,7 +37,7 @@ def test_amm_can_sell_eth_at_curve_price():
     """
     Derived from `passed_tests` notebook test-1
     """
-    Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
+    Sim = CarbonSimulatorUI(pair="USDC/ETH", verbose=True)
     Sim.add_sgl_pos("ETH", 100, 2000, 2000)
     result = Sim.amm_sells("ETH", 2)
     assert result["success"] is True
@@ -65,7 +65,7 @@ def test_can_add_multiple_single_positions():
     """
     Derived from `passed_tests` notebook test-4
     """
-    Sim = CarbonSimulatorUI(pair="USDCETH", verbose=True)
+    Sim = CarbonSimulatorUI(pair="USDC/ETH", verbose=True)
     test_cases = [
         ("ETH", 0.0005, 2700, 2800),
         ("ETH", 0.0005, 2000, 2700),
@@ -85,7 +85,7 @@ def test_no_pair_provided():
     assert result["success"] is False
     assert (
         result["error"]
-        == "Trading pair must be provided either in function call or in simulation defaults"
+        == "Pair must be provided in function or simulation defaults"
     )
 
 
@@ -94,8 +94,8 @@ def test_geometric_mean_in_one_step():
     Derived from `passed_tests` notebook test-10
     """
     Sim = CarbonSimulatorUI(verbose=True)
-    Sim.add_sgl_pos("ETH", 100, 2000, 3000, "ETHUSDC")
-    result = Sim.amm_sells("ETH", 100, "ETHUSDC")
+    Sim.add_sgl_pos("ETH", 100, 2000, 3000, "ETH/USDC")
+    result = Sim.amm_sells("ETH", 100, "ETH/USDC")
     assert result["success"] is True
     assert round(Sim.state()["trades"]["price"].astype(float).mean(), 4) == 2449.4897
 
@@ -105,8 +105,8 @@ def test_geometric_mean_in_two_steps():
     Derived from `passed_tests` notebook test-10
     """
     Sim = CarbonSimulatorUI(verbose=True)
-    Sim.add_sgl_pos("ETH", 100, 2000, 3000, "ETHUSDC")
-    Sim.amm_sells("ETH", 50, "ETHUSDC")
-    result = Sim.amm_sells("ETH", 50, "ETHUSDC")
+    Sim.add_sgl_pos("ETH", 100, 2000, 3000, "ETH/USDC")
+    Sim.amm_sells("ETH", 50, "ETH/USDC")
+    result = Sim.amm_sells("ETH", 50, "ETH/USDC")
     assert result["success"] is True
     assert round(Sim.state()["trades"]["price"].astype(float).mean(), 4) == 2449.4897
