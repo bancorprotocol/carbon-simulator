@@ -6,9 +6,10 @@ Licensed under MIT
 
 VERSION HISTORY
 v2.0 - require slashpair notation (breaking change); exclude_future, constants for matching method
+v2.1 - curve disabling
 """
-__version__ = "2.0"
-__date__ = "7/Dec/2022"
+__version__ = "2.1"
+__date__ = "8/Dec/2022"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -61,7 +62,7 @@ class CarbonSimulatorUI:
         self.exclude_future = exclude_future
 
         self._carbon_pair = CarbonPair.create(pair)
-        
+
         self.raiseonerror = raiseonerror
         self.numtrades = 0
         self.decimals = decimals
@@ -74,7 +75,7 @@ class CarbonSimulatorUI:
             raise ValueError("Fast router not implemented", matching_method)
         else:
             raise ValueError("Illegal value for matching_method", matching_method)
-        
+
         self.orders = {}
         self.vault = {}
         self.trades = {}
@@ -97,7 +98,7 @@ class CarbonSimulatorUI:
         :msg, args, kwargs:     arguments for the exception
         """
         if self.exclude_future:
-            if msg is None: 
+            if msg is None:
                 msg = "Feature disabled (us `exclude_future = False` to enable)"
             raise self.ExcludedFutureFunctionality(msg, *args, **kwargs)
 
@@ -156,7 +157,7 @@ class CarbonSimulatorUI:
         carbon_pair = self.get_carbon_pair(pair)
         return carbon_pair.price_convention
 
-    def _add_order(
+    def _add_order_sell_tkn(
             self,
             tkn: str,
             amt: Any,
@@ -171,8 +172,8 @@ class CarbonSimulatorUI:
 
         :tkn:           the token that is being added to the position, eg "ETH"; it is the token being sold*
         :amt:           the amount of `tkn` that is added to the position
-        :p_lo:          the lower end of the range, quoted with `tkn` as numeraire
-        :p_hi:          ditto upper
+        :p_lo:          the lower end of the range, quoted with `tkn` as numeraire; also p_b, p_end
+        :p_hi:          ditto upper; also p_a, p_start
         :carbon_pair:   the token pair a CarbonPair object
         :id1/2:         the order ids of the two orders that make up the position; if not given, they are generated
         :returns:       the id of the order added
@@ -184,20 +185,37 @@ class CarbonSimulatorUI:
         if id2 is None:
             id2 = id1
 
-        # rearrange p_lo, p_hi if need be
-        if not p_lo <= p_hi:
-            pp = p_lo
-            p_lo = p_hi
-            p_hi = pp
-            print("WARNING: swapped start and end of the range")
+        if amt is None:
+            amt = 0
+
+        if not (p_lo is None and p_hi is None):
+
+            # check the they are both numbers
+            if p_lo is None or p_hi is None:
+                raise ValueError("p_lo, p_hi must either be both None or both numbers", p_lo, p_hi)
+
+            # rearrange p_lo, p_hi if need be
+            if not p_lo <= p_hi:
+                pp = p_lo
+                p_lo = p_hi
+                p_hi = pp
+                print("WARNING: swapped start and end of the range")
+
+            disabled = False
+
+        else:
+            disabled = True
+            p_lo = 0
+            p_hi = 0
 
         # enter order
         order_params = {
             "tkn": tkn,                                 # the token being sold
             "y_int": amt,                               # the capacity of the curve
             "_y": amt,                                  # the initial holding is of the curve (in `tkn`)
-            "p_low": p_lo,                              # the lower end of the range (`tkn` numeraire); also p_b
-            "p_high": p_hi,                             # the upper end of the range (`tkn` numeraire); also p_a
+            "p_low": p_lo,                              # the lower end of the range (`tkn` numeraire); also p_b, p_end
+            "p_high": p_hi,                             # the upper end of the range (`tkn` numeraire); also p_a, p_start
+            "disabled": disabled,                       # if True, order is disabled (p=0)
             "pair_name": carbon_pair.pair_iso,          # the iso name of the pair
             "pair": carbon_pair,                        # the CarbonPair object
             "id": id1,                                  # the id of the new curve generated
@@ -238,7 +256,7 @@ class CarbonSimulatorUI:
 
             # ugly hack, but somehow we need to switch lo and hi to have the
             # boundary closer to the money always first
-            order_id = self._add_order(
+            order_id = self._add_order_sell_tkn(
                 tkn, amt, p_end_c, p_start_c, carbon_pair, id1, id1
             )
 
@@ -263,12 +281,12 @@ class CarbonSimulatorUI:
     def add_strategy(
             self,
             tkn: str,
-            amt_sell: Any,
-            psell_start: Any,
-            psell_end: Any,
-            amt_buy: Any,
-            pbuy_start: Any,
-            pbuy_end: Any,
+            amt_sell: Any = None,
+            psell_start: Any = None,
+            psell_end: Any = None,
+            amt_buy: Any = None,
+            pbuy_start: Any = None,
+            pbuy_end: Any = None,
             pair: str = None,
     ) -> Dict[str, Any]:
         """
@@ -286,6 +304,10 @@ class CarbonSimulatorUI:
         *px_start, px_end are interchangeable, the code deals with sorting them, albeit issuing a warning
         message if they are in the wrong order; sell and buy is seen from the perspective of the AMM, which
         is the same as that of the strategy (liquidity) provider
+
+        amounts that are None (default) are set to zero
+        pbuy that are None are effectively set to 0 (disabled)
+        psell that are None are effectively set to 1/0 (disabled)
         """
         try:
 
@@ -294,7 +316,7 @@ class CarbonSimulatorUI:
             tkn2 = carbon_pair.other(tkn)
             if tkn2 is None:
                 raise ValueError("Can't determine other token", tkn, carbon_pair, pair)
-            
+
 
             # create order tracking ids
             id1 = self._posid
@@ -308,10 +330,10 @@ class CarbonSimulatorUI:
 
             # ugly hack but the 1/2 range boundaries are in the wrong order
             # we want the closer boundary first
-            self._add_order(
+            self._add_order_sell_tkn(
                 tkn, amt_sell, psell_end_c, psell_start_c, carbon_pair, id1, id2
             )
-            self._add_order(
+            self._add_order_sell_tkn(
                 tkn2, amt_buy, pbuy_end_c, pbuy_start_c, carbon_pair, id2, id1
             )
 
@@ -433,6 +455,7 @@ class CarbonSimulatorUI:
                 if self.orders[k].pair_name
                    in [carbon_pair.pair_iso, carbon_pair_r.pair_iso]
                    and self.orders[k].tkn == tkn
+                   and not self.orders[k].disabled
                 if self.orders[k].y > 0
             ]
             use_positions = use_positions if use_positions is not None else order_ids
@@ -788,22 +811,31 @@ class CarbonSimulatorUI:
 
         orderui = CarbonOrderUI.from_order(order)
         # print("[_to_pandas]", orderui)
+
+        if order.disabled:
+            p_start = None
+            p_end = None
+        else:
+            p_start = float(order.pair.convert_price(order.p_high, order.tkn))
+            p_end   = float(order.pair.convert_price(order.p_low, order.tkn))
+
         dic = {
-            "id": order.id,
-            "pair": order.pair_name,
-            "tkn": order.tkn,
-            # "y_int": round(order.y_int, decimals),
-            # "y": round(order.y, decimals),
-            "y_int": float(order.y_int),
-            "y": float(order.y),
-            "y_unit": order.tkn,
-            # "p_start": round(order.pair.convert_price(order.p_high, order.tkn), decimals),
-            # "p_end": round(order.pair.convert_price(order.p_low, order.tkn), decimals),
-            "p_start": float(order.pair.convert_price(order.p_high, order.tkn)),
-            "p_end": float(order.pair.convert_price(order.p_low, order.tkn)),
-            "p_marg": orderui.p_marg,
-            "p_unit": order.pair.price_convention,
-            "lid": order.linked_to_id,
+            "id":           order.id,
+            "pair":         order.pair_name,
+            "tkn":          order.tkn,
+            # "y_int":      round(order.y_int, decimals),
+            # "y":          round(order.y, decimals),
+            "y_int":        float(order.y_int),
+            "y":            float(order.y),
+            "y_unit":       order.tkn,
+            # "p_start":    round(order.pair.convert_price(order.p_high, order.tkn), decimals),
+            # "p_end":      round(order.pair.convert_price(order.p_low, order.tkn), decimals),
+            "disabled":     order.disabled,
+            "p_start":      p_start,
+            "p_end":        p_end,
+            "p_marg":       orderui.p_marg,
+            "p_unit":       order.pair.price_convention,
+            "lid":          order.linked_to_id,
         }
         return pd.DataFrame(dic, index=[order.id])
 
