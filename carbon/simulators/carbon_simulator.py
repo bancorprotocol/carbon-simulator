@@ -71,7 +71,7 @@ class CarbonSimulatorUI:
         elif matching_method == self.MATCH_EXACT:
             self.matcher = ExactRouterX0Y0N(verbose=False)
         elif matching_method == self.MATCH_FAST:
-            raise NotImplementedError("Fast router not implemented", matching_method)
+            raise ValueError("Fast router not implemented", matching_method)
         else:
             raise ValueError("Illegal value for matching_method", matching_method)
         
@@ -144,13 +144,13 @@ class CarbonSimulatorUI:
         """return the slashpair or None"""
         return self._carbon_pair.slashpair if self._carbon_pair else None
 
-    def price_convention(self, pair, tkn):
+    def price_convention(self, pair=None):
         """
         gets the price convention associated with `pair`
 
-        :pair:      a string describing the pair (eg, "ETHUSDC")
-        :tkn:       any constituent token of pair; required to split the pair into its
-                    token parts; no other semantic meaning
+        :pair:      a string describing the pair (eg, "ETH/USDC"); if None (default)
+                    use the price convention of the Sim object; raises an error if
+                    no pair specified at all
         :returns:   a string describing the price convention (eg "USDC per ETH")
         """
         carbon_pair = self.get_carbon_pair(pair)
