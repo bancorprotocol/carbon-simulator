@@ -107,7 +107,7 @@ Then again you launch a Jupyter session running the following command
 $ jupyter notebook
 ````
 
-As the `carbon` library is now installed on your system, you can run the simulation code from anywhere whilst the virtual environment is active. Note that outside the project directory, you only have access the `main` branch of the repo. Inside the project director it _should_ pick up whatever branch you have checked out, but this may depend on your system configuration.
+As the `carbon` library is now installed on your system, you can run the simulation code from anywhere whilst the virtual environment is active. Note that outside the project directory, you only have access the branch of the repo that was checked out at the time you ran setup. Inside the project director it _should_ pick up whatever branch you have checked out, but this may depend on your system configuration.
 
 
 ## Usage
@@ -170,7 +170,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 
 # Change log
 
-- **v1.5** - ...
+- **v1.5** - match constants, exclude future, move demos
 - **v1.4** - analytics, routers, examples and demos, binder badges
 - **v1.3** - more order books, alpha router, thresholds; demo 3-2 and 4-1
 - **v1.2** - order books
