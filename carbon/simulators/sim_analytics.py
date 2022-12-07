@@ -15,8 +15,8 @@ Most functions are also exposed at module level, so alternatively you can do
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "2.0"
-__date__ = "30/Nov/2022"
+__version__ = "2.0.1"
+__date__ = "7/Dec/2022"
 
 import numpy as np
 import pandas as pd
@@ -213,7 +213,7 @@ class Analytics:
         if not isinstance(carbon_pair, CarbonPair):
             raise ValueError("The `carbon_pair` provided is not a CarbonPair instance", carbon_pair)
 
-        pair = carbon_pair.pair_iso
+        pair = carbon_pair.slashpair
         tkn = carbon_pair.tknb
         if buysell == self.AMM_SELLS_BASETOKEN:
             func = sim.amm_sells
