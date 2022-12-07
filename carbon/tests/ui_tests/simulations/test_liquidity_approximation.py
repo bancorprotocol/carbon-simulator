@@ -7,7 +7,7 @@ def test_liquidity_approx_order0():
     """
     Test Order 0 (ETH, range) - Derived from Test36-LiquidityApprox.ipynb
     """
-    Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETHUSDC")
+    Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETH/USDC")
     Sim.add_order("ETH", 10, 2000, 3000)
     Sim.add_order("ETH", 10, 2500, 2500)
     Sim.add_order("USDC", 10*1250, 1500, 1000)
@@ -33,7 +33,7 @@ def test_liquidity_approx_order1():
     """
     Test Order 1 (ETH, point) - Derived from Test36-LiquidityApprox.ipynb
     """
-    Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETHUSDC")
+    Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETH/USDC")
     Sim.add_order("ETH", 10, 2000, 3000)
     Sim.add_order("ETH", 10, 2500, 2500)
     Sim.add_order("USDC", 10*1250, 1500, 1000)
@@ -58,7 +58,7 @@ def test_liquidity_approx_order2():
     """
     Test Order 2 (USDC, range) - Derived from Test36-LiquidityApprox.ipynb
     """
-    Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETHUSDC")
+    Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETH/USDC")
     Sim.add_order("ETH", 10, 2000, 3000)
     Sim.add_order("ETH", 10, 2500, 2500)
     Sim.add_order("USDC", 10*1250, 1500, 1000)
@@ -79,7 +79,7 @@ def test_liquidity_approx_order3():
     """
     Test Order 3 (USDC, point) - Derived from Test36-LiquidityApprox.ipynb
     """
-    Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETHUSDC")
+    Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETH/USDC")
     Sim.add_order("ETH", 10, 2000, 3000)
     Sim.add_order("ETH", 10, 2500, 2500)
     Sim.add_order("USDC", 10*1250, 1500, 1000)

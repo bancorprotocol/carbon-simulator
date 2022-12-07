@@ -11,7 +11,7 @@ def test_orderbook_explain():
     Derived from `passed_tests` notebook demo-3-2
     """
     Sim = CarbonSimulatorUI(
-        pair=CarbonPair("ETH", "USDC"), verbose=False, raiseonerror=True
+        pair=CarbonPair("ETH/USDC"), verbose=False, raiseonerror=True
     )
     CA = al.Analytics(Sim, verbose=True)
     maxx = 3000
@@ -45,7 +45,7 @@ def test_orderbook_plot_token_amount_chart_text():
     Derived from `passed_tests` notebook demo-3-2
     """
     Sim = CarbonSimulatorUI(
-        pair=CarbonPair("ETH", "USDC"), verbose=False, raiseonerror=True
+        pair=CarbonPair("ETH/USDC"), verbose=False, raiseonerror=True
     )
     CA = al.Analytics(Sim, verbose=True)
     maxx = 3000
@@ -82,7 +82,7 @@ def test_orderbook_plot_token_amount_chart_text():
 #     """
 #     Derived from `passed_tests` notebook demo-3-2
 #     """
-#     Sim = CarbonSimulatorUI(pair=CarbonPair("ETH", "USDC"), verbose=False, raiseonerror=True)
+#     Sim = CarbonSimulatorUI(pair=CarbonPair("ETH/USDC"), verbose=False, raiseonerror=True)
 #     CA = al.Analytics(Sim, verbose=True)
 #     maxx = 3000
 #     orders = tuple([
