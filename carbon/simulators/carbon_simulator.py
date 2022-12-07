@@ -3,9 +3,12 @@ wrapper UI class for the Carbon simulation
 
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
+
+VERSION HISTORY
+v1.0.1 - introduced constants for matching method
 """
-__version__ = "1.0"
-__date__ = "21/Nov/2022"
+__version__ = "1.0.1"
+__date__ = "7/Dec/2022"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -29,9 +32,14 @@ class CarbonSimulatorUI:
     :pair:              if given, Simulation methods uses this pair as default; other pairs
                         can still be used, but need to be explicitly mentioned
     :raiseonerror:      if False (default), errors are caught and returned to the result dict
-    :matching_method:   if "exact" (default), the exact matching algorithm is used; otherwise the "fast" algorithm
+    :matching_method:   if MATCH_EXCACT (default), the exact matching algorithm is used; otherwise 
+                        choices are MATCH_FAST and MATCH_ALPHA
     :decimals:          the number of decimals to which the output is rounded
     """
+
+    MATCH_EXACT = "exact"
+    MATCH_FAST = "fast_"
+    MATCH_ALPHA = "alpha_"
 
     def __init__(
             self,
@@ -39,7 +47,7 @@ class CarbonSimulatorUI:
             pair: Any = None,
             raiseonerror: bool = False,
             decimals: int = 6,
-            matching_method: str = "exact",
+            matching_method: str = MATCH_EXACT,
     ):
         self._pos_id = itertools.count()
         self.verbose = verbose
@@ -56,10 +64,16 @@ class CarbonSimulatorUI:
         self.raiseonerror = raiseonerror
         self.numtrades = 0
         self.decimals = decimals
-        self.matcher = (
-            AlphaRouter(verbose=False) if matching_method == 'alpha'
-            else ExactRouterX0Y0N(verbose=False)
-        )
+        self._mm = matching_method
+        if matching_method == self.MATCH_ALPHA:
+            self.matcher = AlphaRouter(verbose=False)
+        elif matching_method == self.MATCH_EXACT:
+            self.matcher = ExactRouterX0Y0N(verbose=False)
+        elif matching_method == self.MATCH_FAST:
+            raise NotImplementedError("Fast router not implemented", matching_method)
+        else:
+            raise ValueError("Illegal value for matching_method", matching_method)
+        
         self.orders = {}
         self.vault = {}
         self.trades = {}
@@ -916,4 +930,4 @@ class CarbonSimulatorUI:
 
     def __repr__(self):
         pair = self._carbon_pair if self._carbon_pair else self.pair
-        return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair='{pair}')"
+        return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair='{pair}', mm='{self._mm}')"
