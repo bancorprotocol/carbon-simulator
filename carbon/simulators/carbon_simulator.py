@@ -5,10 +5,9 @@ wrapper UI class for the Carbon simulation
 Licensed under MIT
 
 VERSION HISTORY
-v1.0.1 - introduced constants for matching method
-v1.0.2 - exclude_future
+v2.0 - require slashpair notation (breaking change); exclude_future, constants for matching method
 """
-__version__ = "1.0.2"
+__version__ = "2.0"
 __date__ = "7/Dec/2022"
 
 import itertools
@@ -31,7 +30,8 @@ class CarbonSimulatorUI:
 
     :verbose:           if True (default), the simulation logger. infos out info along the way
     :pair:              if given, Simulation methods uses this pair as default; other pairs
-                        can still be used, but need to be explicitly mentioned
+                        can still be used, but need to be explicitly mentioned; pairs must be provided 
+                        either as CarbonPair, or in the slash format "ETH/USDC"
     :raiseonerror:      if False (default), errors are caught and returned to the result dict
     :matching_method:   if MATCH_EXCACT (default), the exact matching algorithm is used; otherwise 
                         choices are MATCH_FAST and MATCH_ALPHA
@@ -57,14 +57,8 @@ class CarbonSimulatorUI:
         self.debug = False  # setting this to True enables debug output
         self.exclude_future = exclude_future
 
-        if isinstance(pair, CarbonPair):
-            # print("[__init__] CarbonPair provided", pair)
-            self.pair = pair.pair_iso
-            self._carbon_pair = pair
-        else:
-            self.pair = pair
-            self._carbon_pair = None
-
+        self._carbon_pair = CarbonPair.create(pair)
+        
         self.raiseonerror = raiseonerror
         self.numtrades = 0
         self.decimals = decimals
@@ -122,37 +116,30 @@ class CarbonSimulatorUI:
 
     tknq = default_quotetoken
 
-    def get_carbon_pair(self, pair: str = None, tkn: str = None) -> Tuple[CarbonPair, str]:
+    def get_carbon_pair(self, pair = None):
         """
         helper functon determining the pair from function params and class defaults
 
-        :pair:      a string determining the pair, or CarbonPair (which is simply returned)
-        :tkn:       one token that is part of the pair
-        :returns:   CarbonPairStatic object, or raises
+        :pair:      a slashpair-formt string determining the pair, or CarbonPair
+        :returns:   CarbonPair object, or raises
         """
-        if isinstance(pair, CarbonPair):
-            return pair
+        if pair:
+            return CarbonPair.create(pair)
 
-        if pair is None:
-            if self._carbon_pair:
-                # no pair is given here, we have a carbon pair in the defaults -> that's it
-                return self._carbon_pair
-            pair = self.pair
+        if self._carbon_pair is None:
+            raise ValueError("Pair must be provided in function or simulation defaults")
 
-        if pair is None:
-            raise ValueError(
-                "Trading pair must be provided either in function call or in simulation defaults"
-            )
-        return CarbonPair.from_isopair_and_tkn(pair, tkn)
+        return self._carbon_pair
 
     @property
     def carbon_pair(self):
         """return the default CarbonPair associated with this object, or None"""
-        try:
-            cp = self.get_carbon_pair()
-            return cp
-        except:
-            return None
+        return self._carbon_pair
+
+    @property
+    def slashpair(self):
+        """return the slashpair or None"""
+        return self._carbon_pair.slashpair if self._carbon_pair else None
 
     def price_convention(self, pair, tkn):
         """
@@ -163,7 +150,7 @@ class CarbonSimulatorUI:
                     token parts; no other semantic meaning
         :returns:   a string describing the price convention (eg "USDC per ETH")
         """
-        carbon_pair = self.get_carbon_pair(pair, tkn)
+        carbon_pair = self.get_carbon_pair(pair)
         return carbon_pair.price_convention
 
     def _add_pos(
@@ -234,8 +221,10 @@ class CarbonSimulatorUI:
         """
         try:
 
-            # validate tkn, pair and get CarbonPair object (raises if tkn not part of pair)
-            carbon_pair = self.get_carbon_pair(pair, tkn)
+            # validate tkn, pair and get CarbonPair object
+            carbon_pair = self.get_carbon_pair(pair)
+            if not carbon_pair.has_token(tkn):
+                raise ValueError("Token not part of pair", tkn, carbon_pair, pair)
 
             # create order tracking ids
             id1 = self._posid
@@ -297,9 +286,12 @@ class CarbonSimulatorUI:
         """
         try:
 
-            # validate tkn, pair and get CarbonPair object (raises if tkn not part of pair)
-            carbon_pair = self.get_carbon_pair(pair, tkn)
+            # validate tkn, pair and get CarbonPair object
+            carbon_pair = self.get_carbon_pair(pair)
             tkn2 = carbon_pair.other(tkn)
+            if tkn2 is None:
+                raise ValueError("Can't determine other token", tkn, carbon_pair, pair)
+            
 
             # create order tracking ids
             id1 = self._posid
@@ -916,7 +908,7 @@ class CarbonSimulatorUI:
         """
         PRIVATE - handles trade tkn, pair validations
         """
-        carbon_pair = self.get_carbon_pair(pair, tkn)
+        carbon_pair = self.get_carbon_pair(pair)
         return tkn, carbon_pair.other(tkn), carbon_pair
 
     def _assert_tkn_is_in_positions(self, tkn: str):
@@ -950,5 +942,5 @@ class CarbonSimulatorUI:
         return len(self.orders)
 
     def __repr__(self):
-        pair = self._carbon_pair if self._carbon_pair else self.pair
-        return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair='{pair}', mm='{self._mm}', xf={self.exclude_future})"
+        pair = f"'{self._carbon_pair.slashpair}'" if self._carbon_pair else None
+        return f"{self.__class__.__name__}(<{self.numpos} orders, {self.numtrades} trades>, pair={pair}, mm='{self._mm}', xf={self.exclude_future})"
