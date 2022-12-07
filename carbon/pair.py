@@ -6,8 +6,9 @@ Licensed under MIT
 
 VERSION HISTORY
 v2.0 -- changed constructor to allow for slashpair string
+v2.0.1 -- convert_price
 """
-__version__ = "2.0"
+__version__ = "2.0.1"
 __date__ = "7/Dec/2022"
 
 from dataclasses import dataclass
@@ -287,8 +288,10 @@ class CarbonPair:
         :price:     the price to be converted, with numeraire being `tknq`
         :tknq:      the numeraire token in which the `price` is expressed
         :returns:   the price expressed in the numeraire conventions of the pair;
-                    returns None if tknq not part of this pair
+                    returns None if tknq not part of this pair or price is None
         """
+        if price is None:
+            return None
         if not self.has_token(tknq):
             return None
         if self.has_quotetoken(tknq):
