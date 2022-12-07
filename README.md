@@ -170,6 +170,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 
 # Change log
 
+- **v2.0** - slash notation for pair (breaking)
 - **v1.5** - match constants, exclude future, move demos
 - **v1.4** - analytics, routers, examples and demos, binder badges
 - **v1.3** - more order books, alpha router, thresholds; demo 3-2 and 4-1
