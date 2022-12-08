@@ -4,6 +4,9 @@ represents a Carbon order book position
 (c) Copyright Bprotocol foundation 2022.
 Licensed under MIT
 """
+__version__ = "1.0"
+__date__ = "8/Dec/2022"
+
 import pprint
 from dataclasses import dataclass
 from decimal import Decimal
@@ -26,6 +29,9 @@ class Order:
     """
     Curve class to represent a curve on the market maker's order book
     """
+
+    __VERSION__ = __version__
+    __DATE__    = __date__
 
     # Production variables
     B: DecFloatInt = None  # = sqrt(price_low)

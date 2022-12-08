@@ -44,7 +44,8 @@ class CarbonOrderUI:
     are quoted in the correct currency conventions
     - the properties py = pa and px = pb are aliases
     """
-    __VERSION__ = "1.0"
+    __VERSION__ = __version__
+    __DATE__    = __date__
     
     pair: CarbonPair
     tkn: str
