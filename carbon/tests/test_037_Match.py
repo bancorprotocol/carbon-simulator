@@ -58,7 +58,7 @@ def test037_match():
         for o in ORDERS:
             sim.add_order(*o)
         print(sim, len(sim.state()["orders"]), len(ORDERS))
-        assert(len(sim.state()["orders"])==len(ORDERS))
+        assert(len(sim.state()["orders"])==2*len(ORDERS))
 
     # ## Run the trades and look at the routing
 

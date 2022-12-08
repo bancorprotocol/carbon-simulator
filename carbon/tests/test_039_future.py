@@ -13,21 +13,18 @@
 #     name: python3
 # ---
 
-from carbon import CarbonSimulatorUI
-from carbon.simulators.carbon_simulator import __version__ as uiversion, __date__ as uidate
-#from carbon.pair import __version__ as pversion, __date__ as pdate
-
-print("[carbon_simulator] version", uiversion, uidate)
-#print("[pair] version", pversion, pdate)
-
-# # Carbon Simulation - Test 39 - Future
-
-# +
-#help(CarbonSimulatorUI)
-# -
+from carbon import CarbonSimulatorUI, P, __version__, __date__
+print(f"Carbon v{__version__} ({__date__})")
+print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 
 def test_039():
-    
+        
+    # # Carbon Simulation - Test 39 - Future
+
+    # +
+    #help(CarbonSimulatorUI)
+    # -
+
     Sim = CarbonSimulatorUI()
     SimXF = CarbonSimulatorUI(exclude_future=True)
     SimIF = CarbonSimulatorUI(exclude_future=False)

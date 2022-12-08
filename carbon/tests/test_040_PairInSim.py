@@ -44,8 +44,7 @@ try:
     Sim.add_order("LINK", 10, 2000, 3000, pair=ETHUSDC)
 except ValueError as e:
     print(e)
-    resp = "('Token not part of pair', 'LINK', CarbonPair(slashpair='ETH/USDC'"
-    assert(str(e)[:len(resp)]==resp)    
+    assert str(e) == "('Token not in pair', 'LINK', 'ETH/USDC', 'ETH/USDC')"  
 
 o = Sim.add_order("ETH", 10, 2000, 3000, pair=ETHUSDC)["orders"]
 assert(o.iloc[0]["pair"]=="ETHUSDC")
