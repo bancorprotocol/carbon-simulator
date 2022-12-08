@@ -5,8 +5,6 @@ from .base_router import *
 import pandas as pd
 from typing import Any
 import numpy as np
-from tabulate import tabulate
-import heapq
 
 
 @dataclass
@@ -130,7 +128,7 @@ class AlphaRouter(BaseRouter):
 
         results.fillna(0, inplace=True)
         results.reset_index(inplace=True, drop=True)
-        print(tabulate(results,headers=list(results.columns)))
+        # print(tabulate(results,headers=list(results.columns)))
         top_n_threshold_orders = \
         [results.sliding_index[i] for i in results.index if results.sliding_available_value[i] >= abs(x)][0]
 
@@ -260,43 +258,9 @@ class AlphaRouter(BaseRouter):
 
         results.fillna(0, inplace=True)
         results.reset_index(inplace=True, drop=True)
-        print(tabulate(results,headers=list(results.columns)))
-
-        numbers = results.available_value.values
-        trade_amount = abs(x)
-        max_sum = 0
-
-        for i in range(0, len(numbers)):
-            for j in range(i+1, len(numbers)):
-                for k in range(j+1, len(numbers)):
-                # Check if the sum of the current three numbers is equal to the trade_amount
-                    if numbers[i] + numbers[j] + numbers[k] >= trade_amount:
-                        # Print the numbers that sum to the trade_amount
-                        chosen_indicies = [i,j,k]
-                        max_sum = sum([numbers[i], numbers[j], numbers[k]])
-                        print((numbers[i], numbers[j], numbers[k]),",", max_sum, chosen_indicies)
-                        # Stop iterating
-                        break
-                # Stop iterating if a match was found
-                if numbers[i] + numbers[j] + numbers[k] >= trade_amount:
-                    break
-            # Stop iterating if a match was found
-            if numbers[i] + numbers[j] + numbers[k] >= trade_amount:
-                break
-
-        # If no match was found, print the highest sum and the numbers that sum to that value
-        if max_sum == 0:
-            # Use the `heapq.nlargest()` function to find the three largest numbers
-            largest_three = heapq.nlargest(3, enumerate(numbers), key=lambda x: x[1])
-            chosen_indicies, values = zip(*largest_three)
-            print(values, ",", sum(values), ",",chosen_indicies)
-
-        # translate the chosen_indicies back to the actual order indexes
-        top_n_threshold_orders = [results.indexes[i] for i in chosen_indicies]
-
-
-        # top_n_threshold_orders = \
-        # [results.sliding_index[i] for i in results.index if results.sliding_available_value[i] >= abs(x)][0]
+        # print(tabulate(results,headers=list(results.columns)))\
+        top_n_threshold_orders = \
+        [results.sliding_index[i] for i in results.index if results.sliding_available_value[i] >= abs(x)][0]
 
         # (step 4.)
         # Constrain the exact router to just the top n threshold orders and match
