@@ -6,9 +6,9 @@ Licensed under MIT
 
 VERSION HISTORY
 v2.0 - require slashpair notation (breaking change); exclude_future, constants for matching method
-v2.1 - curve disabling
+v2.2 - curve disabling, single orders
 """
-__version__ = "2.1"
+__version__ = "2.2"
 __date__ = "8/Dec/2022"
 
 import itertools
@@ -226,7 +226,7 @@ class CarbonSimulatorUI:
         return id1
 
     def add_order(
-            self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: str = None
+            self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: Any = None
     ) -> Dict[str, Any]:
         """
         adds a sell order for tkn
@@ -240,7 +240,31 @@ class CarbonSimulatorUI:
         *p_start, p_end are interchangeable, the code deals with sorting them correctly,
         albeit with a warning message if they were in the wrong order
         """
+        return self.add_strategy(tkn, amt, p_start, p_end, pair=pair)
+
+    def _add_replace_single_order(
+            self, tkn: str, amt=None, p_start=None, p_end=None, pair=None, oid=None, lid=None
+    ) -> Dict[str, Any]:
+        """
+        adds or modifies a single sell order for tkn (not part of public interface)
+
+        :tkn:           the token that is being added to the position, eg "ETH"; it is the token being sold*
+        :amt:           the amount of `tkn` that is added to the position
+        :p_start:       the start* of the range, quoted in the currency of the pair
+        :p_end:         ditto end*
+        :pair:          the token pair to which the position corresponds, eg "ETHUSD"*
+        :oid:           the id of the order; if None, a new id is created
+        :lid:           the linked order id; if None, linked to itself**
+
+        *p_start, p_end are interchangeable, the code deals with sorting them correctly,
+        albeit with a warning message if they were in the wrong order
+
+        **if orders are linked to themselves then the tokens the curve receives are not
+        stored or recorded anywhere; they simply disappear
+        """
         try:
+            # this is a non-MVP feature
+            self._raise_if_future_restricted()
 
             # validate tkn, pair and get CarbonPair object
             carbon_pair = self.get_carbon_pair(pair)
@@ -248,7 +272,18 @@ class CarbonSimulatorUI:
                 raise ValueError("Token not part of pair", tkn, carbon_pair, pair)
 
             # create order tracking ids
-            id1 = self._posid
+            if oid is None:
+                id1 = self._posid
+                #print(f"[_add_modify_single_order] generating order with id {id1}")
+            else:
+                id1 = oid
+
+            if lid is None:
+                id2 = id1
+                #print(f"[_add_modify_single_order] setting lid to oid = {id2}")
+            else:
+                id2 = lid
+                
 
             # convert the prices from the pair numeraire to the curve numeraire
             p_start_c = carbon_pair.convert_price(p_start, tkn)
@@ -257,13 +292,13 @@ class CarbonSimulatorUI:
             # ugly hack, but somehow we need to switch lo and hi to have the
             # boundary closer to the money always first
             order_id = self._add_order_sell_tkn(
-                tkn, amt, p_end_c, p_start_c, carbon_pair, id1, id1
+                tkn, amt, p_end_c, p_start_c, carbon_pair, id1, id2
             )
 
             if self.verbose:
                 print(
                     f"[add_sgl_pos] added position: tkn={tkn}, amt={amt}, p_start={p_start}, p_end={p_end}, "
-                    f"pair={carbon_pair.pair_iso}"
+                    f"pair={carbon_pair.pair_iso}, id={id1}, lid={id2}"
                 )
 
             orders = self._to_pandas(self.orders[order_id], decimals=self.decimals)
@@ -273,7 +308,7 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-        return {"success": True, "orders": orders, "orderuis": orderuis}
+        return {"success": True, "orders": orders, "orderuis": orderuis, "id": id1, "lid": id2}
 
     #add_sgl_pos = add_sellorder
     #add_order = add_sellorder
@@ -315,7 +350,7 @@ class CarbonSimulatorUI:
             carbon_pair = self.get_carbon_pair(pair)
             tkn2 = carbon_pair.other(tkn)
             if tkn2 is None:
-                raise ValueError("Can't determine other token", tkn, carbon_pair, pair)
+                raise ValueError("Token not in pair", tkn, carbon_pair.slashpair, pair.slashpair)
 
 
             # create order tracking ids
