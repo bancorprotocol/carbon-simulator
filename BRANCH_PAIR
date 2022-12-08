@@ -1,5 +1,0 @@
-providing a better interfact for CarbonPair, and then forcing pairs to
-be in a format that we can identify base token and quote token
-
-TODO
-- Test38 is ready and running --> needs to be converted to a test
