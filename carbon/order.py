@@ -34,18 +34,19 @@ class Order:
     __DATE__    = __date__
 
     # Production variables
-    B: DecFloatInt = None  # = sqrt(price_low)
-    S: DecFloatInt = None  # = sqrt(price_high) - sqrt(price_low)
-    y_int: DecFloatInt = None  # is the initial intercept of the curve
+    B: DecFloatInt = None       # = sqrt(price_low)
+    S: DecFloatInt = None       # = sqrt(price_high) - sqrt(price_low)
+    y_int: DecFloatInt = None   # the initial intercept of the curve
 
     # Original variables
-    p_high: DecFloatInt = None  # = high price, alias "p_a" in original code/docs
-    p_low: DecFloatInt = None  # = low price, alias "p_a" in original code/docs
-    _y: DecFloatInt = None  # is the current balance of the curve
+    p_high: DecFloatInt = None  # = high price, also p_a, p_start
+    p_low: DecFloatInt = None   # = low price, also p_b, p_low
+    disabled: bool = False      # if True, prices used to be None
+    _y: DecFloatInt = None      # the current balance of the curve
 
     # Alternate variables
-    D: DecFloatInt = None  # is the current intercept of the curve
-    _C: DecFloatInt = None  # is the current balance of the curve
+    D: DecFloatInt = None       # the current intercept of the curve
+    _C: DecFloatInt = None      # the current balance of the curve
 
     pair: CarbonPair = None
     tkn: str = None
