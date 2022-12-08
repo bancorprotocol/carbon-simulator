@@ -4,8 +4,8 @@ represents a single, unidirectional carbon order and provides convenience method
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
 """
-__version__ = "1.1"
-__date__ = "24/Nov/2022"
+__version__ = "1.2"
+__date__ = "8/Dec/2022"
 
 try:
     from .pair import CarbonPair
@@ -59,15 +59,26 @@ class CarbonOrderUI:
             raise RuntimeError("token not part of pair", self.tkn, self.pair)
         self.pb_raw = self.B * self.B
         self.pa_raw = (self.S + self.B)**2
-        self.reverseq = True if self.pair.has_basetoken(self.tkn) else False
-        self.pa = 1./self.pa_raw if self.reverseq else self.pa_raw
-        self.pb = 1./self.pb_raw if self.reverseq else self.pb_raw
-        if self.pa < self.pb:
-            self.pmin = self.pa
-            self.pmax = self.pb
+        if self.pa_raw == 0 and self.pb_raw == 0:
+            self.pa_raw = None
+            self.pa_raw = None
+            self.disabled = True
         else:
-            self.pmin = self.pb
-            self.pmax = self.pa          
+            self.disabled = False
+        self.reverseq = True if self.pair.has_basetoken(self.tkn) else False
+
+        if not self.disabled:
+            self.pa = 1./self.pa_raw if self.reverseq else self.pa_raw
+            self.pb = 1./self.pb_raw if self.reverseq else self.pb_raw
+            if self.pa < self.pb:
+                self.pmin = self.pa
+                self.pmax = self.pb
+            else:
+                self.pmin = self.pb
+                self.pmax = self.pa  
+        else:
+            self.pmin = None
+            self.pmax = None        
     
     @classmethod
     def from_BSy(cls, pair, tkn, B, S, yint, y):
@@ -202,7 +213,9 @@ class CarbonOrderUI:
         the current marginal price of the range
         """
         #dydx = ((self.B * self.yint + self.S * self.y) / self.yint)**2
-        
+        if self.disabled:
+            return None
+
         if self.yint == 0:
             if not self.y == 0:
                 raise ValueError("If yint=0 you must also have y=0", yint, y)
