@@ -39,6 +39,9 @@ class CarbonSimulatorUI:
     :exclude_future:    if True (default), excludes future and experimental features
     """
 
+    __VERSION__ = __version__
+    __DATE__    = __date__
+
     MATCH_EXACT = "exact"
     MATCH_FAST = "fast_"
     MATCH_ALPHA = "alpha_"

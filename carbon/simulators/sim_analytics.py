@@ -34,6 +34,9 @@ class Analytics:
 
     NOTE: this library relies heavily on numpy, and all vectors are in fact numpy arrays
     """
+    __VERSION__ = __version__
+    __DATE__    = __date__
+
     def __init__(self, sim=None, verbose=False):
         self.sim = sim
         self.verbose = verbose
@@ -282,6 +285,9 @@ class OrderBook():
         :y:     ob.ob_prices
 
     """
+    __VERSION__ = __version__
+    __DATE__    = __date__
+    
     ASK = "ASK_amm_sells_src_tkn"
     BID = "BID_amm_buys_src_tkn"
     def __init__(self, src_amounts, trg_amounts, src_tkn="SRC", trg_tkn="TRG", bidask=ASK):

@@ -9,6 +9,7 @@ v2.0 -- changed constructor to allow for slashpair string
 """
 __version__ = "2.0"
 __date__ = "7/Dec/2022"
+
 from dataclasses import dataclass
 
 
@@ -26,7 +27,9 @@ class CarbonPair:
 
     see also https://www.investopedia.com/terms/i/isocurrencycode.asp for ISO currency code
     """
-
+    __VERSION__ = __version__
+    __DATE__    = __date__
+    
     slashpair: str = None
     tknb: str = None 
     tknq: str = None
