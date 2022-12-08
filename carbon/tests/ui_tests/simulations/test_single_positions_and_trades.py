@@ -16,6 +16,7 @@ def test_add_order_concentrated_on_one_point():
         "y_unit": {0: "ETH"},
         "p_start": {0: 2000.0},
         "p_end": {0: 2000.0},
+        "disabled": {0: False},
         "p_marg": {0: 2000.0000000000002},
         "p_unit": {0: "ETH per USDC"},
         "lid": {0: 0},
