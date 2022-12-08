@@ -9,8 +9,8 @@ v2.0 - require slashpair notation (breaking change); exclude_future, constants f
 v2.2 - curve disabling, single orders
 v2.2.1 - CarbonOrderUI linked
 """
-__version__ = "2.2.1"
-__date__ = "16/Dec/2022"
+__version__ = "2.2.2+excl4"
+__date__ = "8/Dec/2022"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -227,7 +227,7 @@ class CarbonSimulatorUI:
         return id1
 
     def add_order(
-            self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: Any = None
+            self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: str = None
     ) -> Dict[str, Any]:
         """
         adds a sell order for tkn
@@ -451,7 +451,8 @@ class CarbonSimulatorUI:
             execute: bool = True,
             limit_price: Any = None,
             inpair: bool = True,
-            use_positions: List[int] = None,
+            use_positions: set = None,
+            excl_positions: set = None,
             threshold_orders: int = None,
             use_positions_matchlevel: List[int] = [],
 
@@ -468,19 +469,25 @@ class CarbonSimulatorUI:
         :limit_price:           the limit price of the order (this price or better from point of view
                                 of the trader, not the AMM!), quoted in convention of the pair
         :inpair:                if True, only match within pair; if False (default), route through all available pairs
-        :use_positions:         the positions to use for the trade (default: all positions)
+        :use_positions:         the positions to use for the trade as set; if None (default) all positions
+        :excl_positions:        the positions to exclude as set; if None (default) no exclusions
         :threshold_orders:      the maximum number of order to be routed through using the alpha router
 
         *amt is always effectively a positive amount; however, if `trade_action` is `match_by_target` then it must
         be provided as a negative number, and if `match_by_src` as positive number
         """
-        trades, orders = None, None
+        trades = None
         try:
             decimals = self.decimals
             carbon_pair_r = carbon_pair.reverse
+            if not use_positions is None:
+                use_positions = set(use_positions)
+            if not excl_positions is None:
+                excl_positions = set(excl_positions)
+                raise ValueError("Excluding positions not implemented yet", excl_positions)
 
             if not inpair:
-                raise NotImplementedError(
+                raise ValueError(
                     "Currently only inpair routing implemented", inpair
                 )
 
@@ -716,7 +723,8 @@ class CarbonSimulatorUI:
             inpair: bool = True,
             limit_price: Any = None,
             threshold_orders: int = 10,
-            use_positions: List[int] = None,
+            use_positions: set = None,
+            excl_positions: set = None,
             use_positions_matchlevel: List[int] = [],
     ) -> Dict[str, Any]:
         """
@@ -730,7 +738,8 @@ class CarbonSimulatorUI:
         :limit_price:       the limit price of the order (this price or better from point of view
                             of the trader, not the AMM!), quoted in convention of the pair
         :threshold_orders:  the maximum number of order to be routed through using the alpha router
-        :use_positions: the positions to use for the trade (default: all positions)
+        :use_positions:     the positions to use for the trade as set; if None (default) all positions
+        :excl_positions:    the positions to exclude as set; if None (default) no exclusions
         """
 
         try:
@@ -745,6 +754,9 @@ class CarbonSimulatorUI:
                     inpair=inpair,
                     limit_price=limit_price,
                     threshold_orders=threshold_orders,
+                    use_positions=use_positions,
+                    excl_positions=excl_positions,
+                    use_positions_matchlevel=use_positions_matchlevel
                 )
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
@@ -763,6 +775,7 @@ class CarbonSimulatorUI:
                 inpair=inpair,
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
+                excl_positions=excl_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
             )
         except Exception as e:
@@ -781,21 +794,23 @@ class CarbonSimulatorUI:
             inpair: bool = True,
             limit_price: Any = None,
             threshold_orders: int = 10,
-            use_positions: List[int] = None,
+            use_positions: set = None,
+            excl_positions: set = None,
             use_positions_matchlevel: List[int] = [],
     ) -> Dict[str, Any]:
         """
         the AMM sells (and the trader buys) `amt` > 0 of `tkn`
 
-        :tkn:               the token sold by the AMM and bought by the trader, eg "ETH"
-        :amt:               the amount sold by the AMM and bought by the trader (must be positive)
-        :pair:              the token pair to which the trade corresponds, eg "ETHUSD"
-        :execute:           if True (default), the trade is executed; otherwise only routing is shown
-        :inpair:            if True, only match within pair; if False (default), route through all available pairs
-        :limit_price:       the limit price of the order (this price or better from point of view
-                            of the trader, not the AMM!), quoted in convention of the pair
-        :threshold_orders:  the maximum number of order to be routed through using the alpha router 
-        :use_positions: the positions to use for the trade (default: all positions)
+        :tkn:                   the token sold by the AMM and bought by the trader, eg "ETH"
+        :amt:                   the amount sold by the AMM and bought by the trader (must be positive)
+        :pair:                  the token pair to which the trade corresponds, eg "ETHUSD"
+        :execute:               if True (default), the trade is executed; otherwise only routing is shown
+        :inpair:                if True, only match within pair; if False (default), route through all available pairs
+        :limit_price:           the limit price of the order (this price or better from point of view
+                                of the trader, not the AMM!), quoted in convention of the pair
+        :threshold_orders:      the maximum number of order to be routed through using the alpha router 
+        :use_positions:         the positions to use for the trade as set; if None (default) all positions
+        :excl_positions:        the positions to exclude as set; if None (default) no exclusions
         """
         try:
 
@@ -809,6 +824,9 @@ class CarbonSimulatorUI:
                     inpair=inpair,
                     limit_price=limit_price,
                     threshold_orders=threshold_orders,
+                    use_positions=use_positions,
+                    excl_positions=excl_positions,
+                    use_positions_matchlevel=use_positions_matchlevel
                 )
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
@@ -827,6 +845,7 @@ class CarbonSimulatorUI:
                 inpair=inpair,
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
+                excl_positions=excl_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
 
             )
