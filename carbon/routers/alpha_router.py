@@ -18,6 +18,121 @@ class AlphaRouter(BaseRouter):
     use_positions_matchlevel: List[int] = None
     exact_router: ExactRouterX0Y0N = ExactRouterX0Y0N()
 
+    # returns an enumerated list with only values >= val
+    def bigger_than(lst, val):
+        return([(i,c) for i,c in lst if c >= val])
+
+    # returns the sum of the values in an enumerated list
+    def sum_me(lst):
+        return(sum([c for i,c in lst]))
+
+    # returns the first single min value in an enumerated list
+    def min_item(lst):
+        min_c = min([c for i,c in lst])
+        min_c_list = [(i,c) for i,c in lst if c == min_c]
+        if len(min_c_list) > 1:
+            return(min_c_list[0])
+        else:
+            return(min_c_list[0])
+
+    # returns the first single max value in an enumerated list
+    def max_item(lst):
+        max_c = max([c for i,c in lst])
+        max_c_list = [(i,c) for i,c in lst if c == max_c]
+        if len(max_c_list) > 1:
+            return(max_c_list[0])
+        else:
+            return(max_c_list[0])
+
+    def get_i(lst, wanted_i):
+        return([(i,c) for i,c in lst if i == wanted_i][0])
+
+    def sum_list_indexes(lst):
+        return(sum([i for i,c in lst]))
+
+    def list_indexes(lst):
+        return([i for i,c in lst])
+
+    def assertion_checks(full_fill, current_sum, threshold, max_fill, threshold_list, num_values):
+        if full_fill == True:
+            assert(current_sum >= threshold)
+        else:
+            assert(current_sum == max_fill)
+
+        if len(threshold_list) < num_values:
+            pass
+        else:
+            assert(len(set([i for i,c in threshold_list])) == num_values)
+
+    
+    def gen_one_order_selector(numbers, threshold, num_values):
+        count = 0
+        current_sum = 0
+        indexed_values = list(enumerate(numbers))
+        max_index, max_val = AlphaRouter.max_item(indexed_values)
+        threshold_list = indexed_values[:num_values]
+        max_fill = sum(sorted(numbers, reverse=True)[:num_values])
+        full_fill = False
+
+        # liquidity check to determine partial fill
+        if threshold <= max_fill:
+            full_fill = True
+            # print('Full fulfillment expected')
+        else:
+            # print(f'Partial fulfillment expected of {max_fill}')
+            pass
+
+        # loop over the remaining values
+        while indexed_values:
+            count += 1
+            # set i based on the the value of the first item in the list, offset by the number of values selected
+            i = indexed_values[0][0]+num_values-1
+            current_sum = AlphaRouter.sum_me(threshold_list)
+
+            # early exit when a partial fill is met
+            if (not full_fill) & (current_sum==max_fill):
+                # print('1')
+                AlphaRouter.assertion_checks(full_fill, current_sum, threshold, max_fill, threshold_list, num_values)
+                sum_threshold_list_indexes = AlphaRouter.sum_list_indexes(threshold_list)
+                # return(threshold_list, current_sum, threshold, count, sum_threshold_list_indexes)#
+                return(AlphaRouter.list_indexes(threshold_list))
+
+            # early exit when we filled the order
+            if current_sum >= threshold:
+                # print('2')
+                AlphaRouter.assertion_checks(full_fill, current_sum, threshold, max_fill, threshold_list, num_values)
+                sum_threshold_list_indexes = AlphaRouter.sum_list_indexes(threshold_list)
+                # return(threshold_list, current_sum, threshold, count, sum_threshold_list_indexes)#
+                return(AlphaRouter.list_indexes(threshold_list))
+            else:
+                # else iterate over the remaining values dont exceed the the total number of inputs
+                if i < len(numbers) - 1:
+                    min_index, min_val = AlphaRouter.min_item(threshold_list)
+                    next_val = AlphaRouter.get_i(indexed_values, i+1)[1]
+
+                    # if the order hasn't been filled more liquidity is needed so swap out the minimum value and take the next in the list
+                    # if the min_val in the threshold list is greater than the max_val in the full list things can't get any better
+                    if min_val >= max_val:
+                        # print('3')
+                        AlphaRouter.assertion_checks(full_fill, current_sum, threshold, max_fill, threshold_list, num_values)
+                        sum_threshold_list_indexes = AlphaRouter.sum_list_indexes(threshold_list)
+                        # return(threshold_list, current_sum, threshold, count, sum_threshold_list_indexes)#
+                        return(AlphaRouter.list_indexes(threshold_list))
+                    
+                    # however, the next value to insert must be greater than the current value
+                    elif next_val > min_val:
+                        threshold_list.remove(AlphaRouter.min_item(threshold_list))
+                        threshold_list.append(AlphaRouter.get_i(indexed_values, i+1))
+                    else:
+                        pass
+                else:
+                    # print('4')
+                    AlphaRouter.assertion_checks(full_fill, current_sum, threshold, max_fill, threshold_list, num_values)
+                    sum_threshold_list_indexes = AlphaRouter.sum_list_indexes(threshold_list)
+                    # return(threshold_list, current_sum, threshold, count, sum_threshold_list_indexes)#
+                    return(AlphaRouter.list_indexes(threshold_list))
+                indexed_values = indexed_values[1:]
+
     def get_geoprice(self, subject: int) -> DecFloatInt:
         """
         Determines the geometric price of the subject curve.
@@ -104,18 +219,16 @@ class AlphaRouter(BaseRouter):
         # (step 3.)
         # Get the available liquidity and return the minimum list of orders with
         # sufficient liquidity to fulfill the inputAmount
-        ordered_associated_liquidity = [self.orders[i].y for i in ordered_amts.keys()]
+        ordered_associated_liquidity = {i:self.orders[i].y for i in ordered_amts.keys()}
 
         results = pd.DataFrame(
             [
                 hypothetical_output_amts.keys(),
                 hypothetical_output_amts.values(),
-                ordered_associated_liquidity,
             ],
             index=[
                 "indexes",
                 "hypothetical_output_amts",
-                "ordered_associated_liquidity",
             ],
         )
         results = results.T.copy()
@@ -123,16 +236,26 @@ class AlphaRouter(BaseRouter):
             by=["hypothetical_output_amts", 'indexes'], ascending=[False, True], inplace=True
         )
 
-        results.loc[:, 'sliding_index'] = [np.array(win.values.tolist(), dtype=object) for win in
-                                           results.indexes.rolling(threshold_orders, min_periods=threshold_orders)]
-        results.loc[:, 'sliding_available_value'] = results.ordered_associated_liquidity.rolling(threshold_orders,
-                                                                                                 min_periods=threshold_orders).sum()
+        results2 = pd.DataFrame(
+            [
+                ordered_associated_liquidity.keys(),
+                ordered_associated_liquidity.values(),
+            ],
+            index=[
+                "ordered_associated_liquidity_keys",
+                "ordered_associated_liquidity",
+            ],
+        )
+        results2 = results2.T.copy()
+
+        results = pd.merge(results, results2, how='left', left_on = 'indexes', right_on='ordered_associated_liquidity_keys')
 
         results.fillna(0, inplace=True)
         results.reset_index(inplace=True, drop=True)
-        print(tabulate(results,headers=list(results.columns)))
-        top_n_threshold_orders = \
-        [results.sliding_index[i] for i in results.index if results.sliding_available_value[i] >= abs(x)][0]
+        # print(tabulate(results,headers=list(results.columns)))
+
+        passed_indexes = AlphaRouter.gen_one_order_selector(results.ordered_associated_liquidity, abs(x), threshold_orders)
+        top_n_threshold_orders = [results.indexes[i] for i in passed_indexes]
 
         # (step 4.)
         # Constrain the exact router to just the top n threshold orders and match
@@ -202,17 +325,12 @@ class AlphaRouter(BaseRouter):
              evaluated within the threshold number of orders.
         """
         # (step 1.)
-        # print(x)
         hypothetical_output_amts = {i: self.amt_by_src(dx=x, subject=i) for i in self.indexes}
-        # print(hypothetical_output_amts)
 
         # (step 3.)
         # Get the available liquidity and return the minimum list of orders with
         # sufficient liquidity to fulfill the inputAmount
         associated_liquidity = [self.orders[i].y for i in self.indexes]
-
-        # ordered_associated_liquidity = [self.orders[i].y for i in ordered_amts.keys()]
-        # print(ordered_associated_liquidity)
 
         amounts = []
         effective_prices = []
@@ -253,50 +371,12 @@ class AlphaRouter(BaseRouter):
             by=["hypothetical_output_amts", 'indexes'], ascending=[False, True], inplace=True
         )
 
-        results.loc[:, 'sliding_index'] = [np.array(win.values.tolist(), dtype=object) for win in
-                                           results.indexes.rolling(threshold_orders, min_periods=threshold_orders)]
-        results.loc[:, 'sliding_available_value'] = results.available_value.rolling(threshold_orders,
-                                                                                    min_periods=threshold_orders).sum()
-
         results.fillna(0, inplace=True)
         results.reset_index(inplace=True, drop=True)
-        print(tabulate(results,headers=list(results.columns)))
-
-        numbers = results.available_value.values
-        trade_amount = abs(x)
-        max_sum = 0
-
-        for i in range(0, len(numbers)):
-            for j in range(i+1, len(numbers)):
-                for k in range(j+1, len(numbers)):
-                # Check if the sum of the current three numbers is equal to the trade_amount
-                    if numbers[i] + numbers[j] + numbers[k] >= trade_amount:
-                        # Print the numbers that sum to the trade_amount
-                        chosen_indicies = [i,j,k]
-                        max_sum = sum([numbers[i], numbers[j], numbers[k]])
-                        print((numbers[i], numbers[j], numbers[k]),",", max_sum, chosen_indicies)
-                        # Stop iterating
-                        break
-                # Stop iterating if a match was found
-                if numbers[i] + numbers[j] + numbers[k] >= trade_amount:
-                    break
-            # Stop iterating if a match was found
-            if numbers[i] + numbers[j] + numbers[k] >= trade_amount:
-                break
-
-        # If no match was found, print the highest sum and the numbers that sum to that value
-        if max_sum == 0:
-            # Use the `heapq.nlargest()` function to find the three largest numbers
-            largest_three = heapq.nlargest(3, enumerate(numbers), key=lambda x: x[1])
-            chosen_indicies, values = zip(*largest_three)
-            print(values, ",", sum(values), ",",chosen_indicies)
-
-        # translate the chosen_indicies back to the actual order indexes
-        top_n_threshold_orders = [results.indexes[i] for i in chosen_indicies]
-
-
-        # top_n_threshold_orders = \
-        # [results.sliding_index[i] for i in results.index if results.sliding_available_value[i] >= abs(x)][0]
+        # print(tabulate(results,headers=list(results.columns)))\
+        
+        passed_indexes = AlphaRouter.gen_one_order_selector(results.available_value, abs(x), threshold_orders)
+        top_n_threshold_orders = [results.indexes[i] for i in passed_indexes]
 
         # (step 4.)
         # Constrain the exact router to just the top n threshold orders and match
