@@ -13,20 +13,19 @@
 #     name: python3
 # ---
 
-from carbon import CarbonSimulatorUI, P
-from carbon.simulators.carbon_simulator import __version__ as uiversion, __date__ as uidate
-
-print("[carbon_simulator] version", uiversion, uidate)
+from carbon import CarbonSimulatorUI, P, __version__, __date__
+print(f"Carbon v{__version__} ({__date__})")
+print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 
 # # Carbon Simulation - Test 40 - PairInSim
+
+ETHUSDC = P("ETH/USDC")
 
 # ## Pair without CarbonPair defaults
 
 Sim = CarbonSimulatorUI(raiseonerror=True)
 assert(Sim.slashpair is None)
 Sim
-
-ETHUSDC = P("ETH/USDC")
 
 try:
     Sim.add_order("ETH", 10, 2000, 3000)
@@ -44,7 +43,7 @@ try:
     Sim.add_order("LINK", 10, 2000, 3000, pair=ETHUSDC)
 except ValueError as e:
     print(e)
-    assert str(e) == "('Token not in pair', 'LINK', 'ETH/USDC', 'ETH/USDC')"  
+    assert str(e) == "('Token not in pair', 'LINK', 'ETH/USDC', 'ETH/USDC')"
 
 o = Sim.add_order("ETH", 10, 2000, 3000, pair=ETHUSDC)["orders"]
 assert(o.iloc[0]["pair"]=="ETHUSDC")
@@ -89,14 +88,6 @@ assert(o.iloc[0]["p_unit"]=="DAI per ETH")
 o
 
 SimP.add_strategy("ETH", 10, 2000, 3000, 10000, 1000, 750)["orders"]
-
-
-
-
-
-
-
-
 
 
 
