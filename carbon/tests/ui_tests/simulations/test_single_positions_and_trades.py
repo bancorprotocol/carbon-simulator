@@ -7,20 +7,7 @@ def test_add_order_concentrated_on_one_point():
     Derived from `passed_tests` notebook test-1
     """
     Sim = CarbonSimulatorUI(pair="USDC/ETH", verbose=True)
-    assert Sim.add_order("ETH", 100, 2000, 2000)["orders"].to_dict() == {
-        "id": {0: 0},
-        "pair": {0: "USDCETH"},
-        "tkn": {0: "ETH"},
-        "y_int": {0: 100.0},
-        "y": {0: 100.0},
-        "y_unit": {0: "ETH"},
-        "p_start": {0: 2000.0},
-        "p_end": {0: 2000.0},
-        "disabled": {0: False},
-        "p_marg": {0: 2000.0000000000002},
-        "p_unit": {0: "ETH per USDC"},
-        "lid": {0: 0},
-    }
+    assert Sim.add_order("ETH", 100, 2000, 2000)["orders"].to_dict() == {'id': {0: 0, 1: 1}, 'pair': {0: 'USDCETH', 1: 'USDCETH'}, 'tkn': {0: 'ETH', 1: 'USDC'}, 'y_int': {0: 100.0, 1: 0.0}, 'y': {0: 100.0, 1: 0.0}, 'y_unit': {0: 'ETH', 1: 'USDC'}, 'disabled': {0: False, 1: True}, 'p_start': {0: 2000.0, 1: None}, 'p_end': {0: 2000.0, 1: None}, 'p_marg': {0: 2000.0000000000002, 1: None}, 'p_unit': {0: 'ETH per USDC', 1: 'ETH per USDC'}, 'lid': {0: 1, 1: 0}}
 
 
 def test_amm_cannot_buy_eth_with_no_usdc():

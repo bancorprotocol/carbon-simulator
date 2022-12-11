@@ -41,5 +41,5 @@ def test_use_positions_display():
     Sim.add_strategy("ETH", 10, 2050, 2050, 5000, 1060, 1060)
     Sim.add_strategy("ETH", 10, 2070, 2070, 5000, 1080, 1080)
     Sim.add_strategy("ETH", 10, 2090, 2090, 5000, 1100, 1100)
-    result = Sim.amm_sells("ETH", 50, execute=False, use_positions=[3, 4])["trades"]
-    assert list(result['routeix'].values) == [3, 4, '[3, 4]']
+    result = Sim.amm_sells("ETH", 50, execute=False, use_positions=[3, 4])
+    assert result['success'] == False

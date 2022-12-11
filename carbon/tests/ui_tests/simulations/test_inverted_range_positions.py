@@ -9,7 +9,7 @@ def test_inverted_range_positions_1():
     Sim.add_order("ETH", 10, 2000, 3000, pair="ETH/USDC")
     result = Sim.add_order("ETH", 10, 3000, 2000, pair="ETH/USDC")
     assert result["success"] is True
-    assert list(Sim.state()["orders"]["p_end"].values) == [3000.0, 3000.0]
+    assert list(Sim.state()["orders"]["p_end"].values) == [3000.0, None, 3000.0, None]
 
 
 def test_inverted_range_positions_2():

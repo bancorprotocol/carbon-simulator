@@ -555,6 +555,9 @@ class CarbonOrderUI:
         #     perc = (price2 - price1)/(self.pmax - self.pmin)
 
         # self.pmax == self.pmin -> 100% in range, otherwise out
+        if self.disabled:
+            return 0
+            
         if self.pmax == self.pmin:
             if price1 == price2:
                 perc2 = 1. if price1 == self.pmax else 0
@@ -562,11 +565,11 @@ class CarbonOrderUI:
                 perc2 = 1. if price1 <= self.pmax and price2 > self.pmax else 0
             price = self.pmax
             #print(f"perc2={perc2}, price={price}", price1, price2, self.pmin, price1==self.pmax, price2==self.pmax)
-        
+
         # price1 > self.pmax or price2 < self.pmin -> completely above or below the range
         elif price1 >= self.pmax or price2 <= self.pmin:
             perc2 = 0
-        
+
         # alternatively: restrict p1,p2 to the ranges and calculate the coverage
         else:
             if price1 < self.pmin: price1 = self.pmin
