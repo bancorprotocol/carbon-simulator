@@ -49,4 +49,10 @@ assert True
 
 assert True
 
+# ## Segment 3 [NOTEST]
+
+# This segment will not be used to create a test (the function will still be generated, but it will be prefixed with `notest` rather than `test`)
+
+assert False
+
 

@@ -18,8 +18,8 @@ import sys
 import os
 import re
 from collections import namedtuple
-__VERSION__ = "1.0"
-__DATE__ = "9/Dec/2022"
+__VERSION__ = "1.1"
+__DATE__ = "11/Dec/2022"
 
 # # Convert NBTest
 #
@@ -88,15 +88,24 @@ fnlst = (filterfn(fn) for fn in rawlist)
 fnlst = tuple(r for r in fnlst if not r is None)
 fnlst
 
+"jksjsdfngx[NOTEST]"[:-8]
+
 
 # ## Process files
 
 # +
 def funcn(title):
     """convert a title into a function name"""
+    title = title.strip()
+    if title[-8:] == "[NOTEST]":
+        prefix = "notest_"
+        title = title[:-8].strip()
+    else:
+        prefix = "test_"
+        
     funcn = title.lower()
     funcn = funcn.replace(" ", "_")
-    funcn = "test_"+funcn
+    funcn = prefix+funcn
     return funcn
 
 assert funcn("Title") == "test_title"
