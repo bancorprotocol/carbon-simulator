@@ -7,9 +7,10 @@ Licensed under MIT
 VERSION HISTORY
 v2.0 -- changed constructor to allow for slashpair string
 v2.0.1 -- convert_price
+v2.0.2 -- allow constructor to take CarbonPair
 """
-__version__ = "2.0.1"
-__date__ = "7/Dec/2022"
+__version__ = "2.0.2"
+__date__ = "11/Dec/2022"
 
 from dataclasses import dataclass
 
@@ -19,7 +20,8 @@ class CarbonPair:
     """
     static information about a carbon token pair
 
-    :slashpair:     the pair string in TKNB/TKNQ form, eg "ETH/USDC"
+    :slashpair:     the pair string in TKNB/TKNQ form, eg "ETH/USDC"; 
+                    can also be a CarbonPair instance
     :tknb:          the base token (risk token) of the pair, eg ETH*
     :tknq:          the quote token (numeraire token) of the pair, eg USDC*
 
@@ -31,7 +33,7 @@ class CarbonPair:
     __VERSION__ = __version__
     __DATE__    = __date__
     
-    slashpair: str = None
+    slashpair: any = None
     tknb: str = None 
     tknq: str = None
 
@@ -45,7 +47,16 @@ class CarbonPair:
                         f"Parameters are pair, tknb, tknq; did you mean `tknb='{self.slashpair}', tknq='{self.tknb}'` ?",
                         self.slashpair, self.tknb, self.tknq)
                 raise ValueError("Must not provide both pair and tknb, tknq", self.slashpair, self.tknb, self.tknq)
+            
+            if isinstance(self.slashpair, self.__class__):
+                #print("[CarbonPair] creating pair from CarbonPair", self.__class__, self.slashpair.__class__, self.slashpair.slashpair)
+                self.slashpair = self.slashpair.slashpair
+            else:
+                pass
+                #print("[CarbonPair] creating pair from string", self.__class__, self.slashpair)
+
             self.slashpair = self.slashpair.upper()
+
             try:
                 self.tknb, self.tknq = self.slashpair.split("/")
             except:
@@ -60,7 +71,10 @@ class CarbonPair:
             self.tknq = self.tknq.upper()
             self.slashpair = f"{self.tknb}/{self.tknq}"
 
-    
+    def __repr__(self):
+        return f"P('{self.slashpair}')"
+        return f"{self.__class__.__name__}('{self.slashpair}')"
+
     @classmethod
     def from_isopair_and_tkn(cls, isopair, tkn=None):
         """
@@ -114,6 +128,14 @@ class CarbonPair:
 
         :slashpair:     the pair, in the format tknb/tknq, eg "ETH/USDC"
         """
+        slashpair = slashpair.upper()
+        tokens = slashpair.split("/")
+        if not len(tokens) == 2:
+            raise ValueError("slashpair must be of form TKNB/TKNQ", slashpair, tokens)
+        tknb = tokens[0].strip()
+        tknq = tokens[1].strip()
+        return cls(f"{tknb}/{tknq}")
+        
 
     @classmethod
     def create(cls, arg1=None, arg2=None):
@@ -183,13 +205,6 @@ class CarbonPair:
     def pair_slash(self):
         """convenience access for slashpair"""
         return self.slashpair
-
-    @property
-    def pair_slash(self):
-        """
-        returns the name of the pair in slash format, ie BAS/QUO
-        """
-        return f"{self.tknb}/{self.tknq}"
 
     @property
     def reverse(self):
