@@ -3,9 +3,12 @@ represents a single, unidirectional carbon order and provides convenience method
 
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
+
+VERSION HISTORY
+- v1.3: order book helper functions (p_marg_f, yfromp_f, dyfromp_f, dyfromdx_f, dyfromdx_f, goalseek)
 """
-__version__ = "1.2"
-__date__ = "8/Dec/2022"
+__version__ = "1.3"
+__date__ = "11/Dec/2022"
 
 try:
     from .pair import CarbonPair
@@ -54,6 +57,7 @@ class CarbonOrderUI:
     yint: float
     y: float
     def __post_init__(self):
+        self.pair = CarbonPair(self.pair)
         self.tkn = self.tkn.upper()
         if not self.pair.has_token(self.tkn):
             raise RuntimeError("token not part of pair", self.tkn, self.pair)
@@ -120,6 +124,14 @@ class CarbonOrderUI:
         respectively; as the function y(x) is convex we must have pa >= pb; as this can
         be confusing in reverse quotation we correct by exchanging pa, pb if pb < pa
         """
+        pair = CarbonPair(pair)
+        if yint<0:
+            raise ValueError("yint must be non-negative", yint)
+        if y>yint:
+            raise ValueError("y must not be bigger than yint (y={y}, yint={yint})", yint, y)
+        if y<0:
+            raise ValueError("y must be non-negative", y)
+
         if pair.has_basetoken(tkn):
             pa = 1./pa
             pb = 1./pb
@@ -210,20 +222,153 @@ class CarbonOrderUI:
     @property
     def p_marg(self):
         """
-        the current marginal price of the range
+        the current marginal price of the range (alias for p_margf)
+        """
+        return self.p_marg_f(0)
+
+
+    def p_marg_f(self, dy=0, raiseonerror=False):
+        """
+        the marginal price function of the range
+
+        :dy:            the negative(!) change in liquidity value, y* = y - dy
+        :raiseonerror:  if True, raises on all errors; otherwise (default) may return None
+        :returns:       marginal price a y*, p(y*) in the price convention of the pair
         """
         #dydx = ((self.B * self.yint + self.S * self.y) / self.yint)**2
         if self.disabled:
             return None
 
+        if dy < 0:
+            if raiseonerror:
+                raise ValueError("Trade size dy must be a non-negative number", dy)
+            return None
+
+        y = self.y - dy
+        if y < 0:
+            if raiseonerror:
+                raise ValueError("Trade size dy too big, results in y<0", dy, y, self.y)
+            return None
+        
         if self.yint == 0:
-            if not self.y == 0:
-                raise ValueError("If yint=0 you must also have y=0", yint, y)
+            if not self.y == 0 and dy == 0:
+                raise ValueError("If yint=0 you must also have y,dy=0", yint, y, dy)
             dydx = ((self.B + self.S))**2
         else:
-            dydx = ((self.B + self.S * self.y/self.yint))**2
+            dydx = ((self.B + self.S * y/self.yint))**2
         result = dydx if self.pair.has_quotetoken(self.tkn) else 1/dydx
         return result
+    
+    def yfromp_f(self, p, checkbounds=True, raiseonerror=False):
+        """
+        returns y as a function of the target marginal price
+
+        :p:             the target marginal price, in the price convention of the pair
+        :checkbounds:   if True (default), check that y is in the right range
+        :raiseonerror:  if True, raises upon error, else return None
+        :returns:       the y value at which the marginal price is achieved
+                        if beyond the end it returns 0, if beyond start or current y None
+        """
+        # dydx = ((B * yint + S * y) / yint)**2 = (B + S y/yint)**2
+        # y = yint * (sqrt(dydx) - B) / S
+        dydx = p if self.pair.has_quotetoken(self.tkn) else 1/p
+        #print(f"[yfromp_f] pa={self.pa_raw} dydx={dydx} pb={self.pb_raw}")
+
+        if checkbounds:
+            if dydx > self.pa_raw:
+                if raiseonerror:
+                    raise ValueError("Price out of bounds (beyond start)", p, self.pa)
+                return None
+            elif dydx < self.pb_raw:
+                if raiseonerror:
+                    raise ValueError("Price out of bounds (beyond end)", p, self.pb)
+                return 0
+        y = self.yint * (sqrt(dydx) - self.B) / self.S
+        if checkbounds:
+            if y > self.y:
+                if raiseonerror:
+                    raise ValueError("Price out of bounds (beyond marginal), hence target y > y", y, self.y )
+                return None
+        return y
+
+    def dyfromp_f(self, p, checkbounds=True, raiseonerror=False):
+        """
+        returns dy = y_target - y as a function of the target marginal price
+
+        :p:             the target marginal price, in the price convention of the pair
+        :checkbounds:   if True (default), check that y is in the right range
+        :raiseonerror:  if True, raises upon error, else return None
+        :returns:       the (positive!) dy value at which the marginal price is achieved
+                        in cases where yfromp_f returns none, this func returns 0
+        """
+        y = self.yfromp_f(p, checkbounds, raiseonerror)
+        if y is None: return 0
+        return self.y-y
+
+    def dyfromdx_f(self, dx, checkbounds=True, raiseonerror=False):
+        """
+        calculates the amount dy SOLD by the AMM to RECEIVE an amount dx
+
+        :dx:            the amount of x the AMM RECEIVES (a POSITIVE number*)
+        :checkbounds:   if True (default), check that dy is in the right range
+        :raiseonerror:  if True, raises upon error, else return None
+        :returns:       the amount dy of y the AMM SELLS (a POSITIVE number*)
+
+        *when checkbounds is False then we can have dx<0, corresponding to the 
+        AMM SELLing x. In this case it returns a negative number, corresponding
+        to the AMM BUYing y.
+        """
+        if checkbounds:
+            if dx < 0:
+                if raiseonerror:
+                    raise ValueError("AMM buy amount dx must be a non-negative number", dx)
+                return None
+            # elif dx > self.y:
+            #     if raiseonerror:
+            #         raise ValueError("AMM sell amount dx must be within available liquidity", dx, self.y)
+            #     return None
+        
+        num   =               (self.S*self.y + self.B*self.yint)**2
+        #         -------------------------------------------------------------
+        denom =   self.S*dx * (self.S*self.y + self.B*self.yint) + self.yint**2
+
+        if checkbounds:
+            if num < 0:
+                if raiseonerror:
+                    raise ValueError("AMM does not have enough y liquidity to purchase dx", y, dx, num)
+                return None
+
+        return dx * (num/denom) 
+
+
+    def dxfromdy_f(self, dy, checkbounds=True, raiseonerror=False):
+        """
+        calculates the amount dx RECEIVED for a trade of dy
+
+        :dy:            the amount of y the AMM sells (a POSITIVE number*)
+        :checkbounds:   if True (default), check that dy is in the right range
+        :raiseonerror:  if True, raises upon error, else return None
+        :returns:       the amount of x the AMM receives (a POSITIVE number*)
+
+        *when checkbounds is False then we can have dy<0, corresponding to the 
+        AMM BUYing y. In this case it returns a negative number, corresponding
+        to the AMM SELLing x.
+        """
+        if checkbounds:
+            if dy < 0:
+                if raiseonerror:
+                    raise ValueError("AMM sell amount dy must be a non-negative number", dy)
+                return None
+            elif dy > self.y:
+                if raiseonerror:
+                    raise ValueError("AMM sell amount dy must be within available liquidity", dy, self.y)
+                return None
+        
+        num   =                                   self.yint**2
+        #       ----------------------------------------------------------------------------------
+        denom = (self.S*self.y+self.B*self.yint) * (self.S*self.y+self.B*self.yint-self.S*dy)
+
+        return dy*(num/denom)     
     
     @property
     def total_liquidity(self):
@@ -318,4 +463,35 @@ class CarbonOrderUI:
         liq = self.pair.convert(amtfrom=liq0, tknfrom=liq0_tkn, tknto=tkn, price=price)
         
         return liq*perc2
+    
+    @staticmethod
+    def goalseek(func, a, b, eps=None):
+        """
+        helper method: solves for x, a<x<b, such that func(x) == 0
         
+        :func:    a function f(x), eg lambda x: x-3
+        :a:       the lower bound
+        :b:       the upper bound
+        :eps:     precision, ie b/a value where goal seek returns
+        :returns: the x value found
+        """
+        if eps is None:
+            eps = 0.0000001
+        if not a<b:
+            raise ValueError("Bracketing value a must be smaller than b", a, b)
+        fa = func(a)
+        fb = func(b)
+        if not fa*fb<0:
+            raise ValueError("Sign of f(a) must be opposite of sign of f(b)", fa, fb, a, b)
+            
+        while 1:
+            m = 0.5*(a+b)
+            fm = func(m)
+            if fm * fa > 0:
+                a = m
+            else:
+                b = m
+            
+            #print(f"m={m}, m={m}, b={b}")
+            if b/a-1 < eps:
+                return m
