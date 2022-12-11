@@ -11,6 +11,7 @@ from .routers import (
     ExactRouterX0Y0N,
 )
 from .pair import CarbonPair
+from .carbon_order_ui import CarbonOrderUI
 from .simulators import CarbonSimulatorUI
 from .simulators import sim_analytics as analytics
 
