@@ -14,25 +14,21 @@
 #     name: python3
 # ---
 
-from sympy import *
-__VERSION__ = "3.1"
-__DATE__ = "20/Nov/2022"
-
+from sympyx import *
+__VERSION__ = "4.0"
+__DATE__ = "12/Dec/2022"
 
 # # Carbon Calculations
 #
 # Various calculations related to the Carbon whitepaper.
 
-def isolate(eqn, var,ix=0):
-    "isolates the variable var in the equation eqn and returns result as equation"
-    return Eq(var, solve(eqn, var)[ix])
-
-
 # ## Core Formulas
 
 x,x0,xint,dx,Dx = symbols("x x_0 x_{int} dx \Delta{x}")
 y,y0,yint,dy,Dy = symbols("y y_0 y_{int} dy \Delta{y}")
-P,Pmarg,Px,Py,Q,Gam,w = symbols("P_0 P_{marg} P_x P_y Q \Gamma w") 
+P,Pmarg,Px,Py,Q,Gam,w,B,S = symbols("P_0 P_{marg} P_x P_y Q \Gamma w B S")
+Pa = Py
+Pb = Px
 xasym, yasym, kappa, k = symbols("x_{asym} y_{asym} \kappa k")
 P0=P
 
@@ -62,9 +58,10 @@ PIQ2E
 # This is the **Definition Equations** for $Q$ in terms of $\Gamma$ and its inverse
 
 QGDE = Eq(Q,(1-Gam)**2)
+QDE = QGDE
 QGDE
 
-GQE = isolate(QGDE, Gam)
+GQE = QGDE.isolate(Gam)
 GQE
 
 # Those are useful identities between a certain expression of $\Gamma$ and certain expressions of $Q$ and vice versa
@@ -104,6 +101,7 @@ PyDE
 # Here are a few other important relationships. Firstly, $P_0$ is the ratio the reference coordinates
 
 PXYE = Eq(P, y0/x0)
+P0DE = PXYE
 PXYE
 
 # and more importantly also of the intercepts
@@ -256,6 +254,73 @@ SRIE = Eq(SE.lhs, P*Dx*x0 / ((Gam*(rho-1)+1)*(Gam*(Dx+x0*(rho-1))+x0)))
 SRIE
 
 (SRIE.rhs - SE.rhs.subs(RXIE.lhs, RXIE.rhs)).simplify()
+
+# ### B,S parameterization
+#
+# The B,S parameterization is not particular intuitive, but the formulas are well suited for implementation
+
+BDE = Eq(B,sqrt(Pb))
+BDE
+
+SDE = Eq(S,sqrt(Pa)-sqrt(Pb))
+SDE
+
+PxDE
+
+PyDE
+
+BSPIE = Eq(y*(x*(B*S + S**2) + yint), yint*(yint - x*(B*S + B**2)))
+BSPIE
+
+# +
+#BSPIYE = BSPIE.isolate(y)
+#BSPIYE
+# -
+
+BSPIYE = Eq(y, solve(BSPIE, y)[0])
+BSPIYE
+
+# +
+#BSPIXE = BSPIE.isolate(x)
+#BSPIXE
+# -
+
+BSPIXE = Eq(x, solve(BSPIE, x)[0])
+BSPIXE
+
+_eqn1 = Eq(dy/dx, (diff(BSPIYE.rhs,x).simplify()))
+_eqn1
+
+_eqn2 = factor(simplify(_eqn1.subs(x, BSPIXE.rhs)))
+_eqn2
+
+# The **marginal price equation** (where $P_{marg} = -dy/dx$) then becomes
+
+MPBSE = Eq(Pmarg, (B+S*y/yint)**2)
+MPBSE
+
+(_eqn2.rhs+MPBSE.rhs).simplify()
+
+# This is an important equation that determines the liquidity amount $y$ as a function of the marginal price.
+
+YMPE = MPBSE.isolate(y)
+YMPE
+
+# Below is the **Swap Equation** (ie $\Delta y$ as a function of $\Delta x$) in B,S parameterization.
+
+BSSE = Eq(Dy, Dx*(S*y + B*yint)**2 / (S*Dx * (S*y + B*yint) + yint**2))
+BSSE
+
+# Here is the **Reverse Swap Equation** (ie $\Delta x$ as a function of $\Delta y$)
+
+BSRSE = Eq(Dx, Dy * yint**2 / ((S*y + B*yint) * (S*y + B*yint - S*Dy)))
+BSRSE
+
+# We check that the marginal price equation is consistent with the swap equations
+
+((BSSE.rhs / Dx).subs(Dx,0)-MPBSE.rhs).simplify()
+
+((BSRSE.rhs / Dy).subs(Dy,0) - 1/MPBSE.rhs).simplify()
 
 # ### Adjusting active ranges
 #
@@ -439,6 +504,62 @@ FORMULAS.add(
     "this is the same as the Marginal Swap Equation, except that the LHS is recognized as the marginal price; x/x0 = r is fixed", 
 )
 
+# ### B, S equations
+
+FORMULAS.add(
+    "BDE", BDE, 
+    "B definition equation", 
+    "This equation defines the parameter B = sqrt Px", 
+)
+
+FORMULAS.add(
+    "SDE", SDE, 
+    "S definition equation", 
+    "This equation defines the parameter S = sqrt Py - sqrt Px", 
+)
+
+FORMULAS.add(
+    "BSPIE", BSPIE, 
+    "Pool Invariant Equation in B,S parameterization", 
+    "This is the Pool Invariant Equation with parameters B, S, and yint", 
+)
+
+FORMULAS.add(
+    "BSPIYE", BSPIYE, 
+    "Pool Invariant Equation in B,S parameterization (solved for y)", 
+    "This is the Pool Invariant Equation with parameters B, S, and yint (solved for y)", 
+)
+
+FORMULAS.add(
+    "BSPIXE", BSPIXE, 
+    "Pool Invariant Equation in B,S parameterization (solved for x)", 
+    "This is the Pool Invariant Equation with parameters B, S, and yint (solved for x)", 
+)
+
+FORMULAS.add(
+    "BSSE", BSSE, 
+    "Swap Equation in B,S parameterization", 
+    "This equation determined Delta y as a function of a non-infinitesimal Delta x", 
+)
+
+FORMULAS.add(
+    "BSRSE", BSRSE, 
+    "Reverse Swap Equation in B,S parameterization", 
+    "This equation determined Delta x as a function of a non-infinitesimal Delta y", 
+)
+
+FORMULAS.add(
+    "MPBSE", MPBSE, 
+    "Marginal Price Equation in B,S", 
+    "The marginal price equation using B,S parameterization", 
+)
+
+FORMULAS.add(
+    "YMPE", YMPE, 
+    "Marginal Price Equation solved for y", 
+    "The marginal price equation using B,S parameterization, solved for y", 
+)
+
 # ### Definition equations and other relationships
 
 FORMULAS.add(
@@ -578,3 +699,5 @@ FORMULAS.add(
     "Inverse ratio equation (x0/x)", 
     "Defines rho as the ratio x0/x", 
 )
+
+
