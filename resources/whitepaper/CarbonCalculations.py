@@ -14,22 +14,13 @@
 #     name: python3
 # ---
 
-from sympy import *
-__VERSION__ = "3.1+margp2+TODO"
+from sympyx import *
+__VERSION__ = "4.0"
 __DATE__ = "12/Dec/2022"
-
 
 # # Carbon Calculations
 #
 # Various calculations related to the Carbon whitepaper.
-
-def isolate(eqn, var,ix=0):
-    "isolates the variable var in the equation eqn and returns result as equation"
-    return Eq(var, solve(eqn, var)[ix])
-def subs(srceq, subeq):
-    "substitutes srceq with the relation in subeq (subeq eg `y=x**2`)"
-    return srceq.subs(subeq.lhs, subeq.rhs).simplify()
-
 
 # ## Core Formulas
 
@@ -70,7 +61,7 @@ QGDE = Eq(Q,(1-Gam)**2)
 QDE = QGDE
 QGDE
 
-GQE = isolate(QGDE, Gam)
+GQE = QGDE.isolate(Gam)
 GQE
 
 # Those are useful identities between a certain expression of $\Gamma$ and certain expressions of $Q$ and vice versa
@@ -276,29 +267,44 @@ SDE
 
 PxDE
 
-isolate(PxDE,P0)
+PyDE
 
-PxDE
+BSPIE = Eq(y*(x*(B*S + S**2) + yint), yint*(yint - x*(B*S + B**2)))
+BSPIE
 
-P0DE
+# +
+#BSPIYE = BSPIE.isolate(y)
+#BSPIYE
+# -
 
-QDE
+BSPIYE = Eq(y, solve(BSPIE, y)[0])
+BSPIYE
 
-GQE
+# +
+#BSPIXE = BSPIE.isolate(x)
+#BSPIXE
+# -
 
-YiQE
+BSPIXE = Eq(x, solve(BSPIE, x)[0])
+BSPIXE
 
+_eqn1 = Eq(dy/dx, (diff(BSPIYE.rhs,x).simplify()))
+_eqn1
 
+_eqn2 = factor(simplify(_eqn1.subs(x, BSPIXE.rhs)))
+_eqn2
 
+# The **marginal price equation** (where $P_{marg} = -dy/dx$) then becomes
 
+MPBSE = Eq(Pmarg, (B+S*y/yint)**2)
+MPBSE
 
-PIE0 = subs(PIE, isolate(P0DE, x0))
-PIE1 = subs(PIE0, GQE)
-PIE2 = subs(PIE1, isolate(PxDE,P0))
-#PIE2 = PIE1.subs()
-PIE2
+(_eqn2.rhs+MPBSE.rhs).simplify()
 
-PIE.rsh.subs()
+# This is an important equation that determines the liquidity amount $y$ as a function of the marginal price.
+
+YMPE = MPBSE.isolate(y)
+YMPE
 
 # Below is the **Swap Equation** (ie $\Delta y$ as a function of $\Delta x$) in B,S parameterization.
 
@@ -310,19 +316,11 @@ BSSE
 BSRSE = Eq(Dx, Dy * yint**2 / ((S*y + B*yint) * (S*y + B*yint - S*Dy)))
 BSRSE
 
-# The **marginal price equation** (where $P_{marg} = -dy/dx$) then becomes
-
-MPBSE = Eq(Pmarg, (B+S*y/yint)**2)
-MPBSE
-
 # We check that the marginal price equation is consistent with the swap equations
 
 ((BSSE.rhs / Dx).subs(Dx,0)-MPBSE.rhs).simplify()
 
 ((BSRSE.rhs / Dy).subs(Dy,0) - 1/MPBSE.rhs).simplify()
-
-YMPE = isolate(MPBSE,y)
-YMPE
 
 # ### Adjusting active ranges
 #
@@ -521,6 +519,36 @@ FORMULAS.add(
 )
 
 FORMULAS.add(
+    "BSPIE", BSPIE, 
+    "Pool Invariant Equation in B,S parameterization", 
+    "This is the Pool Invariant Equation with parameters B, S, and yint", 
+)
+
+FORMULAS.add(
+    "BSPIYE", BSPIYE, 
+    "Pool Invariant Equation in B,S parameterization (solved for y)", 
+    "This is the Pool Invariant Equation with parameters B, S, and yint (solved for y)", 
+)
+
+FORMULAS.add(
+    "BSPIXE", BSPIXE, 
+    "Pool Invariant Equation in B,S parameterization (solved for x)", 
+    "This is the Pool Invariant Equation with parameters B, S, and yint (solved for x)", 
+)
+
+FORMULAS.add(
+    "BSSE", BSSE, 
+    "Swap Equation in B,S parameterization", 
+    "This equation determined Delta y as a function of a non-infinitesimal Delta x", 
+)
+
+FORMULAS.add(
+    "BSRSE", BSRSE, 
+    "Reverse Swap Equation in B,S parameterization", 
+    "This equation determined Delta x as a function of a non-infinitesimal Delta y", 
+)
+
+FORMULAS.add(
     "MPBSE", MPBSE, 
     "Marginal Price Equation in B,S", 
     "The marginal price equation using B,S parameterization", 
@@ -671,3 +699,5 @@ FORMULAS.add(
     "Inverse ratio equation (x0/x)", 
     "Defines rho as the ratio x0/x", 
 )
+
+
