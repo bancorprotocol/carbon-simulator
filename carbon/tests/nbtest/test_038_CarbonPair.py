@@ -32,7 +32,9 @@ def test_carbonpair():
     # -
     
     assert(P==CarbonPair)
-    assert(str(P("ETH/USDC"))=="CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(P("ETH/USDC"))=="P('ETH/USDC')")
+    
+    str(P("ETH/USDC"))
     
     try:
         p = CarbonPair()
@@ -48,15 +50,15 @@ def test_carbonpair():
     
     p = CarbonPair("", "ETH", "USDC")
     print(p)
-    assert(str(p) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(p) == "P('ETH/USDC')")
     
     p = CarbonPair(tknb="ETH", tknq="USDC")
     print(p)
-    assert(str(p) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(p) == "P('ETH/USDC')")
     
     p = CarbonPair(tknq="USDC", tknb="ETH")
     print(p)
-    assert(str(p) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(p) == "P('ETH/USDC')")
     
     try:
         p = CarbonPair("ETHUSDC")
@@ -66,15 +68,15 @@ def test_carbonpair():
     
     p = CarbonPair("ETH/USDC")
     print(p)
-    assert(str(p) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(p) == "P('ETH/USDC')")
     
     p = CarbonPair.from_isopair_and_tkn("ETHUSDC", "USDC")
     print(p)
-    assert(str(p) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(p) == "P('ETH/USDC')")
     
     p = CarbonPair.from_isopair_and_tkn("ETHUSDC", "ETH")
     print(p)
-    assert(str(p) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(p) == "P('ETH/USDC')")
     
     try:
         p = CarbonPair.from_isopair_and_tkn("ETHUSDC", "WBTC")
@@ -84,22 +86,22 @@ def test_carbonpair():
     
     p = CarbonPair.create("ETH/USDC")
     print(p)
-    assert(str(p) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(p) == "P('ETH/USDC')")
     
     p = CarbonPair.create("ETH", "USDC")
     print(p)
-    assert(str(p) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(p) == "P('ETH/USDC')")
     
     pp = CarbonPair.create(p)
     print(pp)
-    assert(str(pp) == "CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC')")
+    assert(str(pp) == "P('ETH/USDC')")
     assert(pp is p)
     
     try:
         pp = CarbonPair.create(p, "ETH")
     except ValueError as e:
         print(e)
-        assert(str(e) == "('Second argument must be None if arg1 is pair', CarbonPair(slashpair='ETH/USDC', tknb='ETH', tknq='USDC'), 'ETH')")
+        assert(str(e) == "('Second argument must be None if arg1 is pair', P('ETH/USDC'), 'ETH')")
     
     assert(p.tknb=="ETH")
     assert(p.tknq=="USDC")
@@ -109,7 +111,7 @@ def test_carbonpair():
     assert(p.pair_slash=="ETH/USDC")
     assert(p.pair_iso=="ETHUSDC")
     assert(p.price_convention=="USDC per ETH")
-    assert(str(p.reverse)=="CarbonPair(slashpair='USDC/ETH', tknb='USDC', tknq='ETH')")
+    assert(str(p.reverse)=="P('USDC/ETH')")
     
     assert(p.has_token("ETH"))
     assert(p.has_token("USDC"))
@@ -147,7 +149,9 @@ def test_carbonpair():
     assert(p.convert_price(2000, "USDC")==2000)
     assert(p.convert_price(1/2000, "ETH")==2000)
     
-    help(p.limit_is_met)
+    # +
+    #help(p.limit_is_met)
+    # -
     
     p.limit_is_met("ETH", 2000, p.BUY, 1000, asphrase=True)
     
