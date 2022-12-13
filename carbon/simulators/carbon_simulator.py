@@ -24,6 +24,8 @@ from decimal import Decimal
 import pandas as pd
 import numpy as np
 
+from ..routers.fast_router import FastRouter
+
 
 class CarbonSimulatorUI:
     """
@@ -44,7 +46,7 @@ class CarbonSimulatorUI:
     __DATE__    = __date__
 
     MATCH_EXACT = "exact"
-    MATCH_FAST = "fast_"
+    MATCH_FAST = "fast"
     MATCH_ALPHA = "alpha_"
 
     def __init__(
@@ -71,6 +73,8 @@ class CarbonSimulatorUI:
             self.matcher = AlphaRouter(verbose=False)
         elif matching_method == self.MATCH_EXACT:
             self.matcher = ExactRouterX0Y0N(verbose=False)
+        elif matching_method == self.MATCH_FAST:
+            self.matcher = FastRouter(verbose=False)
         elif matching_method == self.MATCH_FAST:
             raise ValueError("Fast router not implemented", matching_method)
         else:
