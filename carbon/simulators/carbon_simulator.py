@@ -642,7 +642,7 @@ class CarbonSimulatorUI:
                         1
                     ],  # the number of routes across which the trade was executed
                     "price": [
-                        price_avg
+                        price_avg if trade_action == FastRouter.match_by_target else 1 / Decimal(price_avg)
                     ],  # the price amt_/amt_, in the convention of the pair
                     "p_unit": [
                         f"{tknq} per {tknb}"
@@ -686,7 +686,7 @@ class CarbonSimulatorUI:
                 "pair": [carbon_pair.pair_iso],
                 "routeix": [str(order_ids)],
                 "nroutes": [num_trades],
-                "price": [price_avg],
+                "price": [price_avg if trade_action == FastRouter.match_by_target else 1 / Decimal(price_avg)],
                 "p_unit": [f"{tknq} per {tknb}"],
             }
 
