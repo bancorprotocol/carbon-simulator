@@ -457,6 +457,7 @@ class CarbonSimulatorUI:
             use_positions: List[int] = None,
             threshold_orders: int = None,
             use_positions_matchlevel: List[int] = [],
+            is_by_target: bool = False,
 
     ) -> Dict[str, Any]:
         """
@@ -642,7 +643,7 @@ class CarbonSimulatorUI:
                         1
                     ],  # the number of routes across which the trade was executed
                     "price": [
-                        price_avg if trade_action == FastRouter.match_by_target else 1 / Decimal(price_avg)
+                        price_avg if not (is_by_target and isinstance(self.matcher, FastRouter)) else 1 / Decimal(price_avg)
                     ],  # the price amt_/amt_, in the convention of the pair
                     "p_unit": [
                         f"{tknq} per {tknb}"
@@ -686,7 +687,7 @@ class CarbonSimulatorUI:
                 "pair": [carbon_pair.pair_iso],
                 "routeix": [str(order_ids)],
                 "nroutes": [num_trades],
-                "price": [price_avg if trade_action == FastRouter.match_by_target else 1 / Decimal(price_avg)],
+                "price": [price_avg if not (is_by_target and isinstance(self.matcher, FastRouter)) else 1 / Decimal(price_avg)],
                 "p_unit": [f"{tknq} per {tknb}"],
             }
 
@@ -767,6 +768,7 @@ class CarbonSimulatorUI:
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
+                is_by_target=False,
             )
         except Exception as e:
             if self.raiseonerror:
@@ -831,6 +833,7 @@ class CarbonSimulatorUI:
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
+                is_by_target=True,
 
             )
 
