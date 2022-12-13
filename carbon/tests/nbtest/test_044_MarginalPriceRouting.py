@@ -248,6 +248,122 @@ def test_carbonorderui_tests_dyfromdx_f_and_dxfromdy_f():
     assert round(10000/dx - p0r,4) == 0
     dx/10000, 10000/dx, p0r
     
+    # ### xfromy_f
+    
+    assert order.xfromy_f(order.yint) == 0
+    assert round(order.xfromy_f(0)- order.p0*order.yint, 10) == 0
+    assert order.x == 0
+    assert order.xfromy_f(order.y) == order.x
+    for i in range(10):
+        #print (i)
+        assert round(order.dxfromdy_f(i) - order.xfromy_f(order.y-i), 10) == 0
+    
+    assert orderr.xfromy_f(orderr.yint) == 0
+    assert round(orderr.xfromy_f(0)- orderr.yint/orderr.p0, 10) == 0
+    assert orderr.xfromy_f(orderr.y) == orderr.x
+    for i in range(10):
+        #print (i)
+        assert round(orderr.dxfromdy_f(i*1000) - orderr.xfromy_f(orderr.y-i*1000), 10) == 0
+    
+    assert order1.xfromy_f(order1.yint) == 0
+    assert round(order1.xfromy_f(0)- order.p0*order.yint, 10) == 0
+    assert order1.xfromy_f(order1.y) == order1.x
+    for i in range(5):
+        #print (i)
+        assert round(order1.xfromy_f(order1.y) + order1.dxfromdy_f(i) - order1.xfromy_f(order1.y-i), 10) == 0
+    
+    # ### yfromx_f
+    
+    assert order.yfromx_f(0) == order.yint
+    assert order.yfromx_f(order.xint) == 0
+    for i in range(10):
+        #print(i)
+        assert round(order.yfromx_f(order.xfromy_f(i)) - i, 10)  == 0
+    
+    assert orderr.yfromx_f(0) == orderr.yint
+    assert round(orderr.yfromx_f(orderr.xint-0.00000001),4)==0
+    for i in range(1,10):
+        #print(i)
+        assert round(orderr.yfromx_f(orderr.xfromy_f(i*1000)) - i*1000, 10)  == 0
+    
+    # ### p_eff_f
+    
+    assert order.p_eff_f(0) == 2000
+    assert round(order.p_eff_f(0.000000001)-2000,3) == 0
+    assert round(order.p_eff_f(10) - order.p0, 6) == 0
+    
+    p1 = order1.p_eff_f(0)
+    assert p1 == order1.p_marg_f(0)
+    p2 = order1.p_marg_f(5)
+    assert round(order1.p_eff_f(5) - sqrt(p1*p2),5) == 0
+    p1,p2, sqrt(p1*p2)
+    
+    assert orderr.p_eff_f(0) == 1000
+    assert round(orderr.p_eff_f(0.1)-1000,2) == 0
+    assert round(orderr.p_eff_f(10000) - orderr.p0, 6) == 0
+    
+
+# ------------------------------------------------------------
+# Test      044
+# File      test_044_MarginalPriceRouting.py
+# Segment   CarbonOrderUI charts [NOTEST]
+# ------------------------------------------------------------
+def notest_carbonorderui_charts():
+# ------------------------------------------------------------
+    
+    order1 = CarbonOrderUI.from_prices("ETH/USDC", "ETH", 2000, 3000, 10, 10)
+    order2 = CarbonOrderUI.from_prices("ETH/USDC", "ETH", 2000, 3000, 10, 5)
+    orderr = CarbonOrderUI.from_prices("ETH/USDC", "USDC", 1000, 750, 25000, 25000)
+    
+    ETHr = np.linspace(0,order1.yint)
+    USDCr = np.linspace(0,orderr.yint)
+    
+    plt.plot([order1.xfromy_f(y) for y in ETHr], ETHr, label="order1 (y=10)")
+    plt.plot([order2.xfromy_f(y) for y in ETHr], ETHr, label="order2 (y=5)")
+    plt.ylabel("y [ETH]")
+    plt.xlabel("x [USDC]")
+    plt.legend()
+    
+    plt.plot([order1.dxfromdy_f(y, raiseonerror=False) for y in ETHr], -ETHr, label="order1 (y=10)")
+    plt.plot([order2.dxfromdy_f(y, raiseonerror=False) for y in ETHr], -ETHr, label="order2 (y=5)")
+    plt.ylabel("dy [ETH]")
+    plt.xlabel("dx [USDC]")
+    plt.legend()
+    
+    plt.plot([order1.dxfromdy_f(y, raiseonerror=False) for y in ETHr], -ETHr, label="order1 (y=10)")
+    plt.plot([order2.dxfromdy_f(y, raiseonerror=False) for y in ETHr], -ETHr, label="order2 (y=5)")
+    plt.ylabel("dy [ETH]")
+    plt.xlabel("dx [USDC]")
+    plt.legend()
+    
+    plt.plot(
+        [order1.dxfromdy_f(dy, raiseonerror=False) for dy in ETHr], 
+        [order1.p_marg_f(dy, raiseonerror=False) for dy in ETHr], 
+        label="marg (1; y=10 ETH)")
+    plt.plot(
+        [order2.dxfromdy_f(dy, raiseonerror=False) for dy in ETHr], 
+        [order2.p_marg_f(dy, raiseonerror=False) for dy in ETHr], 
+        label="marg (2; y=5 ETH)")
+    plt.plot(
+        USDCr, 
+        [orderr.p_marg_f(dy, raiseonerror=False) for dy in USDCr], 
+        label="marg(r; y=10k USDC)")
+    plt.plot(
+        [order1.dxfromdy_f(dy, raiseonerror=False) for dy in ETHr], 
+        [order1.p_eff_f(dy, raiseonerror=False) for dy in ETHr], 
+        label="eff (1; y=10 ETH)")
+    plt.plot(
+        [order2.dxfromdy_f(dy, raiseonerror=False) for dy in ETHr], 
+        [order2.p_eff_f(dy, raiseonerror=False) for dy in ETHr], 
+        label="eff (2; y=5 ETH)")
+    plt.plot(
+        USDCr, 
+        [orderr.p_eff_f(dy, raiseonerror=False) for dy in USDCr], 
+        label="eff (r; y=10k USDC)")
+    plt.ylabel("Price [USDC per ETH]")
+    plt.xlabel("dx [USDC]")
+    plt.legend(loc="center right")
+    
 
 # ------------------------------------------------------------
 # Test      044
