@@ -6,9 +6,10 @@ Licensed under MIT
 
 VERSION HISTORY
 - v1.3: order book helper functions (p_marg_f, yfromp_f, dyfromp_f, dyfromdx_f, dyfromdx_f, goalseek)
+- v1.3.1: more order book and other helper functions (yfromx_f, xfromy_f, p_eff_f, xint, )
 """
-__version__ = "1.3"
-__date__ = "11/Dec/2022"
+__version__ = "1.3.1"
+__date__ = "13/Dec/2022"
 
 try:
     from .pair import CarbonPair
@@ -227,11 +228,14 @@ class CarbonOrderUI:
         return self.p_marg_f(0)
 
 
-    def p_marg_f(self, dy=0, raiseonerror=False):
+    def p_marg_f(self, dy=0, fullcurve=False, checkbounds=True, raiseonerror=False):
         """
         the marginal price function of the range
 
-        :dy:            the negative(!) change in liquidity value, y* = y - dy
+        :dy:            the negative(!) change in liquidity value, expressed as 
+                        positive number; y* = y - dy
+        :fullcurve:     if True, ignore curve state y and use yint, ie y* = yint - dy
+        :checkbounds:   if True (default), check that y is in the right range
         :raiseonerror:  if True, raises on all errors; otherwise (default) may return None
         :returns:       marginal price a y*, p(y*) in the price convention of the pair
         """
@@ -239,16 +243,17 @@ class CarbonOrderUI:
         if self.disabled:
             return None
 
-        if dy < 0:
-            if raiseonerror:
-                raise ValueError("Trade size dy must be a non-negative number", dy)
-            return None
-
-        y = self.y - dy
-        if y < 0:
-            if raiseonerror:
-                raise ValueError("Trade size dy too big, results in y<0", dy, y, self.y)
-            return None
+        y = self.yint - dy if fullcurve else self.y - dy
+        #print(f"[p_marg_f] dy={dy} y={y} s.y={self.y} s.yint={self.yint}", fullcurve)
+        if checkbounds:
+            if dy < 0:
+                if raiseonerror:
+                    raise ValueError("Trade size dy must be a non-negative number", dy)
+                return None
+            if y < 0:
+                if raiseonerror:
+                    raise ValueError("Trade size dy too big, results in y<0", dy, y, self.y)
+                return None
         
         if self.yint == 0:
             if not self.y == 0 and dy == 0:
@@ -256,6 +261,45 @@ class CarbonOrderUI:
             dydx = ((self.B + self.S))**2
         else:
             dydx = ((self.B + self.S * y/self.yint))**2
+        result = dydx if self.pair.has_quotetoken(self.tkn) else 1/dydx
+        return result
+    
+    def p_eff_f(self, dy=0, fullcurve=False, checkbounds=True, raiseonerror=False):
+        """
+        the effective price function of the range
+
+        :dy:            the negative(!) change in liquidity value, expressed as 
+                        positive number; y* = y - dy
+        :fullcurve:     if True, ignore curve state y and use yint, ie y* = yint - dy
+        :checkbounds:   if True (default), check that y is in the right range
+        :raiseonerror:  if True, raises on all errors; otherwise (default) may return None
+        :returns:       effective price between y (or yint) and y* in the price convention of the pair
+       """
+        #dydx = ((self.B * self.yint + self.S * self.y) / self.yint)**2
+        if self.disabled:
+            return None
+
+        y0 = self.yint if fullcurve else self.y
+        y = y0 - dy
+        if checkbounds:
+            if dy < 0:
+                if raiseonerror:
+                    raise ValueError("Trade size dy must be a non-negative number", dy)
+                return None
+            if y < 0:
+                if raiseonerror:
+                    raise ValueError("Trade size dy too big, results in y<0", dy, y, self.y)
+                return None
+
+        if self.yint == 0:
+            if not y0 == 0 and dy == 0:
+                raise ValueError("If yint=0 you must also have y,dy=0", yint, y, dy)
+            dydx = ((self.B + self.S))**2
+        else:
+            if dy==0:
+                return self.p_marg_f(self.yint-y, checkbounds=False, fullcurve=True)
+            dydx = dy / (self.xfromy_f(y) - self.xfromy_f(y0))
+        
         result = dydx if self.pair.has_quotetoken(self.tkn) else 1/dydx
         return result
     
@@ -291,6 +335,13 @@ class CarbonOrderUI:
                 return None
         return y
 
+    @property
+    def xint(self):
+        """
+        x intercept, ie max x liquidit, ie x at y=0
+        """
+        return self.yint**2 / (self.B**2*self.yint + self.B*self.S*self.yint)
+        
     def dyfromp_f(self, p, checkbounds=True, raiseonerror=False):
         """
         returns dy = y_target - y as a function of the target marginal price
@@ -369,6 +420,80 @@ class CarbonOrderUI:
         denom = (self.S*self.y+self.B*self.yint) * (self.S*self.y+self.B*self.yint-self.S*dy)
 
         return dy*(num/denom)     
+    
+    def xfromy_f(self, y, checkbounds=True, raiseonerror=False):
+        """
+        the invariant function, expressed as x=f(y)
+
+        :y:             the amount of y the AMM currently holds
+        :checkbounds:   if True (default), check that dy is in the right range
+        :raiseonerror:  if True, raises upon error, else return None
+        :returns:       the corresponding x amount*
+
+        *in Carbon, the funds received on this curve are not kept on this curve but 
+        transferred to a linked curve; the linked curve may hold different amounts
+        of x, eg because it has been seeded with x>0. In other words -- it does not
+        make sense to look at absolute values of x, only of differences.    
+        """
+        if checkbounds:
+            if y > self.yint:
+                if raiseonerror:
+                    raise ValueError("The value of y is out of bounds (y>yint)", y, self.yint)
+                return None
+            elif y < 0:
+                if raiseonerror:
+                    raise ValueError("The value of y is out of bounds (y<0)", y)
+                return None
+
+        num =                          self.yint * (self.yint - y)
+        #        -----------------------------------------------------------------------------
+        denom =  self.B**2*self.yint + self.B*self.S*y + self.B*self.S*self.yint + self.S**2*y
+        return num/denom
+
+    @property
+    def x(self):
+        """
+        the current x value of the curve (=xfromy_f(self.y))
+        """
+        return self.xfromy_f(self.y)
+    
+
+    def yfromx_f(self, x, checkbounds=True, raiseonerror=False):
+        """
+        the invariant function, expressed as y=f(x)
+
+        :x:             the theoretical* amount of x the AMM currently holds
+        :checkbounds:   if True (default), check that dy is in the right range
+        :raiseonerror:  if True, raises upon error, else return None
+        :returns:       the corresponding      
+
+        *in Carbon, the funds received on this curve are not kept on this curve but 
+        transferred to a linked curve; the linked curve may hold different amounts
+        of x, eg because it has been seeded with x>0. In other words -- it does not
+        make sense to look at absolute values of x, only of differences.
+        """
+        if checkbounds:
+            if x < 0:
+                if raiseonerror:
+                    raise ValueError("The value of x is out of bounds (x<0)", x)
+                return None
+            # if x < self.xint:
+            #     if raiseonerror:
+            #         raise ValueError("The value of x is out of bounds (x>xint; y<0)", x, result)
+            #     return None 
+
+        num =    self.yint*(-self.B**2*x - self.B*self.S*x + self.yint)
+        #        ------------------------------------------------------
+        denom =        self.B*self.S*x + self.S**2*x + self.yint
+
+        y = num/denom
+        if checkbounds:
+            if y < 0:
+                if raiseonerror:
+                    raise ValueError("The value of x is out of bounds (x>xint; y<0)", x, xint, y)
+                return None 
+        return y
+
     
     @property
     def total_liquidity(self):
