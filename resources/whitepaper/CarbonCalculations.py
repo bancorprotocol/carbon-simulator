@@ -15,8 +15,8 @@
 # ---
 
 from sympyx import *
-__VERSION__ = "4.0"
-__DATE__ = "12/Dec/2022"
+__VERSION__ = "4.1"
+__DATE__ = "14/Dec/2022"
 
 # # Carbon Calculations
 #
@@ -268,6 +268,10 @@ SDE
 PxDE
 
 PyDE
+
+BDE.s(PxDE)
+
+SDE.s(PxDE).s(PyDE)
 
 BSPIE = Eq(y*(x*(B*S + S**2) + yint), yint*(yint - x*(B*S + B**2)))
 BSPIE
