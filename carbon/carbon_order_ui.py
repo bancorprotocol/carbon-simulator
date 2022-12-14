@@ -212,11 +212,13 @@ class CarbonOrderUI:
     def px(self):
         """alias for pb"""
         return self.pb 
-    
+    p_end = px
+
     @property
     def py(self):
         """alias for pa"""
-        return self.pa  
+        return self.pa
+    p_start = py
     
     @property
     def Q(self):
