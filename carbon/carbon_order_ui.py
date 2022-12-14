@@ -7,9 +7,10 @@ Licensed under MIT
 VERSION HISTORY
 - v1.3: order book helper functions (p_marg_f, yfromp_f, dyfromp_f, dyfromdx_f, dyfromdx_f, goalseek)
 - v1.3.1: more order book and other helper functions (yfromx_f, xfromy_f, p_eff_f, xint, )
+- v1.4: new methods: fromQxy, Q, Gamma
 """
-__version__ = "1.3.1"
-__date__ = "13/Dec/2022"
+__version__ = "1.4"
+__date__ = "14/Dec/2022"
 
 try:
     from .pair import CarbonPair
@@ -112,7 +113,7 @@ class CarbonOrderUI:
     @classmethod
     def from_prices(cls, pair, tkn, pa, pb, yint, y):
         """
-        alternative constructor, taking prices pa, pb
+        alternative constructor, taking prices pa, pb and curve capacity yint
         
         :pair:    the corresponding token pair (specifically, its CarbonPair record)
         :tkn:     the token that this order is selling
@@ -149,11 +150,41 @@ class CarbonOrderUI:
             pair=pair, 
             tkn=tkn, 
             B=B, 
-            S= S, 
+            S=S, 
             yint=yint, 
             y=y
         )
     
+    @classmethod
+    def from_Qxy(cls, pair, tkn, Q, xint, yint, y):
+        """
+        alternative constructor, taking convexity Q and curve capacities xint, yint
+        """
+        pair = CarbonPair(pair)
+        if not pair.has_token(tkn):
+            raise ValueError("token not part of the pair", tkn, pair)
+        if xint<=0:
+            raise ValueError("xint must be positive", xint)
+        if yint<=0:
+            raise ValueError("yint must be positive", yint)
+        if y>yint:
+            raise ValueError("y must not be bigger than yint (y={y}, yint={yint})", yint, y)
+        if y<0:
+            raise ValueError("y must be non-negative", y)
+
+        p0 = yint/xint
+        B = sqrt(p0*Q)
+        S = sqrt(p0/Q) - B
+
+        return cls(
+            pair=pair, 
+            tkn=tkn, 
+            B=B, 
+            S=S, 
+            yint=yint, 
+            y=y
+        )
+
     @classmethod
     def from_order(cls, order):
         """
@@ -187,6 +218,16 @@ class CarbonOrderUI:
         """alias for pa"""
         return self.pa  
     
+    @property
+    def Q(self):
+        """Q parameter = sqrt(Px/Py) < 1"""
+        return sqrt(self.pb_raw/self.pa_raw)
+
+    @property
+    def Gamma(self):
+        """Gamma parameter (also known as n) = 1 - sqrt(Q)"""
+        return 1 - sqrt(self.Q)
+
     @property
     def widthr(self):
         """the width ratio of the range, widthr = pmax/pmin"""

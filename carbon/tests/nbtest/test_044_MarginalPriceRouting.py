@@ -302,6 +302,36 @@ def test_carbonorderui_tests_dyfromdx_f_and_dxfromdy_f():
     assert round(orderr.p_eff_f(0.1)-1000,2) == 0
     assert round(orderr.p_eff_f(10000) - orderr.p0, 6) == 0
     
+    # ### from_Qxy 
+    
+    assert order.Q == sqrt(order.pb_raw/order.pa_raw)
+    assert order.Gamma == 1 - sqrt(order.Q)
+    print(f"Q={order.Q}, Gamma={order.Gamma}")
+    
+    assert order1.Q == sqrt(order1.pb_raw/order1.pa_raw)
+    assert order1.Gamma == 1 - sqrt(order1.Q)
+    print(f"Q={order1.Q}, Gamma={order1.Gamma}")
+    
+    assert orderr.Q == sqrt(orderr.pb_raw/orderr.pa_raw)
+    assert orderr.Gamma == 1 - sqrt(orderr.Q)
+    print(f"Q={orderr.Q}, Gamma={orderr.Gamma}")
+    
+    order_ = CarbonOrderUI.from_Qxy(order.pair, order.tkn, order.Q, order.xint, order.yint, order.y)
+    assert round(order_.B - order.B, 10) == 0
+    assert round(order_.S - order.S, 10) == 0
+    assert round(order_.xint - order.xint, 10) == 0
+    assert round(order_.yint - order.yint, 10) == 0
+    assert round(order_.y - order.y, 10) == 0
+    order_
+    
+    orderr_ = CarbonOrderUI.from_Qxy(orderr.pair, orderr.tkn, orderr.Q, orderr.xint, orderr.yint, orderr.y)
+    assert round(orderr_.B - orderr.B, 10) == 0
+    assert round(orderr_.S - orderr.S, 10) == 0
+    assert round(orderr_.xint - orderr.xint, 10) == 0
+    assert round(orderr_.yint - orderr.yint, 10) == 0
+    assert round(orderr_.y - orderr.y, 10) == 0
+    orderr_
+    
 
 # ------------------------------------------------------------
 # Test      044
