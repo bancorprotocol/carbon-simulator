@@ -7,10 +7,10 @@ Licensed under MIT
 VERSION HISTORY
 - v1.3: order book helper functions (p_marg_f, yfromp_f, dyfromp_f, dyfromdx_f, dyfromdx_f, goalseek)
 - v1.3.1: more order book and other helper functions (yfromx_f, xfromy_f, p_eff_f, xint, )
-- v1.4: new methods: fromQxy, Q, Gamma
+- v1.4: new methods: fromQxy, Q, Gamma, sellx, selly
 """
 __version__ = "1.4"
-__date__ = "14/Dec/2022"
+__date__ = "15/Dec/2022"
 
 try:
     from .pair import CarbonPair
@@ -190,16 +190,31 @@ class CarbonOrderUI:
         """
         alternative constructor, from an Order object
 
-        :order:     the order object
+        :order:     the Order or CarbonOrderUI object
         """
+        try: 
+            yint = order.y_int
+        except:
+            yint = order.yint
+
         return cls(
             pair=order.pair, 
             tkn=order.tkn, 
             B=float(order.B), 
             S= float(order.S), 
-            yint=float(order.y_int), 
+            yint=float(yint), 
             y=float(order.y)
         )
+
+    @property 
+    def tkny(self):
+        """the token on the y-axis (alias for tkn)"""
+        return self.tkn
+    
+    @property 
+    def tknx(self):
+        """the token on the x-axis"""
+        return self.pair.other(self.tkn)
 
     @property
     def p0(self):
@@ -666,3 +681,83 @@ class CarbonOrderUI:
             #print(f"m={m}, m={m}, b={b}")
             if b/a-1 < eps:
                 return m
+
+    def selly(self, dy, execute=True, allowneg=True, expandcurve=False, raiseonerror=False):
+        """
+        executes a trade selling y for x
+
+        :dy:            the amount of y to sell (a positive number)
+        :execute:       if False, only display results but to not update
+        :allowneg:      if True, negative dy numbers (=buying) are allowed
+        :expandcurve:   if True, purchasing y beyond yint expands the curve to yint = y
+        :raiseonerror:  if True, error lead to raising on exception
+        """
+        if dy < 0:
+            if not allowneg:
+                if raiseonerror:
+                    raise ValueError(f"Negative dy is not allowed (allowneg={allowneg})", dy)
+                return None
+
+        yold = self.y
+        pold = self.p_marg
+        ynew = self.y - dy
+        pnew = self.p_marg_f(dy, checkbounds=False)
+
+        if ynew < 0:
+            if raiseonerror:
+                raise ValueError(f"Traded beyond capacity (yold={yold}, ynew={ynew}, dy={dy})")
+            return None
+
+        elif ynew > self.yint:
+            if not expandcurve:
+                if raiseonerror:
+                    raise ValueError(f"Curve needs expanding and expanding not allowed (yold={yold}, ynew={ynew}, dy={dy}, expandcurve={expandcurve})")
+                return None
+            else:
+                yintold = self.yint
+                yint = ynew
+                if execute:
+                    self.yint = ynew
+                curve_expanded = True
+        
+        else:
+            curve_expanded = False
+            yint = self.yint
+
+        dx = self.dxfromdy_f(dy, checkbounds=False, raiseonerror=True)
+        if execute:
+            self.y = ynew
+
+        result = {
+            "y_old": yold,
+            "y": ynew,
+            "dy": dy,
+            "yint_old": yintold if curve_expanded else None,
+            "y_int": yint,
+            "expanded": curve_expanded,
+            "x": self.xfromy_f(ynew),
+            "dx": dx,
+            "tkny": self.tkny,
+            "tknx": self.tknx,
+            "tx": f"Sell {abs(dy)} {self.tkny} buy {self.tknx}" if dx>0 else f"Buy {abs(dy)} {self.tkny} sell {self.tknx}",
+            "dx/dy": dx/dy if dy != 0 else None,
+            "dy/dx": dy/dx if dx != 0 else None,
+            "pmarg_old": pold,
+            "pmarg": pnew,
+            "p": None,
+        } 
+        result["p"] = result["dx/dy"] if self.pair.has_basetoken(self.tkny) else result["dy/dx"]
+        return result
+
+    def buyx(self, dx, execute=True, allowneg=True, expandcurve=False, raiseonerror=False):
+        """
+        executes a buying x for y
+
+        :dx:            the amount of x to buy (a positive number)
+        :execute:       if False, only display results but to not update
+        :allowneg:      if True, negative dy numbers (=buying) are allowed
+        :expandcurve:   if True, purchasing y beyond yint expands the curve to yint = y
+        :raiseonerror:  if True, error lead to raising on exception
+        """
+        dy = self.dyfromdx_f(dx, checkbounds=False, raiseonerror=True)
+        return self.selly(dy, execute, allowneg, expandcurve, raiseonerror)
