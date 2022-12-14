@@ -40,10 +40,11 @@ The permament Github URL for this repo is [`bancorprotocol/carbon-simulator`][re
 
 If you already have Python and Jupyter installed, you can launch a Jupyter instance in the root directory of the project by running `jupyter notebook` and then opening the notebook [`CarbonSim-Example.ipynb`][cse], or any of the other notebooks in that directory. 
 
-You may run into missing modules that need to be installed via pip. In this case, either install them manually based on the list in the [`requirements.txt`][rqt] or refer to the instructions below. We also recommend to install [JupyText][jupytext].
+You may run into missing modules that need to be installed via pip. In this case, either install them manually based on the list in [`requirements.txt`][rqt] and [`requirements_ui.txt`][rqtui] or refer to the instructions below. We also recommend to install [JupyText][jupytext].
 
 [cse]:https://github.com/bancorprotocol/carbon-simulator/blob/main/CarbonSim-Example.ipynb
 [rqt]:https://github.com/bancorprotocol/carbon-simulator/blob/main/requirements.txt
+[rqtui]:https://github.com/bancorprotocol/carbon-simulator/blob/main/requirements_ui.txt
 
 
 ## Project setup
@@ -70,11 +71,12 @@ Navigate to the top level project directory and start the Jupyter server:
 $ jupyter notebook
 ````
 
-Then run the notebook [`CarbonSim-Example.ipynb`][cse] or any of the other notebooks. If you are getting import errors, make sure all modules from [`requirements.txt`][rqt] are installed, eg by running
+Then run the notebook [`CarbonSim-Example.ipynb`][cse] or any of the other notebooks. If you are getting import errors, make sure all modules from [`requirements.txt`][rqt] and [`requirements_ui.txt`][rqtui] are installed, eg by running
 
 
 ````{tab} PyPI
 $ pip install -r requirements.txt
+$ pip install -r requirements_ui.txt
 ````
 
 or by installing the required modules manually. 
