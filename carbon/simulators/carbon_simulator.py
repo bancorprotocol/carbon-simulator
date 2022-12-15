@@ -602,9 +602,9 @@ class CarbonSimulatorUI:
                 )
 
                 if execute:
-                    self.orders[indx].y -= Decimal(amt1)
+                    self.orders[indx].y -= Decimal(amt1) if not (is_by_target and isinstance(self.matcher, FastRouter)) else Decimal(amt2)
                     if self.orders[indx].linked_to_id != indx:
-                        self.orders[self.orders[indx].linked_to_id].y += Decimal(amt2)
+                        self.orders[self.orders[indx].linked_to_id].y += Decimal(amt2) if not (is_by_target and isinstance(self.matcher, FastRouter)) else Decimal(amt1)
                         if (
                                 self.orders[self.orders[indx].linked_to_id].y
                                 > self.orders[self.orders[indx].linked_to_id].y_int
