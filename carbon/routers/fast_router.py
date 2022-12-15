@@ -42,7 +42,7 @@ class FastRouter(BaseRouter):
         if self.use_floor_division:
             return (x * y + z - 1) // z
         else:
-            return (x * y + z - 1) / z
+            return x * y / z
 
     def amt_by_src(
             self, subject: int, dx: DecFloatInt, position_subset: List[int] = None

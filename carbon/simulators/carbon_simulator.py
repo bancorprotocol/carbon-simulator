@@ -647,7 +647,7 @@ class CarbonSimulatorUI:
                         1
                     ],  # the number of routes across which the trade was executed
                     "price": [
-                        price_avg if not (is_by_target and isinstance(self.matcher, FastRouter)) else 1 / Decimal(price_avg)
+                        price_avg if not (is_by_target and isinstance(self.matcher, FastRouter)) else round(float(1 / Decimal(price_avg)), decimals)
                     ],  # the price amt_/amt_, in the convention of the pair
                     "p_unit": [
                         f"{tknq} per {tknb}"
@@ -671,7 +671,7 @@ class CarbonSimulatorUI:
 
             amt1, amt2 = ttl_output, ttl_input
 
-            note = f"AMM sells {amt1:.0f}{tkn} buys {amt2:.0f}{tkno}"
+            note = f"AMM sells {amt1 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt2:.0f}{tkn} buys {amt2 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt1:.0f}{tkno}"
             num_trades = len(routes)
             order_ids = [id_map[o.index] for o in routes]
             uid = f"{numtrades}"
@@ -684,14 +684,20 @@ class CarbonSimulatorUI:
                 "aggr": [True],
                 "exec": [execute],
                 "limitfail": [limitfail],
-                "amt1": [amt1],
+                "amt1": [
+                    amt1 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt2
+                    ],
                 "tkn1": [tkn],
-                "amt2": [amt2],
+                "amt2": [
+                    amt2 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt1
+                    ],
                 "tkn2": [tkno],
                 "pair": [carbon_pair.pair_iso],
                 "routeix": [str(order_ids)],
                 "nroutes": [num_trades],
-                "price": [price_avg if not (is_by_target and isinstance(self.matcher, FastRouter)) else 1 / Decimal(price_avg)],
+                "price": [
+                    price_avg if not (is_by_target and isinstance(self.matcher, FastRouter)) else round(float(1 / Decimal(price_avg)), decimals)
+                    ],
                 "p_unit": [f"{tknq} per {tknb}"],
             }
 
