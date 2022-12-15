@@ -308,6 +308,107 @@ assert round(orderr_.yint - orderr.yint, 10) == 0
 assert round(orderr_.y - orderr.y, 10) == 0
 orderr_
 
+# ### buyx
+
+order_ = CarbonOrderUI.from_order(order)
+r = order_.buyx(1000, raiseonerror=True)
+r
+
+assert round(r["x"],10) == 1000
+assert round(r["p"] - sqrt(r["pmarg_old"]*r["pmarg"]),10) == 0
+assert round(r["dx/dy"] * r["dy/dx"],10) == 1
+assert r["tx"] == 'Sell 0.4954541237152398 ETH buy USDC'
+assert r["expanded"] == False
+assert r["y_old"] - r["dy"] == r["y"]
+assert round(r["x"] - r["dx"],10)==0
+
+r  = order_.buyx(1000, raiseonerror=True)
+r
+
+assert round(r["x"],10) == 2000
+assert round(r["p"] - sqrt(r["pmarg_old"]*r["pmarg"]),10) == 0
+assert r["dx/dy"] == 1 / r["dy/dx"]
+assert r["tx"] == 'Sell 0.4865262015696128 ETH buy USDC'
+assert r["expanded"] == False
+assert r["y_old"] - r["dy"] == r["y"]
+assert round(r["x"] - r["dx"],10)!=0
+
+order_ = CarbonOrderUI.from_order(orderr)
+r  = order_.buyx(1, raiseonerror=True)
+r
+
+assert round(r["x"],10) == 1
+assert round(r["p"] - sqrt(r["pmarg_old"]*r["pmarg"]),10) == 0
+assert r["dx/dy"] == 1 / r["dy/dx"]
+assert r["tx"] == 'Sell 986.7796593583731 USDC buy ETH'
+assert r["expanded"] == False
+assert r["y_old"] - r["dy"] == r["y"]
+assert round(r["x"] - r["dx"],10)==0
+
+r  = order_.buyx(-0.5, raiseonerror=True)
+r
+
+assert round(r["x"],10) == 0.5
+assert round(r["p"] - sqrt(r["pmarg_old"]*r["pmarg"]),10) == 0
+assert r["dx/dy"] == 1 / r["dy/dx"]
+assert r["tx"] == 'Buy 490.10673706911854 USDC sell ETH'
+assert r["expanded"] == False
+assert r["y_old"] - r["dy"] == r["y"]
+assert round(r["x"] - r["dx"],10)!=0
+
+# ### selly
+
+order_ = CarbonOrderUI.from_order(order)
+r  = order_.selly(1, raiseonerror=True)
+r
+
+assert r["y"] == 9
+assert round(r["p"] - sqrt(r["pmarg_old"]*r["pmarg"]),10) == 0
+assert r["dx/dy"] == 1 / r["dy/dx"]
+assert r["tx"] == 'Sell 1 ETH buy USDC'
+assert r["expanded"] == False
+assert r["y_old"] - r["dy"] == r["y"]
+assert round(r["x"] - r["dx"],10)==0
+
+r  = order_.selly(1, raiseonerror=True)
+r
+
+assert r["y"] == 8
+assert round(r["p"] - sqrt(r["pmarg_old"]*r["pmarg"]),10) == 0
+assert r["dx/dy"] == 1 / r["dy/dx"]
+assert r["tx"] == 'Sell 1 ETH buy USDC'
+assert r["expanded"] == False
+assert r["y_old"] - r["dy"] == r["y"]
+assert round(r["x"] - r["dx"],10)!=0
+
+order_ = CarbonOrderUI.from_order(order)
+r1 = order.selly(1, execute = False)
+r2 = order.selly(1, execute = False)
+assert r1 == r2
+
+order_ = CarbonOrderUI.from_order(orderr)
+r  = order_.selly(1000, raiseonerror=True)
+r
+
+assert r["y"] == 9000
+assert round(r["p"] - sqrt(r["pmarg_old"]*r["pmarg"]),10) == 0
+assert r["dx/dy"] == 1 / r["dy/dx"]
+assert r["tx"] == 'Sell 1000 USDC buy ETH'
+assert r["expanded"] == False
+assert r["y_old"] - r["dy"] == r["y"]
+assert round(r["x"] - r["dx"],10)==0
+
+r  = order_.selly(-500, raiseonerror=True)
+r
+
+assert r["y"] == 9500
+assert round(r["p"] - sqrt(r["pmarg_old"]*r["pmarg"]),10) == 0
+assert r["dx/dy"] == 1 / r["dy/dx"]
+assert r["tx"] == 'Buy 500 USDC sell ETH'
+assert r["expanded"] == False
+assert r["y_old"] - r["dy"] == r["y"]
+assert round(r["x"] - r["dx"],10)!=0
+
 # ## CarbonOrderUI charts [NOTEST]
 
 order1 = CarbonOrderUI.from_prices("ETH/USDC", "ETH", 2000, 3000, 10, 10)
@@ -470,7 +571,7 @@ sum([o.dyfromp_f(p_goal) for o in orders])
 
 # And finally we can verify this against the exact algo match
 
-Sim = CarbonSimulatorUI(pair="ETH/USDC", verbose=False, raiseonerror=False)
+Sim = CarbonSimulatorUI(pair="ETH/USDC", verbose=False, raiseonerror=True)
 Sim
 
 for i in range(10):
@@ -478,6 +579,8 @@ for i in range(10):
     # sell 5 ETH off each order to get the appropriate p_marg
     Sim.amm_sells('ETH', 5, use_positions=[i*2])
 Sim.state()['orders'].query("disabled==False")
+
+Sim.state()
 
 r = Sim.amm_sells('ETH', 15)['trades']
 r
