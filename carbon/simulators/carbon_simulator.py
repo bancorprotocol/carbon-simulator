@@ -629,9 +629,13 @@ class CarbonSimulatorUI:
                     "limitfail": [
                         limitfail
                     ],  # False if limit met, True if not, None if no limit
-                    "amt1": [amt1],  # the amount of `tkn1` being sold by the AMM (>0)
+                    "amt1": [
+                        amt1 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt2
+                        ],  # the amount of `tkn1` being sold by the AMM (>0)
                     "tkn1": [tkn],  # the token being SOLD by the AMM
-                    "amt2": [amt2],  # the amount of `tkn2` being bought by the AMM (>0)
+                    "amt2": [
+                        amt2 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt1
+                        ],  # the amount of `tkn2` being bought by the AMM (>0)
                     "tkn2": [tkno],  #  the token being BOUGHT by the AMM
                     "pair": [
                         carbon_pair.pair_iso
