@@ -7,9 +7,10 @@ Licensed under MIT
 VERSION HISTORY
 v2.0 - require slashpair notation (breaking change); exclude_future, constants for matching method
 v2.2 - curve disabling, single orders
+v2.2.1 - CarbonOrderUI linked
 """
-__version__ = "2.2"
-__date__ = "8/Dec/2022"
+__version__ = "2.2.1"
+__date__ = "16/Dec/2022"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -904,7 +905,8 @@ class CarbonSimulatorUI:
                     ]
                 )
                 orderuis = {o.id: CarbonOrderUI.from_order(o) for o in applicable_orders}
-
+                for o in applicable_orders:
+                    orderuis[o.id].set_linked(orderuis[o.linked_to_id])
             else:
                 orders = pd.DataFrame({})
                 orderuis = dict()

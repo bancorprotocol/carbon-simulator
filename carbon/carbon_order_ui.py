@@ -9,8 +9,9 @@ VERSION HISTORY
 - v1.3.1: more order book and other helper functions (yfromx_f, xfromy_f, p_eff_f, xint, )
 - v1.4: new methods: fromQxy, Q, Gamma, sellx, selly
 - v1.4.1: bidask, curves_by_pair_bidask, added checks for B,S=0
+- v1.5: ix, lix, linked_curve (beta)
 """
-__version__ = "1.4.1"
+__version__ = "1.5"
 __date__ = "16/Dec/2022"
 
 try:
@@ -33,6 +34,11 @@ class CarbonOrderUI:
     :S:       the S-parameter; S = sqrt pa_raw - Sqrt pb_raw
     :yint:    the y-intercept of the curve (also its current maximum capacity)
     :y:       the current y-coordinate on the curve (also current token holdings)
+    :id:      id of this curve*
+    :linked:  the linked curve object*
+
+    *Beta; interace may still change in respect to ix, lix and linked as well 
+    as the associated functions
     
     other properties set by the constructor
     :pa_raw:   the pa parameter in native quotation (dy/dx)
@@ -60,6 +66,8 @@ class CarbonOrderUI:
     S: float
     yint: float
     y: float
+    id: any = None
+    linked: any = None
     def __post_init__(self):
         self.pair = CarbonPair(self.pair)
         self.tkn = self.tkn.upper()
@@ -88,6 +96,22 @@ class CarbonOrderUI:
             self.pmin = None
             self.pmax = None        
     
+    def set_id(self, id):
+        """sets curve index; raises if index already set"""
+        if not self.id is None:
+            raise ValueError("Index has already been set", id, self.id)
+        self.id = id
+    
+    def set_linked(self, linked=None):
+        """
+        sets linked object and index
+
+        :linked:    the linked curve (CarbonOrderUI object)
+        """
+        if not self.linked is None:
+            raise ValueError("Linked object has already been set", linked.id, self.linked.id)
+        self.linked = linked
+
     @classmethod
     def from_BSy(cls, pair, tkn, B, S, yint, y):
         """
@@ -205,7 +229,8 @@ class CarbonOrderUI:
             B=float(order.B), 
             S= float(order.S), 
             yint=float(yint), 
-            y=float(order.y)
+            y=float(order.y),
+            id=order.id,
         )
 
     @property 
@@ -787,38 +812,32 @@ class CarbonOrderUI:
         return self.selly(dy, execute, allowneg, expandcurve, raiseonerror)
 
     @staticmethod
-    def curves_by_pair_bidask(curves, includeids=True):
+    def curves_by_pair_bidask(curves):
         """
         sorts curves by pair, and then by bid/ask
 
         :curves:        an iterable of CarbonOrderUI curves
-        :includeids:    if False, return [curve, ...] instead of  {id:curve, ...}
         :returns:       dict {
                             "pair": {
-                                "ALL": {id:curve, ...},
-                                "BID": {id:curve, ...},
-                                "ASK": {id:curve, ...}
+                                "ALL": [curve, ...],
+                                "BID": [curve, ...],
+                                "ASK": [curve, ...]
                             }
                             ...
                         }
         """
         pairs = set(r.pair.slashpair for r in curves.values())
-        if includeids:
-            result = {
-                pair:{ 
-                    "ALL": {k:v for k,v in curves.items() if v.pair.slashpair == pair},
-                    "BID": {k:v for k,v in curves.items() if v.pair.slashpair == pair and v.bidask=="BID"},
-                    "ASK": {k:v for k,v in curves.items() if v.pair.slashpair == pair and v.bidask=="ASK"},
-                }
-                for pair in pairs
+        result = {
+            pair:{ 
+                "ALL": [v for v in curves.values() if v.pair.slashpair == pair],
+                "ASK": [v for v in curves.values() if v.pair.slashpair == pair and v.bidask=="BID"],
+                "BID": [v for v in curves.values() if v.pair.slashpair == pair and v.bidask=="ASK"],
             }
-        else:
-            result = {
-                pair:{ 
-                    "ALL": [v for v in curves.values() if v.pair.slashpair == pair],
-                    "ASK": [v for v in curves.values() if v.pair.slashpair == pair and v.bidask=="BID"],
-                    "BID": [v for v in curves.values() if v.pair.slashpair == pair and v.bidask=="ASK"],
-                }
-                for pair in pairs
-            }            
+            for pair in pairs
+        }            
         return result
+    
+    def __repr__(self):
+        s1 = f"pair={self.pair.slashpair}, B={self.B}, S={self.S}, yint={self.yint}, y={self.y}, id={self.id}"
+        s2 = f"linked=<{self.linked.id}>" if self.linked else "linked=None"
+        return f"{self.__class__.__name__}({s1}, {s2})"
