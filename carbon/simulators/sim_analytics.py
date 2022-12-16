@@ -14,9 +14,12 @@ Most functions are also exposed at module level, so alternatively you can do
 
 (c) Copyright Bprotocol foundation 2022. 
 Licensed under MIT
+
+VERSION HISTORY
+- v2.0.2: chart markers
 """
-__version__ = "2.0.1"
-__date__ = "7/Dec/2022"
+__version__ = "2.0.2"
+__date__ = "16/Dec/2022"
 
 import numpy as np
 import pandas as pd
@@ -593,11 +596,11 @@ class OrderBook():
         ob=self
         y = ob.ob_liquidity
         x = ob.ob_prices
-        plt.plot(x, y, marker=".", color=self.colorba, label=f"{ob.amm_bidask}")
+        plt.plot(x, y, marker="", color=self.colorba, label=f"{ob.amm_bidask}")
         if otherob:
             yo = otherob.ob_liquidity
             xo = otherob.ob_prices
-            plt.plot(xo, yo, marker=".", color=otherob.colorba, label=f"{otherob.amm_bidask}")
+            plt.plot(xo, yo, marker="", color=otherob.colorba, label=f"{otherob.amm_bidask}")
 
         fragment = f" ({ob.amm_bidask})" if not otherob else " (bid and ask)"
         plt.title(f"Order book{fragment}")
