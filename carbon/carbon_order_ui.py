@@ -8,9 +8,10 @@ VERSION HISTORY
 - v1.3: order book helper functions (p_marg_f, yfromp_f, dyfromp_f, dyfromdx_f, dyfromdx_f, goalseek)
 - v1.3.1: more order book and other helper functions (yfromx_f, xfromy_f, p_eff_f, xint, )
 - v1.4: new methods: fromQxy, Q, Gamma, sellx, selly
+- v1.4.1: bidask, curves_by_pair_bidask, added checks for B,S=0
 """
-__version__ = "1.4"
-__date__ = "15/Dec/2022"
+__version__ = "1.4.1"
+__date__ = "16/Dec/2022"
 
 try:
     from .pair import CarbonPair
@@ -32,7 +33,8 @@ class CarbonOrderUI:
     :S:       the S-parameter; S = sqrt pa_raw - Sqrt pb_raw
     :yint:    the y-intercept of the curve (also its current maximum capacity)
     :y:       the current y-coordinate on the curve (also current token holdings)
-    other properties
+    
+    other properties set by the constructor
     :pa_raw:   the pa parameter in native quotation (dy/dx)
     :pb_raw:   ditto pb
     :pa:       the pa paramter in the quotation appropriate for the pair
@@ -216,6 +218,14 @@ class CarbonOrderUI:
         """the token on the x-axis"""
         return self.pair.other(self.tkn)
 
+    @property
+    def bidask(self):
+        """returns BID or ASK depending on what type curve it is"""
+        if self.tkny == self.pair.basetoken:
+            return "BID"
+        else:
+            return "ASK"
+    
     @property
     def p0(self):
         """
@@ -410,6 +420,10 @@ class CarbonOrderUI:
         :returns:       the (positive!) dy value at which the marginal price is achieved
                         in cases where yfromp_f returns none, this func returns 0
         """
+        if self.B == 0 and self.S == 0:
+            if raiseonerror:
+                raise ValueError("Can't determine trade prices from an empty curve", self.B, self.S)
+            return 0
         y = self.yfromp_f(p, checkbounds, raiseonerror)
         if y is None: return 0
         return self.y-y
@@ -427,6 +441,11 @@ class CarbonOrderUI:
         AMM SELLing x. In this case it returns a negative number, corresponding
         to the AMM BUYing y.
         """
+        if self.B == 0 and self.S == 0:
+            if raiseonerror:
+                raise ValueError("Can't trade on an empty curve", self.B, self.S)
+            return 0
+
         if checkbounds:
             if dx < 0:
                 if raiseonerror:
@@ -463,6 +482,11 @@ class CarbonOrderUI:
         AMM BUYing y. In this case it returns a negative number, corresponding
         to the AMM SELLing x.
         """
+        if self.B == 0 and self.S == 0:
+            if raiseonerror:
+                raise ValueError("Can't trade on an empty curve", self.B, self.S)
+            return 0
+
         if checkbounds:
             if dy < 0:
                 if raiseonerror:
@@ -687,7 +711,7 @@ class CarbonOrderUI:
         executes a trade selling y for x
 
         :dy:            the amount of y to sell (a positive number)
-        :execute:       if False, only display results but to not update
+        :execute:       if False, only display results but do not update the object
         :allowneg:      if True, negative dy numbers (=buying) are allowed
         :expandcurve:   if True, purchasing y beyond yint expands the curve to yint = y
         :raiseonerror:  if True, error lead to raising on exception
@@ -751,13 +775,50 @@ class CarbonOrderUI:
 
     def buyx(self, dx, execute=True, allowneg=True, expandcurve=False, raiseonerror=False):
         """
-        executes a buying x for y
+        executes a trade buying x for y
 
         :dx:            the amount of x to buy (a positive number)
-        :execute:       if False, only display results but to not update
+        :execute:       if False, only display results but do not update the object
         :allowneg:      if True, negative dy numbers (=buying) are allowed
         :expandcurve:   if True, purchasing y beyond yint expands the curve to yint = y
         :raiseonerror:  if True, error lead to raising on exception
         """
         dy = self.dyfromdx_f(dx, checkbounds=False, raiseonerror=True)
         return self.selly(dy, execute, allowneg, expandcurve, raiseonerror)
+
+    @staticmethod
+    def curves_by_pair_bidask(curves, includeids=True):
+        """
+        sorts curves by pair, and then by bid/ask
+
+        :curves:        an iterable of CarbonOrderUI curves
+        :includeids:    if False, return [curve, ...] instead of  {id:curve, ...}
+        :returns:       dict {
+                            "pair": {
+                                "ALL": {id:curve, ...},
+                                "BID": {id:curve, ...},
+                                "ASK": {id:curve, ...}
+                            }
+                            ...
+                        }
+        """
+        pairs = set(r.pair.slashpair for r in curves.values())
+        if includeids:
+            result = {
+                pair:{ 
+                    "ALL": {k:v for k,v in curves.items() if v.pair.slashpair == pair},
+                    "BID": {k:v for k,v in curves.items() if v.pair.slashpair == pair and v.bidask=="BID"},
+                    "ASK": {k:v for k,v in curves.items() if v.pair.slashpair == pair and v.bidask=="ASK"},
+                }
+                for pair in pairs
+            }
+        else:
+            result = {
+                pair:{ 
+                    "ALL": [v for v in curves.values() if v.pair.slashpair == pair],
+                    "ASK": [v for v in curves.values() if v.pair.slashpair == pair and v.bidask=="BID"],
+                    "BID": [v for v in curves.values() if v.pair.slashpair == pair and v.bidask=="ASK"],
+                }
+                for pair in pairs
+            }            
+        return result
