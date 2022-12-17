@@ -18,14 +18,20 @@ import sys
 import os
 import re
 from collections import namedtuple
-__VERSION__ = "1.1"
-__DATE__ = "11/Dec/2022"
+__VERSION__ = "1.2"
+__DATE__ = "17/Dec/2022"
+
+# VERSION HISTORY
+#
+# - v1.1: [TEST] and [NOTEST]; defaults
 
 # # Convert NBTest
 #
 # Converts files `NBTest_9999_Comment.py -> test_9999_Comment.py` suitable for `pytest`
 
 print(f"NBTestConvert v{__VERSION__} {__DATE__}")
+
+NOTEST_DEFAULT="TEST"
 
 # ## Get script path and set paths
 
@@ -88,37 +94,59 @@ fnlst = (filterfn(fn) for fn in rawlist)
 fnlst = tuple(r for r in fnlst if not r is None)
 fnlst
 
-"jksjsdfngx[NOTEST]"[:-8]
-
 
 # ## Process files
 
 # +
 def funcn(title):
-    """convert a title into a function name"""
+    """
+    converts a title into a function name
+    
+    NOTE
+    
+    "This is a title [TEST]"     -> test_this_is_a_title
+    "This is a title [NOTEST]"   -> notest_this_is_a_title
+    "This is a title"            -> depends on NOTEST_DEFAULT global
+    """
+    global NOTEST_DEFAULT
+    #print("[funcn] NOTEST_DEFAULT", NOTEST_DEFAULT)
+    
     title = title.strip()
     if title[-8:] == "[NOTEST]":
-        prefix = "notest_"
+        notest = True
         title = title[:-8].strip()
+    elif title[-6:] == "[TEST]":
+        notest = False
+        title = title[:-6].strip()
     else:
-        prefix = "test_"
+        notest = True if NOTEST_DEFAULT == "NOTEST" else False 
+        
+        
+    prefix = "notest_" if notest else "test_"
+
         
     funcn = title.lower()
     funcn = funcn.replace(" ", "_")
     funcn = prefix+funcn
     return funcn
 
-assert funcn("Title") == "test_title"
-assert funcn("Advanced Testing") == "test_advanced_testing"
+assert funcn(" Title [TEST]  ") == "test_title"
+assert funcn(" Title [NOTEST] ") == "notest_title"
+assert funcn(" Title  ") == "notest_title" if NOTEST_DEFAULT=="NOTEST" else "test_title"
+assert funcn(" Advanced Testing [TEST]  ") == "test_advanced_testing"
+assert funcn(" A notest title [NOTEST] ") == "notest_a_notest_title"
 #funcn("Asserting that the radius computes correctly")
 # -
+
+funcn("A notest title [NOTEST]")
+
 
 def process_code(code, dr, srcpath=None, trgpath=None):
     """
     processes notebook code
     
-    :code:    the code to be processed
-    :dr:  the associated data record (datarecord_nt)
+    :code:      the code to be processed
+    :dr:        the associated data record (datarecord_nt)
     :srcpath:   source path (info only)
     :trgpath:   target path (info only)
     """
@@ -149,6 +177,7 @@ def process_code(code, dr, srcpath=None, trgpath=None):
         if l[:4] == "# # ":
             print(f"""Processing "{l[4:]}" ({r.fn})""")
             outlines += [""]
+            
         elif l[:5] == "# ## ":
             title = l[5:].strip()
             fcn = funcn(title)
@@ -164,6 +193,28 @@ def process_code(code, dr, srcpath=None, trgpath=None):
                  "# "+"-"*60,
             ]
             is_precode = False
+            
+        elif l[:9] == "# NBTEST:":
+            l = l[9:]
+            try:
+                opt, val = l.split("=")
+                opt=opt.strip().upper()
+                val=val.strip().upper()
+            except:
+                print(f"  error setting option", l)
+                raise ValueError("Error setting option", l, dr.fn)
+            print(f"  processiong option {opt}={val}")
+            if opt == "NOTEST_DEFAULT":
+                global NOTEST_DEFAULT
+                if val in ["TEST", "NOTEST"]:
+                    NOTEST_DEFAULT = val
+                    #print("[process_code] NOTEST_DEFAULT", NOTEST_DEFAULT)
+                else:
+                    raise ValueError(f"Invalid choice for option NOTEST_DEFAULT: {val}", l, dr.fn)
+            else:
+                raise ValueError(f"Unknown option {opt}", l, dr.fn)
+            
+            
         else:
             if is_precode:
                 if l[:2] != "# ":
@@ -173,12 +224,8 @@ def process_code(code, dr, srcpath=None, trgpath=None):
     outcode = "\n".join(outlines)
     return outcode
 
-
 for r in fnlst:
     code = fload(r.fn, SRCPATH, quiet=True)
     testcode = process_code(code, r, SRCPATH, TRGPATH)
     fsave(testcode, r.outfn, TRGPATH, quiet=True)
-    #print(testcode)
     print(f"  saving generated test to {r.outfn}")
-
-

@@ -41,11 +41,19 @@ import pandas as pd
 #     def help_segment_2():
 #         assert False
 
+# ### Options
+#
+# NBTest options are markdown cells of the form `NBTEST: <option> = <value>`. Recognised options:
+#
+# - `NOTEST_DEFAULT` (`TEST`, `NOTEST`): default choice for Heading2 that do not end in `[TEST]` or `[NOTEST]`
+
+# NBTEST: NOTEST_DEFAULT = TEST
+
 # ## Segment 1
 
 assert True
 
-# ## Segment 2
+# ## Segment 2 [TEST]
 
 assert True
 
