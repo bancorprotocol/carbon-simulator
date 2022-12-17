@@ -19,6 +19,8 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 
 # # Carbon Simulation - Test 40 - PairInSim
 
+# NBTEST: NOTEST_DEFAULT = TEST
+
 ETHUSDC = P("ETH/USDC")
 
 # ## Pair without CarbonPair defaults

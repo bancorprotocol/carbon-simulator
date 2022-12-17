@@ -20,6 +20,7 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
 
 
 
+
 NUM_POINTS = 100   # number of points on the precise chart
 
 ETHUSDC = P(tknq="USDC", tknb="ETH")
@@ -46,7 +47,7 @@ Sim.state()["orders"]
 prices = al.linspace(500,3000, NUM_POINTS)
 prices
 
-curves_by_pair_bidask = CarbonOrderUI.curves_by_pair_bidask(Sim.state()["orderuis"], includeids=False)
+curves_by_pair_bidask = CarbonOrderUI.curves_by_pair_bidask(Sim.state()["orderuis"])
 print(list(curves_by_pair_bidask.keys()))
 
 
@@ -59,7 +60,7 @@ def test_curves_by_pair_bidask():
 # ------------------------------------------------------------
     
     cbpba = curves_by_pair_bidask
-    cbpba["ETH/USDC"]
+    #cbpba["ETH/USDC"]
     
     print(list(cbpba.keys()))
     assert set(cbpba.keys()) == {'ETH/USDC', 'WBTC/USDC', 'USDC/USDT'}
@@ -75,6 +76,55 @@ def test_curves_by_pair_bidask():
     
     assert [int(c.p_marg) for c in cbpba["ETH/USDC"]["BID"] if not c.p_marg is None] == [1500, 1500, 1450, 1200]
     assert [int(c.p_marg) for c in cbpba["ETH/USDC"]["ASK"] if not c.p_marg is None] == [2000, 2100, 2300, 2399, 2500]
+    
+
+# ------------------------------------------------------------
+# Test      045
+# File      test_045_OrderBook.py
+# Segment   CarbonOrderUI id and linked
+# ------------------------------------------------------------
+def test_carbonorderui_id_and_linked():
+# ------------------------------------------------------------
+    
+    p1 = CarbonOrderUI.from_prices(ETHUSDC, "ETH", 2000, 3000, 10, 10)
+    p2 = CarbonOrderUI.from_prices(ETHUSDC, "USDC", 1000, 750, 10, 10)
+    p1,p2
+    
+    assert p1.id is None
+    assert p1.linked is None
+    
+    p1.set_id(1)
+    p2.set_id(2)
+    assert p1.id == 1
+    assert p2.id == 2
+    
+    p1.set_linked(p2)
+    p2.set_linked(p1)
+    assert p1.linked.id == 2
+    assert p2.linked.id == 1
+    
+    p1.linked
+    
+    try:
+        p1.set_id(1)
+        raise RuntimeError("Should raise")
+    except ValueError as e:
+        print(e)
+    
+    try:
+        p1.set_linked(p2)
+        raise RuntimeError("Should raise")
+    except ValueError as e:
+        print(e)
+    
+    curves = curves_by_pair_bidask["ETH/USDC"]
+    assert [c.id for c in curves["ALL"]] == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    assert [c.id for c in curves["BID"]] == [1, 3, 5, 7, 9, 10, 12, 14, 16]
+    assert [c.id for c in curves["ASK"]] == [0, 2, 4, 6, 8, 11, 13, 15, 17]
+    
+    assert [c.linked.id for c in curves["ALL"]] == [1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 13, 12, 15, 14, 17, 16]
+    assert [c.linked.id for c in curves["BID"]] == [c.id for c in curves["ASK"]]
+    assert [c.linked.id for c in curves["ASK"]] == [c.id for c in curves["BID"]]
     
 
 # ------------------------------------------------------------

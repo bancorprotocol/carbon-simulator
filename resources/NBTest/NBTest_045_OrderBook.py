@@ -24,6 +24,8 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
 
 # # Order Book example (NBTest 45)
 
+# NBTEST: NOTEST_DEFAULT = TEST
+
 NUM_POINTS = 100   # number of points on the precise chart
 
 ETHUSDC = P(tknq="USDC", tknb="ETH")

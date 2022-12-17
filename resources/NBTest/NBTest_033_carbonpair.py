@@ -20,6 +20,8 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 # # Carbon Simulation - Test 33 - CarbonPair
 #
 
+# NBTEST: NOTEST_DEFAULT = TEST
+
 # just checking we can add a CarbonPair
 #
 # ## CarbonPair

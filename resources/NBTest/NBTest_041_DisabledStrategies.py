@@ -19,6 +19,8 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 
 # # Carbon Simulation - Test 41 - Disabled Strategies and Orders
 
+# NBTEST: NOTEST_DEFAULT = TEST
+
 Sim = CarbonSimulatorUI(pair="ETH/USDC", raiseonerror=True)
 Sim
 

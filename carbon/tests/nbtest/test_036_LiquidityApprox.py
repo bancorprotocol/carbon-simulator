@@ -17,6 +17,7 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 
 
 
+
 Sim = CarbonSimulatorUI(verbose=False, raiseonerror=False, pair="ETH/USDC")
 Sim
 

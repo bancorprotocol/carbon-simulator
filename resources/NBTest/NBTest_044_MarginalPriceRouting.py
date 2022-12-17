@@ -23,6 +23,8 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
 
 # # Marginal Price Routing Example (NBTest 44)
 
+# NBTEST: NOTEST_DEFAULT = TEST
+
 # The Marginal Price Routing code at the end of this notebook required a number of changes to the Carbon library. In the first few sections below we collect a number of test for those new items.
 
 # ## CarbonPair related tests

@@ -22,6 +22,8 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 
 # # Carbon Simulation - Test 32
 
+# NBTEST: NOTEST_DEFAULT = TEST
+
 # ## Basic arithmetic functions
 
 v1 = al.vec([1,2,3])
