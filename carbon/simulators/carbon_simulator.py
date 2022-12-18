@@ -170,6 +170,7 @@ class CarbonSimulatorUI:
             carbon_pair: CarbonPair,
             id1: int = None,
             id2: int = None,
+            p_marginal: Any = None,
     ) -> int:
         """
         PRIVATE - adds a position for sale of tkn
@@ -180,6 +181,7 @@ class CarbonSimulatorUI:
         :p_hi:          ditto upper; also p_a, p_start
         :carbon_pair:   the token pair a CarbonPair object
         :id1/2:         the order ids of the two orders that make up the position; if not given, they are generated
+        :p_marginal:    the marginal price of the position; if not given, it is calculated
         :returns:       the id of the order added
         """
 
@@ -194,7 +196,7 @@ class CarbonSimulatorUI:
 
         if not (p_lo is None and p_hi is None):
 
-            # check the they are both numbers
+            # check that they are both numbers
             if p_lo is None or p_hi is None:
                 raise ValueError("p_lo, p_hi must either be both None or both numbers", p_lo, p_hi)
 
@@ -214,17 +216,21 @@ class CarbonSimulatorUI:
 
         # enter order
         order_params = {
-            "tkn": tkn,                                 # the token being sold
-            "y_int": amt,                               # the capacity of the curve
-            "_y": amt,                                  # the initial holding is of the curve (in `tkn`)
-            "p_low": p_lo,                              # the lower end of the range (`tkn` numeraire); also p_b, p_end
-            "p_high": p_hi,                             # the upper end of the range (`tkn` numeraire); also p_a, p_start
-            "disabled": disabled,                       # if True, order is disabled (p=0)
-            "pair_name": carbon_pair.pair_iso,          # the iso name of the pair
-            "pair": carbon_pair,                        # the CarbonPair object
-            "id": id1,                                  # the id of the new curve generated
-            "linked_to_id": id2,                        # the id to which this curve is linked (=id if single curve)
+            "tkn": tkn,                                     # the token being sold
+            "_y": amt,                                       # the marginal price of the curve
+            "p_low": p_lo,                                  # the lower end of the range (`tkn` numeraire); also p_b, p_end
+            "p_high": p_hi,                                 # the upper end of the range (`tkn` numeraire); also p_a, p_start
+            "disabled": disabled,                           # if True, order is disabled (p=0)
+            "pair_name": carbon_pair.pair_iso,              # the iso name of the pair
+            "pair": carbon_pair,                            # the CarbonPair object
+            "id": id1,                                      # the id of the new curve generated
+            "linked_to_id": id2,                            # the id to which this curve is linked (=id if single curve)
         }
+        if p_marginal is not None:
+            order_params["p_marginal"] = p_marginal         # the marginal price of the curve
+
+        if p_marginal is None:
+            order_params["y_int"] = amt                     # the capacity of the curve
 
         self.orders[id1] = Order(**order_params)
         return id1
@@ -327,6 +333,8 @@ class CarbonSimulatorUI:
             pbuy_start: Any = None,
             pbuy_end: Any = None,
             pair: str = None,
+            psell_marginal: Any = None,
+            pbuy_marginal: Any = None,
     ) -> Dict[str, Any]:
         """
         adds two linked orders (one buy, one sell; aka a "strategy")
@@ -339,6 +347,8 @@ class CarbonSimulatorUI:
         :pbuy_start:    start of the of the buy `tkn` range*, quoted in the price convention of `pair`
         :pbuy_end:      ditto end
         :pair:          the token pair to which the strategy corresponds, eg "ETHUSD"
+        :pbuy_marginal: the current price of the other token in the pair
+        :psell_marginal: the current price of `tkn` in the pair
 
         *px_start, px_end are interchangeable, the code deals with sorting them, albeit issuing a warning
         message if they are in the wrong order; sell and buy is seen from the perspective of the AMM, which
@@ -356,30 +366,31 @@ class CarbonSimulatorUI:
             if tkn2 is None:
                 raise ValueError("Token not in pair", tkn, carbon_pair.slashpair, pair.slashpair)
 
-
             # create order tracking ids
             id1 = self._posid
             id2 = self._posid
 
             # convert the prices from the pair numeraire to the curve numeraire
+            psell_marginal_c = carbon_pair.convert_price(psell_marginal, tkn)
             psell_start_c = carbon_pair.convert_price(psell_start, tkn)
             psell_end_c = carbon_pair.convert_price(psell_end, tkn)
             pbuy_start_c = carbon_pair.convert_price(pbuy_start, tkn2)
             pbuy_end_c = carbon_pair.convert_price(pbuy_end, tkn2)
+            pbuy_marginal_c = carbon_pair.convert_price(pbuy_marginal, tkn2)
 
             # ugly hack but the 1/2 range boundaries are in the wrong order
             # we want the closer boundary first
             self._add_order_sell_tkn(
-                tkn, amt_sell, psell_end_c, psell_start_c, carbon_pair, id1, id2
+                tkn, amt_sell, psell_end_c, psell_start_c, carbon_pair, id1, id2, psell_marginal_c
             )
             self._add_order_sell_tkn(
-                tkn2, amt_buy, pbuy_end_c, pbuy_start_c, carbon_pair, id2, id1
+                tkn2, amt_buy, pbuy_end_c, pbuy_start_c, carbon_pair, id2, id1, pbuy_marginal_c
             )
 
             if self.verbose:
                 print(
-                    f"[add_linked_pos] added tkn={tkn}, amt_sell={amt_sell}, psell_start={psell_start}, "
-                    f"psell_end={psell_end}, amt_buy={amt_buy}, pbuy_start={pbuy_start}, pbuy_end={pbuy_end}, "
+                    f"[add_linked_pos] added tkn={tkn}, amt_sell={amt_sell}, psell_start={psell_start}, psell_marginal_c={psell_marginal_c}, "
+                    f"psell_end={psell_end}, amt_buy={amt_buy}, pbuy_start={pbuy_start}, pbuy_end={pbuy_end}, pbuy_marginal_c={pbuy_marginal_c},"
                     f"pair={carbon_pair.pair_iso}"
                 )
 
