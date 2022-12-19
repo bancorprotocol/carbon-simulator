@@ -141,6 +141,7 @@ class BaseRouter:
         cmp: Callable = None,
         check_sufficient_liquidity: bool = True,
         threshold_orders: int = None,
+        use_routes: List[dict] = None
     ) -> List[Action]:
         """
         Main algorithm to handle matching a trade amount against the curves/orders.
@@ -154,6 +155,7 @@ class BaseRouter:
         is_by_target: bool = False,
         check_sufficient_liquidity: bool = True,
         threshold_orders: int = None,
+        use_routes: List[dict] = None
     ) -> List[Action]:
         """
         Alias for match method in the case of a source amount.
@@ -167,6 +169,7 @@ class BaseRouter:
         is_by_target: bool = True,
         check_sufficient_liquidity: bool = True,
         threshold_orders: int = None,
+        use_routes: List[dict] = None
     ) -> List[Action]:
         """
         Alias for match method in the case of a target amount.

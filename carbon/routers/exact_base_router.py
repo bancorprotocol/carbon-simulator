@@ -44,6 +44,7 @@ class ExactBase(BaseRouter, ABC):
             is_by_target: bool = False,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = 100,
+            use_routes: List[dict] = None
     ) -> List[Action]:
         """
         Alias for match method in the case of a source amount.
@@ -60,6 +61,7 @@ class ExactBase(BaseRouter, ABC):
             is_by_target: bool = True,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = 100,
+            use_routes: List[dict] = None
     ) -> List[Action]:
         """
         Alias for match method in the case of a target amount.

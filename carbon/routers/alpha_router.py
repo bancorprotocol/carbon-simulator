@@ -60,6 +60,7 @@ class AlphaRouter(BaseRouter):
             is_by_target: bool = True,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            use_routes: List[dict] = None
     ) -> List[Action]:
         """
         The match by target function specfic to the Alpha router that:
@@ -179,6 +180,7 @@ class AlphaRouter(BaseRouter):
             is_by_target: bool = False,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            use_routes: List[dict] = None
     ) -> List[Action]:
         """
         The match by target function specfic to the Alpha router that:
@@ -282,6 +284,7 @@ class AlphaRouter(BaseRouter):
             cmp: Callable = None,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            use_routes: List[dict] = None
     ) -> List[Action]:
         """
         Main algorithm to handle matching a trade amount against the curves/orders.

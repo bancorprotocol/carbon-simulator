@@ -25,6 +25,7 @@ import pandas as pd
 import numpy as np
 
 from ..routers.fast_router import FastRouter
+from ..routers.manual_router import ManualRouter
 
 
 class CarbonSimulatorUI:
@@ -48,6 +49,7 @@ class CarbonSimulatorUI:
     MATCH_EXACT = "exact"
     MATCH_FAST = "fast"
     MATCH_ALPHA = "alpha_"
+    MATCH_MANUAL = "manual"
 
     def __init__(
             self,
@@ -75,6 +77,8 @@ class CarbonSimulatorUI:
             self.matcher = ExactRouterX0Y0N(verbose=False)
         elif matching_method == self.MATCH_FAST:
             self.matcher = FastRouter(verbose=False)
+        elif matching_method == self.MATCH_MANUAL:
+            self.matcher = ManualRouter(verbose=False)
         elif matching_method == self.MATCH_FAST:
             raise ValueError("Fast router not implemented", matching_method)
         else:
@@ -469,6 +473,7 @@ class CarbonSimulatorUI:
             threshold_orders: int = None,
             use_positions_matchlevel: List[int] = [],
             is_by_target: bool = False,
+            use_routes: List[dict] = [],
 
     ) -> Dict[str, Any]:
         """
@@ -509,9 +514,12 @@ class CarbonSimulatorUI:
                    and not self.orders[k].disabled
                 if self.orders[k].y > 0
             ]
+            if use_routes is not None:
+                use_positions = [indx for indx, amt in use_routes]
             use_positions = use_positions if use_positions is not None else order_ids
             applicable_orders = [v for k, v in self.orders.items() if k in order_ids and k in use_positions]
             id_map = {i: applicable_orders[i].id for i in range(len(applicable_orders))}
+            use_routes = [(indx, use_routes[indx][1]) for indx in range(len(use_routes))]
 
             if self.debug:
                 print("[_trade] order_ids", order_ids)
@@ -524,7 +532,8 @@ class CarbonSimulatorUI:
             # route the trade
             routes = trade_action(
                 x=amt,
-                threshold_orders=threshold_orders
+                threshold_orders=threshold_orders,
+                use_routes=use_routes
             )
 
             # retrieve the final route
@@ -743,6 +752,7 @@ class CarbonSimulatorUI:
             threshold_orders: int = 10,
             use_positions: List[int] = None,
             use_positions_matchlevel: List[int] = [],
+            use_routes: List[dict] = [],
     ) -> Dict[str, Any]:
         """
         the AMM buys (and the trader sells) `amt` > 0 of `tkn`
@@ -790,6 +800,7 @@ class CarbonSimulatorUI:
                 use_positions=use_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
                 is_by_target=False,
+                use_routes=use_routes,
             )
         except Exception as e:
             if self.raiseonerror:
@@ -809,6 +820,7 @@ class CarbonSimulatorUI:
             threshold_orders: int = 10,
             use_positions: List[int] = None,
             use_positions_matchlevel: List[int] = [],
+            use_routes: List[dict] = [],
     ) -> Dict[str, Any]:
         """
         the AMM sells (and the trader buys) `amt` > 0 of `tkn`
@@ -855,6 +867,7 @@ class CarbonSimulatorUI:
                 use_positions=use_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
                 is_by_target=True,
+                use_routes=use_routes,
 
             )
 
