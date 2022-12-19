@@ -187,7 +187,10 @@ class Order:
                 self.D = self.C = self._y = self.y_int
 
             elif self.y_int is None and self.p_marginal is not None:
-                self.y_int = self._y * (self.p_high - self.p_low) / (self.p_marginal - self.p_low)
+                if type(self.p_marginal) is Decimal:
+                    self.y_int = self._y * (self.p_high.sqrt() - self.p_low.sqrt()) / (self.p_marginal.sqrt() - self.p_low.sqrt())
+                else:
+                    self.y_int = float(self._y) * (sqrt(self.p_high) - sqrt(self.p_low)) / (sqrt(self.p_marginal) - sqrt(self.p_low))
 
             elif self.D is not None:
                 self.y_int = self.C = self._y = self.D
