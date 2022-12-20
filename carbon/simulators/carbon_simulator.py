@@ -730,7 +730,7 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-        return {"success": True, "trades": trades}
+        return {"success": True, "trades": trades, "is_by_target": is_by_target, "tkn": tkn}
 
     def amm_buys(
             self,
