@@ -557,7 +557,7 @@ class CarbonSimulatorUI:
             # in other words: `total_output` is measured in `tkn` and `total_input` in `otkn`
             # therefore, the numeraire of raw_p = out/in is the token associated to out, `tkn`
             price_avg = carbon_pair.convert_price(raw_price, tkn)
-            price_avg = round(float(price_avg), decimals)
+            # price_avg = round(float(price_avg), decimals)
             if self.debug:
                 print("[_trade] final routes", routes)
 
@@ -580,7 +580,7 @@ class CarbonSimulatorUI:
 
             if limit_price is not None:
                 limitfail = not carbon_pair.limit_is_met(
-                    tkn, limit_price, carbon_pair.BUY, price_avg
+                    tkn, limit_price, carbon_pair.BUY, round(float(price_avg), decimals)
                 )
                 if limitfail:
                     execute = False
@@ -658,7 +658,7 @@ class CarbonSimulatorUI:
                         1
                     ],  # the number of routes across which the trade was executed
                     "price": [
-                        price_avg if not (is_by_target and isinstance(self.matcher, FastRouter)) else round(float(1 / Decimal(price_avg)), decimals)
+                        round(float(price_avg), decimals) if not (is_by_target and isinstance(self.matcher, FastRouter)) else round(float(1 / Decimal(price_avg)), decimals)
                     ],  # the price amt_/amt_, in the convention of the pair
                     "p_unit": [
                         f"{tknq} per {tknb}"
@@ -678,7 +678,7 @@ class CarbonSimulatorUI:
             # Handle base token vs quote token variable swaps for the trade
             ttl_input = round(abs(routes[-1].total_input), decimals)
             ttl_output = round(abs(routes[-1].total_output), decimals)
-            price_avg = f"{price_avg}"
+            # price_avg = f"{price_avg}"
 
             amt1, amt2 = ttl_output, ttl_input
 
@@ -707,7 +707,7 @@ class CarbonSimulatorUI:
                 "routeix": [str(order_ids)],
                 "nroutes": [num_trades],
                 "price": [
-                    price_avg if not (is_by_target and isinstance(self.matcher, FastRouter)) else round(float(1 / Decimal(price_avg)), decimals)
+                    round(float(price_avg), decimals) if not (is_by_target and isinstance(self.matcher, FastRouter)) else round(float(1 / Decimal(price_avg)), decimals)
                     ],
                 "p_unit": [f"{tknq} per {tknb}"],
             }
