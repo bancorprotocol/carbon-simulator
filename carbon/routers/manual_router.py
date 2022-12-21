@@ -164,3 +164,9 @@ class ManualRouter(BaseRouter):
             check_sufficient_liquidity=check_sufficient_liquidity,
             use_routes=use_routes
         )
+
+    def __post_init__(self):
+        if not self.use_floor_division:
+            self.ONE = Decimal("1")
+            self.MIN = Decimal("0")
+            self.MAX = Decimal(str(2 ** 128 - 1))
