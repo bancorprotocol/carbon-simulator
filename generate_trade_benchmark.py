@@ -9,14 +9,14 @@ from decimal import ROUND_HALF_DOWN
 getcontext().prec = 50
 getcontext().rounding = ROUND_HALF_DOWN
 
-pd.set_option('display.float_format', lambda x: '%.5f' % x)
+pd.set_option('display.float_format', lambda x: '{:.12f}'.format(x))
 
 def run(filename, tradeBySourceAmount):
     file = open(filename +'.json', 'r')
     tests = loads(file.read())
     file.close()
 
-    for test in tests[:1]:
+    for test in tests:
         execute(test, tradeBySourceAmount)
 
     #file = open(filename +'.json', 'w')
@@ -48,14 +48,14 @@ def execute(test, tradeBySourceAmount):
             strategyId = int(tradeAction['strategyId']) - 1
             tokenAmount = Decimal(tradeAction['tokenAmount'])
             if tradeBySourceAmount:
-                positionId = 2 * strategyId + (test['strategies'][strategyId][1]['token'] == targetToken)
+                positionId = 2 * strategyId + (test['strategies'][strategyId][1]['token'] == sourceToken)
                 simulator.amm_buys(targetToken, tokenAmount, use_positions=[positionId], use_positions_matchlevel=[positionId])
             else:
-                positionId = 2 * strategyId + (test['strategies'][strategyId][1]['token'] == sourceToken)
+                positionId = 2 * strategyId + (test['strategies'][strategyId][1]['token'] == targetToken)
                 simulator.amm_sells(targetToken, tokenAmount, use_positions=[positionId], use_positions_matchlevel=[positionId])
 
         orders = simulator.state()['orders']
         print(orders['y'], orders['p_marg'])
 
 run('tradeBySourceAmount', True)
-#run('tradeByTargetAmount', False)
+run('tradeByTargetAmount', False)
