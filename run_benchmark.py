@@ -33,9 +33,8 @@ class Action:
 
 def trade(strategies, sourceIndex, action, func):
     targetIndex = 1 - sourceIndex
-    strategy = strategies[action.strategyId]
-    sourceOrder = strategy[sourceIndex]
-    targetOrder = strategy[targetIndex]
+    sourceOrder = strategies[action.strategyId][sourceIndex]
+    targetOrder = strategies[action.strategyId][targetIndex]
     sourceAmount, targetAmount = func(action.tokenAmount, targetOrder)
     sourceOrder.y += sourceAmount
     targetOrder.y -= targetAmount
@@ -63,12 +62,12 @@ def tradeByTargetAmount(targetAmount, targetOrder):
     return n / d, x
 
 def execute(test):
+    indexes = [0 if strategy[0]['token'] == test['sourceToken'] else 1 for strategy in test['strategies']]
     strategies = [[Order(order) for order in strategy] for strategy in test['strategies']]
     func = tradeByTargetAmount if test['tradeByTargetAmount'] else tradeBySourceAmount
 
     for action in [Action(tradeAction) for tradeAction in test['tradeActions']]:
-        sourceIndex = 0 if test['strategies'][action.strategyId][0]['token'] == test['sourceToken'] else 1
-        trade(strategies, sourceIndex, action, func)
+        trade(strategies, indexes[action.strategyId], action, func)
 
     test['expectedResults'] = [
         [
