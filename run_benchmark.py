@@ -62,9 +62,9 @@ def tradeByTargetAmount(targetAmount, targetOrder):
     return n / d, x
 
 def execute(test):
-    indexes = [0 if strategy[0]['token'] == test['sourceToken'] else 1 for strategy in test['strategies']]
+    indexes = [int(strategy[0]['token'] == test['targetToken']) for strategy in test['strategies']]
     strategies = [[Order(order) for order in strategy] for strategy in test['strategies']]
-    func = tradeByTargetAmount if test['tradeByTargetAmount'] else tradeBySourceAmount
+    func = [tradeBySourceAmount, tradeByTargetAmount][test['tradeByTargetAmount']]
 
     for action in [Action(tradeAction) for tradeAction in test['tradeActions']]:
         trade(strategies, indexes[action.strategyId], action, func)
