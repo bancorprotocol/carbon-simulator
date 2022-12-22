@@ -32,11 +32,8 @@ class Action:
         self.tokenAmount = Decimal(action['tokenAmount'])
 
 class Pool:
-    def __init__(self):
-        self.strategies = []
-
-    def addStrategy(self, strategy):
-        self.strategies.append(strategy)
+    def __init__(self, strategies):
+        self.strategies = strategies
 
     def trade(self, sourceIndex, action, func):
         targetIndex = 1 - sourceIndex
@@ -70,11 +67,8 @@ def tradeByTargetAmount(targetAmount, targetOrder):
     return n / d, x
 
 def execute(test):
-    pool = Pool()
+    pool = Pool([[Order(order) for order in strategy] for strategy in test['strategies']])
     func = tradeByTargetAmount if test['tradeByTargetAmount'] else tradeBySourceAmount
-
-    for strategy in test['strategies']:
-        pool.addStrategy([Order(order) for order in strategy])
 
     for action in [Action(tradeAction) for tradeAction in test['tradeActions']]:
         pool.trade(0 if test['strategies'][action.strategyId][0]['token'] == test['sourceToken'] else 1, action, func)
