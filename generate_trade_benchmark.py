@@ -1,10 +1,6 @@
 from carbon import CarbonSimulatorUI
-from json import loads, dumps
-import pandas as pd
-
 from carbon.common import Decimal
-
-pd.set_option('display.float_format', lambda x: '{:.12f}'.format(x))
+from json import loads, dumps
 
 def run(filename, tradeBySourceAmount):
     file = open(filename +'.json', 'r')
@@ -29,13 +25,13 @@ def execute(test, tradeBySourceAmount):
         targetOrder = [order for order in strategy if order['token'] == targetToken][0]
         simulator.add_strategy(
             tkn            = targetToken,
-            amt_sell       = Decimal(targetOrder['liquidity']),
-            psell_start    = Decimal(targetOrder['highestRate']),
-            psell_end      = Decimal(targetOrder['lowestRate']),
-            psell_marginal = Decimal(targetOrder['marginalRate']),
-            amt_buy        = Decimal(sourceOrder['liquidity']),
-            pbuy_start     = Decimal(sourceOrder['highestRate']) ** -1,
-            pbuy_end       = Decimal(sourceOrder['lowestRate']) ** -1,
+            amt_sell       = Decimal(targetOrder['liquidity'   ]),
+            amt_buy        = Decimal(sourceOrder['liquidity'   ]),
+            psell_start    = Decimal(targetOrder['highestRate' ]) ** +1,
+            pbuy_start     = Decimal(sourceOrder['highestRate' ]) ** -1,
+            psell_end      = Decimal(targetOrder['lowestRate'  ]) ** +1,
+            pbuy_end       = Decimal(sourceOrder['lowestRate'  ]) ** -1,
+            psell_marginal = Decimal(targetOrder['marginalRate']) ** +1,
             pbuy_marginal  = Decimal(sourceOrder['marginalRate']) ** -1,
         )
 
@@ -51,6 +47,11 @@ def execute(test, tradeBySourceAmount):
 
     orders = simulator.state()['orders']
     print(orders['y'], orders['p_marg'])
+
+    for n in range(len(test['strategies'])):
+        for k in range(2):
+            orderId = {sourceToken: 1, targetToken: 0}[test['strategies'][n][k]['token']]
+            test['expectedResults'][n][k]['liquidity'] = '{:.12f}'.format(orders['y'][2 * n + orderId]).rstrip('0').rstrip('.')
 
 run('tradeBySourceAmount', True)
 run('tradeByTargetAmount', False)
