@@ -55,7 +55,7 @@ class CarbonSimulatorUI:
             verbose: bool = False,
             pair: Any = None,
             raiseonerror: bool = False,
-            decimals: int = 6,
+            decimals: int = 12,
             matching_method: str = MATCH_EXACT,
             exclude_future: bool = True,
     ):
@@ -731,7 +731,7 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-        return {"success": True, "trades": trades, "is_by_target": is_by_target, "tkn": tkn}
+        return {"success": True, "trades": trades, "is_by_target": is_by_target, "tkn_sold": tkn}
 
     def amm_buys(
             self,
@@ -776,7 +776,6 @@ class CarbonSimulatorUI:
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
             tkn, tkno, carbon_pair = self._get_tkn_and_validate(tkn, pair)
             self._assert_position_is_valid(tkno, carbon_pair)
-
             return self._trade(
                 tkn=tkno,
                 amt=Decimal(str(amt)),
@@ -867,7 +866,7 @@ class CarbonSimulatorUI:
     trader_buys = amm_sells
 
     @staticmethod
-    def _to_pandas(order: Order, decimals: int = 6) -> pd.DataFrame:
+    def _to_pandas(order: Order, decimals: int = 12) -> pd.DataFrame:
         """
         Exports Order values for inspection...
         """
