@@ -7,7 +7,7 @@ Licensed under MIT
 import decimal
 import json
 import math
-from decimal import Decimal
+from ..common import Decimal
 from abc import abstractmethod
 from typing import List, Tuple, Callable
 from dataclasses import field, dataclass

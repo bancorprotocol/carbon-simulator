@@ -1,5 +1,5 @@
 # %%
-from decimal import Decimal
+from carbon.common import Decimal
 
 # %% [markdown]
 # #### List of test strategies

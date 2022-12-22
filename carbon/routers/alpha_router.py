@@ -1,9 +1,7 @@
 """Alpha Router restricts the exact algo calculation to specifically n threshold number of orders."""
-import itertools
 from .exact_router_x0y0n import ExactRouterX0Y0N
 from .base_router import *
 import pandas as pd
-from typing import Any
 import numpy as np
 
 

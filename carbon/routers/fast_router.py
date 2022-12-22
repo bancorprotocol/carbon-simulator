@@ -1,5 +1,5 @@
 """Non-exact "fast" router class."""
-from decimal import Decimal
+from ..common import Decimal
 from functools import cmp_to_key
 from .base_router import *
 

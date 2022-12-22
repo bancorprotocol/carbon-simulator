@@ -9,15 +9,11 @@ __date__ = "8/Dec/2022"
 
 import pprint
 from dataclasses import dataclass
-from decimal import Decimal
-from decimal import getcontext
+from carbon.common import Decimal
 from math import sqrt
 from typing import NewType
 
 from .pair import CarbonPair
-
-
-getcontext().prec = 128
 
 pp = pprint.PrettyPrinter(indent=4)
 
