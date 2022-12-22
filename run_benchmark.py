@@ -31,20 +31,16 @@ class Action:
         self.strategyId = int(action['strategyId']) - 1
         self.tokenAmount = Decimal(action['tokenAmount'])
 
-class Pool:
-    def __init__(self, strategies):
-        self.strategies = strategies
-
-    def trade(self, sourceIndex, action, func):
-        targetIndex = 1 - sourceIndex
-        strategy = self.strategies[action.strategyId]
-        sourceOrder = strategy[sourceIndex]
-        targetOrder = strategy[targetIndex]
-        sourceAmount, targetAmount = func(action.tokenAmount, targetOrder)
-        sourceOrder.y += sourceAmount
-        targetOrder.y -= targetAmount
-        if sourceOrder.z < sourceOrder.y:
-            sourceOrder.z = sourceOrder.y
+def trade(strategies, sourceIndex, action, func):
+    targetIndex = 1 - sourceIndex
+    strategy = strategies[action.strategyId]
+    sourceOrder = strategy[sourceIndex]
+    targetOrder = strategy[targetIndex]
+    sourceAmount, targetAmount = func(action.tokenAmount, targetOrder)
+    sourceOrder.y += sourceAmount
+    targetOrder.y -= targetAmount
+    if sourceOrder.z < sourceOrder.y:
+        sourceOrder.z = sourceOrder.y
 
 def tradeBySourceAmount(sourceAmount, targetOrder):
     x = sourceAmount
@@ -67,11 +63,12 @@ def tradeByTargetAmount(targetAmount, targetOrder):
     return n / d, x
 
 def execute(test):
-    pool = Pool([[Order(order) for order in strategy] for strategy in test['strategies']])
+    strategies = [[Order(order) for order in strategy] for strategy in test['strategies']]
     func = tradeByTargetAmount if test['tradeByTargetAmount'] else tradeBySourceAmount
 
     for action in [Action(tradeAction) for tradeAction in test['tradeActions']]:
-        pool.trade(0 if test['strategies'][action.strategyId][0]['token'] == test['sourceToken'] else 1, action, func)
+        sourceIndex = 0 if test['strategies'][action.strategyId][0]['token'] == test['sourceToken'] else 1
+        trade(strategies, sourceIndex, action, func)
 
     test['expectedResults'] = [
         [
@@ -81,7 +78,7 @@ def execute(test):
             }
             for order in [order.decode() for order in strategy]
         ]
-        for strategy in pool.strategies
+        for strategy in strategies
     ]
 
 def run(fileName):
