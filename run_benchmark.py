@@ -23,7 +23,7 @@ class Order:
             'liquidity': self.y,
             'lowestRate': self.B ** 2,
             'highestRate': (self.A + self.B) ** 2,
-            'marginalRate': ((self.y * self.A + self.z * self.B) / self.z) ** 2,
+            'marginalRate': ((self.y * self.A + self.z * self.B) / self.z) ** 2
         }
 
 class Action:
