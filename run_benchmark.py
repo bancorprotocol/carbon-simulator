@@ -38,12 +38,6 @@ class Pool:
     def addStrategy(self, strategy):
         self.strategies.append(strategy)
 
-    def tradeBySourceAmount(self, sourceIndex, action):
-        self.trade(sourceIndex, action, tradeBySourceAmountFunc)
-
-    def tradeByTargetAmount(self, sourceIndex, action):
-        self.trade(sourceIndex, action, tradeByTargetAmountFunc)
-
     def trade(self, sourceIndex, action, func):
         targetIndex = 1 - sourceIndex
         strategy = self.strategies[action.strategyId]
@@ -55,7 +49,7 @@ class Pool:
         if sourceOrder.z < sourceOrder.y:
             sourceOrder.z = sourceOrder.y
 
-def tradeBySourceAmountFunc(sourceAmount, targetOrder):
+def tradeBySourceAmount(sourceAmount, targetOrder):
     x = sourceAmount
     y = targetOrder.y
     z = targetOrder.z
@@ -65,7 +59,7 @@ def tradeBySourceAmountFunc(sourceAmount, targetOrder):
     d = A * x * (A * y + B * z) + z ** 2
     return x, n / d
 
-def tradeByTargetAmountFunc(targetAmount, targetOrder):
+def tradeByTargetAmount(targetAmount, targetOrder):
     x = targetAmount
     y = targetOrder.y
     z = targetOrder.z
@@ -77,13 +71,13 @@ def tradeByTargetAmountFunc(targetAmount, targetOrder):
 
 def execute(test):
     pool = Pool()
-    tradeFunc = pool.tradeByTargetAmount if test['tradeByTargetAmount'] else pool.tradeBySourceAmount
+    func = tradeByTargetAmount if test['tradeByTargetAmount'] else tradeBySourceAmount
 
     for strategy in test['strategies']:
         pool.addStrategy([Order(order) for order in strategy])
 
     for action in [Action(tradeAction) for tradeAction in test['tradeActions']]:
-        tradeFunc(0 if test['strategies'][action.strategyId][0]['token'] == test['sourceToken'] else 1, action)
+        pool.trade(0 if test['strategies'][action.strategyId][0]['token'] == test['sourceToken'] else 1, action, func)
 
     test['expectedResults'] = [
         [
@@ -108,4 +102,4 @@ def run(fileName):
     file.write(dumps(tests, indent=4))
     file.close()
 
-run('ArbitraryTrade.json')
+run('benchmark/ArbitraryTrade.json')
