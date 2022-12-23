@@ -22,8 +22,8 @@ class Order:
         return {
             'liquidity': self.y,
             'lowestRate': self.B ** 2,
-            'highestRate': (self.A + self.B) ** 2,
-            'marginalRate': ((self.y * self.A + self.z * self.B) / self.z) ** 2
+            'highestRate': (self.B + self.A) ** 2,
+            'marginalRate': (self.B + self.A * self.y / self.z) ** 2
         }
 
 class Action:
