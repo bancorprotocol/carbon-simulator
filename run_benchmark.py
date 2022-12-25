@@ -26,48 +26,33 @@ class Order:
             'marginalRate': (self.B + self.A * self.y / self.z) ** 2
         }
 
-class Action:
-    def __init__(self, action):
-        self.strategyId = int(action['strategyId']) - 1
-        self.tokenAmount = Decimal(action['tokenAmount'])
-
-def trade(strategies, sourceIndex, action, func):
-    targetIndex = 1 - sourceIndex
-    sourceOrder = strategies[action.strategyId][sourceIndex]
-    targetOrder = strategies[action.strategyId][targetIndex]
-    sourceAmount, targetAmount = func(action.tokenAmount, targetOrder)
-    sourceOrder.y += sourceAmount
-    targetOrder.y -= targetAmount
-    if sourceOrder.z < sourceOrder.y:
-        sourceOrder.z = sourceOrder.y
-
-def tradeBySourceAmount(sourceAmount, targetOrder):
-    x = sourceAmount
-    y = targetOrder.y
-    z = targetOrder.z
-    A = targetOrder.A
-    B = targetOrder.B
+def tradeBySourceAmount(x, y, z, A, B):
     n = x * (A * y + B * z) ** 2
     d = A * x * (A * y + B * z) + z ** 2
     return x, n / d
 
-def tradeByTargetAmount(targetAmount, targetOrder):
-    x = targetAmount
-    y = targetOrder.y
-    z = targetOrder.z
-    A = targetOrder.A
-    B = targetOrder.B
+def tradeByTargetAmount(x, y, z, A, B):
     n = x * z ** 2
     d = (A * y + B * z) * (A * y + B * z - A * x)
     return n / d, x
 
 def execute(test):
-    indexes = [int(strategy[0]['token'] == test['targetToken']) for strategy in test['strategies']]
+    directions = [int(strategy[0]['token'] == test['targetToken']) for strategy in test['strategies']]
     strategies = [[Order(order) for order in strategy] for strategy in test['strategies']]
-    func = [tradeBySourceAmount, tradeByTargetAmount][test['tradeByTargetAmount']]
+    tradeFunc = [tradeBySourceAmount, tradeByTargetAmount][test['tradeByTargetAmount']]
 
-    for action in [Action(tradeAction) for tradeAction in test['tradeActions']]:
-        trade(strategies, indexes[action.strategyId], action, func)
+    for tradeActions in test['tradeActions']:
+        strategyId = int(tradeActions['strategyId']) - 1
+        tokenAmount = Decimal(tradeActions['tokenAmount'])
+        sourceIndex = directions[strategyId]
+        targetIndex = 1 - sourceIndex
+        sourceOrder = strategies[strategyId][sourceIndex]
+        targetOrder = strategies[strategyId][targetIndex]
+        sourceAmount, targetAmount = tradeFunc(tokenAmount, targetOrder.y, targetOrder.z, targetOrder.A, targetOrder.B)
+        sourceOrder.y += sourceAmount
+        targetOrder.y -= targetAmount
+        if sourceOrder.z < sourceOrder.y:
+            sourceOrder.z = sourceOrder.y
 
     test['expectedResults'] = [
         [
