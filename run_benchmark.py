@@ -19,10 +19,10 @@ class Order:
         self.A = max - min
         self.B = min
     def __iter__(self):
-        yield 'liquidity'   , self.y
-        yield 'lowestRate'  , self.B ** 2
-        yield 'highestRate' , (self.B + self.A) ** 2
-        yield 'marginalRate', (self.B + self.A * self.y / self.z) ** 2
+        yield 'liquidity'    , self.y
+        yield 'lowestRate'   , self.B ** 2
+        yield 'highestRate'  , (self.B + self.A) ** 2
+        yield 'marginalRate' , (self.B + self.A * self.y / self.z) ** 2
 
 def tradeBySourceAmount(x, y, z, A, B):
     n = x * (A * y + B * z) ** 2
