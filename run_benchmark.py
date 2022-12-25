@@ -18,13 +18,11 @@ class Order:
         self.z = liq * (max - min) / (mid - min)
         self.A = max - min
         self.B = min
-    def decode(self):
-        return {
-            'liquidity': self.y,
-            'lowestRate': self.B ** 2,
-            'highestRate': (self.B + self.A) ** 2,
-            'marginalRate': (self.B + self.A * self.y / self.z) ** 2
-        }
+    def __iter__(self):
+        yield 'liquidity'   , self.y
+        yield 'lowestRate'  , self.B ** 2
+        yield 'highestRate' , (self.B + self.A) ** 2
+        yield 'marginalRate', (self.B + self.A * self.y / self.z) ** 2
 
 def tradeBySourceAmount(x, y, z, A, B):
     n = x * (A * y + B * z) ** 2
@@ -60,7 +58,7 @@ def execute(test):
                 'liquidity': '{:.12f}'.format(order['liquidity']).rstrip('0').rstrip('.'),
                 'marginalRate': '{:.12f}'.format(order['marginalRate'])
             }
-            for order in [order.decode() for order in strategy]
+            for order in [dict(order) for order in strategy]
         ]
         for strategy in strategies
     ]
