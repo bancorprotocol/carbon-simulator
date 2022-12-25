@@ -10,7 +10,7 @@ getcontext().rounding = ROUND_HALF_DOWN
 
 class Order:
     def __init__(self, order):
-        liq = Decimal(int(order['liquidity']))
+        liq = Decimal(order['liquidity'])
         min = Decimal(order['lowestRate']).sqrt()
         max = Decimal(order['highestRate']).sqrt()
         mid = Decimal(order['marginalRate']).sqrt()
