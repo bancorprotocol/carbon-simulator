@@ -35,8 +35,8 @@ def tradeByTargetAmount(x, y, z, A, B):
     return n / d, x
 
 def execute(test):
-    directions = [int(strategy[0]['token'] == test['targetToken']) for strategy in test['strategies']]
-    strategies = [[Order(order) for order in strategy] for strategy in test['strategies']]
+    directions = [int(strategy['orders'][0]['token'] == test['targetToken']) for strategy in test['strategies']]
+    strategies = [[Order(order) for order in strategy['orders']] for strategy in test['strategies']]
     tradeFunc = [tradeBySourceAmount, tradeByTargetAmount][test['tradeByTargetAmount']]
 
     for tradeActions in test['tradeActions']:
@@ -51,17 +51,9 @@ def execute(test):
         targetOrder.y -= targetAmount
         if sourceOrder.z < sourceOrder.y:
             sourceOrder.z = sourceOrder.y
-
-    test['expectedResults'] = [
-        [
-            {
-                'liquidity': '{:.12f}'.format(order['liquidity']).rstrip('0').rstrip('.'),
-                'marginalRate': '{:.12f}'.format(order['marginalRate'])
-            }
-            for order in [dict(order) for order in strategy]
-        ]
-        for strategy in strategies
-    ]
+        for index, order in [[sourceIndex, dict(sourceOrder)], [targetIndex, dict(targetOrder)]]:
+            test['strategies'][strategyId]['orders'][index]['newLiquidity'] = '{:.12f}'.format(order['liquidity']).rstrip('0').rstrip('.')
+            test['strategies'][strategyId]['orders'][index]['newMarginalRate'] = '{:.12f}'.format(order['marginalRate'])
 
 def run(fileName):
     file = open(fileName, 'r')
