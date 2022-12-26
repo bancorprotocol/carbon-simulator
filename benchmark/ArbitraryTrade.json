@@ -536,7 +536,7 @@
                         "highestRate": "4",
                         "marginalRate": "4",
                         "newLiquidity": "4926273.90542905019",
-                        "newMarginalRate": "3.997396804310"
+                        "newMarginalRate": "3.99739680431"
                     }
                 ]
             },
@@ -755,7 +755,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.996658809482",
                         "newLiquidity": "3932632.351298873837",
-                        "newMarginalRate": "2.994990124010"
+                        "newMarginalRate": "2.99499012401"
                     }
                 ]
             },
@@ -1044,7 +1044,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.996438976042",
                         "newLiquidity": "5885953.360116581293",
-                        "newMarginalRate": "4.992881599090"
+                        "newMarginalRate": "4.99288159909"
                     }
                 ]
             },
@@ -1249,7 +1249,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.993323099606",
                         "newLiquidity": "3920660.019933043358",
-                        "newMarginalRate": "2.991657199200"
+                        "newMarginalRate": "2.9916571992"
                     }
                 ]
             },
@@ -1590,7 +1590,7 @@
                         "highestRate": "7",
                         "marginalRate": "6.994482944691",
                         "newLiquidity": "7817298.637371036613",
-                        "newMarginalRate": "6.988972350770"
+                        "newMarginalRate": "6.98897235077"
                     }
                 ]
             },
@@ -1737,7 +1737,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.994477228601",
                         "newLiquidity": "2946990.916462975013",
-                        "newMarginalRate": "1.993689923160"
+                        "newMarginalRate": "1.99368992316"
                     }
                 ]
             },
@@ -1781,7 +1781,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.987009932433",
                         "newLiquidity": "4866412.856624840351",
-                        "newMarginalRate": "3.984419405270"
+                        "newMarginalRate": "3.98441940527"
                     }
                 ]
             },
@@ -1803,7 +1803,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.985778459056",
                         "newLiquidity": "5826103.979425015329",
-                        "newMarginalRate": "4.982232459160"
+                        "newMarginalRate": "4.98223245916"
                     }
                 ]
             },
@@ -2417,7 +2417,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.985009659049",
                         "newLiquidity": "9660810.853692693031",
-                        "newMarginalRate": "8.977528475690"
+                        "newMarginalRate": "8.97752847569"
                     }
                 ]
             },
@@ -2993,7 +2993,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.978841788426",
                         "newLiquidity": "847240.43557431146",
-                        "newMarginalRate": "8.968290164750"
+                        "newMarginalRate": "8.96829016475"
                     },
                     {
                         "token": "TKN0",
@@ -3243,7 +3243,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.993301115103",
                         "newLiquidity": "2947006",
-                        "newMarginalRate": "1.993695877870"
+                        "newMarginalRate": "1.99369587787"
                     }
                 ]
             },
@@ -3750,7 +3750,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.918854444406",
                         "newLiquidity": "906158.43409521271",
-                        "newMarginalRate": "9.898721686860"
+                        "newMarginalRate": "9.89872168686"
                     },
                     {
                         "token": "TKN0",
@@ -3825,7 +3825,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.973625588547",
                         "newLiquidity": "6743988",
-                        "newMarginalRate": "5.974380104720"
+                        "newMarginalRate": "5.97438010472"
                     }
                 ]
             },
@@ -4574,7 +4574,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.978706927645",
                         "newLiquidity": "5810276",
-                        "newMarginalRate": "4.979418050730"
+                        "newMarginalRate": "4.97941805073"
                     }
                 ]
             },
@@ -4631,7 +4631,7 @@
                         "highestRate": "15",
                         "marginalRate": "14.870030221520",
                         "newLiquidity": "1319976.267200186192",
-                        "newMarginalRate": "14.805677496840"
+                        "newMarginalRate": "14.80567749684"
                     },
                     {
                         "token": "TKN0",
@@ -4640,7 +4640,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.975647724709",
                         "newLiquidity": "8686252",
-                        "newMarginalRate": "7.976460285370"
+                        "newMarginalRate": "7.97646028537"
                     }
                 ]
             },
@@ -4653,7 +4653,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.926036118419",
                         "newLiquidity": "1497566.861208323865",
-                        "newMarginalRate": "15.852583468320"
+                        "newMarginalRate": "15.85258346832"
                     },
                     {
                         "token": "TKN0",
@@ -4905,7 +4905,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.976460285370",
                         "newLiquidity": "8693252",
-                        "newMarginalRate": "7.977272887420"
+                        "newMarginalRate": "7.97727288742"
                     }
                 ]
             },
@@ -5556,7 +5556,7 @@
                         "highestRate": "4",
                         "marginalRate": "4",
                         "newLiquidity": "4926273.90542905019",
-                        "newMarginalRate": "3.997396804310"
+                        "newMarginalRate": "3.99739680431"
                     }
                 ]
             },
@@ -5775,7 +5775,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.996658809482",
                         "newLiquidity": "3932632.351298873837",
-                        "newMarginalRate": "2.994990124010"
+                        "newMarginalRate": "2.99499012401"
                     }
                 ]
             },
@@ -6064,7 +6064,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.996438976042",
                         "newLiquidity": "5885953.360116581293",
-                        "newMarginalRate": "4.992881599090"
+                        "newMarginalRate": "4.99288159909"
                     }
                 ]
             },
@@ -6269,7 +6269,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.993323099606",
                         "newLiquidity": "3920660.019933043358",
-                        "newMarginalRate": "2.991657199200"
+                        "newMarginalRate": "2.9916571992"
                     }
                 ]
             },
@@ -6610,7 +6610,7 @@
                         "highestRate": "7",
                         "marginalRate": "6.994482944691",
                         "newLiquidity": "7817298.637371036613",
-                        "newMarginalRate": "6.988972350770"
+                        "newMarginalRate": "6.98897235077"
                     }
                 ]
             },
@@ -6757,7 +6757,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.994477228601",
                         "newLiquidity": "2946990.916462975013",
-                        "newMarginalRate": "1.993689923160"
+                        "newMarginalRate": "1.99368992316"
                     }
                 ]
             },
@@ -6801,7 +6801,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.987009932433",
                         "newLiquidity": "4866412.856624840351",
-                        "newMarginalRate": "3.984419405270"
+                        "newMarginalRate": "3.98441940527"
                     }
                 ]
             },
@@ -6823,7 +6823,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.985778459056",
                         "newLiquidity": "5826103.979425015329",
-                        "newMarginalRate": "4.982232459160"
+                        "newMarginalRate": "4.98223245916"
                     }
                 ]
             },
@@ -7437,7 +7437,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.985009659049",
                         "newLiquidity": "9660810.853692693031",
-                        "newMarginalRate": "8.977528475690"
+                        "newMarginalRate": "8.97752847569"
                     }
                 ]
             },
@@ -8013,7 +8013,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.978841788426",
                         "newLiquidity": "847240.43557431146",
-                        "newMarginalRate": "8.968290164750"
+                        "newMarginalRate": "8.96829016475"
                     },
                     {
                         "token": "TKN0",
@@ -8263,7 +8263,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.993301115103",
                         "newLiquidity": "2947006",
-                        "newMarginalRate": "1.993695877870"
+                        "newMarginalRate": "1.99369587787"
                     }
                 ]
             },
@@ -8770,7 +8770,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.918854444406",
                         "newLiquidity": "906158.43409521271",
-                        "newMarginalRate": "9.898721686860"
+                        "newMarginalRate": "9.89872168686"
                     },
                     {
                         "token": "TKN0",
@@ -8845,7 +8845,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.973625588547",
                         "newLiquidity": "6743988",
-                        "newMarginalRate": "5.974380104720"
+                        "newMarginalRate": "5.97438010472"
                     }
                 ]
             },
@@ -9594,7 +9594,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.978706927645",
                         "newLiquidity": "5810276",
-                        "newMarginalRate": "4.979418050730"
+                        "newMarginalRate": "4.97941805073"
                     }
                 ]
             },
@@ -9651,7 +9651,7 @@
                         "highestRate": "15",
                         "marginalRate": "14.870030221520",
                         "newLiquidity": "1319976.267200186192",
-                        "newMarginalRate": "14.805677496840"
+                        "newMarginalRate": "14.80567749684"
                     },
                     {
                         "token": "TKN0",
@@ -9660,7 +9660,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.975647724709",
                         "newLiquidity": "8686252",
-                        "newMarginalRate": "7.976460285370"
+                        "newMarginalRate": "7.97646028537"
                     }
                 ]
             },
@@ -9673,7 +9673,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.926036118419",
                         "newLiquidity": "1497566.861208323865",
-                        "newMarginalRate": "15.852583468320"
+                        "newMarginalRate": "15.85258346832"
                     },
                     {
                         "token": "TKN0",
@@ -9925,7 +9925,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.976460285370",
                         "newLiquidity": "8693252",
-                        "newMarginalRate": "7.977272887420"
+                        "newMarginalRate": "7.97727288742"
                     }
                 ]
             },
@@ -10053,7 +10053,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "433096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -10286,7 +10286,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "434096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -10295,7 +10295,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.999605028440",
                         "newLiquidity": "1479482.592518380051",
-                        "newMarginalRate": "0.999209973840"
+                        "newMarginalRate": "0.99920997384"
                     }
                 ]
             },
@@ -10523,7 +10523,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "435096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -10532,7 +10532,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.999210134897",
                         "newLiquidity": "1478483.987294881139",
-                        "newMarginalRate": "0.998815314350"
+                        "newMarginalRate": "0.99881531435"
                     }
                 ]
             },
@@ -10567,7 +10567,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "558552",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -10764,7 +10764,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "436096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -10808,7 +10808,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "561552",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -11009,7 +11009,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "437096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -11053,7 +11053,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "564552",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -11097,7 +11097,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "684008",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -11258,7 +11258,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "438096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -11302,7 +11302,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "567552",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -11346,7 +11346,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "689008",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -11355,7 +11355,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.997732867542",
                         "newLiquidity": "3426811.998265588096",
-                        "newMarginalRate": "2.995468254080"
+                        "newMarginalRate": "2.99546825408"
                     }
                 ]
             },
@@ -11511,7 +11511,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "439096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -11555,7 +11555,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "570552",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -11599,7 +11599,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "694008",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -11630,7 +11630,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.497241538038",
                         "newLiquidity": "3908649.818291596217",
-                        "newMarginalRate": "3.494486241000"
+                        "newMarginalRate": "3.494486241"
                     }
                 ]
             },
@@ -11643,7 +11643,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.500000000000",
                         "newLiquidity": "809464",
-                        "newMarginalRate": "7.500000000000"
+                        "newMarginalRate": "7.5"
                     },
                     {
                         "token": "TKN1",
@@ -11768,7 +11768,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "440096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -11799,7 +11799,7 @@
                         "highestRate": "1.500000000000",
                         "marginalRate": "1.494996849507",
                         "newLiquidity": "1954351.837977730164",
-                        "newMarginalRate": "1.494165288430"
+                        "newMarginalRate": "1.49416528843"
                     }
                 ]
             },
@@ -11812,7 +11812,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "573552",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -11843,7 +11843,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.492889229528",
                         "newLiquidity": "2913051.989712507665",
-                        "newMarginalRate": "2.491116229580"
+                        "newMarginalRate": "2.49111622958"
                     }
                 ]
             },
@@ -11856,7 +11856,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "699008",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -11865,7 +11865,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.993206309577",
                         "newLiquidity": "3396880.618236124542",
-                        "newMarginalRate": "2.990946822540"
+                        "newMarginalRate": "2.99094682254"
                     }
                 ]
             },
@@ -11900,7 +11900,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.500000000000",
                         "newLiquidity": "816464",
-                        "newMarginalRate": "7.500000000000"
+                        "newMarginalRate": "7.5"
                     },
                     {
                         "token": "TKN1",
@@ -12029,7 +12029,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "441096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -12073,7 +12073,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "576552",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -12082,7 +12082,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.992209826472",
                         "newLiquidity": "2427232.31183846899",
-                        "newMarginalRate": "1.990915824740"
+                        "newMarginalRate": "1.99091582474"
                     }
                 ]
             },
@@ -12117,7 +12117,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "704008",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -12161,7 +12161,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.500000000000",
                         "newLiquidity": "823464",
-                        "newMarginalRate": "7.500000000000"
+                        "newMarginalRate": "7.5"
                     },
                     {
                         "token": "TKN1",
@@ -12205,7 +12205,7 @@
                         "highestRate": "8.500000000000",
                         "marginalRate": "8.500000000000",
                         "newLiquidity": "934920",
-                        "newMarginalRate": "8.500000000000"
+                        "newMarginalRate": "8.5"
                     },
                     {
                         "token": "TKN1",
@@ -12294,7 +12294,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "442096",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -12303,7 +12303,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.996452406303",
                         "newLiquidity": "1471504.744206760786",
-                        "newMarginalRate": "0.996059218970"
+                        "newMarginalRate": "0.99605921897"
                     }
                 ]
             },
@@ -12338,7 +12338,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "579552",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -12382,7 +12382,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "709008",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -12426,7 +12426,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.500000000000",
                         "newLiquidity": "830464",
-                        "newMarginalRate": "7.500000000000"
+                        "newMarginalRate": "7.5"
                     },
                     {
                         "token": "TKN1",
@@ -12470,7 +12470,7 @@
                         "highestRate": "8.500000000000",
                         "marginalRate": "8.500000000000",
                         "newLiquidity": "943920",
-                        "newMarginalRate": "8.500000000000"
+                        "newMarginalRate": "8.5"
                     },
                     {
                         "token": "TKN1",
@@ -12805,7 +12805,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.996453985120",
                         "newLiquidity": "1473505",
-                        "newMarginalRate": "0.996848728500"
+                        "newMarginalRate": "0.9968487285"
                     }
                 ]
             },
@@ -13077,7 +13077,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "563073.832459635283",
-                        "newMarginalRate": "5.485454656330"
+                        "newMarginalRate": "5.48545465633"
                     },
                     {
                         "token": "TKN0",
@@ -13305,7 +13305,7 @@
                         "highestRate": "1.500000000000",
                         "marginalRate": "1.493616865436",
                         "newLiquidity": "1954380",
-                        "newMarginalRate": "1.494173121800"
+                        "newMarginalRate": "1.4941731218"
                     }
                 ]
             },
@@ -14118,7 +14118,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.987944790931",
                         "newLiquidity": "3381995",
-                        "newMarginalRate": "2.988699473890"
+                        "newMarginalRate": "2.98869947389"
                     }
                 ]
             },
@@ -14570,7 +14570,7 @@
                         "highestRate": "1.500000000000",
                         "marginalRate": "1.496399182876",
                         "newLiquidity": "1964380",
-                        "newMarginalRate": "1.496955957050"
+                        "newMarginalRate": "1.49695595705"
                     }
                 ]
             },
@@ -14592,7 +14592,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.993521867777",
                         "newLiquidity": "2442263",
-                        "newMarginalRate": "1.994171982160"
+                        "newMarginalRate": "1.99417198216"
                     }
                 ]
             },
@@ -14671,7 +14671,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.436103711942",
                         "newLiquidity": "673971.14120127532",
-                        "newMarginalRate": "7.404461107150"
+                        "newMarginalRate": "7.40446110715"
                     },
                     {
                         "token": "TKN0",
@@ -14724,7 +14724,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.991508729517",
                         "newLiquidity": "5351175",
-                        "newMarginalRate": "4.992358268130"
+                        "newMarginalRate": "4.99235826813"
                     }
                 ]
             },
@@ -14936,7 +14936,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.404461629766",
                         "newLiquidity": "622250.929387086936",
-                        "newMarginalRate": "7.373020564350"
+                        "newMarginalRate": "7.37302056435"
                     },
                     {
                         "token": "TKN0",
@@ -15552,7 +15552,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.996838958591",
                         "newLiquidity": "5913931.950760053013",
-                        "newMarginalRate": "3.995259677340"
+                        "newMarginalRate": "3.99525967734"
                     }
                 ]
             },
@@ -16104,7 +16104,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.992877773993",
                         "newLiquidity": "11771905.720945146168",
-                        "newMarginalRate": "9.985763020280"
+                        "newMarginalRate": "9.98576302028"
                     }
                 ]
             },
@@ -16353,7 +16353,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.985763069960",
                         "newLiquidity": "11731977.164566446853",
-                        "newMarginalRate": "9.978655911860"
+                        "newMarginalRate": "9.97865591186"
                     }
                 ]
             },
@@ -16375,7 +16375,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.990931318995",
                         "newLiquidity": "13707246.993817789109",
-                        "newMarginalRate": "11.981872865320"
+                        "newMarginalRate": "11.98187286532"
                     }
                 ]
             },
@@ -16819,7 +16819,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.979985172182",
                         "newLiquidity": "7817399.35636075545",
-                        "newMarginalRate": "5.976658929730"
+                        "newMarginalRate": "5.97665892973"
                     }
                 ]
             },
@@ -16841,7 +16841,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.974019431493",
                         "newLiquidity": "9732823.714549166109",
-                        "newMarginalRate": "7.968838377590"
+                        "newMarginalRate": "7.96883837759"
                     }
                 ]
             },
@@ -17124,7 +17124,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.964464569962",
                         "newLiquidity": "11612362.313111701852",
-                        "newMarginalRate": "9.957380133840"
+                        "newMarginalRate": "9.95738013384"
                     }
                 ]
             },
@@ -17168,7 +17168,7 @@
                         "highestRate": "14",
                         "marginalRate": "13.966936711976",
                         "newLiquidity": "15466995.371731661564",
-                        "newMarginalRate": "13.955941542250"
+                        "newMarginalRate": "13.95594154225"
                     }
                 ]
             },
@@ -17592,7 +17592,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.984232149512",
                         "newLiquidity": "5887007",
-                        "newMarginalRate": "3.984626785150"
+                        "newMarginalRate": "3.98462678515"
                     }
                 ]
             },
@@ -17847,7 +17847,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.970015317591",
                         "newLiquidity": "7795508",
-                        "newMarginalRate": "5.970571327840"
+                        "newMarginalRate": "5.97057132784"
                     }
                 ]
             },
@@ -18084,7 +18084,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.970571327840",
                         "newLiquidity": "7797508",
-                        "newMarginalRate": "5.971127363980"
+                        "newMarginalRate": "5.97112736398"
                     }
                 ]
             },
@@ -18097,7 +18097,7 @@
                         "highestRate": "22",
                         "marginalRate": "22",
                         "newLiquidity": "2180298.125288578049",
-                        "newMarginalRate": "21.939957497350"
+                        "newMarginalRate": "21.93995749735"
                     },
                     {
                         "token": "TKN0",
@@ -18325,7 +18325,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.971127363980",
                         "newLiquidity": "7799508",
-                        "newMarginalRate": "5.971683426010"
+                        "newMarginalRate": "5.97168342601"
                     }
                 ]
             },
@@ -18338,7 +18338,7 @@
                         "highestRate": "22",
                         "marginalRate": "21.939958293649",
                         "newLiquidity": "2114568.881876199648",
-                        "newMarginalRate": "21.880161255160"
+                        "newMarginalRate": "21.88016125516"
                     },
                     {
                         "token": "TKN0",
@@ -18832,7 +18832,7 @@
                         "highestRate": "22",
                         "marginalRate": "21.820608540052",
                         "newLiquidity": "1983645.200071646113",
-                        "newMarginalRate": "21.761298436080"
+                        "newMarginalRate": "21.76129843608"
                     },
                     {
                         "token": "TKN0",
@@ -19107,7 +19107,7 @@
                         "highestRate": "24",
                         "marginalRate": "23.766042617995",
                         "newLiquidity": "2115618.407604482295",
-                        "newMarginalRate": "23.688816417270"
+                        "newMarginalRate": "23.68881641727"
                     },
                     {
                         "token": "TKN0",
@@ -19373,7 +19373,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.953147015223",
                         "newLiquidity": "11592548",
-                        "newMarginalRate": "9.953857973240"
+                        "newMarginalRate": "9.95385797324"
                     }
                 ]
             },
@@ -19559,7 +19559,7 @@
                         "highestRate": "18",
                         "marginalRate": "17.830659889599",
                         "newLiquidity": "1577245.84310500893",
-                        "newMarginalRate": "17.809660087080"
+                        "newMarginalRate": "17.80966008708"
                     },
                     {
                         "token": "TKN0",
@@ -19612,7 +19612,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.962388709879",
                         "newLiquidity": "9706043",
-                        "newMarginalRate": "7.963038307490"
+                        "newMarginalRate": "7.96303830749"
                     }
                 ]
             },
@@ -19656,7 +19656,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.948759756716",
                         "newLiquidity": "13492973",
-                        "newMarginalRate": "11.949514308610"
+                        "newMarginalRate": "11.94951430861"
                     }
                 ]
             },
@@ -19678,7 +19678,7 @@
                         "highestRate": "14",
                         "marginalRate": "13.947320845380",
                         "newLiquidity": "15407294",
-                        "newMarginalRate": "13.948107996690"
+                        "newMarginalRate": "13.94810799669"
                     }
                 ]
             },
@@ -19912,7 +19912,7 @@
                         "highestRate": "26",
                         "marginalRate": "25.523762637995",
                         "newLiquidity": "1974629.593463092363",
-                        "newMarginalRate": "25.430086087080"
+                        "newMarginalRate": "25.43008608708"
                     },
                     {
                         "token": "TKN0",
@@ -19987,7 +19987,7 @@
                         "highestRate": "18",
                         "marginalRate": "17.956722521980",
                         "newLiquidity": "19345621",
-                        "newMarginalRate": "17.957555373070"
+                        "newMarginalRate": "17.95755537307"
                     }
                 ]
             },
@@ -20093,7 +20093,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "217048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -20326,7 +20326,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "218048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -20348,7 +20348,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "248912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -20563,7 +20563,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "219048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -20585,7 +20585,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "250912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -20607,7 +20607,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "280776",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -20804,7 +20804,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "220048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -20826,7 +20826,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "252912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -20835,7 +20835,7 @@
                         "highestRate": "0.750000000000",
                         "marginalRate": "0.749164980911",
                         "newLiquidity": "983159.087267870127",
-                        "newMarginalRate": "0.748747809310"
+                        "newMarginalRate": "0.74874780931"
                     }
                 ]
             },
@@ -20848,7 +20848,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "283776",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -21049,7 +21049,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "221048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -21071,7 +21071,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "254912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -21093,7 +21093,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "286776",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -21137,7 +21137,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "344504",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -21298,7 +21298,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "222048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -21320,7 +21320,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "256912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -21342,7 +21342,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "289776",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -21351,7 +21351,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.998049554301",
                         "newLiquidity": "1222582.824839958398",
-                        "newMarginalRate": "0.997400657900"
+                        "newMarginalRate": "0.9974006579"
                     }
                 ]
             },
@@ -21373,7 +21373,7 @@
                         "highestRate": "1.250000000000",
                         "marginalRate": "1.248220517265",
                         "newLiquidity": "1466497.89503701096",
-                        "newMarginalRate": "1.247332122360"
+                        "newMarginalRate": "1.24733212236"
                     }
                 ]
             },
@@ -21386,7 +21386,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "349504",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -21408,7 +21408,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "376368",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -21551,7 +21551,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "223048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -21573,7 +21573,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "258912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -21595,7 +21595,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "292776",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -21639,7 +21639,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "354504",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -21661,7 +21661,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "382368",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -21683,7 +21683,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.750000000000",
                         "newLiquidity": "408232",
-                        "newMarginalRate": "3.750000000000"
+                        "newMarginalRate": "3.75"
                     },
                     {
                         "token": "TKN1",
@@ -21808,7 +21808,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "224048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -21830,7 +21830,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "260912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -21852,7 +21852,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "295776",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -21896,7 +21896,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "359504",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -21918,7 +21918,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "388368",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -21940,7 +21940,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.750000000000",
                         "newLiquidity": "415232",
-                        "newMarginalRate": "3.750000000000"
+                        "newMarginalRate": "3.75"
                     },
                     {
                         "token": "TKN1",
@@ -21949,7 +21949,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.998373469002",
                         "newLiquidity": "2194244.07291393342",
-                        "newMarginalRate": "1.996748885900"
+                        "newMarginalRate": "1.9967488859"
                     }
                 ]
             },
@@ -21971,7 +21971,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "2451142.501472472023",
-                        "newMarginalRate": "2.248125022660"
+                        "newMarginalRate": "2.24812502266"
                     }
                 ]
             },
@@ -22069,7 +22069,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "225048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -22091,7 +22091,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "262912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -22113,7 +22113,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "298776",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -22144,7 +22144,7 @@
                         "highestRate": "1.250000000000",
                         "marginalRate": "1.245558293542",
                         "newLiquidity": "1451546.538250249899",
-                        "newMarginalRate": "1.244672738790"
+                        "newMarginalRate": "1.24467273879"
                     }
                 ]
             },
@@ -22157,7 +22157,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "364504",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -22179,7 +22179,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "394368",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -22201,7 +22201,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.750000000000",
                         "newLiquidity": "422232",
-                        "newMarginalRate": "3.750000000000"
+                        "newMarginalRate": "3.75"
                     },
                     {
                         "token": "TKN1",
@@ -22245,7 +22245,7 @@
                         "highestRate": "4.250000000000",
                         "marginalRate": "4.250000000000",
                         "newLiquidity": "471960",
-                        "newMarginalRate": "4.250000000000"
+                        "newMarginalRate": "4.25"
                     },
                     {
                         "token": "TKN1",
@@ -22334,7 +22334,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "226048",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -22343,7 +22343,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.498227386069",
                         "newLiquidity": "735754.870920879322",
-                        "newMarginalRate": "0.498030791570"
+                        "newMarginalRate": "0.49803079157"
                     }
                 ]
             },
@@ -22356,7 +22356,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "264912",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -22378,7 +22378,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "301776",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -22387,7 +22387,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.995457985042",
                         "newLiquidity": "1210630.595758861789",
-                        "newMarginalRate": "0.994811614010"
+                        "newMarginalRate": "0.99481161401"
                     }
                 ]
             },
@@ -22422,7 +22422,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "369504",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -22444,7 +22444,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "400368",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -22453,7 +22453,7 @@
                         "highestRate": "1.750000000000",
                         "marginalRate": "1.744492899933",
                         "newLiquidity": "1922913.161733376651",
-                        "newMarginalRate": "1.743120125780"
+                        "newMarginalRate": "1.74312012578"
                     }
                 ]
             },
@@ -22466,7 +22466,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.750000000000",
                         "newLiquidity": "429232",
-                        "newMarginalRate": "3.750000000000"
+                        "newMarginalRate": "3.75"
                     },
                     {
                         "token": "TKN1",
@@ -22510,7 +22510,7 @@
                         "highestRate": "4.250000000000",
                         "marginalRate": "4.250000000000",
                         "newLiquidity": "480960",
-                        "newMarginalRate": "4.250000000000"
+                        "newMarginalRate": "4.25"
                     },
                     {
                         "token": "TKN1",
@@ -22532,7 +22532,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "503824",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -23568,7 +23568,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.499610600698",
                         "newLiquidity": "740755",
-                        "newMarginalRate": "0.500000000000"
+                        "newMarginalRate": "0.5"
                     }
                 ]
             },
@@ -23817,7 +23817,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.500000000000",
                         "newLiquidity": "741755",
-                        "newMarginalRate": "0.500000000000"
+                        "newMarginalRate": "0.5"
                     }
                 ]
             },
@@ -24070,7 +24070,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.500000000000",
                         "newLiquidity": "742755",
-                        "newMarginalRate": "0.500000000000"
+                        "newMarginalRate": "0.5"
                     }
                 ]
             },
@@ -24127,7 +24127,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.972870555406",
                         "newLiquidity": "288931.455052963853",
-                        "newMarginalRate": "2.963908682320"
+                        "newMarginalRate": "2.96390868232"
                     },
                     {
                         "token": "TKN0",
@@ -24158,7 +24158,7 @@
                         "highestRate": "1.500000000000",
                         "marginalRate": "1.494727426479",
                         "newLiquidity": "1698499",
-                        "newMarginalRate": "1.495482347970"
+                        "newMarginalRate": "1.49548234797"
                     }
                 ]
             },
@@ -24327,7 +24327,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.500000000000",
                         "newLiquidity": "743755",
-                        "newMarginalRate": "0.500000000000"
+                        "newMarginalRate": "0.5"
                     }
                 ]
             },
@@ -24349,7 +24349,7 @@
                         "highestRate": "0.750000000000",
                         "marginalRate": "0.749592880542",
                         "newLiquidity": "988193",
-                        "newMarginalRate": "0.750000000000"
+                        "newMarginalRate": "0.75"
                     }
                 ]
             },
@@ -24588,7 +24588,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.500000000000",
                         "newLiquidity": "744755",
-                        "newMarginalRate": "0.500000000000"
+                        "newMarginalRate": "0.5"
                     }
                 ]
             },
@@ -24610,7 +24610,7 @@
                         "highestRate": "0.750000000000",
                         "marginalRate": "0.750000000000",
                         "newLiquidity": "990193",
-                        "newMarginalRate": "0.750000000000"
+                        "newMarginalRate": "0.75"
                     }
                 ]
             },
@@ -24711,7 +24711,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.719087897795",
                         "newLiquidity": "350970.036391591736",
-                        "newMarginalRate": "3.703774642990"
+                        "newMarginalRate": "3.70377464299"
                     },
                     {
                         "token": "TKN0",
@@ -24733,7 +24733,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.982236720335",
                         "newLiquidity": "392380.767379236761",
-                        "newMarginalRate": "3.964591025750"
+                        "newMarginalRate": "3.96459102575"
                     },
                     {
                         "token": "TKN0",
@@ -24764,7 +24764,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.495754363977",
                         "newLiquidity": "2680087",
-                        "newMarginalRate": "2.496603938890"
+                        "newMarginalRate": "2.49660393889"
                     }
                 ]
             },
@@ -24853,7 +24853,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.500000000000",
                         "newLiquidity": "745755",
-                        "newMarginalRate": "0.500000000000"
+                        "newMarginalRate": "0.5"
                     }
                 ]
             },
@@ -24875,7 +24875,7 @@
                         "highestRate": "0.750000000000",
                         "marginalRate": "0.750000000000",
                         "newLiquidity": "992193",
-                        "newMarginalRate": "0.750000000000"
+                        "newMarginalRate": "0.75"
                     }
                 ]
             },
@@ -25855,7 +25855,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.986634123767",
                         "newLiquidity": "15730525.407422886677",
-                        "newMarginalRate": "11.979959382810"
+                        "newMarginalRate": "11.97995938281"
                     }
                 ]
             },
@@ -26078,7 +26078,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.987362679426",
                         "newLiquidity": "11811889.214886652895",
-                        "newMarginalRate": "7.984207858850"
+                        "newMarginalRate": "7.98420785885"
                     }
                 ]
             },
@@ -26144,7 +26144,7 @@
                         "highestRate": "20",
                         "marginalRate": "19.985755369896",
                         "newLiquidity": "23543810.442602271927",
-                        "newMarginalRate": "19.971525862660"
+                        "newMarginalRate": "19.97152586266"
                     }
                 ]
             },
@@ -26969,7 +26969,7 @@
                         "highestRate": "32",
                         "marginalRate": "31.973975045057",
                         "newLiquidity": "35107909.169813335049",
-                        "newMarginalRate": "31.947981721830"
+                        "newMarginalRate": "31.94798172183"
                     }
                 ]
             },
@@ -28334,7 +28334,7 @@
                         "highestRate": "36",
                         "marginalRate": "35.872064325387",
                         "newLiquidity": "3323111.189201695281",
-                        "newMarginalRate": "35.829569863540"
+                        "newMarginalRate": "35.82956986354"
                     },
                     {
                         "token": "TKN0",
@@ -28632,7 +28632,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.918281372627",
                         "newLiquidity": "19379082",
-                        "newMarginalRate": "15.918930831110"
+                        "newMarginalRate": "15.91893083111"
                     }
                 ]
             },
@@ -28667,7 +28667,7 @@
                         "highestRate": "52",
                         "marginalRate": "52",
                         "newLiquidity": "5202548.629538680014",
-                        "newMarginalRate": "51.806328850520"
+                        "newMarginalRate": "51.80632885052"
                     },
                     {
                         "token": "TKN0",
@@ -28872,7 +28872,7 @@
                         "highestRate": "44",
                         "marginalRate": "43.639301313472",
                         "newLiquidity": "3943305.090673559015",
-                        "newMarginalRate": "43.520053146300"
+                        "newMarginalRate": "43.5200531463"
                     },
                     {
                         "token": "TKN0",
@@ -28938,7 +28938,7 @@
                         "highestRate": "56",
                         "marginalRate": "56",
                         "newLiquidity": "5620576.105963983451",
-                        "newMarginalRate": "55.770866211320"
+                        "newMarginalRate": "55.77086621132"
                     },
                     {
                         "token": "TKN0",
@@ -29103,7 +29103,7 @@
                         "highestRate": "40",
                         "marginalRate": "39.589408479641",
                         "newLiquidity": "3491555.58485293896",
-                        "newMarginalRate": "39.508048511030"
+                        "newMarginalRate": "39.50804851103"
                     },
                     {
                         "token": "TKN0",
@@ -29213,7 +29213,7 @@
                         "highestRate": "60",
                         "marginalRate": "60",
                         "newLiquidity": "6028637.634873427912",
-                        "newMarginalRate": "59.735824321850"
+                        "newMarginalRate": "59.73582432185"
                     },
                     {
                         "token": "TKN0",
@@ -29404,7 +29404,7 @@
                         "highestRate": "48",
                         "marginalRate": "47.374159259835",
                         "newLiquidity": "4014078.711999838855",
-                        "newMarginalRate": "47.219610991600"
+                        "newMarginalRate": "47.2196109916"
                     },
                     {
                         "token": "TKN0",
@@ -29599,7 +29599,7 @@
                         "highestRate": "36",
                         "marginalRate": "35.660348707289",
                         "newLiquidity": "3144495.716978260696",
-                        "newMarginalRate": "35.618229780350"
+                        "newMarginalRate": "35.61822978035"
                     },
                     {
                         "token": "TKN0",
@@ -29630,7 +29630,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.943921265205",
                         "newLiquidity": "15603010",
-                        "newMarginalRate": "11.944477359560"
+                        "newMarginalRate": "11.94447735956"
                     }
                 ]
             },
@@ -29652,7 +29652,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.920879286052",
                         "newLiquidity": "19391082",
-                        "newMarginalRate": "15.921528797530"
+                        "newMarginalRate": "15.92152879753"
                     }
                 ]
             },
@@ -30897,7 +30897,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.999348909748",
                         "newLiquidity": "4932270",
-                        "newMarginalRate": "3.998697872490"
+                        "newMarginalRate": "3.99869787249"
                     }
                 ]
             },
@@ -31164,7 +31164,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.999287408699",
                         "newLiquidity": "5917924",
-                        "newMarginalRate": "4.998574868180"
+                        "newMarginalRate": "4.99857486818"
                     }
                 ]
             },
@@ -31644,7 +31644,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.997395956956",
                         "newLiquidity": "4923270",
-                        "newMarginalRate": "3.996745078680"
+                        "newMarginalRate": "3.99674507868"
                     }
                 ]
             },
@@ -32537,7 +32537,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.998332388366",
                         "newLiquidity": "9852540",
-                        "newMarginalRate": "8.997498640490"
+                        "newMarginalRate": "8.99749864049"
                     }
                 ]
             },
@@ -32559,7 +32559,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.999149793348",
                         "newLiquidity": "10846194",
-                        "newMarginalRate": "9.998299622840"
+                        "newMarginalRate": "9.99829962284"
                     }
                 ]
             },
@@ -32907,7 +32907,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.994985570779",
                         "newLiquidity": "3932816.020660033724",
-                        "newMarginalRate": "2.995041269370"
+                        "newMarginalRate": "2.99504126937"
                     }
                 ]
             },
@@ -33385,7 +33385,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.995096956972",
                         "newLiquidity": "3933216.103330054264",
-                        "newMarginalRate": "2.995152679620"
+                        "newMarginalRate": "2.99515267962"
                     }
                 ]
             },
@@ -33599,7 +33599,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.995263178759",
                         "newLiquidity": "864192",
-                        "newMarginalRate": "8.994079168270"
+                        "newMarginalRate": "8.99407916827"
                     },
                     {
                         "token": "TKN0",
@@ -33674,7 +33674,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.995072223241",
                         "newLiquidity": "5898590.470691534228",
-                        "newMarginalRate": "4.995131603330"
+                        "newMarginalRate": "4.99513160333"
                     }
                 ]
             },
@@ -33914,7 +33914,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.993409823809",
                         "newLiquidity": "1228160",
-                        "newMarginalRate": "11.990115414500"
+                        "newMarginalRate": "11.9901154145"
                     },
                     {
                         "token": "TKN0",
@@ -34145,7 +34145,7 @@
                         "highestRate": "11",
                         "marginalRate": "10.989004778842",
                         "newLiquidity": "1102104",
-                        "newMarginalRate": "10.986256832610"
+                        "newMarginalRate": "10.98625683261"
                     },
                     {
                         "token": "TKN0",
@@ -34176,7 +34176,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.995190816141",
                         "newLiquidity": "5899256.653965814276",
-                        "newMarginalRate": "4.995250229570"
+                        "newMarginalRate": "4.99525022957"
                     }
                 ]
             },
@@ -34433,7 +34433,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.995250113120",
                         "newLiquidity": "5899589.745659618353",
-                        "newMarginalRate": "4.995309543230"
+                        "newMarginalRate": "4.99530954323"
                     }
                 ]
             },
@@ -34773,7 +34773,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.995304312776",
                         "newLiquidity": "1715050",
-                        "newMarginalRate": "15.990609314700"
+                        "newMarginalRate": "15.9906093147"
                     },
                     {
                         "token": "TKN0",
@@ -34884,7 +34884,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.989343905597",
                         "newLiquidity": "859192",
-                        "newMarginalRate": "8.988160284750"
+                        "newMarginalRate": "8.98816028475"
                     },
                     {
                         "token": "TKN0",
@@ -34950,7 +34950,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.980234901721",
                         "newLiquidity": "1212160",
-                        "newMarginalRate": "11.976942302510"
+                        "newMarginalRate": "11.97694230251"
                     },
                     {
                         "token": "TKN0",
@@ -34981,7 +34981,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.995754481030",
                         "newLiquidity": "6885885.224972811835",
-                        "newMarginalRate": "5.995812718600"
+                        "newMarginalRate": "5.9958127186"
                     }
                 ]
             },
@@ -35917,7 +35917,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.999348909748",
                         "newLiquidity": "4932270",
-                        "newMarginalRate": "3.998697872490"
+                        "newMarginalRate": "3.99869787249"
                     }
                 ]
             },
@@ -36184,7 +36184,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.999287408699",
                         "newLiquidity": "5917924",
-                        "newMarginalRate": "4.998574868180"
+                        "newMarginalRate": "4.99857486818"
                     }
                 ]
             },
@@ -36664,7 +36664,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.997395956956",
                         "newLiquidity": "4923270",
-                        "newMarginalRate": "3.996745078680"
+                        "newMarginalRate": "3.99674507868"
                     }
                 ]
             },
@@ -37557,7 +37557,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.998332388366",
                         "newLiquidity": "9852540",
-                        "newMarginalRate": "8.997498640490"
+                        "newMarginalRate": "8.99749864049"
                     }
                 ]
             },
@@ -37579,7 +37579,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.999149793348",
                         "newLiquidity": "10846194",
-                        "newMarginalRate": "9.998299622840"
+                        "newMarginalRate": "9.99829962284"
                     }
                 ]
             },
@@ -37927,7 +37927,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.994985570779",
                         "newLiquidity": "3932816.020660033724",
-                        "newMarginalRate": "2.995041269370"
+                        "newMarginalRate": "2.99504126937"
                     }
                 ]
             },
@@ -38405,7 +38405,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.995096956972",
                         "newLiquidity": "3933216.103330054264",
-                        "newMarginalRate": "2.995152679620"
+                        "newMarginalRate": "2.99515267962"
                     }
                 ]
             },
@@ -38619,7 +38619,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.995263178759",
                         "newLiquidity": "864192",
-                        "newMarginalRate": "8.994079168270"
+                        "newMarginalRate": "8.99407916827"
                     },
                     {
                         "token": "TKN0",
@@ -38694,7 +38694,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.995072223241",
                         "newLiquidity": "5898590.470691534228",
-                        "newMarginalRate": "4.995131603330"
+                        "newMarginalRate": "4.99513160333"
                     }
                 ]
             },
@@ -38934,7 +38934,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.993409823809",
                         "newLiquidity": "1228160",
-                        "newMarginalRate": "11.990115414500"
+                        "newMarginalRate": "11.9901154145"
                     },
                     {
                         "token": "TKN0",
@@ -39165,7 +39165,7 @@
                         "highestRate": "11",
                         "marginalRate": "10.989004778842",
                         "newLiquidity": "1102104",
-                        "newMarginalRate": "10.986256832610"
+                        "newMarginalRate": "10.98625683261"
                     },
                     {
                         "token": "TKN0",
@@ -39196,7 +39196,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.995190816141",
                         "newLiquidity": "5899256.653965814276",
-                        "newMarginalRate": "4.995250229570"
+                        "newMarginalRate": "4.99525022957"
                     }
                 ]
             },
@@ -39453,7 +39453,7 @@
                         "highestRate": "5",
                         "marginalRate": "4.995250113120",
                         "newLiquidity": "5899589.745659618353",
-                        "newMarginalRate": "4.995309543230"
+                        "newMarginalRate": "4.99530954323"
                     }
                 ]
             },
@@ -39793,7 +39793,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.995304312776",
                         "newLiquidity": "1715050",
-                        "newMarginalRate": "15.990609314700"
+                        "newMarginalRate": "15.9906093147"
                     },
                     {
                         "token": "TKN0",
@@ -39904,7 +39904,7 @@
                         "highestRate": "9",
                         "marginalRate": "8.989343905597",
                         "newLiquidity": "859192",
-                        "newMarginalRate": "8.988160284750"
+                        "newMarginalRate": "8.98816028475"
                     },
                     {
                         "token": "TKN0",
@@ -39970,7 +39970,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.980234901721",
                         "newLiquidity": "1212160",
-                        "newMarginalRate": "11.976942302510"
+                        "newMarginalRate": "11.97694230251"
                     },
                     {
                         "token": "TKN0",
@@ -40001,7 +40001,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.995754481030",
                         "newLiquidity": "6885885.224972811835",
-                        "newMarginalRate": "5.995812718600"
+                        "newMarginalRate": "5.9958127186"
                     }
                 ]
             },
@@ -40173,7 +40173,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "433096.197742081153",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -40406,7 +40406,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "434096.593382681681",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -40643,7 +40643,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "435096.989258080398",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -40674,7 +40674,7 @@
                         "highestRate": "1.500000000000",
                         "marginalRate": "1.499442659964",
                         "newLiquidity": "1971308",
-                        "newMarginalRate": "1.498885423490"
+                        "newMarginalRate": "1.49888542349"
                     }
                 ]
             },
@@ -40687,7 +40687,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "557052.244208533024",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -40884,7 +40884,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "436097.385368461129",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -40928,7 +40928,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "558552.732784659053",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -40959,7 +40959,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "2958962",
-                        "newMarginalRate": "2.499287434090"
+                        "newMarginalRate": "2.49928743409"
                     }
                 ]
             },
@@ -41129,7 +41129,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "437098.781714011888",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -41173,7 +41173,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "560053.221599491916",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -41217,7 +41217,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "680674.876736504934",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -41378,7 +41378,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "438100.178294917871",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -41422,7 +41422,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "561554.710653187142",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -41466,7 +41466,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "682341.296982105375",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -41475,7 +41475,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.999243891537",
                         "newLiquidity": "3446789",
-                        "newMarginalRate": "2.998487878370"
+                        "newMarginalRate": "2.99848787837"
                     }
                 ]
             },
@@ -41631,7 +41631,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "439102.575111364451",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -41640,7 +41640,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.997628971270",
                         "newLiquidity": "1474481",
-                        "newMarginalRate": "0.997234073420"
+                        "newMarginalRate": "0.99723407342"
                     }
                 ]
             },
@@ -41675,7 +41675,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "563056.199945899634",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -41719,7 +41719,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "684008.717386651185",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -41763,7 +41763,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.500000000000",
                         "newLiquidity": "804214.178032374668",
-                        "newMarginalRate": "7.500000000000"
+                        "newMarginalRate": "7.5"
                     },
                     {
                         "token": "TKN1",
@@ -41888,7 +41888,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "440104.972163540201",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -41919,7 +41919,7 @@
                         "highestRate": "1.500000000000",
                         "marginalRate": "1.496657513214",
                         "newLiquidity": "1961308",
-                        "newMarginalRate": "1.496100794550"
+                        "newMarginalRate": "1.49610079455"
                     }
                 ]
             },
@@ -41932,7 +41932,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "564558.689477785922",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -41976,7 +41976,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "685676.137950223085",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -42007,7 +42007,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.498422927053",
                         "newLiquidity": "3932616",
-                        "newMarginalRate": "3.497634523850"
+                        "newMarginalRate": "3.49763452385"
                     }
                 ]
             },
@@ -42020,7 +42020,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.500000000000",
                         "newLiquidity": "805964.53416957815",
-                        "newMarginalRate": "7.500000000000"
+                        "newMarginalRate": "7.5"
                     },
                     {
                         "token": "TKN1",
@@ -42149,7 +42149,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "441107.369451630867",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -42193,7 +42193,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "566061.179249001916",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -42237,7 +42237,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "687344.558672901291",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -42246,7 +42246,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.996976137921",
                         "newLiquidity": "3431789",
-                        "newMarginalRate": "2.996220410640"
+                        "newMarginalRate": "2.99622041064"
                     }
                 ]
             },
@@ -42281,7 +42281,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.500000000000",
                         "newLiquidity": "807714.890415496519",
-                        "newMarginalRate": "7.500000000000"
+                        "newMarginalRate": "7.5"
                     },
                     {
                         "token": "TKN1",
@@ -42290,7 +42290,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.998372606567",
                         "newLiquidity": "4423443",
-                        "newMarginalRate": "3.997559034020"
+                        "newMarginalRate": "3.99755903402"
                     }
                 ]
             },
@@ -42325,7 +42325,7 @@
                         "highestRate": "8.500000000000",
                         "marginalRate": "8.500000000000",
                         "newLiquidity": "927720.1530534634",
-                        "newMarginalRate": "8.500000000000"
+                        "newMarginalRate": "8.5"
                     },
                     {
                         "token": "TKN1",
@@ -42334,7 +42334,7 @@
                         "highestRate": "5",
                         "marginalRate": "5",
                         "newLiquidity": "5423097",
-                        "newMarginalRate": "4.999149811420"
+                        "newMarginalRate": "4.99914981142"
                     }
                 ]
             },
@@ -42414,7 +42414,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "442110.766975823381",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -42458,7 +42458,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.500000000000",
                         "newLiquidity": "567564.669259702896",
-                        "newMarginalRate": "5.500000000000"
+                        "newMarginalRate": "5.5"
                     },
                     {
                         "token": "TKN1",
@@ -42502,7 +42502,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "689012.979554765513",
-                        "newMarginalRate": "6.500000000000"
+                        "newMarginalRate": "6.5"
                     },
                     {
                         "token": "TKN1",
@@ -42546,7 +42546,7 @@
                         "highestRate": "7.500000000000",
                         "marginalRate": "7.500000000000",
                         "newLiquidity": "809465.246770173589",
-                        "newMarginalRate": "7.500000000000"
+                        "newMarginalRate": "7.5"
                     },
                     {
                         "token": "TKN1",
@@ -42590,7 +42590,7 @@
                         "highestRate": "8.500000000000",
                         "marginalRate": "8.500000000000",
                         "newLiquidity": "929520.459212450833",
-                        "newMarginalRate": "8.500000000000"
+                        "newMarginalRate": "8.5"
                     },
                     {
                         "token": "TKN1",
@@ -43469,7 +43469,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.495014171484",
                         "newLiquidity": "2935628.847351869593",
-                        "newMarginalRate": "2.495132856010"
+                        "newMarginalRate": "2.49513285601"
                     }
                 ]
             },
@@ -43648,7 +43648,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.996400306059",
                         "newLiquidity": "1472591.481167465948",
-                        "newMarginalRate": "0.996488119900"
+                        "newMarginalRate": "0.9964881199"
                     }
                 ]
             },
@@ -43727,7 +43727,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.500000000000",
                         "newLiquidity": "684012",
-                        "newMarginalRate": "6.496299546260"
+                        "newMarginalRate": "6.49629954626"
                     },
                     {
                         "token": "TKN0",
@@ -43736,7 +43736,7 @@
                         "highestRate": "3",
                         "marginalRate": "2.995464778654",
                         "newLiquidity": "3427558.449824526207",
-                        "newMarginalRate": "2.995581056630"
+                        "newMarginalRate": "2.99558105663"
                     }
                 ]
             },
@@ -44429,7 +44429,7 @@
                         "highestRate": "1.500000000000",
                         "marginalRate": "1.495655494183",
                         "newLiquidity": "1960109.057157146891",
-                        "newMarginalRate": "1.495767107270"
+                        "newMarginalRate": "1.49576710727"
                     }
                 ]
             },
@@ -44486,7 +44486,7 @@
                         "highestRate": "6.500000000000",
                         "marginalRate": "6.488901799685",
                         "newLiquidity": "669012",
-                        "newMarginalRate": "6.485204506850"
+                        "newMarginalRate": "6.48520450685"
                     },
                     {
                         "token": "TKN0",
@@ -44552,7 +44552,7 @@
                         "highestRate": "8",
                         "marginalRate": "8",
                         "newLiquidity": "861525",
-                        "newMarginalRate": "7.995326253770"
+                        "newMarginalRate": "7.99532625377"
                     },
                     {
                         "token": "TKN0",
@@ -44703,7 +44703,7 @@
                         "highestRate": "5.500000000000",
                         "marginalRate": "5.483776970507",
                         "newLiquidity": "546564",
-                        "newMarginalRate": "5.481075461840"
+                        "newMarginalRate": "5.48107546184"
                     },
                     {
                         "token": "TKN0",
@@ -44712,7 +44712,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.995504180811",
                         "newLiquidity": "2448956.203003335215",
-                        "newMarginalRate": "1.995622813360"
+                        "newMarginalRate": "1.99562281336"
                     }
                 ]
             },
@@ -44734,7 +44734,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.495607758196",
                         "newLiquidity": "2938965.658128202637",
-                        "newMarginalRate": "2.495726779160"
+                        "newMarginalRate": "2.49572677916"
                     }
                 ]
             },
@@ -44778,7 +44778,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.496395859108",
                         "newLiquidity": "3924046.8932020105",
-                        "newMarginalRate": "3.496508692700"
+                        "newMarginalRate": "3.4965086927"
                     }
                 ]
             },
@@ -44835,7 +44835,7 @@
                         "highestRate": "8.500000000000",
                         "marginalRate": "8.500000000000",
                         "newLiquidity": "920520",
-                        "newMarginalRate": "8.495086133530"
+                        "newMarginalRate": "8.49508613353"
                     },
                     {
                         "token": "TKN0",
@@ -45034,7 +45034,7 @@
                         "highestRate": "7",
                         "marginalRate": "6.983698097743",
                         "newLiquidity": "719310",
-                        "newMarginalRate": "6.979625591620"
+                        "newMarginalRate": "6.97962559162"
                     },
                     {
                         "token": "TKN0",
@@ -45913,7 +45913,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.998813870023",
                         "newLiquidity": "5921924",
-                        "newMarginalRate": "3.998418532450"
+                        "newMarginalRate": "3.99841853245"
                     }
                 ]
             },
@@ -46451,7 +46451,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.998046768989",
                         "newLiquidity": "9864540",
-                        "newMarginalRate": "7.997395744980"
+                        "newMarginalRate": "7.99739574498"
                     }
                 ]
             },
@@ -46726,7 +46726,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.997862264183",
                         "newLiquidity": "11835848",
-                        "newMarginalRate": "9.997149736360"
+                        "newMarginalRate": "9.99714973636"
                     }
                 ]
             },
@@ -46939,7 +46939,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.996656115129",
                         "newLiquidity": "7887232",
-                        "newMarginalRate": "5.996098891600"
+                        "newMarginalRate": "5.9960988916"
                     }
                 ]
             },
@@ -47712,7 +47712,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.996046917423",
                         "newLiquidity": "5915979.557391253646",
-                        "newMarginalRate": "3.996068874320"
+                        "newMarginalRate": "3.99606887432"
                     }
                 ]
             },
@@ -47945,7 +47945,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.996068654032",
                         "newLiquidity": "5916034.561062892458",
-                        "newMarginalRate": "3.996090612440"
+                        "newMarginalRate": "3.99609061244"
                     }
                 ]
             },
@@ -48182,7 +48182,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.996090390701",
                         "newLiquidity": "5916089.564734895257",
-                        "newMarginalRate": "3.996112350620"
+                        "newMarginalRate": "3.99611235062"
                     }
                 ]
             },
@@ -48195,7 +48195,7 @@
                         "highestRate": "20",
                         "marginalRate": "19.997924862665",
                         "newLiquidity": "1974293",
-                        "newMarginalRate": "19.995849832990"
+                        "newMarginalRate": "19.99584983299"
                     },
                     {
                         "token": "TKN0",
@@ -48458,7 +48458,7 @@
                         "highestRate": "22",
                         "marginalRate": "21.997239473563",
                         "newLiquidity": "2219208",
-                        "newMarginalRate": "21.994479120330"
+                        "newMarginalRate": "21.99447912033"
                     },
                     {
                         "token": "TKN0",
@@ -48480,7 +48480,7 @@
                         "highestRate": "24",
                         "marginalRate": "24",
                         "newLiquidity": "2467920",
-                        "newMarginalRate": "23.996693374480"
+                        "newMarginalRate": "23.99669337448"
                     },
                     {
                         "token": "TKN0",
@@ -48489,7 +48489,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.995012305236",
                         "newLiquidity": "11824014.678149191805",
-                        "newMarginalRate": "9.995041992260"
+                        "newMarginalRate": "9.99504199226"
                     }
                 ]
             },
@@ -48659,7 +48659,7 @@
                         "highestRate": "18",
                         "marginalRate": "17.995242342187",
                         "newLiquidity": "1725884",
-                        "newMarginalRate": "17.994053025990"
+                        "newMarginalRate": "17.99405302599"
                     },
                     {
                         "token": "TKN0",
@@ -48930,7 +48930,7 @@
                         "highestRate": "20",
                         "marginalRate": "19.991700096623",
                         "newLiquidity": "1968293",
-                        "newMarginalRate": "19.989625389930"
+                        "newMarginalRate": "19.98962538993"
                     },
                     {
                         "token": "TKN0",
@@ -49170,7 +49170,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.996177337966",
                         "newLiquidity": "5916309.579426547263",
-                        "newMarginalRate": "3.996199303930"
+                        "newMarginalRate": "3.99619930393"
                     }
                 ]
             },
@@ -49214,7 +49214,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.994909945080",
                         "newLiquidity": "9853220.440669690555",
-                        "newMarginalRate": "7.994939548620"
+                        "newMarginalRate": "7.99493954862"
                     }
                 ]
             },
@@ -49280,7 +49280,7 @@
                         "highestRate": "14",
                         "marginalRate": "13.996085274734",
                         "newLiquidity": "15772892.333042152264",
-                        "newMarginalRate": "13.996113442220"
+                        "newMarginalRate": "13.99611344222"
                     }
                 ]
             },
@@ -49449,7 +49449,7 @@
                         "highestRate": "6",
                         "marginalRate": "5.995151671021",
                         "newLiquidity": "7883932.067477910502",
-                        "newMarginalRate": "5.995179548180"
+                        "newMarginalRate": "5.99517954818"
                     }
                 ]
             },
@@ -49493,7 +49493,7 @@
                         "highestRate": "10",
                         "marginalRate": "9.995130570452",
                         "newLiquidity": "11824678.770050543563",
-                        "newMarginalRate": "9.995160274020"
+                        "newMarginalRate": "9.99516027402"
                     }
                 ]
             },
@@ -49581,7 +49581,7 @@
                         "highestRate": "18",
                         "marginalRate": "17.997498553578",
                         "newLiquidity": "19729330.018366441857",
-                        "newMarginalRate": "17.997524611330"
+                        "newMarginalRate": "17.99752461133"
                     }
                 ]
             },
@@ -49688,7 +49688,7 @@
                         "highestRate": "4",
                         "marginalRate": "3.996220811953",
                         "newLiquidity": "5916419.58677455843",
-                        "newMarginalRate": "3.996242780940"
+                        "newMarginalRate": "3.99624278094"
                     }
                 ]
             },
@@ -49776,7 +49776,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.995579616070",
                         "newLiquidity": "13798116.432637061354",
-                        "newMarginalRate": "11.995608712550"
+                        "newMarginalRate": "11.99560871255"
                     }
                 ]
             },
@@ -49820,7 +49820,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.996799216573",
                         "newLiquidity": "17750471.419581480658",
-                        "newMarginalRate": "15.996826349880"
+                        "newMarginalRate": "15.99682634988"
                     }
                 ]
             },
@@ -50041,7 +50041,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.995608647134",
                         "newLiquidity": "13798308.460419042584",
-                        "newMarginalRate": "11.995637747850"
+                        "newMarginalRate": "11.99563774785"
                     }
                 ]
             },
@@ -50107,7 +50107,7 @@
                         "highestRate": "18",
                         "marginalRate": "17.997550665272",
                         "newLiquidity": "19729830.091851102724",
-                        "newMarginalRate": "17.997576730720"
+                        "newMarginalRate": "17.99757673072"
                     }
                 ]
             },
@@ -50129,7 +50129,7 @@
                         "highestRate": "20",
                         "marginalRate": "19.998324525568",
                         "newLiquidity": "21710916.76349466814",
-                        "newMarginalRate": "19.998349536580"
+                        "newMarginalRate": "19.99834953658"
                     }
                 ]
             },
@@ -50213,7 +50213,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "218048.791125297489",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -50446,7 +50446,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "220050.374628147258",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -50455,7 +50455,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.499604671932",
                         "newLiquidity": "738740",
-                        "newMarginalRate": "0.499209500210"
+                        "newMarginalRate": "0.49920950021"
                     }
                 ]
             },
@@ -50468,7 +50468,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "249579.657953808599",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -50683,7 +50683,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "222053.960011604943",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -50705,7 +50705,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "252248.642002616939",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -50727,7 +50727,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "280776.976993587958",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -50924,7 +50924,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "224058.547278657698",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -50946,7 +50946,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "254919.628265677971",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -50968,7 +50968,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "283778.932253868361",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -51169,7 +51169,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "226065.13643228253",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -51191,7 +51191,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "257592.616746287809",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -51213,7 +51213,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "286782.889425666592",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -51257,7 +51257,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "342838.173718853336",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -51418,7 +51418,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "228073.727475478434",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -51440,7 +51440,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "260267.607447748702",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -51462,7 +51462,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "289788.848511484159",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -51506,7 +51506,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "346173.855337604995",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -51528,7 +51528,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "373797.3441336048",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -51671,7 +51671,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "230083.320411234238",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -51693,7 +51693,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "262944.600373372628",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -51715,7 +51715,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "292796.809513808598",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -51759,7 +51759,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "349510.538228885098",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -51781,7 +51781,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "377227.890240412898",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -51803,7 +51803,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.750000000000",
                         "newLiquidity": "404732.712202113238",
-                        "newMarginalRate": "3.750000000000"
+                        "newMarginalRate": "3.75"
                     },
                     {
                         "token": "TKN1",
@@ -51812,7 +51812,7 @@
                         "highestRate": "2",
                         "marginalRate": "2",
                         "newLiquidity": "2215221",
-                        "newMarginalRate": "1.999186303100"
+                        "newMarginalRate": "1.9991863031"
                     }
                 ]
             },
@@ -51928,7 +51928,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "232094.915242556792",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -51950,7 +51950,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "265623.59552647058",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -51972,7 +51972,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "295806.772435146561",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -52016,7 +52016,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "352849.222393977914",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -52025,7 +52025,7 @@
                         "highestRate": "1.500000000000",
                         "marginalRate": "1.497732388671",
                         "newLiquidity": "1708394",
-                        "newMarginalRate": "1.496976899410"
+                        "newMarginalRate": "1.49697689941"
                     }
                 ]
             },
@@ -52038,7 +52038,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "380659.437393043804",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -52060,7 +52060,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.750000000000",
                         "newLiquidity": "408234.137186151991",
-                        "newMarginalRate": "3.750000000000"
+                        "newMarginalRate": "3.75"
                     },
                     {
                         "token": "TKN1",
@@ -52069,7 +52069,7 @@
                         "highestRate": "2",
                         "marginalRate": "1.999186303100",
                         "newLiquidity": "2208221",
-                        "newMarginalRate": "1.998372771760"
+                        "newMarginalRate": "1.99837277176"
                     }
                 ]
             },
@@ -52091,7 +52091,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "2461135",
-                        "newMarginalRate": "2.249166232810"
+                        "newMarginalRate": "2.24916623281"
                     }
                 ]
             },
@@ -52189,7 +52189,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "234107.51197245488",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -52198,7 +52198,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.496841753149",
                         "newLiquidity": "731740",
-                        "newMarginalRate": "0.496447675850"
+                        "newMarginalRate": "0.49644767585"
                     }
                 ]
             },
@@ -52211,7 +52211,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "268304.592910363295",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -52233,7 +52233,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "298818.737277999743",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -52277,7 +52277,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "356189.907834169331",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -52299,7 +52299,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "384092.985592437034",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -52321,7 +52321,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.750000000000",
                         "newLiquidity": "411737.563040438027",
-                        "newMarginalRate": "3.750000000000"
+                        "newMarginalRate": "3.75"
                     },
                     {
                         "token": "TKN1",
@@ -52365,7 +52365,7 @@
                         "highestRate": "4.250000000000",
                         "marginalRate": "4.250000000000",
                         "newLiquidity": "466560.612266027118",
-                        "newMarginalRate": "4.250000000000"
+                        "newMarginalRate": "4.25"
                     },
                     {
                         "token": "TKN1",
@@ -52454,7 +52454,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.250000000000",
                         "newLiquidity": "236122.110603943259",
-                        "newMarginalRate": "2.250000000000"
+                        "newMarginalRate": "2.25"
                     },
                     {
                         "token": "TKN1",
@@ -52476,7 +52476,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.500000000000",
                         "newLiquidity": "270987.592528377702",
-                        "newMarginalRate": "2.500000000000"
+                        "newMarginalRate": "2.5"
                     },
                     {
                         "token": "TKN1",
@@ -52498,7 +52498,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.750000000000",
                         "newLiquidity": "301832.704044879964",
-                        "newMarginalRate": "2.750000000000"
+                        "newMarginalRate": "2.75"
                     },
                     {
                         "token": "TKN1",
@@ -52507,7 +52507,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.995447374338",
                         "newLiquidity": "1210567",
-                        "newMarginalRate": "0.994797847150"
+                        "newMarginalRate": "0.99479784715"
                     }
                 ]
             },
@@ -52542,7 +52542,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.250000000000",
                         "newLiquidity": "359531.594550749091",
-                        "newMarginalRate": "3.250000000000"
+                        "newMarginalRate": "3.25"
                     },
                     {
                         "token": "TKN1",
@@ -52564,7 +52564,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.500000000000",
                         "newLiquidity": "387527.534839537082",
-                        "newMarginalRate": "3.500000000000"
+                        "newMarginalRate": "3.5"
                     },
                     {
                         "token": "TKN1",
@@ -52586,7 +52586,7 @@
                         "highestRate": "3.750000000000",
                         "marginalRate": "3.750000000000",
                         "newLiquidity": "415241.98976568186",
-                        "newMarginalRate": "3.750000000000"
+                        "newMarginalRate": "3.75"
                     },
                     {
                         "token": "TKN1",
@@ -52630,7 +52630,7 @@
                         "highestRate": "4.250000000000",
                         "marginalRate": "4.250000000000",
                         "newLiquidity": "470161.837214674347",
-                        "newMarginalRate": "4.250000000000"
+                        "newMarginalRate": "4.25"
                     },
                     {
                         "token": "TKN1",
@@ -52652,7 +52652,7 @@
                         "highestRate": "4.500000000000",
                         "marginalRate": "4.500000000000",
                         "newLiquidity": "497460.934867219121",
-                        "newMarginalRate": "4.500000000000"
+                        "newMarginalRate": "4.5"
                     },
                     {
                         "token": "TKN1",
@@ -53202,7 +53202,7 @@
                         "highestRate": "0.500000000000",
                         "marginalRate": "0.496403548928",
                         "newLiquidity": "732072.983183273095",
-                        "newMarginalRate": "0.496578879600"
+                        "newMarginalRate": "0.4965788796"
                     }
                 ]
             },
@@ -53434,7 +53434,7 @@
                         "highestRate": "2.250000000000",
                         "marginalRate": "2.246731361619",
                         "newLiquidity": "232122",
-                        "newMarginalRate": "2.245642343480"
+                        "newMarginalRate": "2.24564234348"
                     },
                     {
                         "token": "TKN0",
@@ -53710,7 +53710,7 @@
                         "highestRate": "0.750000000000",
                         "marginalRate": "0.745658922424",
                         "newLiquidity": "972857.125193152193",
-                        "newMarginalRate": "0.745881840190"
+                        "newMarginalRate": "0.74588184019"
                     }
                 ]
             },
@@ -54003,7 +54003,7 @@
                         "highestRate": "1.250000000000",
                         "marginalRate": "1.245491249756",
                         "newLiquidity": "1457486.769048374124",
-                        "newMarginalRate": "1.245728982190"
+                        "newMarginalRate": "1.24572898219"
                     }
                 ]
             },
@@ -54234,7 +54234,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.995744062259",
                         "newLiquidity": "1216032.464763202721",
-                        "newMarginalRate": "0.995981328490"
+                        "newMarginalRate": "0.99598132849"
                     }
                 ]
             },
@@ -54482,7 +54482,7 @@
                         "highestRate": "2.750000000000",
                         "marginalRate": "2.737294598718",
                         "newLiquidity": "283832",
-                        "newMarginalRate": "2.734757048670"
+                        "newMarginalRate": "2.73475704867"
                     },
                     {
                         "token": "TKN0",
@@ -54491,7 +54491,7 @@
                         "highestRate": "1",
                         "marginalRate": "0.995981227821",
                         "newLiquidity": "1217128.480996848508",
-                        "newMarginalRate": "0.996218742450"
+                        "newMarginalRate": "0.99621874245"
                     }
                 ]
             },
@@ -54548,7 +54548,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.492119636258",
                         "newLiquidity": "369527",
-                        "newMarginalRate": "3.488182784930"
+                        "newMarginalRate": "3.48818278493"
                     },
                     {
                         "token": "TKN0",
@@ -54730,7 +54730,7 @@
                         "highestRate": "0.750000000000",
                         "marginalRate": "0.746551210251",
                         "newLiquidity": "976069.564338069607",
-                        "newMarginalRate": "0.746774939660"
+                        "newMarginalRate": "0.74677493966"
                     }
                 ]
             },
@@ -54787,7 +54787,7 @@
                         "highestRate": "3.250000000000",
                         "marginalRate": "3.235830220475",
                         "newLiquidity": "334531",
-                        "newMarginalRate": "3.232292612650"
+                        "newMarginalRate": "3.23229261265"
                     },
                     {
                         "token": "TKN0",
@@ -54884,7 +54884,7 @@
                         "highestRate": "2.500000000000",
                         "marginalRate": "2.498299839391",
                         "newLiquidity": "2700166.858078544327",
-                        "newMarginalRate": "2.498499942640"
+                        "newMarginalRate": "2.49849994264"
                     }
                 ]
             },
@@ -55074,7 +55074,7 @@
                         "highestRate": "3.500000000000",
                         "marginalRate": "3.484248153964",
                         "newLiquidity": "357527",
-                        "newMarginalRate": "3.480315743360"
+                        "newMarginalRate": "3.48031574336"
                     },
                     {
                         "token": "TKN0",
@@ -55712,7 +55712,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.999209207595",
                         "newLiquidity": "11848848",
-                        "newMarginalRate": "7.998813826050"
+                        "newMarginalRate": "7.99881382605"
                     }
                 ]
             },
@@ -56744,7 +56744,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.997395638991",
                         "newLiquidity": "19738080",
-                        "newMarginalRate": "15.996744581860"
+                        "newMarginalRate": "15.99674458186"
                     }
                 ]
             },
@@ -56810,7 +56810,7 @@
                         "highestRate": "28",
                         "marginalRate": "27.999211380232",
                         "newLiquidity": "31592928",
-                        "newMarginalRate": "27.998422771570"
+                        "newMarginalRate": "27.99842277157"
                     }
                 ]
             },
@@ -56957,7 +56957,7 @@
                         "highestRate": "8",
                         "marginalRate": "7.997232397587",
                         "newLiquidity": "11843848",
-                        "newMarginalRate": "7.996837064900"
+                        "newMarginalRate": "7.9968370649"
                     }
                 ]
             },
@@ -58244,7 +58244,7 @@
                         "highestRate": "12",
                         "marginalRate": "11.994997929820",
                         "newLiquidity": "15784564.003895649918",
-                        "newMarginalRate": "11.995011862800"
+                        "newMarginalRate": "11.9950118628"
                     }
                 ]
             },
@@ -58454,7 +58454,7 @@
                         "highestRate": "36",
                         "marginalRate": "35.996427739659",
                         "newLiquidity": "3454018",
-                        "newMarginalRate": "35.995237025600"
+                        "newMarginalRate": "35.9952370256"
                     },
                     {
                         "token": "TKN0",
@@ -58476,7 +58476,7 @@
                         "highestRate": "40",
                         "marginalRate": "39.995844999787",
                         "newLiquidity": "3946086",
-                        "newMarginalRate": "39.993767580610"
+                        "newMarginalRate": "39.99376758061"
                     },
                     {
                         "token": "TKN0",
@@ -58507,7 +58507,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.994806246207",
                         "newLiquidity": "19729216.188241867237",
-                        "newMarginalRate": "15.994821043310"
+                        "newMarginalRate": "15.99482104331"
                     }
                 ]
             },
@@ -59045,7 +59045,7 @@
                         "highestRate": "24",
                         "marginalRate": "23.995477794579",
                         "newLiquidity": "27624504.164261173499",
-                        "newMarginalRate": "23.995492336250"
+                        "newMarginalRate": "23.99549233625"
                     }
                 ]
             },
@@ -59289,7 +59289,7 @@
                         "highestRate": "52",
                         "marginalRate": "51.992490980222",
                         "newLiquidity": "5418312",
-                        "newMarginalRate": "51.988736673660"
+                        "newMarginalRate": "51.98873667366"
                     },
                     {
                         "token": "TKN0",
@@ -59333,7 +59333,7 @@
                         "highestRate": "60",
                         "marginalRate": "60",
                         "newLiquidity": "6413584",
-                        "newMarginalRate": "59.995563896410"
+                        "newMarginalRate": "59.99556389641"
                     },
                     {
                         "token": "TKN0",
@@ -59342,7 +59342,7 @@
                         "highestRate": "32",
                         "marginalRate": "31.996744964795",
                         "newLiquidity": "35527660.670979784326",
-                        "newMarginalRate": "31.996758527600"
+                        "newMarginalRate": "31.9967585276"
                     }
                 ]
             },
@@ -59480,7 +59480,7 @@
                         "highestRate": "40",
                         "marginalRate": "39.987535646796",
                         "newLiquidity": "3938086",
-                        "newMarginalRate": "39.985458443430"
+                        "newMarginalRate": "39.98545844343"
                     },
                     {
                         "token": "TKN0",
@@ -59546,7 +59546,7 @@
                         "highestRate": "52",
                         "marginalRate": "51.988736673660",
                         "newLiquidity": "5413312",
-                        "newMarginalRate": "51.984982502650"
+                        "newMarginalRate": "51.98498250265"
                     },
                     {
                         "token": "TKN0",
@@ -59612,7 +59612,7 @@
                         "highestRate": "64",
                         "marginalRate": "64",
                         "newLiquidity": "6906202",
-                        "newMarginalRate": "63.995297264090"
+                        "newMarginalRate": "63.99529726409"
                     },
                     {
                         "token": "TKN0",
@@ -59772,7 +59772,7 @@
                         "highestRate": "16",
                         "marginalRate": "15.994880027545",
                         "newLiquidity": "19729556.209660653522",
-                        "newMarginalRate": "15.994894829330"
+                        "newMarginalRate": "15.99489482933"
                     }
                 ]
             },
@@ -60050,7 +60050,7 @@
                         "highestRate": "48",
                         "marginalRate": "47.980144747566",
                         "newLiquidity": "4911640",
-                        "newMarginalRate": "47.976835938160"
+                        "newMarginalRate": "47.97683593816"
                     },
                     {
                         "token": "TKN0",
