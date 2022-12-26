@@ -34,9 +34,6 @@ def tradeByTargetAmount(x, y, z, A, B):
     d = (A * y + B * z) * (A * y + B * z - A * x)
     return n / d, x
 
-def format(value):
-    return '{:.12f}'.format(value).rstrip('0').rstrip('.')
-
 def execute(test):
     directions = [int(strategy['orders'][0]['token'] == test['targetToken']) for strategy in test['strategies']]
     strategies = [[Order(order) for order in strategy['orders']] for strategy in test['strategies']]
@@ -55,8 +52,8 @@ def execute(test):
         if sourceOrder.z < sourceOrder.y:
             sourceOrder.z = sourceOrder.y
         for index, order in [[sourceIndex, dict(sourceOrder)], [targetIndex, dict(targetOrder)]]:
-            test['strategies'][strategyId]['orders'][index]['newLiquidity'] = format(order['liquidity'])
-            test['strategies'][strategyId]['orders'][index]['newMarginalRate'] = format(order['marginalRate'])
+            for dst, src in [['newLiquidity', 'liquidity'], ['newMarginalRate', 'marginalRate']]:
+                test['strategies'][strategyId]['orders'][index][dst] = '{:.12f}'.format(order[src]).rstrip('0').rstrip('.')
 
 def run(fileName):
     file = open(fileName, 'r')
