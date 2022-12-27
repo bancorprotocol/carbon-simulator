@@ -14,7 +14,7 @@ def execute(test, module):
 
     for tradeActions in test['tradeActions']:
         strategyId = int(tradeActions['strategyId']) - 1
-        tokenAmount = module.Amount(tradeActions['tokenAmount'])
+        tokenAmount = module.Amount(tradeActions['amount'])
         sourceIndex = directions[strategyId]
         targetIndex = 1 - sourceIndex
         sourceOrder = strategies[strategyId][sourceIndex]
@@ -45,7 +45,7 @@ def run(fileName, maxError):
         verify(implTest, specTest, maxError)
 
     file = open(fileName, 'w')
-    file.write(dumps(data, indent=4))
+    file.write(dumps(data, indent=2))
     file.close()
 
 run('resources/benchmark/ArbitraryTrade.json', {'newLiquidity': '0.000005', 'newMarginalRate': '0.000002'})
