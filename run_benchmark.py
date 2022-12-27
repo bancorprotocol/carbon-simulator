@@ -26,7 +26,7 @@ def execute(test, module):
             sourceOrder.z = sourceOrder.y
         for index, order in [[sourceIndex, dict(sourceOrder)], [targetIndex, dict(targetOrder)]]:
             for dst, src in [['newLiquidity', 'liquidity'], ['newMarginalRate', 'marginalRate']]:
-                test['strategies'][strategyId]['orders'][index][dst] = '{:.12f}'.format(order[src]).rstrip('0').rstrip('.')
+                test['strategies'][strategyId]['orders'][index][dst] = '{}'.format(order[src])
 
 def verify(implTest, specTest, maxError):
     for implStrategy, specStrategy in zip(implTest['strategies'], specTest['strategies']):
