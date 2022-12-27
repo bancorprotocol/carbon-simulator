@@ -20,12 +20,11 @@ from tabulate import tabulate
 from ..order import Order
 from ..pair import CarbonPair
 from ..carbon_order_ui import CarbonOrderUI
-from ..routers import ExactRouterX0Y0N, AlphaRouter
+from ..routers import ExactRouterX0Y0N, AlphaRouter, FastRouter
 from decimal import Decimal
 import pandas as pd
 import numpy as np
 
-from ..routers.fast_router import FastRouter
 
 
 class CarbonSimulatorUI:
@@ -55,7 +54,7 @@ class CarbonSimulatorUI:
             verbose: bool = False,
             pair: Any = None,
             raiseonerror: bool = False,
-            decimals: int = 12,
+            decimals: int = 50,
             matching_method: str = MATCH_EXACT,
             exclude_future: bool = True,
     ):
@@ -866,7 +865,7 @@ class CarbonSimulatorUI:
     trader_buys = amm_sells
 
     @staticmethod
-    def _to_pandas(order: Order, decimals: int = 12) -> pd.DataFrame:
+    def _to_pandas(order: Order, decimals: int = 50) -> pd.DataFrame:
         """
         Exports Order values for inspection...
         """
