@@ -1,52 +1,25 @@
 from json import loads
 from json import dumps
 
-from decimal import Decimal
-from decimal import getcontext
-from decimal import ROUND_HALF_DOWN
+from copy import deepcopy
 
-getcontext().prec = 50
-getcontext().rounding = ROUND_HALF_DOWN
+from benchmark import impl
+from benchmark import spec
+from benchmark import assertAlmostEqual
 
-class Order:
-    def __init__(self, order):
-        liq = Decimal(order['liquidity'])
-        min = Decimal(order['lowestRate']).sqrt()
-        max = Decimal(order['highestRate']).sqrt()
-        mid = Decimal(order['marginalRate']).sqrt()
-        self.y = liq
-        self.z = liq * (max - min) / (mid - min)
-        self.A = max - min
-        self.B = min
-    def __iter__(self):
-        yield 'liquidity'    , self.y
-        yield 'lowestRate'   , self.B ** 2
-        yield 'highestRate'  , (self.B + self.A) ** 2
-        yield 'marginalRate' , (self.B + self.A * self.y / self.z) ** 2
-
-def tradeBySourceAmount(x, y, z, A, B):
-    n = x * (A * y + B * z) ** 2
-    d = A * x * (A * y + B * z) + z ** 2
-    return x, n / d
-
-def tradeByTargetAmount(x, y, z, A, B):
-    n = x * z ** 2
-    d = (A * y + B * z) * (A * y + B * z - A * x)
-    return n / d, x
-
-def execute(test):
+def execute(test, module):
     directions = [int(strategy['orders'][0]['token'] == test['targetToken']) for strategy in test['strategies']]
-    strategies = [[Order(order) for order in strategy['orders']] for strategy in test['strategies']]
-    tradeFunc = [tradeBySourceAmount, tradeByTargetAmount][test['tradeByTargetAmount']]
+    strategies = [[module.Order(order) for order in strategy['orders']] for strategy in test['strategies']]
+    tradeFunc = [module.tradeBySourceAmount, module.tradeByTargetAmount][test['tradeByTargetAmount']]
 
     for tradeActions in test['tradeActions']:
         strategyId = int(tradeActions['strategyId']) - 1
-        tokenAmount = Decimal(tradeActions['tokenAmount'])
+        tokenAmount = module.toAmount(tradeActions['tokenAmount'])
         sourceIndex = directions[strategyId]
         targetIndex = 1 - sourceIndex
         sourceOrder = strategies[strategyId][sourceIndex]
         targetOrder = strategies[strategyId][targetIndex]
-        sourceAmount, targetAmount = tradeFunc(tokenAmount, targetOrder.y, targetOrder.z, targetOrder.A, targetOrder.B)
+        sourceAmount, targetAmount = tradeFunc(tokenAmount, targetOrder)
         sourceOrder.y += sourceAmount
         targetOrder.y -= targetAmount
         if sourceOrder.z < sourceOrder.y:
@@ -55,16 +28,24 @@ def execute(test):
             for dst, src in [['newLiquidity', 'liquidity'], ['newMarginalRate', 'marginalRate']]:
                 test['strategies'][strategyId]['orders'][index][dst] = '{:.12f}'.format(order[src]).rstrip('0').rstrip('.')
 
-def run(fileName):
+def verify(implTest, specTest, maxError):
+    for implStrategy, specStrategy in zip(implTest['strategies'], specTest['strategies']):
+        for implOrder, specOrder in zip(implStrategy['orders'], specStrategy['orders']):
+            for key in maxError:
+                assertAlmostEqual(implOrder[key], specOrder[key], maxError[key])
+
+def run(fileName, maxError):
     file = open(fileName, 'r')
-    tests = loads(file.read())
+    data = loads(file.read())
     file.close()
 
-    for test in tests:
-        execute(test)
+    for implTest, specTest in zip(data, deepcopy(data)):
+        execute(implTest, spec)
+        execute(specTest, impl)
+        verify(implTest, specTest, maxError)
 
     file = open(fileName, 'w')
-    file.write(dumps(tests, indent=4))
+    file.write(dumps(data, indent=4))
     file.close()
 
-run('benchmark/ArbitraryTrade.json')
+run('benchmark/ArbitraryTrade.json', {'newLiquidity': '0.000005', 'newMarginalRate': '0.000002'})
