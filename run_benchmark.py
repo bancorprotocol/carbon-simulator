@@ -40,8 +40,8 @@ def run(fileName, maxError):
     file.close()
 
     for implTest, specTest in zip(data, deepcopy(data)):
-        execute(implTest, spec)
-        execute(specTest, impl)
+        execute(implTest, impl)
+        execute(specTest, spec)
         verify(implTest, specTest, maxError)
 
     file = open(fileName, 'w')
