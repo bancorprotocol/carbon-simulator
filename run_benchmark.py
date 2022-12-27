@@ -14,7 +14,7 @@ def execute(test, module):
 
     for tradeActions in test['tradeActions']:
         strategyId = int(tradeActions['strategyId']) - 1
-        tokenAmount = module.toAmount(tradeActions['tokenAmount'])
+        tokenAmount = module.Amount(tradeActions['tokenAmount'])
         sourceIndex = directions[strategyId]
         targetIndex = 1 - sourceIndex
         sourceOrder = strategies[strategyId][sourceIndex]

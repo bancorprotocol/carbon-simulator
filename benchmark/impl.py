@@ -1,5 +1,7 @@
 from . import Decimal
 
+Amount = int
+
 ONE = 2 ** 32
 
 def encode(x): return x.sqrt() * ONE
@@ -27,9 +29,6 @@ class Order:
         yield 'lowestRate'   , decode(B)
         yield 'highestRate'  , decode(B + A)
         yield 'marginalRate' , decode(B + A * y / z)
-
-def toAmount(string):
-    return int(string)
 
 def tradeBySourceAmount(x, order):
     y, z, A, B = [order.y, order.z, order.A, order.B]

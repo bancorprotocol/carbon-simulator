@@ -1,5 +1,7 @@
 from . import Decimal
 
+Amount = Decimal
+
 class Order:
     def __init__(self, order):
         liq = Decimal(order['liquidity'])
@@ -19,9 +21,6 @@ class Order:
         yield 'lowestRate'   , B ** 2
         yield 'highestRate'  , (B + A) ** 2
         yield 'marginalRate' , (B + A * y / z) ** 2
-
-def toAmount(string):
-    return Decimal(string)
 
 def tradeBySourceAmount(x, order):
     y, z, A, B = [order.y, order.z, order.A, order.B]
