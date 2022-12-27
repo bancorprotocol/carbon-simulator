@@ -13,9 +13,9 @@ def mulDivC(x, y, z): return (x * y + z - 1) // z
 class Order:
     def __init__(self, order):
         liq = int(Decimal(order['liquidity']))
-        min = encode(Decimal(order['lowestRate']))
-        max = encode(Decimal(order['highestRate']))
-        mid = encode(Decimal(order['marginalRate']))
+        min = int(encode(Decimal(order['lowestRate'])))
+        max = int(encode(Decimal(order['highestRate'])))
+        mid = int(encode(Decimal(order['marginalRate'])))
         self.y = liq
         self.z = liq * (max - min) // (mid - min)
         self.A = max - min
