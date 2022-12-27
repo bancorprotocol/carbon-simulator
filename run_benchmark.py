@@ -48,4 +48,4 @@ def run(fileName, maxError):
     file.write(dumps(data, indent=4))
     file.close()
 
-run('benchmark/ArbitraryTrade.json', {'newLiquidity': '0.000005', 'newMarginalRate': '0.000002'})
+run('resources/benchmark/ArbitraryTrade.json', {'newLiquidity': '0.000005', 'newMarginalRate': '0.000002'})
