@@ -38,23 +38,30 @@ def verify(implTest, specTest, maxError):
             for key in maxError:
                 assertAlmostEqual(implOrder['expected'][key], specOrder['expected'][key], maxError[key])
 
+def generate(fileName, module):
+    file = open(f'{fileName}.json', 'r')
+    tests = loads(file.read())
+    file.close()
+
+    for test in tests:
+        execute(test, module)
+
+    file = open(f'{fileName}.{module.__name__}.json', 'w')
+    file.write(dumps(tests, indent=2))
+    file.close()
+
+    return tests
+
 def run(fileName, maxError):
-    file = open(fileName, 'r')
-    data = loads(file.read())
-    file.close()
+    implTests = generate(fileName, impl)
+    specTests = generate(fileName, spec)
 
-    for implTest, specTest in zip(data, deepcopy(data)):
-        execute(implTest, impl)
-        execute(specTest, spec)
+    for implTest, specTest in zip(implTests, specTests):
         verify(implTest, specTest, maxError)
-
-    file = open(fileName, 'w')
-    file.write(dumps(data, indent=2))
-    file.close()
 
 tests = [
     {
-        'fileName': 'resources/benchmark/ArbitraryTrade.json',
+        'fileName': 'resources/benchmark/ArbitraryTrade',
         'maxError': {
             'liquidity'    : '0.0000046064',
             'lowestRate'   : '0.0000000007',
