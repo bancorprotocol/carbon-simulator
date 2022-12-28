@@ -25,7 +25,7 @@ class Order:
         z = Decimal(self.z)
         A = Decimal(self.A)
         B = Decimal(self.B)
-        yield 'liquidity'    , self.y
+        yield 'liquidity'    , y
         yield 'lowestRate'   , decode(B)
         yield 'highestRate'  , decode(B + A)
         yield 'marginalRate' , decode(B + A * y / z)
