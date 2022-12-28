@@ -9,4 +9,4 @@ def assertAlmostEqual(actual, expected, maxError):
     actual, expected, maxError = [Decimal(x) for x in [actual, expected, maxError]]
     if actual != expected:
         error = abs(actual - expected) / expected
-        assert error <= maxError, f'error = {error}'
+        assert error <= maxError, 'error = {:f}'.format(error)
