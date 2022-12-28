@@ -36,7 +36,7 @@ def verify(implTest, specTest, maxError):
             for key in maxError:
                 assertAlmostEqual(implOrder['expected'][key], specOrder['expected'][key], maxError[key])
 
-def generate(fileName, module):
+def generate(fileName, module, suffix):
     file = open(f'{fileName}.json', 'r')
     tests = loads(file.read())
     file.close()
@@ -44,15 +44,15 @@ def generate(fileName, module):
     for test in tests:
         execute(test, module)
 
-    file = open(f'{fileName}.{module.__name__}.json', 'w')
+    file = open(f'{fileName}.{suffix}.json', 'w')
     file.write(dumps(tests, indent=2))
     file.close()
 
     return tests
 
 def run(fileName, maxError):
-    implTests = generate(fileName, impl)
-    specTests = generate(fileName, spec)
+    implTests = generate(fileName, impl, 'impl')
+    specTests = generate(fileName, spec, 'spec')
 
     for implTest, specTest in zip(implTests, specTests):
         verify(implTest, specTest, maxError)
