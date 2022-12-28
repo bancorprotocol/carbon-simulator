@@ -1,8 +1,6 @@
 from json import loads
 from json import dumps
 
-from copy import deepcopy
-
 from benchmark import impl
 from benchmark import spec
 from benchmark import assertAlmostEqual
