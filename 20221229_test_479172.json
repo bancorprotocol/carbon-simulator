@@ -12,8 +12,12 @@
                         "lowestRate": "0.000400000000",
                         "highestRate": "0.000500000000",
                         "marginalRate": "0.000476190476",
-                        "newLiquidity": "7.024559153479",
-                        "newMarginalRate": "0.000452826759"
+                        "expected": {
+                            "liquidity": "7.024559153479",
+                            "lowestRate": "0.000400000000",
+                            "highestRate": "0.000500000000",
+                            "marginalRate": "0.000452826759"
+                        }
                     },
                     {
                         "token": "USDC",
@@ -21,8 +25,12 @@
                         "lowestRate": "1020.000000000000",
                         "highestRate": "1040.000000000000",
                         "marginalRate": "1030.000000000000",
-                        "newLiquidity": "16407.593124061514",
-                        "newMarginalRate": "1036.433235515845"
+                        "expected": {
+                            "liquidity": "16407.593124061514",
+                            "lowestRate": "1020.000000000000",
+                            "highestRate": "1040.000000000000",
+                            "marginalRate": "1036.433235515845"
+                        }
                     }
                 ]
             },
@@ -34,8 +42,12 @@
                         "lowestRate": "0.000355871886",
                         "highestRate": "0.000497512438",
                         "marginalRate": "0.000476190476",
-                        "newLiquidity": "8.166987349858",
-                        "newMarginalRate": "0.000452826759"
+                        "expected": {
+                            "liquidity": "8.166987349858",
+                            "lowestRate": "0.000355871886",
+                            "highestRate": "0.000497512438",
+                            "marginalRate": "0.000452826759"
+                        }
                     },
                     {
                         "token": "USDC",
@@ -43,8 +55,12 @@
                         "lowestRate": "1210.000000000000",
                         "highestRate": "1510.000000000000",
                         "marginalRate": "1250.000000000000",
-                        "newLiquidity": "13947.381198016597",
-                        "newMarginalRate": "1265.968579328206"
+                        "expected": {
+                            "liquidity": "13947.381198016597",
+                            "lowestRate": "1210.000000000000",
+                            "highestRate": "1510.000000000000",
+                            "marginalRate": "1265.968579328206"
+                        }
                     }
                 ]
             },
@@ -56,8 +72,12 @@
                         "lowestRate": "0.000450450450",
                         "highestRate": "0.000495049505",
                         "marginalRate": "0.000454545455",
-                        "newLiquidity": "5.808453496662",
-                        "newMarginalRate": "0.000452826759"
+                        "expected": {
+                            "liquidity": "5.808453496662",
+                            "lowestRate": "0.000450450450",
+                            "highestRate": "0.000495049505",
+                            "marginalRate": "0.000452826759"
+                        }
                     },
                     {
                         "token": "USDC",
@@ -65,8 +85,12 @@
                         "lowestRate": "1050.000000000000",
                         "highestRate": "1060.000000000000",
                         "marginalRate": "1055.000000000000",
-                        "newLiquidity": "19238.885565248278",
-                        "newMarginalRate": "1059.629997777449"
+                        "expected": {
+                            "liquidity": "19238.885565248278",
+                            "lowestRate": "1050.000000000000",
+                            "highestRate": "1060.000000000000",
+                            "marginalRate": "1059.629997777449"
+                        }
                     }
                 ]
             },
@@ -78,8 +102,12 @@
                         "lowestRate": "0.000485436893",
                         "highestRate": "0.000492610837",
                         "marginalRate": "0.000491400491",
-                        "newLiquidity": "0.000000000000",
-                        "newMarginalRate": "0.000485436893"
+                        "expected": {
+                            "liquidity": "0.000000000000",
+                            "lowestRate": "0.000485436893",
+                            "highestRate": "0.000492610837",
+                            "marginalRate": "0.000485436893"
+                        }
                     },
                     {
                         "token": "USDC",
@@ -87,8 +115,12 @@
                         "lowestRate": "1055.000000000000",
                         "highestRate": "1750.000000000000",
                         "marginalRate": "1700.000000000000",
-                        "newLiquidity": "30474.618433563053",
-                        "newMarginalRate": "1750.000000000000"
+                        "expected": {
+                            "liquidity": "30474.618433563053",
+                            "lowestRate": "1055.000000000000",
+                            "highestRate": "1750.000000000000",
+                            "marginalRate": "1750.000000000000"
+                        }
                     }
                 ]
             },
@@ -100,8 +132,12 @@
                         "lowestRate": "0.000480769231",
                         "highestRate": "0.000490196078",
                         "marginalRate": "0.000487804878",
-                        "newLiquidity": "0.000000000000",
-                        "newMarginalRate": "0.000480769231"
+                        "expected": {
+                            "liquidity": "0.000000000000",
+                            "lowestRate": "0.000480769231",
+                            "highestRate": "0.000490196078",
+                            "marginalRate": "0.000480769231"
+                        }
                     },
                     {
                         "token": "USDC",
@@ -109,8 +145,12 @@
                         "lowestRate": "1040.000000000000",
                         "highestRate": "1250.000000000000",
                         "marginalRate": "1050.000000000000",
-                        "newLiquidity": "30649.455198624491",
-                        "newMarginalRate": "1070.800866245103"
+                        "expected": {
+                            "liquidity": "30649.455198624491",
+                            "lowestRate": "1040.000000000000",
+                            "highestRate": "1250.000000000000",
+                            "marginalRate": "1070.800866245103"
+                        }
                     }
                 ]
             }
@@ -118,23 +158,23 @@
         "tradeActions": [
             {
                 "strategyId": "4",
-                "tokenAmount": "10.000000000000"
+                "amount": "10.000000000000"
             },
             {
                 "strategyId": "5",
-                "tokenAmount": "10.000000000000"
+                "amount": "10.000000000000"
             },
             {
                 "strategyId": "1",
-                "tokenAmount": "2.975440846521"
+                "amount": "2.975440846521"
             },
             {
                 "strategyId": "2",
-                "tokenAmount": "1.833012650142"
+                "amount": "1.833012650142"
             },
             {
                 "strategyId": "3",
-                "tokenAmount": "4.191546503338"
+                "amount": "4.191546503338"
             }
         ]
     }
