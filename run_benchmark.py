@@ -57,7 +57,7 @@ def run(fileName, maxError):
     for implTest, specTest in zip(implTests, specTests):
         verify(implTest, specTest, maxError)
 
-blocks = [
+for batch in [
     {
         'fileName': 'resources/benchmark/ArbitraryTrade',
         'maxError': {
@@ -76,7 +76,4 @@ blocks = [
             'marginalRate' : '0.00099900099901',
         }
     },
-]
-
-for block in blocks:
-    run(block['fileName'], block['maxError'])
+]:  run(batch['fileName'], batch['maxError'])
