@@ -66,7 +66,16 @@ blocks = [
             'highestRate'  : '0.0000000007',
             'marginalRate' : '0.0000015278',
         }
-    }
+    },
+    {
+        'fileName': 'resources/benchmark/EthUsdcTrade',
+        'maxError': {
+            'liquidity'    : '0.00000011765498',
+            'lowestRate'   : '0.00000000000002',
+            'highestRate'  : '0.00000000000002',
+            'marginalRate' : '0.00099900099901',
+        }
+    },
 ]
 
 for block in blocks:
