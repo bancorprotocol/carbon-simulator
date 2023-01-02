@@ -826,5 +826,1661 @@
         "amount": "7890000000000000000"
       }
     ]
+  },
+  {
+    "sourceToken": "ETH",
+    "targetToken": "USDC",
+    "tradeByTargetAmount": false,
+    "strategies": [
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      }
+    ],
+    "tradeActions": [
+      {
+        "strategyId": "1",
+        "amount": "4920000000000000000"
+      },
+      {
+        "strategyId": "2",
+        "amount": "18240000000000000000"
+      },
+      {
+        "strategyId": "3",
+        "amount": "31560000000000000000"
+      },
+      {
+        "strategyId": "4",
+        "amount": "4920000000000000000"
+      },
+      {
+        "strategyId": "5",
+        "amount": "18240000000000000000"
+      },
+      {
+        "strategyId": "6",
+        "amount": "31560000000000000000"
+      },
+      {
+        "strategyId": "7",
+        "amount": "4920000000000000000"
+      },
+      {
+        "strategyId": "8",
+        "amount": "18240000000000000000"
+      },
+      {
+        "strategyId": "9",
+        "amount": "31560000000000000000"
+      }
+    ]
+  },
+  {
+    "sourceToken": "ETH",
+    "targetToken": "USDC",
+    "tradeByTargetAmount": true,
+    "strategies": [
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      }
+    ],
+    "tradeActions": [
+      {
+        "strategyId": "1",
+        "amount": "4920000000"
+      },
+      {
+        "strategyId": "2",
+        "amount": "18240000000"
+      },
+      {
+        "strategyId": "3",
+        "amount": "31560000000"
+      },
+      {
+        "strategyId": "4",
+        "amount": "4920000000"
+      },
+      {
+        "strategyId": "5",
+        "amount": "18240000000"
+      },
+      {
+        "strategyId": "6",
+        "amount": "31560000000"
+      },
+      {
+        "strategyId": "7",
+        "amount": "4920000000"
+      },
+      {
+        "strategyId": "8",
+        "amount": "18240000000"
+      },
+      {
+        "strategyId": "9",
+        "amount": "31560000000"
+      }
+    ]
+  },
+  {
+    "sourceToken": "USDC",
+    "targetToken": "ETH",
+    "tradeByTargetAmount": false,
+    "strategies": [
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      }
+    ],
+    "tradeActions": [
+      {
+        "strategyId": "1",
+        "amount": "4920000000"
+      },
+      {
+        "strategyId": "2",
+        "amount": "18240000000"
+      },
+      {
+        "strategyId": "3",
+        "amount": "31560000000"
+      },
+      {
+        "strategyId": "4",
+        "amount": "4920000000"
+      },
+      {
+        "strategyId": "5",
+        "amount": "18240000000"
+      },
+      {
+        "strategyId": "6",
+        "amount": "31560000000"
+      },
+      {
+        "strategyId": "7",
+        "amount": "4920000000"
+      },
+      {
+        "strategyId": "8",
+        "amount": "18240000000"
+      },
+      {
+        "strategyId": "9",
+        "amount": "31560000000"
+      }
+    ]
+  },
+  {
+    "sourceToken": "USDC",
+    "targetToken": "ETH",
+    "tradeByTargetAmount": true,
+    "strategies": [
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      }
+    ],
+    "tradeActions": [
+      {
+        "strategyId": "1",
+        "amount": "4920000000000000000"
+      },
+      {
+        "strategyId": "2",
+        "amount": "18240000000000000000"
+      },
+      {
+        "strategyId": "3",
+        "amount": "31560000000000000000"
+      },
+      {
+        "strategyId": "4",
+        "amount": "4920000000000000000"
+      },
+      {
+        "strategyId": "5",
+        "amount": "18240000000000000000"
+      },
+      {
+        "strategyId": "6",
+        "amount": "31560000000000000000"
+      },
+      {
+        "strategyId": "7",
+        "amount": "4920000000000000000"
+      },
+      {
+        "strategyId": "8",
+        "amount": "18240000000000000000"
+      },
+      {
+        "strategyId": "9",
+        "amount": "31560000000000000000"
+      }
+    ]
+  },
+  {
+    "sourceToken": "ETH",
+    "targetToken": "USDC",
+    "tradeByTargetAmount": false,
+    "strategies": [
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      }
+    ],
+    "tradeActions": [
+      {
+        "strategyId": "1",
+        "amount": "12300000000000000000"
+      },
+      {
+        "strategyId": "2",
+        "amount": "45600000000000000000"
+      },
+      {
+        "strategyId": "3",
+        "amount": "78900000000000000000"
+      },
+      {
+        "strategyId": "4",
+        "amount": "12300000000000000000"
+      },
+      {
+        "strategyId": "5",
+        "amount": "45600000000000000000"
+      },
+      {
+        "strategyId": "6",
+        "amount": "78900000000000000000"
+      },
+      {
+        "strategyId": "7",
+        "amount": "12300000000000000000"
+      },
+      {
+        "strategyId": "8",
+        "amount": "45600000000000000000"
+      },
+      {
+        "strategyId": "9",
+        "amount": "78900000000000000000"
+      }
+    ]
+  },
+  {
+    "sourceToken": "ETH",
+    "targetToken": "USDC",
+    "tradeByTargetAmount": true,
+    "strategies": [
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          },
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          }
+        ]
+      }
+    ],
+    "tradeActions": [
+      {
+        "strategyId": "1",
+        "amount": "12300000000"
+      },
+      {
+        "strategyId": "2",
+        "amount": "45600000000"
+      },
+      {
+        "strategyId": "3",
+        "amount": "78900000000"
+      },
+      {
+        "strategyId": "4",
+        "amount": "12300000000"
+      },
+      {
+        "strategyId": "5",
+        "amount": "45600000000"
+      },
+      {
+        "strategyId": "6",
+        "amount": "78900000000"
+      },
+      {
+        "strategyId": "7",
+        "amount": "12300000000"
+      },
+      {
+        "strategyId": "8",
+        "amount": "45600000000"
+      },
+      {
+        "strategyId": "9",
+        "amount": "78900000000"
+      }
+    ]
+  },
+  {
+    "sourceToken": "USDC",
+    "targetToken": "ETH",
+    "tradeByTargetAmount": false,
+    "strategies": [
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      }
+    ],
+    "tradeActions": [
+      {
+        "strategyId": "1",
+        "amount": "12300000000"
+      },
+      {
+        "strategyId": "2",
+        "amount": "45600000000"
+      },
+      {
+        "strategyId": "3",
+        "amount": "78900000000"
+      },
+      {
+        "strategyId": "4",
+        "amount": "12300000000"
+      },
+      {
+        "strategyId": "5",
+        "amount": "45600000000"
+      },
+      {
+        "strategyId": "6",
+        "amount": "78900000000"
+      },
+      {
+        "strategyId": "7",
+        "amount": "12300000000"
+      },
+      {
+        "strategyId": "8",
+        "amount": "45600000000"
+      },
+      {
+        "strategyId": "9",
+        "amount": "78900000000"
+      }
+    ]
+  },
+  {
+    "sourceToken": "USDC",
+    "targetToken": "ETH",
+    "tradeByTargetAmount": true,
+    "strategies": [
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.00000000095",
+            "highestRate": "0.00000000105",
+            "marginalRate": "0.000000001"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "950000000",
+            "highestRate": "1050000000",
+            "marginalRate": "1000000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001187",
+            "highestRate": "0.000000001312",
+            "marginalRate": "0.00000000125"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "760000000",
+            "highestRate": "840000000",
+            "marginalRate": "800000000"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "123000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "123000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "456000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "456000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      },
+      {
+        "orders": [
+          {
+            "token": "USDC",
+            "liquidity": "789000000000",
+            "lowestRate": "0.000000001425",
+            "highestRate": "0.000000001575",
+            "marginalRate": "0.0000000015"
+          },
+          {
+            "token": "ETH",
+            "liquidity": "789000000000000000000",
+            "lowestRate": "633333333.333333333333",
+            "highestRate": "700000000",
+            "marginalRate": "666666666.666666666667"
+          }
+        ]
+      }
+    ],
+    "tradeActions": [
+      {
+        "strategyId": "1",
+        "amount": "12300000000000000000"
+      },
+      {
+        "strategyId": "2",
+        "amount": "45600000000000000000"
+      },
+      {
+        "strategyId": "3",
+        "amount": "78900000000000000000"
+      },
+      {
+        "strategyId": "4",
+        "amount": "12300000000000000000"
+      },
+      {
+        "strategyId": "5",
+        "amount": "45600000000000000000"
+      },
+      {
+        "strategyId": "6",
+        "amount": "78900000000000000000"
+      },
+      {
+        "strategyId": "7",
+        "amount": "12300000000000000000"
+      },
+      {
+        "strategyId": "8",
+        "amount": "45600000000000000000"
+      },
+      {
+        "strategyId": "9",
+        "amount": "78900000000000000000"
+      }
+    ]
   }
 ]

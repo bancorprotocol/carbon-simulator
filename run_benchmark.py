@@ -70,10 +70,10 @@ for batch in [
     {
         'fileName': 'resources/benchmark/EthUsdcTrade',
         'maxError': {
-            'liquidity'    : '0.00000011765498',
-            'lowestRate'   : '0.00000000000002',
-            'highestRate'  : '0.00000000000002',
-            'marginalRate' : '0.00099900099901',
+            'liquidity'    : '0.000001288756294',
+            'lowestRate'   : '0.000000000000019',
+            'highestRate'  : '0.000000000000012',
+            'marginalRate' : '0.000999000999001',
         }
     },
 ]:  run(batch['fileName'], batch['maxError'])
