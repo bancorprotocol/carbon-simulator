@@ -172,7 +172,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 
 # Change log
 
-- **v2.2** - benchmarks (b1), 
+- **v2.2** - benchmarks (b1), alpha optimizer (b2)
 - **v2.1** - new order book methodology, improved NBTest, added functionality to CarbonOrderUY, added CarbonCurves notebook, updated demo 3-2 to the new order book code
 - **v2.0** - slash notation for pair (breaking); disabled curves; remove aliases; order book functions and marginal price routing in CarbonOrderUI
 - **v1.5** - match constants, exclude future, move demos
