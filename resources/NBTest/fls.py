@@ -10,13 +10,14 @@ FLS - File Load Save (simple wrappers for loading and saving data)
 - v1.0: fload, fsave, join
 - v1.0.1: minor change in output
 - v1.1: json and yaml
-- v1.1.1: copyright notice & canonic URL
+- v1.2: copyright notice, license & canonic URL
 
 :copyright:     (c) Copyright Stefan LOESCH / topaze.blue 2022; ALL RIGHTS RESERVED
+:license:       [MIT](https://opensource.org/licenses/MIT)
 :canonicurl:    https://github.com/topazeblue/TopazePublishing/blob/main/code/fls.py
 """
-__VERSION__ = "1.1.1"
-__DATE__ = "12/Oct/2022"
+__VERSION__ = "1.2"
+__DATE__ = "06/Jan/2023"
 
 import os as _os
 import gzip as _gzip
