@@ -14,7 +14,7 @@ on:
     tags:
       - 'v*'
     branches:
-      - "main"
+      - "release-cicd1"
 
 jobs:
   release:
@@ -23,14 +23,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          PACKAGE_VERSION: v.$(python setup.py --version)
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: $PACKAGE_VERSION
+          release_name: $PACKAGE_VERSION
           draft: true
           prerelease: true
 
