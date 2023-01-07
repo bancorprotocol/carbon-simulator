@@ -6,13 +6,12 @@ Licensed under MIT
 
 VERSION HISTORY
 - v1.3: order book helper functions (p_marg_f, yfromp_f, dyfromp_f, dyfromdx_f, dyfromdx_f, goalseek)
-- v1.3.1: more order book and other helper functions (yfromx_f, xfromy_f, p_eff_f, xint, )
-- v1.4: new methods: fromQxy, Q, Gamma, sellx, selly
-- v1.4.1: bidask, curves_by_pair_bidask, added checks for B,S=0
-- v1.5: ix, lix, linked_curve (beta)
+- v1.4: new methods: fromQxy, Q, Gamma, sellx, selly; yfromx_f, xfromy_f, p_eff_f, xint (1.3.1)
+- v1.5: linked curves (beta); bidask, curves_by_pair_bidask, checks for B,S=0 (1.4.1)
+- v1.6: linked curves incl trading (final), addliqy, tradeto; minor formula improvement (1.5.1)
 """
-__version__ = "1.5"
-__date__ = "16/Dec/2022"
+__version__ = "1.6"
+__date__ = "20/Jan/2023"
 
 try:
     from .pair import CarbonPair
@@ -68,6 +67,7 @@ class CarbonOrderUI:
     y: float
     id: any = None
     linked: any = None
+
     def __post_init__(self):
         self.pair = CarbonPair(self.pair)
         self.tkn = self.tkn.upper()
@@ -97,11 +97,18 @@ class CarbonOrderUI:
             self.pmax = None        
     
     def set_id(self, id):
-        """sets curve index; raises if index already set"""
+        """sets curve index; raises if curve ID already set"""
         if not self.id is None:
-            raise ValueError("Index has already been set", id, self.id)
+            raise ValueError("Curve ID has already been set", id, self.id)
         self.id = id
     
+    @property
+    def lid(self):
+        """returns ID of linked curve, or None"""
+        if self.linked is None:
+            return None
+        return self.linked.id
+        
     def set_linked(self, linked=None):
         """
         sets linked object and index
@@ -396,6 +403,11 @@ class CarbonOrderUI:
         result = dydx if self.pair.has_quotetoken(self.tkn) else 1/dydx
         return result
     
+    class PriceOutOfBoundsError(ValueError): pass
+    class PriceOutOfBoundsErrorBeyondStart(PriceOutOfBoundsError): pass
+    class PriceOutOfBoundsErrorBeyondEnd(PriceOutOfBoundsError): pass
+    class PriceOutOfBoundsErrorBeyondMarg(PriceOutOfBoundsError): pass
+
     def yfromp_f(self, p, checkbounds=True, raiseonerror=False):
         """
         returns y as a function of the target marginal price
@@ -414,26 +426,27 @@ class CarbonOrderUI:
         if checkbounds:
             if dydx > self.pa_raw:
                 if raiseonerror:
-                    raise ValueError("Price out of bounds (beyond start)", p, self.pa)
+                    raise self.PriceOutOfBoundsErrorBeyondStart("Price out of bounds (beyond start)", p, self.pa)
                 return None
             elif dydx < self.pb_raw:
                 if raiseonerror:
-                    raise ValueError("Price out of bounds (beyond end)", p, self.pb)
+                    raise self.PriceOutOfBoundsErrorBeyondEnd("Price out of bounds (beyond end)", p, self.pb)
                 return 0
         y = self.yint * (sqrt(dydx) - self.B) / self.S
         if checkbounds:
             if y > self.y:
                 if raiseonerror:
-                    raise ValueError("Price out of bounds (beyond marginal), hence target y > y", y, self.y )
+                    raise self.PriceOutOfBoundsErrorBeyondMarg("Price out of bounds (beyond marginal), hence target y > y", y, self.y )
                 return None
         return y
 
     @property
     def xint(self):
         """
-        x intercept, ie max x liquidit, ie x at y=0
+        x intercept, ie max x liquidity, ie x at y=0
         """
-        return self.yint**2 / (self.B**2*self.yint + self.B*self.S*self.yint)
+        #return self.yint**2 / (self.B**2*self.yint + self.B*self.S*self.yint)
+        return self.yint / (self.B**2 + self.B*self.S)
         
     def dyfromp_f(self, p, checkbounds=True, raiseonerror=False):
         """
@@ -733,12 +746,13 @@ class CarbonOrderUI:
 
     def selly(self, dy, execute=True, allowneg=True, expandcurve=False, raiseonerror=False):
         """
-        executes a trade selling y for x
+        executes a trade selling dy for dx (dy given)
 
         :dy:            the amount of y to sell (a positive number)
         :execute:       if False, only display results but do not update the object
         :allowneg:      if True, negative dy numbers (=buying) are allowed
-        :expandcurve:   if True, purchasing y beyond yint expands the curve to yint = y
+        :expandcurve:   if True, purchasing y beyond yint [sic] expands the curve to yint = y
+                        only meaningful with allowneg = True
         :raiseonerror:  if True, error lead to raising on exception
         """
         if dy < 0:
@@ -746,6 +760,9 @@ class CarbonOrderUI:
                 if raiseonerror:
                     raise ValueError(f"Negative dy is not allowed (allowneg={allowneg})", dy)
                 return None
+
+        if dy == 0:
+            execute = False
 
         yold = self.y
         pold = self.p_marg
@@ -777,40 +794,102 @@ class CarbonOrderUI:
         if execute:
             self.y = ynew
 
+        if self.linked:
+            result_linked = self.linked.addliqy(dx)
+        else:
+            result_linked = None
+
         result = {
-            "y_old": yold,
-            "y": ynew,
-            "dy": dy,
-            "yint_old": yintold if curve_expanded else None,
-            "y_int": yint,
-            "expanded": curve_expanded,
-            "x": self.xfromy_f(ynew),
-            "dx": dx,
-            "tkny": self.tkny,
-            "tknx": self.tknx,
-            "tx": f"Sell {abs(dy)} {self.tkny} buy {self.tknx}" if dx>0 else f"Buy {abs(dy)} {self.tkny} sell {self.tknx}",
-            "dx/dy": dx/dy if dy != 0 else None,
-            "dy/dx": dy/dx if dx != 0 else None,
-            "pmarg_old": pold,
-            "pmarg": pnew,
-            "p": None,
+            "action":       "bysource[selly]",
+            "executed":     execute,
+            "y_old":        yold,
+            "y":            ynew,
+            "dy":           dy,
+            "yint_old":     yintold if curve_expanded else None,
+            "y_int":        yint,
+            "expanded":     curve_expanded,
+            "x":            self.xfromy_f(ynew),
+            "dx":           dx,
+            "tkny":         self.tkny,
+            "tknx":         self.tknx,
+            "tx":           f"Sell {abs(dy)} {self.tkny} buy {self.tknx}" if dx>0 else f"Buy {abs(dy)} {self.tkny} sell {self.tknx}",
+            "dx/dy":        dx/dy if dy != 0 else None,
+            "dy/dx":        dy/dx if dx != 0 else None,
+            "pmarg_old":    pold,
+            "pmarg":        pnew,
+            "linked":       result_linked,
+            "p":            None,
         } 
         result["p"] = result["dx/dy"] if self.pair.has_basetoken(self.tkny) else result["dy/dx"]
         return result
 
     def buyx(self, dx, execute=True, allowneg=True, expandcurve=False, raiseonerror=False):
         """
-        executes a trade buying x for y
+        executes a trade dy for dx (dx given)
 
         :dx:            the amount of x to buy (a positive number)
         :execute:       if False, only display results but do not update the object
         :allowneg:      if True, negative dy numbers (=buying) are allowed
-        :expandcurve:   if True, purchasing y beyond yint expands the curve to yint = y
+        :expandcurve:   if True, purchasing y beyond yint [sic] expands the curve to yint = y
+                        only meaningful with allowneg = True
         :raiseonerror:  if True, error lead to raising on exception
         """
         dy = self.dyfromdx_f(dx, checkbounds=False, raiseonerror=True)
-        return self.selly(dy, execute, allowneg, expandcurve, raiseonerror)
+        result = self.selly(dy, execute, allowneg, expandcurve, raiseonerror)
+        result["action"] = "bytarget[buyx]"
+        return result
 
+    def tradeto(self, p_marg, execute=True, raiseonerror=False):
+        """
+        executes a trade dy for dx (target marginal price p_marg given)
+
+        :p:             the target marginal price
+        :execute:       if False, only display results, but do not update the object
+        :raiseonerror:  if True, error lead to raising on exception
+        """
+        try:
+            dy = self.dyfromp_f(p_marg, checkbounds=True, raiseonerror=True)
+        except (self.PriceOutOfBoundsErrorBeyondStart, 
+                self.PriceOutOfBoundsErrorBeyondMarg):
+            dy = 0
+        except self.PriceOutOfBoundsErrorBeyondEnd:
+            dy = self.dyfromp_f(self.p_end, checkbounds=False, raiseonerror=False)
+        result = self.selly(dy, execute, allowneg=False, expandcurve=False, raiseonerror=raiseonerror)
+        result["action"] = "byprice[tradeto]"
+        return result
+        
+    def addliqy(self, dy, expandcurve=True):
+        """
+        adds liquidity to the curve (typically called on a linked curve)
+
+        :dy:            the amount of liquidity to be added (must be positive)
+        :expandcurve:   if True (default), expand yint=y if need be
+        """
+        if dy < 0:
+            raise ValueError("Liquidity amount dy must not be < 0", dy)
+        
+        newy = self.y + dy
+        result = {
+            "y_old":        self.y,
+            "y":            newy,
+            "dy":           dy,
+            "yint_old":     self.yint,
+            "yint":         self.yint,
+            "tkny":         self.tkn,
+            "pmarg_old":    self.p_marg,
+            "pmarg":        None,
+            "expanded":     False,
+        }
+        if newy > self.yint:
+            if not expandcurve:
+                raise ValueError("Must expand curve and expandcurve=False", self.y, dy, newy, self.yint)
+            self.yint = newy
+            result["yint"] = newy
+            result["expanded"] = True
+        self.y = newy
+        result["pmarg"] = self.p_marg
+        return result
+        
     @staticmethod
     def curves_by_pair_bidask(curves):
         """
@@ -838,6 +917,6 @@ class CarbonOrderUI:
         return result
     
     def __repr__(self):
-        s1 = f"pair={self.pair.slashpair}, B={self.B}, S={self.S}, yint={self.yint}, y={self.y}, id={self.id}"
+        s1 = f"pair={self.pair.slashpair}, tkn={self.tkn}, B={self.B}, S={self.S}, yint={self.yint}, y={self.y}, id={self.id}"
         s2 = f"linked=<{self.linked.id}>" if self.linked else "linked=None"
-        return f"{self.__class__.__name__}({s1}, {s2})"
+        return f"{self.__class__.__name__}({s1}, {s2})" 
