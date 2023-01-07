@@ -17,9 +17,10 @@ Licensed under MIT
 
 VERSION HISTORY
 - v2.0.2: chart markers
+- v2.1: order book improvements (data_orderbook_chart, data_price_chart, data_tokenamount_chart)
 """
-__version__ = "2.0.2"
-__date__ = "16/Dec/2022"
+__version__ = "2.1-beta2"
+__date__ = "7/Jan/2022"
 
 import numpy as np
 import pandas as pd
@@ -283,9 +284,13 @@ class OrderBook():
         :x2:    ob.midpoints(ob.src_amounts)
         :y2:    ob.marg_prices
 
-    - Order Book chart: plots the order book (liquidity vs price)
+    - Order Book chart: plots the order book (marginal liquidity vs price)
         :x:     ob.ob_liquidity
         :y:     ob.ob_prices
+
+    - Liquidity Depth chart: plots liquidity depth (cumulative order book)
+        :x:
+        :y:
 
     """
     __VERSION__ = __version__
@@ -535,20 +540,45 @@ class OrderBook():
         """returns the correct color depending on bid/ask"""
         return self.COLOR_BID if self.bidask==self.BID else self.COLOR_ASK
     
-    def plot_token_amount_chart(self):
+    def plot_tokenamount_chart(self):
         """
         plots the token amount chart based on the order book in self
         """
         ob=self
-        x = ob.src_amounts
-        y = ob.trg_amounts
+        # x = ob.src_amounts
+        # y = ob.trg_amounts
+        data = self.data_tokenamount_chart()
+        x = data["src"]
+        y = data["trg"]
         plt.plot(x, y, marker="", label="token amount")
         plt.title(f"Token trade (AMM {ob.amm_buysell_src} {ob.src_tkn}, {ob.amm_buysell_trg} {ob.trg_tkn})")
-        plt.xlabel(f"Tokens {ob.src_token_outin} ({ob.src_tkn})")
-        plt.ylabel(f"Tokens {ob.trg_token_outin} ({ob.trg_tkn})")
+        plt.xlabel(f"Tokens {ob.src_token_outin} ({data['src_unit']})")
+        plt.ylabel(f"Tokens {ob.trg_token_outin} ({data['trg_unit']})")
         plt.grid()
         #plt.legend()
         return f"plotted tokens received against trade size ({int(max(y)):,})"
+
+    def data_tokenamount_chart(self, aspandas=False):
+        """
+        returns the data underlying the orderbook chart
+
+        :aspandas:   if True, return data as data frame, otherwise dict
+        """
+        x = self.src_amounts
+        y = self.trg_amounts
+        result  = {
+            "x": x,
+            "src": x,
+            "y": y,
+            "trg": y,
+            "src_unit": self.src_tkn,
+            "trg_unit": self.trg_tkn,
+        }
+        if not aspandas:
+            return result
+        x_s = pd.Series(x, name=f"src_amt [{result['src_unit']}]")
+        y_s = pd.Series(y, name=f"trg_amt [{result['trg_unit']}]")
+        return pd.DataFrame([x_s, y_s]).T
 
 
     def plot_price_charto(self):
@@ -574,18 +604,55 @@ class OrderBook():
         plots the price chart based on the order book in self
         """
         ob=self
-        x1 = ob.src_amounts
-        y1 = ob.pricesr(reverse)
+        # x1 = ob.src_amounts
+        # y1 = ob.pricesr(reverse)
+        # x2 = ob.midpoints(x1)
+        # y2 = ob.marg_pricesr(reverse)
+        data = self.data_price_chart(reverse)
+        x1 = data["size1"]
+        y1 = data["price1_eff"]
+        x2 = data["size2"]
+        y2 = data["price2_marg"]
         plt.plot(x1, y1, marker="", label="effective price")
-        x2 = ob.midpoints(x1)
-        y2 = ob.marg_pricesr(reverse)
         plt.plot(x2, y2, marker="", label="marginal price")
         plt.title("Price against trade size")
-        plt.xlabel(f"Trade size ({ob.src_tkn}; AMM {ob.amm_buysell_src})")
-        plt.ylabel(f"Price ({ob.pricesr_u(reverse)})")
+        plt.xlabel(f"Trade size ({data['size_unit']}; AMM {data['ammm_buysell_src']})")
+        plt.ylabel(f"Price ({data['prices_unit']})")
         plt.grid()
         plt.legend()
         return "plotted marginal and effective prices against trade size"
+
+    def data_price_chart(self, reverse=False, aspandas=False):
+        """
+        returns the data underlying the price chart
+
+        :aspandas:   if True, return data as data frame, otherwise dict
+        """
+        x1 = self.src_amounts
+        y1 = self.pricesr(reverse)
+        x2 = self.midpoints(x1)
+        y2 = self.marg_pricesr(reverse)
+        result  = {
+            "x1": x1,
+            "size1": x1,
+            "y1": y1,
+            "price1_eff": y1,
+            "x2": x2,
+            "size2": x2,
+            "y2": y2,
+            "price2_marg": y2,
+            "ammm_buysell_src": self.amm_buysell_src,
+            "size_unit": self.src_tkn,
+            "prices_unit": self.pricesr_u(reverse),
+        }
+        if not aspandas:
+            return result
+
+        x1_s = pd.Series(x1, name=f"size1 [{result['size_unit']}]")
+        y1_s = pd.Series(y1, name=f"price1_eff [{result['prices_unit']}]")
+        x2_s = pd.Series(x2, name=f"size2 [{result['size_unit']}]")
+        y2_s = pd.Series(y2, name=f"price2_marg [{result['prices_unit']}]")
+        return pd.DataFrame([x1_s, y1_s, x2_s, y2_s, ]).T
 
     def plot_orderbook_chart(self, xmin=None, xmax=None, ymax=None, otherob=None):
         """
@@ -593,9 +660,15 @@ class OrderBook():
         
         :otherob:   if given, also plot the other orderbook into the same chart
         """
-        ob=self
-        y = ob.ob_liquidity
-        x = ob.ob_prices
+        ob = self
+        # y = ob.ob_liquidity
+        # x = ob.ob_prices
+        data = self.data_orderbook_chart()
+        x = data["prices"]
+        y = data["liquidity"]
+        x_u = data["prices_unit"]
+        y_u = data["liquidity_unit"]
+        
         plt.plot(x, y, marker="", color=self.colorba, label=f"{ob.amm_bidask}")
         if otherob:
             yo = otherob.ob_liquidity
@@ -604,14 +677,37 @@ class OrderBook():
 
         fragment = f" ({ob.amm_bidask})" if not otherob else " (bid and ask)"
         plt.title(f"Order book{fragment}")
-        plt.xlabel(f"Price ({ob.ob_prices_u})")
-        plt.ylabel(f"Liquidity ({ob.ob_liquidity_u})")
+        plt.xlabel(f"Price ({x_u})")
+        plt.ylabel(f"Liquidity ({y_u})")
         plt.grid()
         if otherob:
             plt.legend()
         plt.xlim(xmin,xmax)
         plt.ylim(0,ymax)
         return f"plotted order book ({int(Analytics.vecdot(ob.dmarg_prices,y)):,})"
+
+    def data_orderbook_chart(self, aspandas=False):
+        """
+        returns the data underlying the orderbook chart
+
+        :aspandas:   if True, return data as data frame, otherwise dict
+        """
+        liq = self.ob_liquidity
+        prc = self.ob_prices
+        result  = {
+            "liquidity": liq,
+            "x": liq,
+            "prices": prc,
+            "y": prc,
+            "liquidity_unit": self.ob_liquidity_u,
+            "prices_unit": self.ob_prices_u,
+        }
+        if not aspandas:
+            return result
+
+        liq_s = pd.Series(liq, name=f"Liquidity [{result['liquidity_unit']}]")
+        prc_s = pd.Series(prc, name=f"Price [{result['prices_unit']}]")
+        return pd.DataFrame([prc_s, liq_s]).T
 
     @staticmethod
     def plot_approx_orderbook_chart(l):
