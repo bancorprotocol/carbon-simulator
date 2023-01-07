@@ -10,9 +10,10 @@ VERSION HISTORY
 - v1.4: new methods: fromQxy, Q, Gamma, sellx, selly
 - v1.4.1: bidask, curves_by_pair_bidask, added checks for B,S=0
 - v1.5: ix, lix, linked_curve (beta)
+- v1.5.1: minor formula improvement
 """
-__version__ = "1.5"
-__date__ = "16/Dec/2022"
+__version__ = "1.5.1"
+__date__ = "07/Jan/2023"
 
 try:
     from .pair import CarbonPair
@@ -433,7 +434,8 @@ class CarbonOrderUI:
         """
         x intercept, ie max x liquidit, ie x at y=0
         """
-        return self.yint**2 / (self.B**2*self.yint + self.B*self.S*self.yint)
+        #return self.yint**2 / (self.B**2*self.yint + self.B*self.S*self.yint)
+        return self.yint / (self.B**2 + self.B*self.S)
         
     def dyfromp_f(self, p, checkbounds=True, raiseonerror=False):
         """
@@ -840,4 +842,4 @@ class CarbonOrderUI:
     def __repr__(self):
         s1 = f"pair={self.pair.slashpair}, B={self.B}, S={self.S}, yint={self.yint}, y={self.y}, id={self.id}"
         s2 = f"linked=<{self.linked.id}>" if self.linked else "linked=None"
-        return f"{self.__class__.__name__}({s1}, {s2})"
+        return f"{self.__class__.__name__}({s1}, {s2})" 
