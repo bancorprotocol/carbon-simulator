@@ -1,13 +1,14 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: py:light,ipynb
 #     text_representation:
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.14.4
+#       jupytext_version: 1.13.1
 #   kernelspec:
-#     display_name: Python 3.10.8 64-bit
+#     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
@@ -15,6 +16,7 @@
 # +
 import pandas as pd
 from decimal import Decimal
+from io import StringIO
 
 from carbon import CarbonSimulatorUI, __version__, __date__
 print(f"Carbon Version v{__version__} ({__date__})", )

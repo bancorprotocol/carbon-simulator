@@ -12,6 +12,7 @@
 
 import pandas as pd
 from decimal import Decimal
+from io import StringIO
 
 from carbon import CarbonSimulatorUI, __version__, __date__
 print(f"Carbon Version v{__version__} ({__date__})", )
