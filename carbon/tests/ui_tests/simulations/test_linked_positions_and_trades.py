@@ -59,7 +59,7 @@ def test_amm_can_sell_eth_at_curve_price():
         "pair": {0: "USDCETH"},
         "routeix": {0: "[0]"},
         "nroutes": {0: 1},
-        "price": {0: "2000.0"},
+        "price": {0: 2000.0},
         "p_unit": {0: "ETH per USDC"},
     }
 
