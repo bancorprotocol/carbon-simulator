@@ -8,9 +8,10 @@ VERSION HISTORY
 v2.0 - require slashpair notation (breaking change); exclude_future, constants for matching method
 v2.2 - curve disabling, single orders
 v2.2.1 - CarbonOrderUI linked
+v2.3 - added fast router
 """
-__version__ = "2.2.1"
-__date__ = "16/Dec/2022"
+__version__ = "2.3"
+__date__ = "9/Jan/2023"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -20,10 +21,11 @@ from tabulate import tabulate
 from ..order import Order
 from ..pair import CarbonPair
 from ..carbon_order_ui import CarbonOrderUI
-from ..routers import ExactRouterX0Y0N, AlphaRouter
+from ..routers import ExactRouterX0Y0N, AlphaRouter, FastRouter
 from decimal import Decimal
 import pandas as pd
 import numpy as np
+
 
 
 class CarbonSimulatorUI:
@@ -45,7 +47,7 @@ class CarbonSimulatorUI:
     __DATE__    = __date__
 
     MATCH_EXACT = "exact"
-    MATCH_FAST = "fast_"
+    MATCH_FAST = "fast"
     MATCH_ALPHA = "alpha_"
 
     def __init__(
@@ -53,7 +55,7 @@ class CarbonSimulatorUI:
             verbose: bool = False,
             pair: Any = None,
             raiseonerror: bool = False,
-            decimals: int = 6,
+            decimals: int = 50,
             matching_method: str = MATCH_EXACT,
             exclude_future: bool = True,
     ):
@@ -72,6 +74,8 @@ class CarbonSimulatorUI:
             self.matcher = AlphaRouter(verbose=False)
         elif matching_method == self.MATCH_EXACT:
             self.matcher = ExactRouterX0Y0N(verbose=False)
+        elif matching_method == self.MATCH_FAST:
+            self.matcher = FastRouter(verbose=False)
         elif matching_method == self.MATCH_FAST:
             raise ValueError("Fast router not implemented", matching_method)
         else:
@@ -167,6 +171,7 @@ class CarbonSimulatorUI:
             carbon_pair: CarbonPair,
             id1: int = None,
             id2: int = None,
+            p_marginal: Any = None,
     ) -> int:
         """
         PRIVATE - adds a position for sale of tkn
@@ -177,6 +182,7 @@ class CarbonSimulatorUI:
         :p_hi:          ditto upper; also p_a, p_start
         :carbon_pair:   the token pair a CarbonPair object
         :id1/2:         the order ids of the two orders that make up the position; if not given, they are generated
+        :p_marginal:    the marginal price of the position; if not given, it is calculated
         :returns:       the id of the order added
         """
 
@@ -191,7 +197,7 @@ class CarbonSimulatorUI:
 
         if not (p_lo is None and p_hi is None):
 
-            # check the they are both numbers
+            # check that they are both numbers
             if p_lo is None or p_hi is None:
                 raise ValueError("p_lo, p_hi must either be both None or both numbers", p_lo, p_hi)
 
@@ -211,17 +217,21 @@ class CarbonSimulatorUI:
 
         # enter order
         order_params = {
-            "tkn": tkn,                                 # the token being sold
-            "y_int": amt,                               # the capacity of the curve
-            "_y": amt,                                  # the initial holding is of the curve (in `tkn`)
-            "p_low": p_lo,                              # the lower end of the range (`tkn` numeraire); also p_b, p_end
-            "p_high": p_hi,                             # the upper end of the range (`tkn` numeraire); also p_a, p_start
-            "disabled": disabled,                       # if True, order is disabled (p=0)
-            "pair_name": carbon_pair.pair_iso,          # the iso name of the pair
-            "pair": carbon_pair,                        # the CarbonPair object
-            "id": id1,                                  # the id of the new curve generated
-            "linked_to_id": id2,                        # the id to which this curve is linked (=id if single curve)
+            "tkn": tkn,                                     # the token being sold
+            "_y": amt,                                       # the marginal price of the curve
+            "p_low": p_lo,                                  # the lower end of the range (`tkn` numeraire); also p_b, p_end
+            "p_high": p_hi,                                 # the upper end of the range (`tkn` numeraire); also p_a, p_start
+            "disabled": disabled,                           # if True, order is disabled (p=0)
+            "pair_name": carbon_pair.pair_iso,              # the iso name of the pair
+            "pair": carbon_pair,                            # the CarbonPair object
+            "id": id1,                                      # the id of the new curve generated
+            "linked_to_id": id2,                            # the id to which this curve is linked (=id if single curve)
         }
+        if p_marginal is not None:
+            order_params["p_marginal"] = p_marginal         # the marginal price of the curve
+
+        if p_marginal is None:
+            order_params["y_int"] = amt                     # the capacity of the curve
 
         self.orders[id1] = Order(**order_params)
         return id1
@@ -324,6 +334,8 @@ class CarbonSimulatorUI:
             pbuy_start: Any = None,
             pbuy_end: Any = None,
             pair: str = None,
+            psell_marginal: Any = None,
+            pbuy_marginal: Any = None,
     ) -> Dict[str, Any]:
         """
         adds two linked orders (one buy, one sell; aka a "strategy")
@@ -336,6 +348,8 @@ class CarbonSimulatorUI:
         :pbuy_start:    start of the of the buy `tkn` range*, quoted in the price convention of `pair`
         :pbuy_end:      ditto end
         :pair:          the token pair to which the strategy corresponds, eg "ETHUSD"
+        :pbuy_marginal: the current price of the other token in the pair
+        :psell_marginal: the current price of `tkn` in the pair
 
         *px_start, px_end are interchangeable, the code deals with sorting them, albeit issuing a warning
         message if they are in the wrong order; sell and buy is seen from the perspective of the AMM, which
@@ -353,30 +367,31 @@ class CarbonSimulatorUI:
             if tkn2 is None:
                 raise ValueError("Token not in pair", tkn, carbon_pair.slashpair, pair.slashpair)
 
-
             # create order tracking ids
             id1 = self._posid
             id2 = self._posid
 
             # convert the prices from the pair numeraire to the curve numeraire
+            psell_marginal_c = carbon_pair.convert_price(psell_marginal, tkn)
             psell_start_c = carbon_pair.convert_price(psell_start, tkn)
             psell_end_c = carbon_pair.convert_price(psell_end, tkn)
             pbuy_start_c = carbon_pair.convert_price(pbuy_start, tkn2)
             pbuy_end_c = carbon_pair.convert_price(pbuy_end, tkn2)
+            pbuy_marginal_c = carbon_pair.convert_price(pbuy_marginal, tkn2)
 
             # ugly hack but the 1/2 range boundaries are in the wrong order
             # we want the closer boundary first
             self._add_order_sell_tkn(
-                tkn, amt_sell, psell_end_c, psell_start_c, carbon_pair, id1, id2
+                tkn, amt_sell, psell_end_c, psell_start_c, carbon_pair, id1, id2, psell_marginal_c
             )
             self._add_order_sell_tkn(
-                tkn2, amt_buy, pbuy_end_c, pbuy_start_c, carbon_pair, id2, id1
+                tkn2, amt_buy, pbuy_end_c, pbuy_start_c, carbon_pair, id2, id1, pbuy_marginal_c
             )
 
             if self.verbose:
                 print(
-                    f"[add_linked_pos] added tkn={tkn}, amt_sell={amt_sell}, psell_start={psell_start}, "
-                    f"psell_end={psell_end}, amt_buy={amt_buy}, pbuy_start={pbuy_start}, pbuy_end={pbuy_end}, "
+                    f"[add_linked_pos] added tkn={tkn}, amt_sell={amt_sell}, psell_start={psell_start}, psell_marginal_c={psell_marginal_c}, "
+                    f"psell_end={psell_end}, amt_buy={amt_buy}, pbuy_start={pbuy_start}, pbuy_end={pbuy_end}, pbuy_marginal_c={pbuy_marginal_c},"
                     f"pair={carbon_pair.pair_iso}"
                 )
 
@@ -454,6 +469,7 @@ class CarbonSimulatorUI:
             use_positions: List[int] = None,
             threshold_orders: int = None,
             use_positions_matchlevel: List[int] = [],
+            is_by_target: bool = False,
 
     ) -> Dict[str, Any]:
         """
@@ -542,7 +558,7 @@ class CarbonSimulatorUI:
             # in other words: `total_output` is measured in `tkn` and `total_input` in `otkn`
             # therefore, the numeraire of raw_p = out/in is the token associated to out, `tkn`
             price_avg = carbon_pair.convert_price(raw_price, tkn)
-            price_avg = round(float(price_avg), decimals)
+            # price_avg = round(float(price_avg), decimals)
             if self.debug:
                 print("[_trade] final routes", routes)
 
@@ -565,7 +581,7 @@ class CarbonSimulatorUI:
 
             if limit_price is not None:
                 limitfail = not carbon_pair.limit_is_met(
-                    tkn, limit_price, carbon_pair.BUY, price_avg
+                    tkn, limit_price, carbon_pair.BUY, round(float(price_avg), decimals)
                 )
                 if limitfail:
                     execute = False
@@ -598,9 +614,9 @@ class CarbonSimulatorUI:
                 )
 
                 if execute:
-                    self.orders[indx].y -= Decimal(amt1)
+                    self.orders[indx].y -= Decimal(amt1) if not (is_by_target and isinstance(self.matcher, FastRouter)) else Decimal(amt2)
                     if self.orders[indx].linked_to_id != indx:
-                        self.orders[self.orders[indx].linked_to_id].y += Decimal(amt2)
+                        self.orders[self.orders[indx].linked_to_id].y += Decimal(amt2) if not (is_by_target and isinstance(self.matcher, FastRouter)) else Decimal(amt1)
                         if (
                                 self.orders[self.orders[indx].linked_to_id].y
                                 > self.orders[self.orders[indx].linked_to_id].y_int
@@ -625,9 +641,13 @@ class CarbonSimulatorUI:
                     "limitfail": [
                         limitfail
                     ],  # False if limit met, True if not, None if no limit
-                    "amt1": [amt1],  # the amount of `tkn1` being sold by the AMM (>0)
+                    "amt1": [
+                        amt1 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt2
+                        ],  # the amount of `tkn1` being sold by the AMM (>0)
                     "tkn1": [tkn],  # the token being SOLD by the AMM
-                    "amt2": [amt2],  # the amount of `tkn2` being bought by the AMM (>0)
+                    "amt2": [
+                        amt2 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt1
+                        ],  # the amount of `tkn2` being bought by the AMM (>0)
                     "tkn2": [tkno],  #  the token being BOUGHT by the AMM
                     "pair": [
                         carbon_pair.pair_iso
@@ -639,7 +659,7 @@ class CarbonSimulatorUI:
                         1
                     ],  # the number of routes across which the trade was executed
                     "price": [
-                        price_avg
+                        round(float(price_avg), decimals) if not (is_by_target and isinstance(self.matcher, FastRouter)) else round(float(1 / Decimal(price_avg)), decimals)
                     ],  # the price amt_/amt_, in the convention of the pair
                     "p_unit": [
                         f"{tknq} per {tknb}"
@@ -659,11 +679,11 @@ class CarbonSimulatorUI:
             # Handle base token vs quote token variable swaps for the trade
             ttl_input = round(abs(routes[-1].total_input), decimals)
             ttl_output = round(abs(routes[-1].total_output), decimals)
-            price_avg = f"{price_avg}"
+            # price_avg = f"{price_avg}"
 
             amt1, amt2 = ttl_output, ttl_input
 
-            note = f"AMM sells {amt1:.0f}{tkn} buys {amt2:.0f}{tkno}"
+            note = f"AMM sells {amt1 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt2:.0f}{tkn} buys {amt2 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt1:.0f}{tkno}"
             num_trades = len(routes)
             order_ids = [id_map[o.index] for o in routes]
             uid = f"{numtrades}"
@@ -676,14 +696,20 @@ class CarbonSimulatorUI:
                 "aggr": [True],
                 "exec": [execute],
                 "limitfail": [limitfail],
-                "amt1": [amt1],
+                "amt1": [
+                    amt1 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt2
+                    ],
                 "tkn1": [tkn],
-                "amt2": [amt2],
+                "amt2": [
+                    amt2 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt1
+                    ],
                 "tkn2": [tkno],
                 "pair": [carbon_pair.pair_iso],
                 "routeix": [str(order_ids)],
                 "nroutes": [num_trades],
-                "price": [price_avg],
+                "price": [
+                    round(float(price_avg), decimals) if not (is_by_target and isinstance(self.matcher, FastRouter)) else round(float(1 / Decimal(price_avg)), decimals)
+                    ],
                 "p_unit": [f"{tknq} per {tknb}"],
             }
 
@@ -705,7 +731,7 @@ class CarbonSimulatorUI:
             if self.raiseonerror:
                 raise
             return {"success": False, "error": str(e), "exception": e}
-        return {"success": True, "trades": trades}
+        return {"success": True, "trades": trades, "is_by_target": is_by_target, "tkn_sold": tkn}
 
     def amm_buys(
             self,
@@ -750,7 +776,6 @@ class CarbonSimulatorUI:
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
             tkn, tkno, carbon_pair = self._get_tkn_and_validate(tkn, pair)
             self._assert_position_is_valid(tkno, carbon_pair)
-
             return self._trade(
                 tkn=tkno,
                 amt=Decimal(str(amt)),
@@ -764,6 +789,7 @@ class CarbonSimulatorUI:
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
+                is_by_target=False,
             )
         except Exception as e:
             if self.raiseonerror:
@@ -828,6 +854,7 @@ class CarbonSimulatorUI:
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
+                is_by_target=True,
 
             )
 
@@ -839,7 +866,7 @@ class CarbonSimulatorUI:
     trader_buys = amm_sells
 
     @staticmethod
-    def _to_pandas(order: Order, decimals: int = 6) -> pd.DataFrame:
+    def _to_pandas(order: Order, decimals: int = 50) -> pd.DataFrame:
         """
         Exports Order values for inspection...
         """

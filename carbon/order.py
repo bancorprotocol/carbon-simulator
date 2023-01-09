@@ -41,6 +41,7 @@ class Order:
     # Original variables
     p_high: DecFloatInt = None  # = high price, also p_a, p_start
     p_low: DecFloatInt = None   # = low price, also p_b, p_low
+    p_marginal: DecFloatInt = None  # = marginal price, also p_c, p_mid
     disabled: bool = False      # if True, prices used to be None
     _y: DecFloatInt = None      # the current balance of the curve
 
@@ -147,7 +148,12 @@ class Order:
         if self.p_high is not None and self.p_low is not None:
             self.p_high = Decimal(self.p_high)
             self.p_low = Decimal(self.p_low)
+
+        if self.y_int is not None:
             self.y_int = Decimal(self.y_int)
+
+        if self.p_marginal is not None:
+            self.p_marginal = Decimal(self.p_marginal)
 
         if self.auto_convert_variables:
 
@@ -180,8 +186,16 @@ class Order:
             if self.y_int is not None:
                 self.D = self.C = self._y = self.y_int
 
+            elif self.y_int is None and self.p_marginal is not None:
+                if type(self.p_marginal) is Decimal:
+                    self.y_int = self._y * (self.p_high.sqrt() - self.p_low.sqrt()) / (self.p_marginal.sqrt() - self.p_low.sqrt())
+                else:
+                    self.y_int = float(self._y) * (sqrt(self.p_high) - sqrt(self.p_low)) / (sqrt(self.p_marginal) - sqrt(self.p_low))
+
             elif self.D is not None:
                 self.y_int = self.C = self._y = self.D
 
             if self.p_high == self.p_low:
                 self.adj_n_mode = True
+
+
