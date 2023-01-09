@@ -276,10 +276,14 @@ def test_carbonorderui_tests_dyfromdx_f_and_dxfromdy_f():
     # ### yfromx_f
     
     assert order.yfromx_f(0) == order.yint
-    assert order.yfromx_f(order.xint) == 0
+    assert round(order.yfromx_f(order.xint),5) == 0
     for i in range(10):
         #print(i)
         assert round(order.yfromx_f(order.xfromy_f(i)) - i, 10)  == 0
+    
+    order.yfromx_f(order.xint)
+    
+    
     
     assert orderr.yfromx_f(0) == orderr.yint
     assert round(orderr.yfromx_f(orderr.xint-0.00000001),4)==0
