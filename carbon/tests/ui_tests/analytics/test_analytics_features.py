@@ -68,7 +68,7 @@ def test_orderbook_plot_token_amount_chart_text():
     trg_amounts = al.vec([CA.simulate_trades(size, CA.ASK) for size in src_amounts])
 
     OB = al.OrderBook(src_amounts, trg_amounts, "ETH", "USDC")
-    result = OB.plot_token_amount_chart()
+    result = OB.plot_tokenamount_chart()
     assert result == "plotted tokens received against trade size (504,750)"
 
 
