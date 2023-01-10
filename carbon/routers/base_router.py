@@ -52,6 +52,7 @@ class Action:
     total_price: DecFloatInt = 0
     match_method: str = ""
     threshold_orders: int = 100
+    support_partial: bool = False
 
 
 @dataclass
@@ -98,7 +99,7 @@ class BaseRouter:
         """
         return math.prod(lst)
 
-    def sufficient_liquidity_exists(self, x: DecFloatInt, use_positions_matchlevel) -> bool:
+    def sufficient_liquidity_exists(self, x: DecFloatInt, use_positions_matchlevel, support_partial) -> bool:
         """
         Method to check if there is sufficient liquidity to handle the trade.
         """
@@ -111,7 +112,13 @@ class BaseRouter:
             ), "Insufficient liquidity across all user positions to support this trade."
             return True
         except AssertionError as e:
-            raise e
+            if support_partial:
+                print("Assuming partial fulfillment.")
+                print(f'Setting trade amount to max: {available_liquidity}')
+                return available_liquidity
+            else:
+                raise e
+
 
     @abstractmethod
     def amt_by_target(
