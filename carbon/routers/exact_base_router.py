@@ -44,6 +44,7 @@ class ExactBase(BaseRouter, ABC):
             is_by_target: bool = False,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = 100,
+            support_partial: bool = False,
     ) -> List[Action]:
         """
         Alias for match method in the case of a source amount.
@@ -52,6 +53,7 @@ class ExactBase(BaseRouter, ABC):
             x=x,
             is_by_target=is_by_target,
             check_sufficient_liquidity=check_sufficient_liquidity,
+            support_partial=support_partial,
         )
 
     def match_by_target(
@@ -60,6 +62,7 @@ class ExactBase(BaseRouter, ABC):
             is_by_target: bool = True,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = 100,
+            support_partial: bool = False,
     ) -> List[Action]:
         """
         Alias for match method in the case of a target amount.
@@ -68,6 +71,7 @@ class ExactBase(BaseRouter, ABC):
             x=x,
             is_by_target=is_by_target,
             check_sufficient_liquidity=check_sufficient_liquidity,
+            support_partial=support_partial,
         )
 
     def match(
@@ -80,6 +84,7 @@ class ExactBase(BaseRouter, ABC):
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = 100,
             use_positions_matchlevel: List[int] = [],
+            support_partial: bool = False,
     ) -> List[Action]:
         """
         Main logic for the exact methods (both SBY and Y0X0N variable implementations).
@@ -88,7 +93,9 @@ class ExactBase(BaseRouter, ABC):
 
         if is_by_target:
             if check_sufficient_liquidity:
-                self.sufficient_liquidity_exists(x, use_positions_matchlevel)
+                if not self.sufficient_liquidity_exists(x, use_positions_matchlevel, support_partial):
+                    x = sum([self.orders[i].y for i in use_positions_matchlevel])
+                    print(x)
         partial_swaps = final_swaps = {}
         dropped_indices = []
         while not completed_trade:
@@ -197,19 +204,23 @@ class ExactBase(BaseRouter, ABC):
                         float(actual_value) - float(goal_value) >= 0
                 ), "Insufficient liquidity across all user positions to support this trade."
             except AssertionError as e:
-                raise e
+                if support_partial:
+                    print("Assuming partial fulfillment.")
+                else:
+                    raise e
 
-        if perc_error > 0.0001:
-            err_message = f"[match] imprecise matching: err={perc_error} (goal={goal_value}, actual={actual_value}, is_by_target={is_by_target}) "
-            print(err_message)
-            if perc_error < 0.01:
-                self.logger.info(err_message)       # message logged as info <1%...
-            elif perc_error < 0.05:
-                self.logger.warning(err_message)    # ...as warning 1-5%...
-            else:
-                self.logger.error(err_message)      # ...and error/raise >5%
-                raise RuntimeError(err_message)
-            assert perc_error < 0.10, err_message
+        if not support_partial:
+            if perc_error > 0.0001:
+                err_message = f"[match] imprecise matching: err={perc_error} (goal={goal_value}, actual={actual_value}, is_by_target={is_by_target}) "
+                print(err_message)
+                if perc_error < 0.01:
+                    self.logger.info(err_message)       # message logged as info <1%...
+                elif perc_error < 0.05:
+                    self.logger.warning(err_message)    # ...as warning 1-5%...
+                else:
+                    self.logger.error(err_message)      # ...and error/raise >5%
+                    raise RuntimeError(err_message)
+                assert perc_error < 0.10, err_message
 
         # Package Results
         match_method = "by_src" if not is_by_target else "by_target"

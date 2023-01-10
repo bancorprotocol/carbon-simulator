@@ -460,6 +460,7 @@ class CarbonSimulatorUI:
             self,
             tkn: str,
             amt: Any,
+            support_partial: bool,
             carbon_pair: CarbonPair,
             trade_action: Callable = None,
             trade_description: str = None,
@@ -486,11 +487,13 @@ class CarbonSimulatorUI:
         :inpair:                if True, only match within pair; if False (default), route through all available pairs
         :use_positions:         the positions to use for the trade (default: all positions)
         :threshold_orders:      the maximum number of order to be routed through using the alpha router
+        :support_partial:       if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
 
         *amt is always effectively a positive amount; however, if `trade_action` is `match_by_target` then it must
         be provided as a negative number, and if `match_by_src` as positive number
         """
         trades, orders = None, None
+        is_partial = False
         try:
             decimals = self.decimals
             carbon_pair_r = carbon_pair.reverse
@@ -525,7 +528,8 @@ class CarbonSimulatorUI:
             # route the trade
             routes = trade_action(
                 x=amt,
-                threshold_orders=threshold_orders
+                threshold_orders=threshold_orders,
+                support_partial=support_partial,
             )
 
             # retrieve the final route
@@ -638,6 +642,9 @@ class CarbonSimulatorUI:
                     "exec": [
                         execute
                     ],  # True iff this trade has been executed (also False on limitfail)
+                    "partial": [
+                        is_partial
+                    ],  # True support_partial is set to True
                     "limitfail": [
                         limitfail
                     ],  # False if limit met, True if not, None if no limit
@@ -682,6 +689,8 @@ class CarbonSimulatorUI:
             # price_avg = f"{price_avg}"
 
             amt1, amt2 = ttl_output, ttl_input
+            if amt != ttl_input:
+                is_partial = True
 
             note = f"AMM sells {amt1 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt2:.0f}{tkn} buys {amt2 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt1:.0f}{tkno}"
             num_trades = len(routes)
@@ -695,6 +704,7 @@ class CarbonSimulatorUI:
                 "note": [note],
                 "aggr": [True],
                 "exec": [execute],
+                "partial": [is_partial],
                 "limitfail": [limitfail],
                 "amt1": [
                     amt1 if not (is_by_target and isinstance(self.matcher, FastRouter)) else amt2
@@ -744,6 +754,7 @@ class CarbonSimulatorUI:
             threshold_orders: int = 10,
             use_positions: List[int] = None,
             use_positions_matchlevel: List[int] = [],
+            support_partial: bool = False,
     ) -> Dict[str, Any]:
         """
         the AMM buys (and the trader sells) `amt` > 0 of `tkn`
@@ -756,7 +767,8 @@ class CarbonSimulatorUI:
         :limit_price:       the limit price of the order (this price or better from point of view
                             of the trader, not the AMM!), quoted in convention of the pair
         :threshold_orders:  the maximum number of order to be routed through using the alpha router
-        :use_positions: the positions to use for the trade (default: all positions)
+        :use_positions:     the positions to use for the trade (default: all positions)
+        :support_partial:   if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
         """
 
         try:
@@ -771,6 +783,7 @@ class CarbonSimulatorUI:
                     inpair=inpair,
                     limit_price=limit_price,
                     threshold_orders=threshold_orders,
+                    support_partial=support_partial,
                 )
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
@@ -790,6 +803,7 @@ class CarbonSimulatorUI:
                 use_positions=use_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
                 is_by_target=False,
+                support_partial=support_partial,
             )
         except Exception as e:
             if self.raiseonerror:
@@ -809,6 +823,7 @@ class CarbonSimulatorUI:
             threshold_orders: int = 10,
             use_positions: List[int] = None,
             use_positions_matchlevel: List[int] = [],
+            support_partial: bool = False,
     ) -> Dict[str, Any]:
         """
         the AMM sells (and the trader buys) `amt` > 0 of `tkn`
@@ -821,7 +836,8 @@ class CarbonSimulatorUI:
         :limit_price:       the limit price of the order (this price or better from point of view
                             of the trader, not the AMM!), quoted in convention of the pair
         :threshold_orders:  the maximum number of order to be routed through using the alpha router 
-        :use_positions: the positions to use for the trade (default: all positions)
+        :use_positions:     the positions to use for the trade (default: all positions)
+        :support_partial:   if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
         """
         try:
 
@@ -835,6 +851,7 @@ class CarbonSimulatorUI:
                     inpair=inpair,
                     limit_price=limit_price,
                     threshold_orders=threshold_orders,
+                    support_partial=support_partial,
                 )
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
@@ -855,6 +872,7 @@ class CarbonSimulatorUI:
                 use_positions=use_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
                 is_by_target=True,
+                support_partial=support_partial,
 
             )
 

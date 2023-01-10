@@ -142,6 +142,7 @@ class FastRouter(BaseRouter):
             cmp: Callable = None,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            support_partial: bool = False,
     ) -> List[Action]:
         """
         * Compute a list of {order index, trade amount} tuples:
@@ -224,6 +225,8 @@ class FastRouter(BaseRouter):
             is_by_target: bool = False,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            support_partial: bool = False,
+
     ) -> List[Action]:
         return self.match(
             x=x,
@@ -240,6 +243,7 @@ class FastRouter(BaseRouter):
             is_by_target: bool = True,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            support_partial: bool = False,
     ) -> List[Action]:
         return self.match(
             x=x,
