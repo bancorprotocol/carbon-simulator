@@ -177,6 +177,7 @@ class AlphaRouter(BaseRouter):
             is_by_target: bool = True,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            support_partial: bool = False,
     ) -> List[Action]:
         """
         The match by target function specfic to the Alpha router that:
@@ -304,6 +305,7 @@ class AlphaRouter(BaseRouter):
             is_by_target: bool = False,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            support_partial: bool = False,
     ) -> List[Action]:
         """
         The match by target function specfic to the Alpha router that:
