@@ -198,7 +198,6 @@ class AlphaRouter(BaseRouter):
              to return the optimal distribution for the full inputAmount
              evaluated within the threshold number of orders.
         """
-
         if threshold_orders == None:
             threshold_orders = 10
 
@@ -253,8 +252,13 @@ class AlphaRouter(BaseRouter):
 
         results.fillna(0, inplace=True)
         results.reset_index(inplace=True, drop=True)
+        # print(f'is_by_target {is_by_target}') # True
         # print(tabulate(results,headers=list(results.columns)))
-
+        if support_partial & (results.ordered_associated_liquidity.sum() < abs(x)):
+            if x < 0:
+                x = -results.ordered_associated_liquidity.sum() + Decimal('0.0000000001')
+            else:
+                x = results.ordered_associated_liquidity.sum() - Decimal('0.0000000001')
         passed_indexes = AlphaRouter.gen_one_order_selector(results.ordered_associated_liquidity, abs(x), threshold_orders)
         top_n_threshold_orders = [results.indexes[i] for i in passed_indexes]
 
@@ -268,6 +272,7 @@ class AlphaRouter(BaseRouter):
             check_sufficient_liquidity=check_sufficient_liquidity,
             threshold_orders=threshold_orders,
             use_positions_matchlevel=use_positions_matchlevel,
+            support_partial=support_partial,
         )
 
     def amt_by_src(
@@ -375,8 +380,13 @@ class AlphaRouter(BaseRouter):
 
         results.fillna(0, inplace=True)
         results.reset_index(inplace=True, drop=True)
-        # print(tabulate(results,headers=list(results.columns)))\
-        
+        # print(f'is_by_target {is_by_target}') #False
+        # print(tabulate(results,headers=list(results.columns)))
+        if support_partial & (results.available_value.sum() < abs(x)):
+            if x < 0:
+                x = -results.available_value.sum() + Decimal('0.0000000001')
+            else:
+                x = results.available_value.sum() - Decimal('0.0000000001')
         passed_indexes = AlphaRouter.gen_one_order_selector(results.available_value, abs(x), threshold_orders)
         top_n_threshold_orders = [results.indexes[i] for i in passed_indexes]
 

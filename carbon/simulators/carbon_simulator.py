@@ -48,7 +48,7 @@ class CarbonSimulatorUI:
 
     MATCH_EXACT = "exact"
     MATCH_FAST = "fast"
-    MATCH_ALPHA = "alpha_"
+    MATCH_ALPHA = "alpha"
 
     def __init__(
             self,
