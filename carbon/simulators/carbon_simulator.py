@@ -9,9 +9,10 @@ v2.0 - require slashpair notation (breaking change); exclude_future, constants f
 v2.2 - curve disabling, single orders
 v2.2.1 - CarbonOrderUI linked
 v2.3 - added fast router
+v2.4 - limit orders, changed trade_action -> match_by in _trade
 """
-__version__ = "2.3"
-__date__ = "9/Jan/2023"
+__version__ = "2.4"
+__date__ = "12/Jan/2023"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -456,16 +457,21 @@ class CarbonSimulatorUI:
     #delete_pos = delete_order
     delete_strategy = delete_order
 
+    MATCH_BY_SOURCE = "match_by_source"
+    MATCH_BY_TARGET = "match_by_target"
+
     def _trade(
             self,
             tkn: str,
             amt: Any,
             support_partial: bool,
             carbon_pair: CarbonPair,
-            trade_action: Callable = None,
+            #trade_action: Callable = None,
+            match_by: str = None,
             trade_description: str = None,
             execute: bool = True,
             limit_price: Any = None,
+            limit_amt: Any = None,
             inpair: bool = True,
             use_positions: List[int] = None,
             threshold_orders: int = None,
@@ -479,21 +485,47 @@ class CarbonSimulatorUI:
         :tkn:                   the token that is being SOLD by the AMM, eg "ETH"*
         :amt:                   the amount to be traded*
         :carbon_pair:           the CarbonPair class of the token pair
-        :trade_action:          either `match_by_target(...)` or `match_by_src(...)` method of the `self.matcher`
+        :match_by:              either MATCH_BY_SOURCE or MATCH_BY_TARGET
         :trade_description:     human-readable description of the trade, eg "amm vs trader, buy vs sell, for amt"
         :execute:               if True (default), the trade is executed; otherwise only routing is shown
         :limit_price:           the limit price of the order (this price or better from point of view
-                                of the trader, not the AMM!), quoted in convention of the pair
+                                of the trader, not the AMM!), quoted in convention of the pair**
+        :limit_amt:             the minimum amount of tokens the traders expects to obtain; quoted in units of the
+                                other token, ie `carbon_pair.other(tkn)`**
         :inpair:                if True, only match within pair; if False (default), route through all available pairs
         :use_positions:         the positions to use for the trade (default: all positions)
         :threshold_orders:      the maximum number of order to be routed through using the alpha router
         :support_partial:       if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
 
-        *amt is always effectively a positive amount; however, if `trade_action` is `match_by_target` then it must
-        be provided as a negative number, and if `match_by_src` as positive number
+        *amt is always effectively a positive amount; however, if `match_by` is `MATCH_BY_TARGET` then it must
+        be provided as a negative number, and if `MATCH_BY_SOURCE` as positive number
+
+        **limit_price and limit_amt are redundant; either one of them can be given, or none, but not both
         """
         trades, orders = None, None
         is_partial = False
+
+        if match_by == self.MATCH_BY_TARGET:
+            trade_action = self.matcher.match_by_target
+        elif match_by == self.MATCH_BY_SOURCE:
+            trade_action = self.matcher.match_by_src
+        else:
+            raise ValueError("match_by must be self.MATCH_BY_TARGET or self.MATCH_BY_SOURCE", match_by)
+
+        if not limit_amt is None:
+            if not limit_price is None:
+                raise ValueError("Not both limit_amt and limit_price can be given", limit_amt, limit_price)
+            
+            # amt is expressed in the source token if match_by == MATCH_BY_SOURCE, otherwise target token
+            # rawprice is expressed as tkn per other token if MATCH_BY_TARGET, otherwise reverse
+            # we use carbon_pair.convert_price to convert it into the proper price convention
+            rawprice = abs(float(amt) / float(limit_amt))
+            limit_price = carbon_pair.convert_price(
+                rawprice, tknq = tkn if match_by == self.MATCH_BY_TARGET else carbon_pair.other(tkn)
+            )
+            #print(f"[_trade] limit_amt={limit_amt}, tkn={tkn}, match_by={match_by}, limit_price={limit_price}")
+            #print(f"[_trade] limit_amt={limit_amt}, tkn={tkn}, rawprice={rawprice}, limit_price={limit_price}")
+            
         try:
             decimals = self.decimals
             carbon_pair_r = carbon_pair.reverse
@@ -584,6 +616,7 @@ class CarbonSimulatorUI:
             # - `buysell = BUY`
 
             if limit_price is not None:
+                print(f"[_trade] limit_price={limit_price}, price_avg={price_avg}")
                 limitfail = not carbon_pair.limit_is_met(
                     tkn, limit_price, carbon_pair.BUY, round(float(price_avg), decimals)
                 )
@@ -751,6 +784,7 @@ class CarbonSimulatorUI:
             execute: bool = True,
             inpair: bool = True,
             limit_price: Any = None,
+            limit_amt: Any = None,
             threshold_orders: int = 10,
             use_positions: List[int] = None,
             use_positions_matchlevel: List[int] = [],
@@ -765,11 +799,18 @@ class CarbonSimulatorUI:
         :execute:           if True (default), the trade is executed; otherwise only routing is shown
         :inpair:            if True, only match within pair; if False (default), route through all available pairs
         :limit_price:       the limit price of the order (this price or better from point of view
-                            of the trader, not the AMM!), quoted in convention of the pair
+                            of the trader, not the AMM!), quoted in convention of the pair*
+        :limit_amt:         the minimum amount of tokens the traders expects to obtain; quoted in units of the
+                            other token, ie `carbon_pair.other(tkn)`*
         :threshold_orders:  the maximum number of order to be routed through using the alpha router
         :use_positions:     the positions to use for the trade (default: all positions)
         :support_partial:   if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
+        
+        *limit_price and limit_amt are redundant; either one of them can be given, or none, but not both
         """
+
+        #print("[amm_buys]", limit_amt, limit_price)
+        
 
         try:
 
@@ -782,6 +823,7 @@ class CarbonSimulatorUI:
                     execute=execute,
                     inpair=inpair,
                     limit_price=limit_price,
+                    limit_amt=limit_amt,
                     threshold_orders=threshold_orders,
                     support_partial=support_partial,
                 )
@@ -793,11 +835,13 @@ class CarbonSimulatorUI:
                 tkn=tkno,
                 amt=Decimal(str(amt)),
                 carbon_pair=carbon_pair,
-                trade_action=self.matcher.match_by_src,
+                #trade_action=self.matcher.match_by_src,
+                match_by = self.MATCH_BY_SOURCE,
                 trade_description=f"trader buys $ {tkno} sells * {tkn} | AMM sells $ {tkno} buys * {tkn} via "
                                   f"order #",
                 execute=execute,
                 limit_price=limit_price,
+                limit_amt=limit_amt,
                 inpair=inpair,
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
@@ -820,6 +864,7 @@ class CarbonSimulatorUI:
             execute: bool = True,
             inpair: bool = True,
             limit_price: Any = None,
+            limit_amt: Any = None,
             threshold_orders: int = 10,
             use_positions: List[int] = None,
             use_positions_matchlevel: List[int] = [],
@@ -834,11 +879,18 @@ class CarbonSimulatorUI:
         :execute:           if True (default), the trade is executed; otherwise only routing is shown
         :inpair:            if True, only match within pair; if False (default), route through all available pairs
         :limit_price:       the limit price of the order (this price or better from point of view
-                            of the trader, not the AMM!), quoted in convention of the pair
+                            of the trader, not the AMM!), quoted in convention of the pair*
+        :limit_amt:         the minimum amount of tokens the traders expects to obtain; quoted in units of the
+                            other token, ie `carbon_pair.other(tkn)`*
         :threshold_orders:  the maximum number of order to be routed through using the alpha router 
         :use_positions:     the positions to use for the trade (default: all positions)
         :support_partial:   if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
+        
+        *limit_price and limit_amt are redundant; either one of them can be given, or none, but not both
         """
+
+        #print("[amm_sells]", limit_amt, limit_price)
+        
         try:
 
             if amt < 0:
@@ -850,6 +902,7 @@ class CarbonSimulatorUI:
                     execute=execute,
                     inpair=inpair,
                     limit_price=limit_price,
+                    limit_amt=limit_amt,
                     threshold_orders=threshold_orders,
                     support_partial=support_partial,
                 )
@@ -862,11 +915,13 @@ class CarbonSimulatorUI:
                 tkn=tkn,
                 amt=-Decimal(str(amt)),
                 carbon_pair=carbon_pair,
-                trade_action=self.matcher.match_by_target,
+                #trade_action=self.matcher.match_by_target,
+                match_by = self.MATCH_BY_TARGET,
                 trade_description=f"trader buys $ {tkno} sells * {tkn} | AMM sells $ {tkn} buys * {tkno} via "
                                   f"order #",
                 execute=execute,
                 limit_price=limit_price,
+                limit_amt=limit_amt,
                 inpair=inpair,
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
