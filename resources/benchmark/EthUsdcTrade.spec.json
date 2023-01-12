@@ -312,7 +312,9 @@
         "strategyId": "9",
         "amount": "7890000000000000000"
       }
-    ]
+    ],
+    "sourceAmount": "41040000000000000000",
+    "targetAmount": "51283291916.667975205848"
   },
   {
     "sourceToken": "ETH",
@@ -627,7 +629,9 @@
         "strategyId": "9",
         "amount": "7890000000"
       }
-    ]
+    ],
+    "sourceAmount": "33752568806011722871.321403294562",
+    "targetAmount": "41040000000"
   },
   {
     "sourceToken": "USDC",
@@ -942,7 +946,9 @@
         "strategyId": "9",
         "amount": "7890000000"
       }
-    ]
+    ],
+    "sourceAmount": "41040000000",
+    "targetAmount": "33736781375741747919.92065426561"
   },
   {
     "sourceToken": "USDC",
@@ -1257,7 +1263,9 @@
         "strategyId": "9",
         "amount": "7890000000000000000"
       }
-    ]
+    ],
+    "sourceAmount": "51312992739.946531039708",
+    "targetAmount": "41040000000000000000"
   },
   {
     "sourceToken": "ETH",
@@ -1572,7 +1580,9 @@
         "strategyId": "9",
         "amount": "31560000000000000000"
       }
-    ]
+    ],
+    "sourceAmount": "164160000000000000000",
+    "targetAmount": "204932937958.325929876939"
   },
   {
     "sourceToken": "ETH",
@@ -1887,7 +1897,9 @@
         "strategyId": "9",
         "amount": "31560000000"
       }
-    ]
+    ],
+    "sourceAmount": "135113205421747581388.627121897893",
+    "targetAmount": "164160000000"
   },
   {
     "sourceToken": "USDC",
@@ -2202,7 +2214,9 @@
         "strategyId": "9",
         "amount": "31560000000"
       }
-    ]
+    ],
+    "sourceAmount": "164160000000",
+    "targetAmount": "134860578054171399349.50842133429"
   },
   {
     "sourceToken": "USDC",
@@ -2517,7 +2531,9 @@
         "strategyId": "9",
         "amount": "31560000000000000000"
       }
-    ]
+    ],
+    "sourceAmount": "205408041911.334669186626",
+    "targetAmount": "164160000000000000000"
   },
   {
     "sourceToken": "ETH",
@@ -2832,7 +2848,9 @@
         "strategyId": "9",
         "amount": "78900000000000000000"
       }
-    ]
+    ],
+    "sourceAmount": "410400000000000000000",
+    "targetAmount": "511334193168.452064719873"
   },
   {
     "sourceToken": "ETH",
@@ -3147,7 +3165,9 @@
         "strategyId": "9",
         "amount": "78900000000"
       }
-    ]
+    ],
+    "sourceAmount": "338298843448410501593.977541104433",
+    "targetAmount": "410400000000"
   },
   {
     "sourceToken": "USDC",
@@ -3462,7 +3482,9 @@
         "strategyId": "9",
         "amount": "78900000000"
       }
-    ]
+    ],
+    "sourceAmount": "410400000000",
+    "targetAmount": "336719561446684714819.298121853287"
   },
   {
     "sourceToken": "USDC",
@@ -3777,6 +3799,8 @@
         "strategyId": "9",
         "amount": "78900000000000000000"
       }
-    ]
+    ],
+    "sourceAmount": "514302242362.435996449525",
+    "targetAmount": "410400000000000000000"
   }
 ]
