@@ -13,6 +13,9 @@ def execute(test, module):
     strategies = [[module.Order(order) for order in strategy['orders']] for strategy in test['strategies']]
     tradeFunc = [module.tradeBySourceAmount, module.tradeByTargetAmount][test['tradeByTargetAmount']]
 
+    test['sourceAmount'] = module.Amount(0)
+    test['targetAmount'] = module.Amount(0)
+
     for tradeActions in test['tradeActions']:
         strategyId = int(tradeActions['strategyId']) - 1
         tokenAmount = module.Amount(tradeActions['amount'])
@@ -25,6 +28,11 @@ def execute(test, module):
         targetOrder.y -= targetAmount
         if sourceOrder.z < sourceOrder.y:
             sourceOrder.z = sourceOrder.y
+        test['sourceAmount'] += sourceAmount
+        test['targetAmount'] += targetAmount
+
+    test['sourceAmount'] = format(test['sourceAmount'])
+    test['targetAmount'] = format(test['targetAmount'])
 
     for dstStrategy, srcStrategy in zip(test['strategies'], strategies):
         for dstOrder, srcOrder in zip(dstStrategy['orders'], srcStrategy):
