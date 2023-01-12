@@ -310,7 +310,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "1999.604672183585"
   },
   {
     "sourceToken": "TKN0",
@@ -627,7 +629,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "7997.142858478939"
   },
   {
     "sourceToken": "TKN0",
@@ -948,7 +952,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "19989.106502817571"
   },
   {
     "sourceToken": "TKN0",
@@ -1273,7 +1279,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "39970.049547380871"
   },
   {
     "sourceToken": "TKN0",
@@ -1602,7 +1610,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "69932.552570772232"
   },
   {
     "sourceToken": "TKN0",
@@ -1935,7 +1945,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "111867.206488124121"
   },
   {
     "sourceToken": "TKN0",
@@ -2272,7 +2284,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "167762.607315895273"
   },
   {
     "sourceToken": "TKN0",
@@ -2613,7 +2627,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "239605.353734174101"
   },
   {
     "sourceToken": "TKN0",
@@ -2958,7 +2974,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "329380.046825356036"
   },
   {
     "sourceToken": "TKN0",
@@ -3307,7 +3325,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "439069.290715260188"
   },
   {
     "sourceToken": "TKN0",
@@ -3620,7 +3640,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "8994.703976163427"
   },
   {
     "sourceToken": "TKN0",
@@ -3937,7 +3959,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "28963.734627463454"
   },
   {
     "sourceToken": "TKN0",
@@ -4258,7 +4282,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "61867.890077011578"
   },
   {
     "sourceToken": "TKN0",
@@ -4583,7 +4609,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "109650.280160840364"
   },
   {
     "sourceToken": "TKN0",
@@ -4912,7 +4940,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "174236.911164241071"
   },
   {
     "sourceToken": "TKN0",
@@ -5245,7 +5275,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "257537.000497098347"
   },
   {
     "sourceToken": "TKN0",
@@ -5582,7 +5614,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "361443.085733566278"
   },
   {
     "sourceToken": "TKN0",
@@ -5923,7 +5957,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "487831.077009343041"
   },
   {
     "sourceToken": "TKN0",
@@ -6268,7 +6304,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "638560.202481133074"
   },
   {
     "sourceToken": "TKN0",
@@ -6617,7 +6655,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "815472.934294932168"
   },
   {
     "sourceToken": "TKN0",
@@ -6930,7 +6970,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "999.802336091793"
   },
   {
     "sourceToken": "TKN0",
@@ -7247,7 +7289,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "3998.571626844379"
   },
   {
     "sourceToken": "TKN0",
@@ -7568,7 +7612,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "9994.553448973719"
   },
   {
     "sourceToken": "TKN0",
@@ -7893,7 +7939,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "19985.024971218888"
   },
   {
     "sourceToken": "TKN0",
@@ -8222,7 +8270,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "34966.276958706807"
   },
   {
     "sourceToken": "TKN0",
@@ -8555,7 +8605,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "55933.603917232354"
   },
   {
     "sourceToken": "TKN0",
@@ -8892,7 +8944,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "83881.304922293655"
   },
   {
     "sourceToken": "TKN0",
@@ -9233,7 +9287,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "119802.679193110983"
   },
   {
     "sourceToken": "TKN0",
@@ -9578,7 +9634,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "164690.027279147678"
   },
   {
     "sourceToken": "TKN0",
@@ -9927,7 +9985,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "219534.650524737389"
   },
   {
     "sourceToken": "TKN0",
@@ -10240,7 +10300,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "4497.381919039199"
   },
   {
     "sourceToken": "TKN0",
@@ -10557,7 +10619,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "14482.136092949572"
   },
   {
     "sourceToken": "TKN0",
@@ -10878,7 +10942,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "30935.092517254437"
   },
   {
     "sourceToken": "TKN0",
@@ -11203,7 +11269,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "54828.46028365544"
   },
   {
     "sourceToken": "TKN0",
@@ -11532,7 +11600,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "87126.026179720727"
   },
   {
     "sourceToken": "TKN0",
@@ -11865,7 +11935,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "128783.180943441645"
   },
   {
     "sourceToken": "TKN0",
@@ -12202,7 +12274,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "180746.823608020146"
   },
   {
     "sourceToken": "TKN0",
@@ -12543,7 +12617,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "243955.214532105831"
   },
   {
     "sourceToken": "TKN0",
@@ -12888,7 +12964,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "319337.773502677818"
   },
   {
     "sourceToken": "TKN0",
@@ -13237,7 +13315,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "407814.82405270922"
   },
   {
     "sourceToken": "TKN0",
@@ -13550,7 +13630,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "3999.20934436717"
   },
   {
     "sourceToken": "TKN0",
@@ -13867,7 +13949,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "15994.285321747061"
   },
   {
     "sourceToken": "TKN0",
@@ -14188,7 +14272,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "39978.212215370413"
   },
   {
     "sourceToken": "TKN0",
@@ -14513,7 +14599,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "79940.097747804588"
   },
   {
     "sourceToken": "TKN0",
@@ -14842,7 +14930,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "139865.102526219049"
   },
   {
     "sourceToken": "TKN0",
@@ -15175,7 +15265,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "223734.408894478615"
   },
   {
     "sourceToken": "TKN0",
@@ -15512,7 +15604,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "335525.208950110963"
   },
   {
     "sourceToken": "TKN0",
@@ -15853,7 +15947,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "479210.700187651879"
   },
   {
     "sourceToken": "TKN0",
@@ -16198,7 +16294,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "658760.083971976443"
   },
   {
     "sourceToken": "TKN0",
@@ -16547,7 +16645,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "878138.569638941916"
   },
   {
     "sourceToken": "TKN0",
@@ -16860,7 +16960,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "17989.347057961855"
   },
   {
     "sourceToken": "TKN0",
@@ -17177,7 +17279,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "57926.917727801656"
   },
   {
     "sourceToken": "TKN0",
@@ -17498,7 +17602,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "123733.42235386184"
   },
   {
     "sourceToken": "TKN0",
@@ -17823,7 +17929,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "219293.721925189013"
   },
   {
     "sourceToken": "TKN0",
@@ -18152,7 +18260,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "348458.208766586171"
   },
   {
     "sourceToken": "TKN0",
@@ -18485,7 +18595,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "515043.699622606814"
   },
   {
     "sourceToken": "TKN0",
@@ -18822,7 +18934,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "722834.022697529469"
   },
   {
     "sourceToken": "TKN0",
@@ -19163,7 +19277,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "975580.393567180207"
   },
   {
     "sourceToken": "TKN0",
@@ -19508,7 +19624,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "1277001.72947603145"
   },
   {
     "sourceToken": "TKN0",
@@ -19857,7 +19975,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "1630784.837371041409"
   },
   {
     "sourceToken": "TKN0",
@@ -20170,7 +20290,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "499.901167979198"
   },
   {
     "sourceToken": "TKN0",
@@ -20487,7 +20609,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "1999.286010827979"
   },
   {
     "sourceToken": "TKN0",
@@ -20808,7 +20932,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "4997.277397392988"
   },
   {
     "sourceToken": "TKN0",
@@ -21133,7 +21259,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "9992.513633389155"
   },
   {
     "sourceToken": "TKN0",
@@ -21462,7 +21590,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "17483.139903468714"
   },
   {
     "sourceToken": "TKN0",
@@ -21795,7 +21925,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "27966.803735683894"
   },
   {
     "sourceToken": "TKN0",
@@ -22132,7 +22264,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "41940.655202823092"
   },
   {
     "sourceToken": "TKN0",
@@ -22473,7 +22607,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "59901.343656497541"
   },
   {
     "sourceToken": "TKN0",
@@ -22818,7 +22954,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "82345.018573062872"
   },
   {
     "sourceToken": "TKN0",
@@ -23167,7 +23305,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "109767.33166327484"
   },
   {
     "sourceToken": "TKN0",
@@ -23480,7 +23620,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "2248.71989796901"
   },
   {
     "sourceToken": "TKN0",
@@ -23797,7 +23939,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "7241.325303418478"
   },
   {
     "sourceToken": "TKN0",
@@ -24118,7 +24262,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "15468.632632805625"
   },
   {
     "sourceToken": "TKN0",
@@ -24443,7 +24589,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "27417.362038115362"
   },
   {
     "sourceToken": "TKN0",
@@ -24772,7 +24920,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "43570.144919813201"
   },
   {
     "sourceToken": "TKN0",
@@ -25105,7 +25255,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "64405.415764201415"
   },
   {
     "sourceToken": "TKN0",
@@ -25442,7 +25594,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "90397.239078182764"
   },
   {
     "sourceToken": "TKN0",
@@ -25783,7 +25937,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "122015.071876594255"
   },
   {
     "sourceToken": "TKN0",
@@ -26128,7 +26284,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "159723.46934158065"
   },
   {
     "sourceToken": "TKN0",
@@ -26477,7 +26635,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "203981.754694749649"
   },
   {
     "sourceToken": "TKN0",
@@ -26790,7 +26950,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "7998.41868873434"
   },
   {
     "sourceToken": "TKN0",
@@ -27107,7 +27269,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "31988.570643494122"
   },
   {
     "sourceToken": "TKN0",
@@ -27428,7 +27592,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "79956.42347860476"
   },
   {
     "sourceToken": "TKN0",
@@ -27753,7 +27919,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "159880.193986861596"
   },
   {
     "sourceToken": "TKN0",
@@ -28082,7 +28250,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "279730.202181719039"
   },
   {
     "sourceToken": "TKN0",
@@ -28415,7 +28585,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "447468.81331747903"
   },
   {
     "sourceToken": "TKN0",
@@ -28752,7 +28924,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "671050.411374347508"
   },
   {
     "sourceToken": "TKN0",
@@ -29093,7 +29267,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "958421.391264545227"
   },
   {
     "sourceToken": "TKN0",
@@ -29438,7 +29614,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "1317520.155905225679"
   },
   {
     "sourceToken": "TKN0",
@@ -29787,7 +29965,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "1756277.123296331874"
   },
   {
     "sourceToken": "TKN0",
@@ -30100,7 +30280,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000",
+    "targetAmount": "35978.632694916415"
   },
   {
     "sourceToken": "TKN0",
@@ -30417,7 +30599,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "3000",
+    "targetAmount": "115853.278526322029"
   },
   {
     "sourceToken": "TKN0",
@@ -30738,7 +30922,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "6000",
+    "targetAmount": "247464.454308385516"
   },
   {
     "sourceToken": "TKN0",
@@ -31063,7 +31249,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10000",
+    "targetAmount": "438580.498241834222"
   },
   {
     "sourceToken": "TKN0",
@@ -31392,7 +31580,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "15000",
+    "targetAmount": "696900.557572395257"
   },
   {
     "sourceToken": "TKN0",
@@ -31725,7 +31915,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "21000",
+    "targetAmount": "1030056.637505472368"
   },
   {
     "sourceToken": "TKN0",
@@ -32062,7 +32254,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "28000",
+    "targetAmount": "1445615.106002635574"
   },
   {
     "sourceToken": "TKN0",
@@ -32403,7 +32597,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "36000",
+    "targetAmount": "1951077.825997344915"
   },
   {
     "sourceToken": "TKN0",
@@ -32748,7 +32944,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "45000",
+    "targetAmount": "2553883.104906045449"
   },
   {
     "sourceToken": "TKN0",
@@ -33097,7 +33295,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "55000",
+    "targetAmount": "3261406.462476921406"
   },
   {
     "sourceToken": "TKN0",
@@ -33410,7 +33610,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "500.04943063303",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -33727,7 +33929,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "1166.876916292909",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -34048,7 +34252,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "1917.160772980258",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -34373,7 +34579,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "2717.562773991159",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -34702,7 +34910,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "3551.40774586952",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -35035,7 +35245,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "4409.163173000323",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -35372,7 +35584,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "5284.868683655634",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -35713,7 +35927,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "6174.548931920909",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -36058,7 +36274,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "7075.419908137815",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -36407,7 +36625,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "7985.455938974795",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -36720,7 +36940,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "111.118422463584",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -37037,7 +37259,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "311.153707126793",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -37358,7 +37582,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "583.971024854533",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -37683,7 +37909,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "917.474302494377",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -38012,7 +38240,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "1302.36083464006",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -38345,7 +38575,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "1731.321846476383",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -38682,7 +38914,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "2198.510102729195",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -39023,7 +39257,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "2699.174178460048",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -39368,7 +39604,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "3229.400450518508",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -39717,7 +39955,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "3785.92684166585",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -40030,7 +40270,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "1000.197742081153",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -40347,7 +40589,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "2334.174491747329",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -40668,7 +40912,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "3835.310311356689",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -40993,7 +41239,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "5436.919079860012",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -41322,7 +41570,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "7105.633535329596",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -41655,7 +41905,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "8822.371314945981",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -41992,7 +42244,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "10575.195760082569",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -42333,7 +42587,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "12356.142050360192",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -42678,7 +42934,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "14159.629749428303",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -43027,7 +43285,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "15981.596607928449",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -43340,7 +43600,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "222.250972411364",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -43657,7 +43919,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "622.389662768083",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -43978,7 +44242,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "1168.198368564727",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -44303,7 +44569,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "1835.534340805357",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -44632,7 +44900,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "2605.83467171893",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -44965,7 +45235,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "3464.516746635422",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -45302,7 +45574,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "4399.914074812608",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -45643,7 +45917,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "5402.545815093461",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -45988,7 +46264,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "6464.601761861172",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -46337,7 +46615,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "7579.570732859821",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -46650,7 +46930,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "250.012357047441",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -46967,7 +47249,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "583.385890744134",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -47288,7 +47572,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "958.456842645142",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -47613,7 +47899,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "1358.557319024605",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -47942,7 +48230,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "1775.351856778844",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -48275,7 +48565,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "2204.076372112692",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -48612,7 +48904,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "2641.752674790804",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -48953,7 +49247,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "3086.394863122585",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -49298,7 +49594,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "3536.612488799064",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -49647,7 +49945,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "3991.394081744792",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -49960,7 +50260,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "55.557391253646",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -50277,7 +50579,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "155.566251139536",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -50598,7 +50902,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "291.952493232647",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -50923,7 +51229,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "458.66180843668",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -51252,7 +51560,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "651.03751713592",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -51585,7 +51895,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "865.420913139559",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -51922,7 +52234,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "1098.884969266121",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -52263,7 +52577,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "1349.051332596885",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -52608,7 +52924,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "1613.961182961203",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -52957,7 +53275,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "1891.981984858399",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -53270,7 +53590,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "2000.791125297489",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -53587,7 +53909,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "4670.032581955857",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -53908,7 +54232,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "7674.57900780984",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -54233,7 +54559,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "10881.02020764952",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -54562,7 +54890,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "14222.554592337681",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -54895,7 +55225,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "17660.948597672617",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -55232,7 +55564,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "21172.265648565768",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -55573,7 +55907,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "24740.519927064692",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -55918,7 +56254,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "28354.501177851392",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -56267,7 +56605,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "32006.041536429482",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -56580,7 +56920,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "444.552119128547",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -56897,7 +57239,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "1245.070679037429",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -57218,7 +57562,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "2337.306885170105",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -57543,7 +57889,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "3673.160101634205",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -57872,7 +58220,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "5215.671164526359",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -58205,7 +58555,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "6935.818470161245",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -58542,7 +58894,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "8810.389704179593",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -58883,7 +59237,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "10820.522909699864",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -59228,7 +59584,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "12950.679096951632",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -59577,7 +59935,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "15187.901673847666",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -59890,7 +60250,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "125.003089185514",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -60207,7 +60569,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "291.679805394996",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -60528,7 +60892,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "479.197541836784",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -60853,7 +61219,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "679.222657948477",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -61182,7 +61550,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "887.587954237186",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -61515,7 +61885,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "1101.911933250341",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -61852,7 +62224,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "1320.705999552462",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -62193,7 +62567,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "1542.977645760455",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -62538,7 +62914,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "1768.03203739424",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -62887,7 +63265,9 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "1995.363781528483",
+    "targetAmount": "55000"
   },
   {
     "sourceToken": "TKN0",
@@ -63200,7 +63580,9 @@
         "strategyId": "1",
         "amount": "1000"
       }
-    ]
+    ],
+    "sourceAmount": "27.778237192393",
+    "targetAmount": "1000"
   },
   {
     "sourceToken": "TKN0",
@@ -63517,7 +63899,9 @@
         "strategyId": "2",
         "amount": "2000"
       }
-    ]
+    ],
+    "sourceAmount": "77.780454557025",
+    "targetAmount": "3000"
   },
   {
     "sourceToken": "TKN0",
@@ -63838,7 +64222,9 @@
         "strategyId": "3",
         "amount": "3000"
       }
-    ]
+    ],
+    "sourceAmount": "145.967929927787",
+    "targetAmount": "6000"
   },
   {
     "sourceToken": "TKN0",
@@ -64163,7 +64549,9 @@
         "strategyId": "4",
         "amount": "4000"
       }
-    ]
+    ],
+    "sourceAmount": "229.311935078994",
+    "targetAmount": "10000"
   },
   {
     "sourceToken": "TKN0",
@@ -64492,7 +64880,9 @@
         "strategyId": "5",
         "amount": "5000"
       }
-    ]
+    ],
+    "sourceAmount": "325.482798577675",
+    "targetAmount": "15000"
   },
   {
     "sourceToken": "TKN0",
@@ -64825,7 +65215,9 @@
         "strategyId": "6",
         "amount": "6000"
       }
-    ]
+    ],
+    "sourceAmount": "432.650091911178",
+    "targetAmount": "21000"
   },
   {
     "sourceToken": "TKN0",
@@ -65162,7 +65554,9 @@
         "strategyId": "7",
         "amount": "7000"
       }
-    ]
+    ],
+    "sourceAmount": "549.349456058",
+    "targetAmount": "28000"
   },
   {
     "sourceToken": "TKN0",
@@ -65503,7 +65897,9 @@
         "strategyId": "8",
         "amount": "8000"
       }
-    ]
+    ],
+    "sourceAmount": "674.39106293266",
+    "targetAmount": "36000"
   },
   {
     "sourceToken": "TKN0",
@@ -65848,7 +66244,9 @@
         "strategyId": "9",
         "amount": "9000"
       }
-    ]
+    ],
+    "sourceAmount": "806.795009517721",
+    "targetAmount": "45000"
   },
   {
     "sourceToken": "TKN0",
@@ -66197,6 +66595,8 @@
         "strategyId": "10",
         "amount": "10000"
       }
-    ]
+    ],
+    "sourceAmount": "945.744663262571",
+    "targetAmount": "55000"
   }
 ]
