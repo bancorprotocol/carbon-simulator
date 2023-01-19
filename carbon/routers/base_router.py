@@ -113,8 +113,8 @@ class BaseRouter:
             return True
         except AssertionError as e:
             if support_partial:
-                print("Assuming partial fulfillment.")
-                print(f'Setting trade amount to max: {available_liquidity}')
+                # print("Assuming partial fulfillment.")
+                # print(f'Setting trade amount to max: {available_liquidity}')
                 return available_liquidity
             else:
                 raise e

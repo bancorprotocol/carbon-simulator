@@ -48,7 +48,7 @@ class CarbonSimulatorUI:
 
     MATCH_EXACT = "exact"
     MATCH_FAST = "fast"
-    MATCH_ALPHA = "alpha_"
+    MATCH_ALPHA = "alpha"
 
     def __init__(
             self,
@@ -928,7 +928,13 @@ class CarbonSimulatorUI:
                         value, only state corresponding to this specific `pair` is provided
         :inclhistory:   if True (default), also provide history, in particular trade history If False, no trades
                         are provided
-        :returns:       a dict with the current state of the system where the values are pandas dataframes
+        :returns:       a dict with the current state of the system
+
+
+        RETURN DICT
+        :orders:        a pandas data frame showing current orders
+        :orderuis:      a list of CarbonOrderUI objects presenting current orders
+        :trades:        a pandas data frame showing trades
         """
         try:
 

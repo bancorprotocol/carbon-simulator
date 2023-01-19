@@ -205,7 +205,8 @@ class ExactBase(BaseRouter, ABC):
                 ), "Insufficient liquidity across all user positions to support this trade."
             except AssertionError as e:
                 if support_partial:
-                    print("Assuming partial fulfillment.")
+                    pass
+                    # print("Assuming partial fulfillment.")
                 else:
                     raise e
 
