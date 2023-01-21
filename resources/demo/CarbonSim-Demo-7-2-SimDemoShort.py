@@ -21,7 +21,6 @@ plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
 from time import time as timestamp
 import os
-from fls import *
 print(f"Carbon v{__version__} ({__date__})")
 print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
@@ -30,8 +29,11 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
 
 # ## Setup
 
-OUTPATH = "/Users/skl/Desktop/sim"
-# !rm {OUTPATH}/*.png
+OUTPATH = "/Users/skl/Desktop/sim7-2"
+OUTPATH = None
+if OUTPATH:
+    # !mkdir {OUTPATH}
+    # !rm {OUTPATH}/*.png
 
 # #### Define parameters
 
@@ -72,7 +74,7 @@ half_sig2_dt = 0.5*vol*vol*dt
 
 # ## Simulation
 
-for ix in range(10):
+for ix in range(10 if not OUTPATH else 100):
     
     # #### Set up objects and generate path
 
@@ -122,15 +124,28 @@ for ix in range(10):
     
     # #### Show and save
     ts = f"{timestamp()*10:0.0f}"[-6:]
-    plt.savefig(os.path.join(OUTPATH, f"sim-{ts}.png"))
+    if OUTPATH:
+        plt.savefig(os.path.join(OUTPATH, f"sim-{ts}.png"))
     plt.show()
 
-# !ls {OUTPATH}/*.png
+if OUTPATH:
+    # !ls {OUTPATH}/*.png
 
-filelist = os.listdir(OUTPATH)
-filelist = [fn for fn in filelist if fn[-4:]==".png"]
-markdown = "".join(f"""
-![]({OUTPATH}/{fn})
-""" for fn in filelist)
-fsave(markdown, "_sim-charts.md", OUTPATH)
-# !pandoc {OUTPATH}/_sim-charts.md -o {OUTPATH}/_sim-charts.docx
+# +
+# if OUTPATH:
+#     filelist = os.listdir(OUTPATH)
+#     filelist = [fn for fn in filelist if fn[-4:]==".png"]
+#     markdown = "".join(f"""
+#     ![]({OUTPATH}/{fn})
+#     """ for fn in filelist)
+#     fsave(markdown, "_sim-charts.md", OUTPATH)
+# #     !pandoc {OUTPATH}/_sim-charts.md -o {OUTPATH}/_sim-charts.docx
+# -
+
+if OUTPATH:
+    from fls import fsave
+    filelist = os.listdir(OUTPATH)
+    filelist = [fn for fn in filelist if fn[-4:]==".png"]
+    markdown = "\n\n".join(f"![]({OUTPATH}/{fn})" for fn in filelist)
+    fsave(markdown, "_sim-charts.md", OUTPATH)
+    # !pandoc {OUTPATH}/_sim-charts.md -o {OUTPATH}/_sim-charts.docx
