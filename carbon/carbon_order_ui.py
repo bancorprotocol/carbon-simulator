@@ -9,9 +9,10 @@ VERSION HISTORY
 - v1.4: new methods: fromQxy, Q, Gamma, sellx, selly; yfromx_f, xfromy_f, p_eff_f, xint (1.3.1)
 - v1.5: linked curves (beta); bidask, curves_by_pair_bidask, checks for B,S=0 (1.4.1)
 - v1.6: linked curves incl trading (final), addliqy, tradeto; minor formula improvement (1.5.1)
+- v1.6.1: bugfix
 """
-__version__ = "1.6"
-__date__ = "20/Jan/2023"
+__version__ = "1.6.1"
+__date__ = "21/Jan/2023"
 
 try:
     from .pair import CarbonPair
@@ -847,6 +848,8 @@ class CarbonOrderUI:
         :execute:       if False, only display results, but do not update the object
         :raiseonerror:  if True, error lead to raising on exception
         """
+        if self.yint == 0:
+            self.yint = 1e-50 # selly fails on a fully empty curve, even with dy=0
         try:
             dy = self.dyfromp_f(p_marg, checkbounds=True, raiseonerror=True)
         except (self.PriceOutOfBoundsErrorBeyondStart, 
