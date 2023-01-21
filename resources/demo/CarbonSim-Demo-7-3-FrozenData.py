@@ -22,7 +22,7 @@ from carbon.helpers.simulation import run_sim, plot_sim
 
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
-require_version("2.3")
+require_version("2.2.2")
 # -
 
 # # Carbon Simulation - Demo 7-3 (frozen data)
