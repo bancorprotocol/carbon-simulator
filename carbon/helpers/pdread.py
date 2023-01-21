@@ -4,7 +4,7 @@ Carbon helper module - read time series from data frame
 __VERSION__ = "1.0"
 __DATE__ = "21/01/2023"
 
-import pandas as pd
+import pandas as _pd
 
 # those imports are for re-export
 from os.path import join as j
@@ -14,9 +14,9 @@ def dfread(fn):
     """reads dataframe from file and asserts format"""
     
     if fn[-7:] == ".pickle":
-        df = pd.read_pickle(fn)
+        df = _pd.read_pickle(fn)
     else:
-        df = pd.read_csv(fn)
+        df = _pd.read_csv(fn)
     assert df.columns[0] == "time"
     assert df.columns[1] == "datetime"
     return df
@@ -54,4 +54,4 @@ def pdcols(fn):
 
 def pathtime(path):
     """returns the time (in years) covered by the series `path`"""
-    return (path.index[-1]-path.index[0])/pd.Timedelta(days=1)/365.25
+    return (path.index[-1]-path.index[0])/_pd.Timedelta(days=1)/365.25

@@ -1,13 +1,13 @@
 """
-Carbon helper module -- encapsulate paramters for a single strategy
+Carbon helper module -- encapsulate parameters for a single strategy
 """
 __VERSION__ = "1.0"
 __DATE__ = "21/01/2023"
 
-from dataclasses import dataclass
+from dataclasses import dataclass as _dataclass
 
 
-@dataclass
+@_dataclass
 class strategy():
     
     p_buy_a: float
@@ -22,9 +22,35 @@ class strategy():
     csh: str = "CSH"
 
     @classmethod
-    def from_mwh(cls, m=100, g=0, w=0, amt_rsk=0, amt_csh=0, rsk="RSK", csh="CSH"):
+    def from_mgw(cls, m=100, g=0, w=0, amt_rsk=0, amt_csh=0, rsk="RSK", csh="CSH"):
         """
         create class from mid and widths
+        
+        :m:             the (geometric) middle between the two ranges
+        :g:             the geometric gap between the two ranges
+        :w:             the geometric width of the range
+        :amt_rsk:       the amount of risk asset the strategy is seeded with
+        :amt_csh:       the amount of cash the strategy is seeded with
+        :rsk:           risk asset name (default RSK)
+        :csh:           cash name (default CSH)
+
+            p_buy_a     = m/(1+g)
+            p_buy_b     = m/(1+g)/(1+w)
+            p_sell_a    = m*(1+g)
+            p_sell_b    = m*(1+g)*(1+w)
+        """
+        p_buy_a     = m/(1+g)
+        p_buy_b     = m/(1+g)/(1+w)
+        p_sell_a    = m*(1+g)
+        p_sell_b    = m*(1+g)*(1+w)
+
+        return cls(p_buy_a, p_buy_b, p_sell_a, p_sell_b, amt_rsk, amt_csh, rsk, csh)
+    
+    # DEPRECATED
+    @classmethod
+    def from_mwh(cls, m=100, g=0, w=0, amt_rsk=0, amt_csh=0, rsk="RSK", csh="CSH"):
+        """
+        DEPRECATED -- used from_mgw | create class from mid and widths
         
         :m:             the (geometric) middle between the two ranges
         :g:             the geometric gap between the two ranges
@@ -60,5 +86,3 @@ class strategy():
     @property
     def slashpair(self):
         return f"{self.rsk}/{self.csh}"
-
-strategy.from_mwh(2000, 0.1, 0.05, amt_rsk=1, rsk="ETH", csh="USD").p
