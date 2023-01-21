@@ -13,17 +13,19 @@
 #     name: python3
 # ---
 
-from fls import *
+from carbon.helpers.fls import *
 import sys
 import os
 import re
 from collections import namedtuple
-__VERSION__ = "1.2"
-__DATE__ = "17/Dec/2022"
+__VERSION__ = "1.2.1"
+__DATE__ = "21/Jan/2022"
 
 # VERSION HISTORY
 #
-# - v1.1: [TEST] and [NOTEST]; defaults
+# - v1.2.1: import fls from Carbon
+# - v1.2: [TEST] and [NOTEST]; defaults
+#
 
 # # Convert NBTest
 #

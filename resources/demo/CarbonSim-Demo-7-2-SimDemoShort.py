@@ -13,17 +13,14 @@
 #     name: python3
 # ---
 
-from carbon import CarbonSimulatorUI, CarbonOrderUI, P, __version__, __date__
-from math import sqrt, exp, log
-import numpy as np
-from matplotlib import pyplot as plt
+# +
+from carbon.helpers.stdimports import *
+from carbon.helpers.fls import fsave
+from time import time as timestamp
+
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
-from time import time as timestamp
-import os
-print(f"Carbon v{__version__} ({__date__})")
-print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
-print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
+# -
 
 # # Carbon Simulation - Demo 7-2 (Sim Demo Short)
 
@@ -143,7 +140,6 @@ if OUTPATH:
 # -
 
 if OUTPATH:
-    from fls import fsave
     filelist = os.listdir(OUTPATH)
     filelist = [fn for fn in filelist if fn[-4:]==".png"]
     markdown = "\n\n".join(f"![]({OUTPATH}/{fn})" for fn in filelist)
