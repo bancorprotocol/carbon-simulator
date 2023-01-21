@@ -11,8 +11,8 @@ v2.2.1 - CarbonOrderUI linked
 v2.3 - added fast router
 v2.4 - limit orders, changed trade_action -> match_by in _trade
 """
-__version__ = "2.4"
-__date__ = "12/Jan/2023"
+__version__ = "2.4+excl"
+__date__ = "21/Jan/2023"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -238,7 +238,7 @@ class CarbonSimulatorUI:
         return id1
 
     def add_order(
-            self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: Any = None
+            self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: str = None
     ) -> Dict[str, Any]:
         """
         adds a sell order for tkn
@@ -473,7 +473,8 @@ class CarbonSimulatorUI:
             limit_price: Any = None,
             limit_amt: Any = None,
             inpair: bool = True,
-            use_positions: List[int] = None,
+            use_positions: set = None,
+            excl_positions: set = None,
             threshold_orders: int = None,
             use_positions_matchlevel: List[int] = [],
             is_by_target: bool = False,
@@ -493,7 +494,8 @@ class CarbonSimulatorUI:
         :limit_amt:             the minimum amount of tokens the traders expects to obtain; quoted in units of the
                                 other token, ie `carbon_pair.other(tkn)`**
         :inpair:                if True, only match within pair; if False (default), route through all available pairs
-        :use_positions:         the positions to use for the trade (default: all positions)
+        :use_positions:         the positions to use for the trade as set; if None (default) all positions
+        :excl_positions:        the positions to exclude as set; if None (default) no exclusions
         :threshold_orders:      the maximum number of order to be routed through using the alpha router
         :support_partial:       if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
 
@@ -529,9 +531,14 @@ class CarbonSimulatorUI:
         try:
             decimals = self.decimals
             carbon_pair_r = carbon_pair.reverse
+            if not use_positions is None:
+                use_positions = set(use_positions)
+            if not excl_positions is None:
+                excl_positions = set(excl_positions)
+                raise ValueError("Excluding positions not implemented yet", excl_positions)
 
             if not inpair:
-                raise NotImplementedError(
+                raise ValueError(
                     "Currently only inpair routing implemented", inpair
                 )
 
@@ -786,7 +793,8 @@ class CarbonSimulatorUI:
             limit_price: Any = None,
             limit_amt: Any = None,
             threshold_orders: int = 10,
-            use_positions: List[int] = None,
+            use_positions: set = None,
+            excl_positions: set = None,
             use_positions_matchlevel: List[int] = [],
             support_partial: bool = False,
     ) -> Dict[str, Any]:
@@ -803,7 +811,8 @@ class CarbonSimulatorUI:
         :limit_amt:         the minimum amount of tokens the traders expects to obtain; quoted in units of the
                             other token, ie `carbon_pair.other(tkn)`*
         :threshold_orders:  the maximum number of order to be routed through using the alpha router
-        :use_positions:     the positions to use for the trade (default: all positions)
+        :use_positions:         the positions to use for the trade as set; if None (default) all positions
+        :excl_positions:    the positions to exclude as set; if None (default) no exclusions
         :support_partial:   if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
         
         *limit_price and limit_amt are redundant; either one of them can be given, or none, but not both
@@ -826,6 +835,9 @@ class CarbonSimulatorUI:
                     limit_amt=limit_amt,
                     threshold_orders=threshold_orders,
                     support_partial=support_partial,
+                    use_positions=use_positions,
+                    excl_positions=excl_positions,
+                    use_positions_matchlevel=use_positions_matchlevel
                 )
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
@@ -845,6 +857,7 @@ class CarbonSimulatorUI:
                 inpair=inpair,
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
+                excl_positions=excl_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
                 is_by_target=False,
                 support_partial=support_partial,
@@ -866,24 +879,26 @@ class CarbonSimulatorUI:
             limit_price: Any = None,
             limit_amt: Any = None,
             threshold_orders: int = 10,
-            use_positions: List[int] = None,
+            use_positions: set = None,
+            excl_positions: set = None,
             use_positions_matchlevel: List[int] = [],
             support_partial: bool = False,
     ) -> Dict[str, Any]:
         """
         the AMM sells (and the trader buys) `amt` > 0 of `tkn`
 
-        :tkn:               the token sold by the AMM and bought by the trader, eg "ETH"
-        :amt:               the amount sold by the AMM and bought by the trader (must be positive)
-        :pair:              the token pair to which the trade corresponds, eg "ETHUSD"
-        :execute:           if True (default), the trade is executed; otherwise only routing is shown
-        :inpair:            if True, only match within pair; if False (default), route through all available pairs
-        :limit_price:       the limit price of the order (this price or better from point of view
-                            of the trader, not the AMM!), quoted in convention of the pair*
+        :tkn:                   the token sold by the AMM and bought by the trader, eg "ETH"
+        :amt:                   the amount sold by the AMM and bought by the trader (must be positive)
+        :pair:                  the token pair to which the trade corresponds, eg "ETHUSD"
+        :execute:               if True (default), the trade is executed; otherwise only routing is shown
+        :inpair:                if True, only match within pair; if False (default), route through all available pairs
+        :limit_price:           the limit price of the order (this price or better from point of view
+                                of the trader, not the AMM!), quoted in convention of the pair*
         :limit_amt:         the minimum amount of tokens the traders expects to obtain; quoted in units of the
                             other token, ie `carbon_pair.other(tkn)`*
-        :threshold_orders:  the maximum number of order to be routed through using the alpha router 
-        :use_positions:     the positions to use for the trade (default: all positions)
+        :threshold_orders:      the maximum number of order to be routed through using the alpha router 
+        :use_positions:             the positions to use for the trade as set; if None (default) all positions
+        :excl_positions:        the positions to exclude as set; if None (default) no exclusions
         :support_partial:   if True (not default), and insufficient liquidity for a trade request, a partial fullfilment is made
         
         *limit_price and limit_amt are redundant; either one of them can be given, or none, but not both
@@ -905,6 +920,9 @@ class CarbonSimulatorUI:
                     limit_amt=limit_amt,
                     threshold_orders=threshold_orders,
                     support_partial=support_partial,
+                    use_positions=use_positions,
+                    excl_positions=excl_positions,
+                    use_positions_matchlevel=use_positions_matchlevel
                 )
 
             # get the token `tkn`, the other token `tkno` and the CarbonPair object
@@ -925,6 +943,7 @@ class CarbonSimulatorUI:
                 inpair=inpair,
                 threshold_orders=threshold_orders,
                 use_positions=use_positions,
+                excl_positions=excl_positions,
                 use_positions_matchlevel=use_positions_matchlevel,
                 is_by_target=True,
                 support_partial=support_partial,
