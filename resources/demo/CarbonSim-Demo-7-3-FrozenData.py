@@ -16,7 +16,7 @@
 # +
 from carbon.helpers.stdimports import *
 #from carbon.helpers.pdread import *
-from carbon.helpers import j, strategy, pdread, Params
+from carbon.helpers import j, strategy, pdread, Params, fsave
 from carbon.helpers.simulation import run_sim, plot_sim
 
 plt.style.use('seaborn-dark')
@@ -37,7 +37,7 @@ params = Params(
     plotSell          = True,    # whether to plot sell (ask) ranges and marginal prices
     plotPrice         = True,    # whether to plot the price
     plotValueTotal    = True,    # whether to plot the aggregate portfolio value
-    plotValueCsh      = True,   # whether to plot the cash portion of the portfolio value
+    plotValueCsh      = False,   # whether to plot the cash portion of the portfolio value
     plotValueRsk      = False,   # whether to plot the risk asset portion of the portfolio value
 )
 
@@ -58,7 +58,7 @@ print(f"OUTPATH = {OUTPATH}")
 # filename determines collection, eg `RANPTH-05000-0000` is sig=50% vol and mu=0% drift; see available collections in the `ls` command below
 
 # +
-DATAID = "RANPTH-05000-0000"
+DATAID = "RAN-050-00"
 
 DATAPATH = "../data"
 DATAFN = j(DATAPATH, f"{DATAID}.pickle")
@@ -82,13 +82,10 @@ print(f"Chose data id {DATAID}")
 # -
 
 strats = (
-    strategy.from_mwh(m=100, g=0.02, w=0.13, amt_rsk=1, amt_csh=0.001),
-    strategy.from_mwh(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0.001),
-    [strategy.from_mwh(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0.001),
-    strategy.from_mwh(m=100, g=0.02, w=0.1, amt_rsk=1, amt_csh=0.001)],
-#     strategy.from_mwh(m=100, g=0.20, w=0.05, amt_rsk=1, amt_csh=0),
-#     strategy.from_mwh(m=100, g=0.10, w=0.20, amt_rsk=1, amt_csh=0),
-#     strategy.from_mwh(m=100, g=0.20, w=0.20, amt_rsk=1, amt_csh=0),
+    strategy.from_mgw(m=100, g=0.02, w=0.13, amt_rsk=1, amt_csh=0.001),
+    strategy.from_mgw(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0.001),
+    [strategy.from_mgw(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0.001),
+    strategy.from_mgw(m=100, g=0.02, w=0.1, amt_rsk=1, amt_csh=0.001)],
 )
 
 # ## Simulation
@@ -105,13 +102,10 @@ for colnm in ["p0000", "p0001", "p0002"][:1]:
             plt.savefig(j(OUTPATH, f"{DATAID}-{colnm}-{ix}.png"))
         plt.show()
 
-
-
-
 if OUTPATH:
     # !ls {OUTPATH}/*.png
 
-if OUTPATH and OUTPATH != ".":
+if OUTPATH:
     filelist = os.listdir(OUTPATH)
     filelist = [fn for fn in filelist if fn[-4:]==".png"]
     markdown = "\n\n".join(f"![]({OUTPATH}/{fn})" for fn in filelist)
