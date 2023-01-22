@@ -1,9 +1,12 @@
 """
 Carbon helper module - run the simulation
 """
+__VERSION__ = "1.0"
+__DATE__ = "23/01/2023"
 
 from collections import namedtuple as _nt
 import numpy as _np
+from math import sqrt
 from matplotlib import pyplot as _plt
 from .. import CarbonSimulatorUI as _CarbonSimulatorUI
 from .params import Params
@@ -31,49 +34,64 @@ def run_sim(strat, path):
     for strat_ in strat:
         Sim.add_strategy(*strat_.p)
     ouis = Sim.state()["orderuis"]
+
+    # FACTS:
+    # ouis[0].pair.tknb == ouis[0].tkn  -> buy/bid
+    # ouis[1].pair.tknq == ouis[1].tkn  -> sell/ask
+    # in other words
+    # oui.tkn == tknb --> buy/bid
+    # oui.tkn == tknq --> sell/ask
+    # of course oui also has the bidask property...
     
-    rskamt_r    = _np.array([ouis[0].y])
-    cshamt_r    = _np.array([ouis[1].y])
-    margpbuy_r  = _np.array([ouis[0].p_marg])
-    margpsell_r = _np.array([ouis[1].p_marg])
+    ouis_buy  = tuple(o for _,o in ouis.items() if o.bidask == "BID") # 0
+    ouis_sell = tuple(o for _,o in ouis.items() if o.bidask == "ASK") # 1
+    
+    rskamt_r     = _np.array([sum(o.y for o in ouis_buy),])
+    cshamt_r     = _np.array([sum(o.y for o in ouis_sell),])
+    margpbuy_rz  = [tuple(o.p_marg for o in ouis_buy),]
+    margpsell_rz = [tuple(o.p_marg for o in ouis_sell),]
     for spot in path[1:]:
         for oui in ouis.values():
             oui.tradeto(spot)
-        rskamt_r      = _np.append(rskamt_r, [ouis[0].y])
-        cshamt_r      = _np.append(cshamt_r, [ouis[1].y])
+        rskamt_r      = _np.append(rskamt_r, [sum(o.y for o in ouis_buy),])
+        cshamt_r      = _np.append(cshamt_r, [sum(o.y for o in ouis_sell),])
         
-        margpbuy_r    = _np.append(margpbuy_r, [ouis[0].p_marg])
-        margpsell_r   = _np.append(margpsell_r, [ouis[1].p_marg])
-            # NOTE: THIS IS BROKEN FOR STRATEGY PORTOFOLIOS
-            # WE NEED TO USE THE MAX OF THE BID, AND MIN OF ASK INSTEAD
-            # ALTERNATIVELY WE CHANGE IT WHENEVER TRADETO WORKED IN THE RIGHT DIRECTION
+        margpbuy_rz  += [tuple(o.p_marg for o in ouis_buy),]
+        margpsell_rz += [tuple(o.p_marg for o in ouis_sell),]
+            # this creates margpbuy_r0 as a single series of n-tuples
+            # once we are done we want to splice this into n series of singles
+            # remember, if z = zip(a,b,c) then a,b,c = zip(*z)
+
+    margpbuy_r  = tuple(zip(*margpbuy_rz))
+    margpsell_r = tuple(zip(*margpsell_rz))
+
     
     value_r = rskamt_r * path + cshamt_r
     return simresults_nt(rskamt_r, cshamt_r, value_r, margpbuy_r, margpsell_r) 
 
-_DEFAULT_PARAMS = Params(
-    plotRanges      = True,      # whether to shade the ranges
-    plotBuy         = True,      # whether to plot buy (bid) ranges and marginal prices
-    plotSell        = True,      # whether to plot sell (ask) ranges and marginal prices
-    plotMargP       = True,      # whetger to plot the marginal price for the ranges
+SIM_DEFAULT_PARAMS = Params(
     plotPrice       = True,      # whether to plot the price
-    plotValueTotal  = True,      # whether to plot the aggregate portfolio value
-    plotValueCsh    = True,      # whether to plot the cash portion of the portfolio value
+    plotValueCsh    = False,     # whether to plot the cash portion of the portfolio value
     plotValueRsk    = False,     # whether to plot the risk asset portion of the portfolio value
+    plotValueTotal  = True,      # whether to plot the aggregate portfolio value
+    plotRanges      = True,      # whether to shade the ranges
+    plotMargP       = True,      # whetger to plot the marginal price for the ranges
+    plotBid         = True,      # whether to plot buy (bid) ranges and marginal prices
+    plotAsk         = True,      # whether to plot sell (ask) ranges and marginal prices
 )
 
 def plot_sim(strat, path, simresults, dataid, params):
     """
     plots the simulation chart
 
-    :strat:         the strategy object
+    :strat:         the strategy object, or a list thereof in case of multiple strategies
     :path:          the spot path used in the simulation, as pandas series
-    :simresults:    the simresults_nt returned by run_sim (rskamt_r, cshamt_r, value_r)
-    :dataid:        a description of the data used in the title
-    :params:        the parameter object (can be a dict)
+    :simresults:    the simresults_nt returned by run_sim (rskamt_r, cshamt_r, value_r, ...)
+    :dataid:        a description of the data the will be used in the title
+    :params:        the parameter object (can be a dict; defaults SIM_DEFAULT_PARAMS)
     """
 
-    p = Params.construct(params, defaults=_DEFAULT_PARAMS.params)
+    p = Params.construct(params, defaults=SIM_DEFAULT_PARAMS.params)
     
     if isinstance(strat, _strategy):
         strat = (strat,)
@@ -90,33 +108,31 @@ def plot_sim(strat, path, simresults, dataid, params):
     amt_csh  = sum(strat_.amt_csh  for strat_ in strat)
     rsk      = strat[0].rsk
     csh      = strat[0].csh
-    
+    mid      = sqrt(p_buy_a*p_sell_a)
+
     descr = strat[0].descr if len(strat)==1 else f"strategy portfolio ({len(strat)} items)"
-    descr = f"BID {p_buy_b:.2f}-{p_buy_a:.2f} [{amt_csh:.2f} {csh}] -- ASK {p_sell_a:.2f}-{p_sell_b:.2f} [{amt_rsk:.2f} {rsk}]"
+    descr = f"BID {p_buy_b:.1f}-{p_buy_a:.1f} [{amt_csh:.0f} {csh}] - MID {mid:.1f} - ASK {p_sell_a:.1f}-{p_sell_b:.1f} [{amt_rsk:.1f} {rsk}]"
     
     rskamt_f, cshamt_r, value_r, margpbuy_r, margpsell_r = simresults
-    
-    #rskamt_f  = rskamt_r[-1]
-    #cshamt_f  = cshamt_r[-1]
 
     fig, ax1 = _plt.subplots()
     ax2 = ax1.twinx()
     plots = []
     if p.plotPrice:
         plots += ax1.plot(path, color="0.7", label="price [lhs]")
-    if len(strat) == 1:
-        if p.plotMargP:
-            # this is temporary; marginal prices are broken for multiple strategies
-            if p.plotBuy:
-                plots += ax1.plot(path.index, margpsell_r, color="green", linestyle="dotted", linewidth=0.8, label="bid [lhs]")
-            if p.plotSell:
-                plots += ax1.plot(path.index, margpbuy_r, color="red", linestyle="dotted", linewidth=0.8, label="ask [lhs]")
+    if p.plotMargP:
+        for margpsell_ri, margpbuy_ri in zip(margpsell_r, margpbuy_r):
+            if p.plotBid:
+                plots += ax1.plot(path.index, margpsell_ri, color="green", linestyle="dotted", linewidth=0.8, label="bid [lhs]")
+            if p.plotAsk:
+                plots += ax1.plot(path.index, margpbuy_ri, color="red", linestyle="dotted", linewidth=0.8, label="ask [lhs]")
     if p.plotRanges:
-        if p.plotBuy:
-            [ax1.fill_between(path.index, p_buy_a, p_buy_b, color="lightgreen", alpha=0.1, label="bid range [lhs]")]
-        if p.plotSell:
-            [ax1.fill_between(path.index, p_sell_a, p_sell_b, color="lightcoral", alpha=0.1, label="ask range [lhs]")]
-            # use plots += [ax1.plot(...)] to add the above plots to the legend
+        for s in strat:
+            if p.plotBid:
+                [ax1.fill_between(path.index, s.p_buy_a, s.p_buy_b, color="lightgreen", alpha=0.1, label="bid range [lhs]")]
+            if p.plotAsk:
+                [ax1.fill_between(path.index, s.p_sell_a, s.p_sell_b, color="lightcoral", alpha=0.1, label="ask range [lhs]")]
+                # use plots += [ax1.plot(...)] to add the above plots to the legend
     
     if p.plotValueTotal:
         plots += ax2.plot(value_r, color = "blue", label="portfolio value [rhs]")

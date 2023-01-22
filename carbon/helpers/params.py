@@ -40,17 +40,22 @@ class Params():
         self._defaults = None
     
     @classmethod
-    def construct(cls, dct, defaults=None):
+    def construct(cls, dct=None, defaults=None):
         """
         alternative constructor from dct
 
-        :dct:       a dict object; can also be a Params object which will be returned as is
+        :dct:       typically a dict object; can also be a Params object which will be replicated
+                    (defaults can either be on the original object or here, but not on both; if
+                    you want to merge defaults use set_default on the created object); a value
+                    of None creates an empty object
         :defaults:  the default values for this object; note that they can not be passed 
                     using the standard constructor; if the object is already a params object,
                     the existing defaults will be updated, and overwritten if they exist
         :returns:   a newly created Params object
         """
-        if isinstance(dct, cls):
+        if not dct:
+            result = cls()
+        elif isinstance(dct, cls):
             result = cls(**dct._params)
             if not dct._defaults is None and not defaults is None:
                 raise ValueError("Must not provide default in both constructor and dct", dct, defaults)
