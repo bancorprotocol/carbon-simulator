@@ -1,5 +1,6 @@
 resources/NBTest/carbon
 resources/demo/carbon
+resources/examples/carbon
 resources/data/charts
 __pycache__/*
 __pycache__
