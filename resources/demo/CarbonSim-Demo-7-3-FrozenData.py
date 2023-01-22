@@ -17,12 +17,12 @@
 from carbon.helpers.stdimports import *
 from carbon.helpers.pdread import *
 from carbon.helpers.strategy import *
-from carbon.helpers.fls import *
-from carbon.helpers.simulation import run_sim, plot_sim
+#from carbon.helpers.simulation import run_sim, plot_sim
+from simulation import run_sim, plot_sim
 
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
-require_version("2.2.2")
+print_version(require="2.2.2")
 # -
 
 # # Carbon Simulation - Demo 7-3 (frozen data)
@@ -56,19 +56,31 @@ print(f"Chose data id {DATAID}")
 
 # ### Strategies
 #
-# This is the list of strategies to be tested against the paths. The 
+# This is the list of strategies to be tested against the paths. Note: it is recommended to always to a minimal amount of tokens into either side of the strategy in order to ensure that that marginal price is well defined. For the simulation it does not make a difference, provided the amounts are small. 
+
+# +
+# strats = (
+#     strategy.from_mwh(m=100, g=0.10, w=0.05, amt_rsk=1, amt_csh=0),
+#     strategy.from_mwh(m=100, g=0.20, w=0.05, amt_rsk=1, amt_csh=0),
+#     strategy.from_mwh(m=100, g=0.10, w=0.20, amt_rsk=1, amt_csh=0),
+#     strategy.from_mwh(m=100, g=0.20, w=0.20, amt_rsk=1, amt_csh=0),
+# )
+# #strats
+# -
 
 strats = (
-    strategy.from_mwh(m=100, g=0.10, w=0.05, amt_rsk=1, amt_csh=0),
-    strategy.from_mwh(m=100, g=0.20, w=0.05, amt_rsk=1, amt_csh=0),
-    strategy.from_mwh(m=100, g=0.10, w=0.20, amt_rsk=1, amt_csh=0),
-    strategy.from_mwh(m=100, g=0.20, w=0.20, amt_rsk=1, amt_csh=0),
+    strategy.from_mwh(m=100, g=0.02, w=0.13, amt_rsk=1, amt_csh=0.001),
+    strategy.from_mwh(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0.001),
+    [strategy.from_mwh(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0.001),
+    strategy.from_mwh(m=100, g=0.02, w=0.1, amt_rsk=1, amt_csh=0.001)],
+#     strategy.from_mwh(m=100, g=0.20, w=0.05, amt_rsk=1, amt_csh=0),
+#     strategy.from_mwh(m=100, g=0.10, w=0.20, amt_rsk=1, amt_csh=0),
+#     strategy.from_mwh(m=100, g=0.20, w=0.20, amt_rsk=1, amt_csh=0),
 )
-#strats
 
 # ## Simulation
 
-for colnm in ["p0000", "p0001", "p0002"]:
+for colnm in ["p0000", "p0001", "p0002"][:1]:
     for ix, strat in enumerate(strats):
     
         path = pdread(DATAFN, colnm)
@@ -81,6 +93,8 @@ for colnm in ["p0000", "p0001", "p0002"]:
         plt.show()
 
 
+
+
 if OUTPATH:
     # !ls {OUTPATH}/*.png
 
@@ -90,5 +104,3 @@ if OUTPATH and OUTPATH != ".":
     markdown = "\n\n".join(f"![]({OUTPATH}/{fn})" for fn in filelist)
     fsave(markdown, "_sim-charts.md", OUTPATH)
     # !pandoc {OUTPATH}/_sim-charts.md -o {OUTPATH}/_sim-charts.docx
-
-

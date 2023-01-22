@@ -6,7 +6,7 @@ Carbon helper module -- check version requirements are met
 import re as _re
 from .. import __version__
 
-class VersionTooLowError(RuntimeError): pass
+class VersionRequirementNotMetError(RuntimeError): pass
 
 def split_version_str(vstr):
     """splits version mumber string into tuple (int, int, int, ...)"""
@@ -35,7 +35,7 @@ def require_version(required, actual=None, raiseonfail=True):
     if not raiseonfail:
         return result
     if not result:
-        raise VersionTooLowError(f"Version requirements not met (required = {rl}, actual = {al})", required, actual)
+        raise VersionRequirementNotMetError(f"Version requirements not met (required = {rl}, actual = {al})", required, actual)
 
 def _require_version(rl, al):
     """

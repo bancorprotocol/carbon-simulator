@@ -20,6 +20,7 @@ from time import time as timestamp
 
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
+print_version(require="2.2.2")
 # -
 
 # # Carbon Simulation - Demo 7-2 (Sim Demo Short)

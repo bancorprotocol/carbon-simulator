@@ -1,12 +1,13 @@
 """
 Carbon helper module - run the simulation
 """
+print("[simulation] LOCAL IMPORT")
 
 from collections import namedtuple as _nt
 import numpy as _np
 from matplotlib import pyplot as _plt
-from .. import CarbonSimulatorUI as _CarbonSimulatorUI
-from .strategy import strategy as _strategy
+from carbon import CarbonSimulatorUI as _CarbonSimulatorUI
+from carbon.helpers.strategy import strategy as _strategy
 
 simresults_nt = _nt("simresults", "rskamt_r, cshamt_r, value_r, margpbuy_r, margpsell_r")
 

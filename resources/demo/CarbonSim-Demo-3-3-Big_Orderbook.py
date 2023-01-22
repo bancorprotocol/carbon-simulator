@@ -14,14 +14,15 @@
 #     name: python3
 # ---
 
-from carbon import P, CarbonOrderUI, CarbonSimulatorUI, analytics as cal, __version__, __date__
+# +
+from carbon.helpers.stdimports import *
 from carbon.helpers.fls import fload, fsave
-import numpy as np
-from matplotlib import pyplot as plt
-import pandas as pd
 from collections import namedtuple
-print(f"Carbon Version v{__version__} ({__date__})", )
-print (f"Analytics Version v{cal.__version__} ({cal.__date__})")
+
+plt.style.use('seaborn-dark')
+plt.rcParams['figure.figsize'] = [12,6]
+print_version(require="2.2.2")
+# -
 
 
 # # Carbon Simulation - Demo 3-3 (Big Orderbook)
@@ -180,5 +181,5 @@ data = {
 }
 #data
 
-#fsave(data, "template.json", DATAPATH, json=True)
+# fsave(data, "template.json", DATAPATH, json=True)
 
