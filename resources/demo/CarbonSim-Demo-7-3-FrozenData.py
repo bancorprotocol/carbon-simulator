@@ -15,8 +15,8 @@
 
 # +
 from carbon.helpers.stdimports import *
-from carbon.helpers.pdread import *
-from carbon.helpers.strategy import *
+#from carbon.helpers.pdread import *
+from carbon.helpers import j, strategy, pdread, Params
 from carbon.helpers.simulation import run_sim, plot_sim
 
 plt.style.use('seaborn-dark')
@@ -27,6 +27,20 @@ print_version(require="2.2.3")
 # # Carbon Simulation - Demo 7-3 (frozen data)
 
 # ## Setup
+
+# ### Parameter
+
+params = Params(
+    plotRanges        = True,    # whether to shade the ranges
+    plotMargP         = True,    # whetger to plot the marginal price for the ranges
+    plotBuy           = True,    # whether to plot buy (bid) ranges and marginal prices
+    plotSell          = True,    # whether to plot sell (ask) ranges and marginal prices
+    plotPrice         = True,    # whether to plot the price
+    plotValueTotal    = True,    # whether to plot the aggregate portfolio value
+    plotValueCsh      = True,   # whether to plot the cash portion of the portfolio value
+    plotValueRsk      = False,   # whether to plot the risk asset portion of the portfolio value
+)
+
 
 # ### Generated output
 #
@@ -84,7 +98,7 @@ for colnm in ["p0000", "p0001", "p0002"][:1]:
     
         path = pdread(DATAFN, colnm)
         simresults = run_sim(strat, path)
-        plot_sim(strat, path, simresults, f"{DATAID} [{colnm}]")
+        plot_sim(strat, path, simresults, f"{DATAID} [{colnm}]", params)
         
         # save charts
         if isinstance(OUTPATH, str):

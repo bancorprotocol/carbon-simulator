@@ -94,11 +94,21 @@ assert p.b == 2
 assert p.c == 3
 assert p.get_default("b") == 20
 pp = Params.construct(p)
-assert pp is p
+assert not pp is p
+assert p.params == pp.params
 try:
     ppp = Params.construct(p, defaults={"e":100})
 except ValueError as e:
     print(e)
+
+p  = Params.construct({'a': 1, 'b': 2})
+defaults = {'b': 20, 'c': 3}
+pp = Params.construct(p, defaults=defaults)
+assert not pp is p
+assert p.params == pp.params
+assert pp.defaults == defaults
+assert not pp.defaults is defaults
+assert not pp._defaults is defaults
 
 # ## helpers stdimport
 

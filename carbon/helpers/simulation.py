@@ -6,6 +6,7 @@ from collections import namedtuple as _nt
 import numpy as _np
 from matplotlib import pyplot as _plt
 from .. import CarbonSimulatorUI as _CarbonSimulatorUI
+from .params import Params
 from .strategy import strategy as _strategy
 
 simresults_nt = _nt("simresults", "rskamt_r, cshamt_r, value_r, margpbuy_r, margpsell_r")
@@ -50,8 +51,18 @@ def run_sim(strat, path):
     value_r = rskamt_r * path + cshamt_r
     return simresults_nt(rskamt_r, cshamt_r, value_r, margpbuy_r, margpsell_r) 
 
+_DEFAULT_PARAMS = Params(
+    plotRanges      = True,      # whether to shade the ranges
+    plotBuy         = True,      # whether to plot buy (bid) ranges and marginal prices
+    plotSell        = True,      # whether to plot sell (ask) ranges and marginal prices
+    plotMargP       = True,      # whetger to plot the marginal price for the ranges
+    plotPrice       = True,      # whether to plot the price
+    plotValueTotal  = True,      # whether to plot the aggregate portfolio value
+    plotValueCsh    = True,      # whether to plot the cash portion of the portfolio value
+    plotValueRsk    = False,     # whether to plot the risk asset portion of the portfolio value
+)
 
-def plot_sim(strat, path, simresults, dataid):
+def plot_sim(strat, path, simresults, dataid, params):
     """
     plots the simulation chart
 
@@ -59,7 +70,10 @@ def plot_sim(strat, path, simresults, dataid):
     :path:          the spot path used in the simulation, as pandas series
     :simresults:    the simresults_nt returned by run_sim (rskamt_r, cshamt_r, value_r)
     :dataid:        a description of the data used in the title
+    :params:        the parameter object (can be a dict)
     """
+
+    p = Params.construct(params, defaults=_DEFAULT_PARAMS.params)
     
     if isinstance(strat, _strategy):
         strat = (strat,)
@@ -88,17 +102,31 @@ def plot_sim(strat, path, simresults, dataid):
     fig, ax1 = _plt.subplots()
     ax2 = ax1.twinx()
     plots = []
-    plots += ax1.plot(path, color="0.7", label="price [lhs]")
+    if p.plotPrice:
+        plots += ax1.plot(path, color="0.7", label="price [lhs]")
     if len(strat) == 1:
-        # this is temporary; marginal prices are broken for multiple strategies
-        plots += ax1.plot(path.index, margpsell_r, color="green", linestyle="dotted", linewidth=0.8, label="bid [lhs]")
-        plots += ax1.plot(path.index, margpbuy_r, color="red", linestyle="dotted", linewidth=0.8, label="ask [lhs]")
-    [ax1.fill_between(path.index, p_buy_a, p_buy_b, color="lightgreen", alpha=0.1, label="bid range [lhs]")]
-    [ax1.fill_between(path.index, p_sell_a, p_sell_b, color="lightcoral", alpha=0.1, label="ask range [lhs]")]
-        # use plots += [ax1.plot(...)] to add the above plots to the legend
-    plots += ax2.plot(value_r, color = "blue", label="portfolio value [rhs]")
-    plots += ax2.plot(value_r.index, cshamt_r, color="blue", linestyle="dotted", label=f"{csh} portion [rhs]")
-    #plots += ax2.plot(value_r.index, cshamt_r, color = "skyblue", label="cash [rhs]")
+        if p.plotMargP:
+            # this is temporary; marginal prices are broken for multiple strategies
+            if p.plotBuy:
+                plots += ax1.plot(path.index, margpsell_r, color="green", linestyle="dotted", linewidth=0.8, label="bid [lhs]")
+            if p.plotSell:
+                plots += ax1.plot(path.index, margpbuy_r, color="red", linestyle="dotted", linewidth=0.8, label="ask [lhs]")
+    if p.plotRanges:
+        if p.plotBuy:
+            [ax1.fill_between(path.index, p_buy_a, p_buy_b, color="lightgreen", alpha=0.1, label="bid range [lhs]")]
+        if p.plotSell:
+            [ax1.fill_between(path.index, p_sell_a, p_sell_b, color="lightcoral", alpha=0.1, label="ask range [lhs]")]
+            # use plots += [ax1.plot(...)] to add the above plots to the legend
+    
+    if p.plotValueTotal:
+        plots += ax2.plot(value_r, color = "blue", label="portfolio value [rhs]")
+
+    if p.plotValueCsh:
+        plots += ax2.plot(value_r.index, cshamt_r, color="blue", linestyle="dashed", linewidth=0.8, label=f"{csh} portion [rhs]")
+
+    if p.plotValueRsk:
+        plots += ax2.plot(value_r.index, value_r-cshamt_r, color="blue", linestyle="dotted", linewidth=1, label=f"{rsk} portion [rhs]")
+    
     ax2.set_ylabel(f"portfolio value ({csh})")
     ax1.set_ylabel(f"price ({csh} per {rsk})")
     #ax1.set_xlabel("date")

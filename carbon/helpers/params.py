@@ -48,18 +48,17 @@ class Params():
         :defaults:  the default values for this object; note that they can not be passed 
                     using the standard constructor; if the object is already a params object,
                     the existing defaults will be updated, and overwritten if they exist
-        :returns:   a newly created Params object if a dict has been passed, or the Params
-                    object itself if a Params object has been past (idempotent)
+        :returns:   a newly created Params object
         """
         if isinstance(dct, cls):
-            result = dct
+            result = cls(**dct._params)
             if not dct._defaults is None and not defaults is None:
                 raise ValueError("Must not provide default in both constructor and dct", dct, defaults)
         else:
             result = cls(**dct)
 
         if defaults: 
-            result._defaults = dict(defaults)
+            result._defaults = {**defaults}
         return result
         
 
