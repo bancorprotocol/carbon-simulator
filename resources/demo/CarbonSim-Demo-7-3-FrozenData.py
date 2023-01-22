@@ -17,12 +17,11 @@
 from carbon.helpers.stdimports import *
 from carbon.helpers.pdread import *
 from carbon.helpers.strategy import *
-#from carbon.helpers.simulation import run_sim, plot_sim
-from simulation import run_sim, plot_sim
+from carbon.helpers.simulation import run_sim, plot_sim
 
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
-print_version(require="2.2.2")
+print_version(require="2.2.3")
 # -
 
 # # Carbon Simulation - Demo 7-3 (frozen data)
