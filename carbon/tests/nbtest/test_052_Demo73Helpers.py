@@ -11,20 +11,90 @@
 
 
 from carbon.helpers.stdimports import *
-from carbon.helpers.pdread import *
-from carbon.helpers.strategy import *
-from carbon.helpers.fls import *
-from carbon.helpers.version import VersionTooLowError
 
+from carbon.helpers.version import VersionRequirementNotMetError
 from carbon.helpers.simulation import run_sim, plot_sim
+
+from carbon.helpers import fload, fsave
+from carbon.helpers import Params
+from carbon.helpers import dfread, pdread, pathtime, pdcols, j
+from carbon.helpers import strategy
+from carbon.helpers import require_version
+from carbon.helpers import print_version
 
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
-
+print_version(require="2.3")
 
 
 #
 
+
+# ------------------------------------------------------------
+# Test      052
+# File      test_052_Demo73Helpers.py
+# Segment   params
+# ------------------------------------------------------------
+def test_params():
+# ------------------------------------------------------------
+    
+    p = Params(a=1, b=2)
+    assert p["a"] == 1
+    assert p.a == 1
+    assert p["c"] is None
+    print(p)
+    assert str(p) == "Params.construct({'a': 1, 'b': 2})"
+    assert p.params == {'a': 1, 'b': 2}
+    p["c"] = 5
+    assert p["c"] == 5
+    assert p.c == 5
+    result = p.add(d=10, e=11)
+    assert result is p
+    assert p["d"] == 10
+    assert p.e == 11
+    try:
+        p.z
+        raise RuntimeError("should raise")
+    except KeyError as e:
+        print(e)
+    
+    # +
+    p = Params(a=1, b=2)
+    assert p.defaults == {}
+    p.set_default(b=20, c=3)
+    assert str(p) == "Params.construct({'a': 1, 'b': 2}, defaults={'b': 20, 'c': 3})"
+    assert p.b == 2
+    assert p.get_default("b") == 20
+    assert p.c == 3
+    
+    p = Params(a=1, b=2)
+    assert p.get_default("c") is None
+    result = p.set_default()
+    assert result is p
+    p.set_default(c=10, d=11)
+    assert p.c == 10
+    assert p.d == 11
+    assert p.defaults == {'c': 10, 'd': 11}
+    assert p["e"] is None
+    try:
+        p.e
+        raise RuntimeError("should raise")
+    except KeyError as e:
+        pass
+    # -
+    
+    p = Params.construct({'a': 1, 'b': 2}, defaults={'b': 20, 'c': 3})
+    assert p.a == 1
+    assert p.b == 2
+    assert p.c == 3
+    assert p.get_default("b") == 20
+    pp = Params.construct(p)
+    assert pp is p
+    try:
+        ppp = Params.construct(p, defaults={"e":100})
+    except ValueError as e:
+        print(e)
+    
 
 # ------------------------------------------------------------
 # Test      052
@@ -79,7 +149,7 @@ def test_helpers_version():
     try:
         require_version("2.0", "1.0")
         run("must raise error")
-    except VersionTooLowError as e:
+    except VersionRequirementNotMetError as e:
         print(e)
     
 
