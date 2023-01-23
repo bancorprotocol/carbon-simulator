@@ -858,6 +858,8 @@ class CarbonOrderUI:
         except self.PriceOutOfBoundsErrorBeyondEnd:
             dy = self.dyfromp_f(self.p_end, checkbounds=False, raiseonerror=False)
         result = self.selly(dy, execute, allowneg=False, expandcurve=False, raiseonerror=raiseonerror)
+        if result is None:
+            raise RuntimeError("Unexpected None value", dy, self.yint, self.y, self.p_marg, p_marg, self)
         result["action"] = "byprice[tradeto]"
         return result
         
