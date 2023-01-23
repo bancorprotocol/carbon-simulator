@@ -1,11 +1,11 @@
 # ------------------------------------------------------------
-# Auto generated test file `test_049_LimitPrices.py`
+# Auto generated test file `test_903_LimitPricesSlow.py`
 # ------------------------------------------------------------
-# source file   = NBTest_049_LimitPrices.py
+# source file   = NBTest_903_LimitPricesSlow.py
 # source path   = /Users/skl/REPOES/Bancor/CarbonSimulator/resources/NBTest/
 # target path   = /Users/skl/REPOES/Bancor/CarbonSimulator/resources/NBTest/
-# test id       = 049
-# test comment  = LimitPrices
+# test id       = 903
+# test comment  = LimitPricesSlow
 # ------------------------------------------------------------
 
 
@@ -23,8 +23,8 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
 
 
 # ------------------------------------------------------------
-# Test      049
-# File      test_049_LimitPrices.py
+# Test      903
+# File      test_903_LimitPricesSlow.py
 # Segment   Limit prices
 # ------------------------------------------------------------
 def test_limit_prices():

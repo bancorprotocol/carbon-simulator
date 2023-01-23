@@ -1,11 +1,11 @@
 # ------------------------------------------------------------
-# Auto generated test file `test_047_FastRouter.py`
+# Auto generated test file `test_902_FastRouterSlow.py`
 # ------------------------------------------------------------
-# source file   = NBTest_047_FastRouter.py
+# source file   = NBTest_902_FastRouterSlow.py
 # source path   = /Users/skl/REPOES/Bancor/CarbonSimulator/resources/NBTest/
 # target path   = /Users/skl/REPOES/Bancor/CarbonSimulator/resources/NBTest/
-# test id       = 047
-# test comment  = FastRouter
+# test id       = 902
+# test comment  = FastRouterSlow
 # ------------------------------------------------------------
 
 
@@ -22,8 +22,8 @@ print(f"Carbon Version v{__version__} ({__date__})", )
 
 
 # ------------------------------------------------------------
-# Test      047
-# File      test_047_FastRouter.py
+# Test      902
+# File      test_902_FastRouterSlow.py
 # Segment   FastRouterTests
 # ------------------------------------------------------------
 def test_fastroutertests():

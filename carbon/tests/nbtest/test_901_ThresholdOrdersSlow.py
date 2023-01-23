@@ -1,11 +1,11 @@
 # ------------------------------------------------------------
-# Auto generated test file `test_046_ThresholdOrders.py`
+# Auto generated test file `test_901_ThresholdOrdersSlow.py`
 # ------------------------------------------------------------
-# source file   = NBTest_046_ThresholdOrders.py
+# source file   = NBTest_901_ThresholdOrdersSlow.py
 # source path   = /Users/skl/REPOES/Bancor/CarbonSimulator/resources/NBTest/
 # target path   = /Users/skl/REPOES/Bancor/CarbonSimulator/resources/NBTest/
-# test id       = 046
-# test comment  = ThresholdOrders
+# test id       = 901
+# test comment  = ThresholdOrdersSlow
 # ------------------------------------------------------------
 
 
@@ -18,8 +18,8 @@ print(f"Carbon Version v{__version__} ({__date__})", )
 
 
 # ------------------------------------------------------------
-# Test      046
-# File      test_046_ThresholdOrders.py
+# Test      901
+# File      test_901_ThresholdOrdersSlow.py
 # Segment   ThresholdOrdersUsePos
 # ------------------------------------------------------------
 def test_thresholdordersusepos():
