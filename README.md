@@ -174,6 +174,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 
 # Change log
 
+- **v2.2.4** marginal price at init; also yint, but still issues; added HODL and better legend to sim; strategy object; SharedVar; NBTest bugfix; adding PathGenerator to helpers; adding StartConditions to simulation; adding uniswap constructor to strategy; adding CryptoCompare to data and helpers; updated various helpers for market data, including scaling  
 - **v2.2.1, 2.2.2, 2.2.3** - created Demo 7-3 (key sim); created carbon.helpers module; widgets (for Demo 7-4 which is 7-3 with widgets); Binder optimizations
 - **v2.2** - benchmarks, alpha optimizer, fls, fast router, ob test, partial fill, limit amounts, CarbonOrderUI v1.6, notes folder; NBTest 46-51; Demo 3-8, 4-2, 4-3, 5-8, 7-1, 7-2
 - **v2.1** - new order book methodology, improved NBTest, added functionality to CarbonOrderUY, added CarbonCurves notebook, updated demo 3-2 to the new order book code
