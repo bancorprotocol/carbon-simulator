@@ -1,11 +1,11 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "1.0"
-__DATE__ = "23/01/2023"
+__VERSION__ = "1.0.1"
+__DATE__ = "24/01/2023"
 
 from dataclasses import dataclass as _dataclass
-
+from math import sqrt
 
 @_dataclass
 class strategy():
@@ -67,7 +67,7 @@ class strategy():
     @classmethod
     def from_mgw(cls, m=100, g=0, w=0, amt_rsk=0, amt_csh=0, rsk="RSK", csh="CSH"):
         """
-        create class from mid `m`, gap width `g`, and range width `w`
+        create instance from mid `m`, gap width `g`, and range width `w`
         
         :m:             the (geometric) middle between the two ranges
         :g:             the geometric gap between the two ranges
@@ -102,9 +102,11 @@ class strategy():
     
     @property
     def descr(s):
+        """returns a description of the strategy"""
         bid_s = f"BID {s.p_buy_b:.1f}-{s.p_buy_a:.1f} [{s.amt_csh} {s.csh}]"
         ask_s = f"ASK {s.p_sell_a:.1f}-{s.p_sell_b:.1f} [{s.amt_rsk} {s.rsk}]"
-        return f"{bid_s} -- {ask_s}"
+        mid_s = f"MID {sqrt(s.p_buy_a*s.p_sell_a):.1f}"
+        return f"{bid_s} - {mid_s} - {ask_s}"
     
     @property
     def p(s):
@@ -113,4 +115,5 @@ class strategy():
     
     @property
     def slashpair(self):
+        """returns the slashpair as str, eg 'RSK/CSH'"""
         return f"{self.rsk}/{self.csh}"
