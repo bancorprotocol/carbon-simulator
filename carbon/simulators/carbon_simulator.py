@@ -198,8 +198,9 @@ class CarbonSimulatorUI:
         """
 
         #print("[_add_order_sell_tkn] y_int", y_int)
-        assert y_int is None, "yint != None not operational yet"
-
+        #assert y_int is None, "yint != None not operational yet"
+        if not y_int is None: 
+            print("[_add_order_sell_tkn] WARNING. YINT != 0 NOT FULLY OPERATIONAL")
         # create order tracking ids
         if id1 is None:
             id1 = self._posid
