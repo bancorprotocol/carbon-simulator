@@ -1,8 +1,8 @@
 """
 Carbon helper module - run the simulation
 """
-__VERSION__ = "1.0"
-__DATE__ = "23/01/2023"
+__VERSION__ = "1.1"
+__DATE__ = "25/01/2023"
 
 from collections import namedtuple as _nt
 import numpy as _np
@@ -12,7 +12,7 @@ from .. import CarbonSimulatorUI as _CarbonSimulatorUI
 from .params import Params
 from .strategy import strategy as _strategy
 
-simresults_nt = _nt("simresults", "rskamt_r, cshamt_r, value_r, margpbuy_r, margpsell_r")
+simresults_nt = _nt("simresults", "rskamt_r, cshamt_r, value_r, hodl_r, margpbuy_r, margpsell_r")
 
 def run_sim(strat, path):
     """
@@ -64,16 +64,26 @@ def run_sim(strat, path):
 
     margpbuy_r  = tuple(zip(*margpbuy_rz))
     margpsell_r = tuple(zip(*margpsell_rz))
-
-    
     value_r = rskamt_r * path + cshamt_r
-    return simresults_nt(rskamt_r, cshamt_r, value_r, margpbuy_r, margpsell_r) 
+    hodl_r = rskamt_r[0]*path+cshamt_r[0]
+    #print(f"f[run_sim] initial amounts RSK={rskamt_r[0]}, CSH={cshamt_r[0]}", )
+    
+    
+    return simresults_nt(
+        rskamt_r    = rskamt_r, 
+        cshamt_r    = cshamt_r, 
+        value_r     = value_r,
+        hodl_r      = hodl_r,
+        margpbuy_r  = margpbuy_r,
+        margpsell_r = margpsell_r
+    ) 
 
 SIM_DEFAULT_PARAMS = Params(
     plotPrice       = True,      # whether to plot the price
     plotValueCsh    = False,     # whether to plot the cash portion of the portfolio value
     plotValueRsk    = False,     # whether to plot the risk asset portion of the portfolio value
     plotValueTotal  = True,      # whether to plot the aggregate portfolio value
+    plotValueHODL   = False,      # whether to plot the HODL value of the initial portfolio
     plotRanges      = True,      # whether to shade the ranges
     plotMargP       = True,      # whetger to plot the marginal price for the ranges
     plotBid         = True,      # whether to plot buy (bid) ranges and marginal prices
@@ -113,39 +123,50 @@ def plot_sim(strat, path, simresults, dataid, params):
     descr = strat[0].descr if len(strat)==1 else f"strategy portfolio ({len(strat)} items)"
     descr = f"BID {p_buy_b:.1f}-{p_buy_a:.1f} [{amt_csh:.0f} {csh}] - MID {mid:.1f} - ASK {p_sell_a:.1f}-{p_sell_b:.1f} [{amt_rsk:.1f} {rsk}]"
     
-    rskamt_f, cshamt_r, value_r, margpbuy_r, margpsell_r = simresults
+    rskamt_r    = simresults.rskamt_r 
+    cshamt_r    = simresults.cshamt_r 
+    value_r     = simresults.value_r 
+    hodl_r      = simresults.hodl_r 
+    margpbuy_r  = simresults.margpbuy_r 
+    margpsell_r = simresults.margpsell_r
 
     fig, ax1 = _plt.subplots()
     ax2 = ax1.twinx()
     plots = []
-    if p.plotPrice:
-        plots += ax1.plot(path, color="0.7", label="price [lhs]")
-    if p.plotMargP:
-        for margpsell_ri, margpbuy_ri in zip(margpsell_r, margpbuy_r):
-            if p.plotBid:
-                plots += ax1.plot(path.index, margpsell_ri, color="green", linestyle="dotted", linewidth=0.8, label="bid [lhs]")
-            if p.plotAsk:
-                plots += ax1.plot(path.index, margpbuy_ri, color="red", linestyle="dotted", linewidth=0.8, label="ask [lhs]")
     if p.plotRanges:
         for s in strat:
             if p.plotBid:
                 [ax1.fill_between(path.index, s.p_buy_a, s.p_buy_b, color="lightgreen", alpha=0.1, label="bid range [lhs]")]
             if p.plotAsk:
                 [ax1.fill_between(path.index, s.p_sell_a, s.p_sell_b, color="lightcoral", alpha=0.1, label="ask range [lhs]")]
-                # use plots += [ax1.plot(...)] to add the above plots to the legend
+            
+    if p.plotMargP:
+        for margpsell_ri, margpbuy_ri, ix in zip(margpsell_r, margpbuy_r, range(len(margpsell_r))):
+            if p.plotBid:
+                plots += ax1.plot(path.index, margpsell_ri, color="green", linestyle="dotted", linewidth=0.8, label="bid [lhs]" if not ix else None)
+            if p.plotAsk:
+                plots += ax1.plot(path.index, margpbuy_ri, color="red", linestyle="dotted", linewidth=0.8, label="ask [lhs]" if not ix else None)
+            
+    if p.plotPrice:
+        plots += ax1.plot(path, color="0.7", label="price [lhs]")
     
-    if p.plotValueTotal:
-        plots += ax2.plot(value_r, color = "blue", label="portfolio value [rhs]")
-
+    if p.plotValueHODL:
+        plots += ax2.plot(value_r.index, hodl_r, color="cyan", linestyle="dotted", linewidth=1, label=f"HODL value [rhs]")
+    
     if p.plotValueCsh:
         plots += ax2.plot(value_r.index, cshamt_r, color="blue", linestyle="dashed", linewidth=0.8, label=f"{csh} portion [rhs]")
 
     if p.plotValueRsk:
-        plots += ax2.plot(value_r.index, value_r-cshamt_r, color="blue", linestyle="dotted", linewidth=1, label=f"{rsk} portion [rhs]")
+        plots += ax2.plot(value_r.index, rskamt_r, color="blue", linestyle="dotted", linewidth=1, label=f"{rsk} portion [rhs]")
     
+    if p.plotValueTotal:
+        plots += ax2.plot(value_r, color = "blue", label="portfolio value [rhs]")
+
     ax2.set_ylabel(f"portfolio value ({csh})")
     ax1.set_ylabel(f"price ({csh} per {rsk})")
     #ax1.set_xlabel("date")
     _plt.title(f"{descr} on {dataid}")
     labels = [p.get_label() for p in plots]
-    _plt.legend(plots, labels)
+    plots_labels = [(p,l) for l,p in zip(labels[::-1], plots[::-1]) if not l[0] == "_"]
+    #_plt.legend(plots[::-1], labels[::-1])
+    _plt.legend(*zip(*plots_labels))
