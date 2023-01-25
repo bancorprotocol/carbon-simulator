@@ -10,9 +10,10 @@ v2.2 - curve disabling, single orders
 v2.2.1 - CarbonOrderUI linked
 v2.3 - added fast router
 v2.4 - limit orders, changed trade_action -> match_by in _trade
+v2.5 - ability to specify y_int
 """
-__version__ = "2.4"
-__date__ = "12/Jan/2023"
+__version__ = "2.5"
+__date__ = "25/Jan/2023"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -173,6 +174,7 @@ class CarbonSimulatorUI:
             id1: int = None,
             id2: int = None,
             p_marginal: Any = None,
+            y_int: Any = None,
     ) -> int:
         """
         PRIVATE - adds a position for sale of tkn
@@ -183,10 +185,20 @@ class CarbonSimulatorUI:
         :p_hi:          ditto upper; also p_a, p_start
         :carbon_pair:   the token pair a CarbonPair object
         :id1/2:         the order ids of the two orders that make up the position; if not given, they are generated
-        :p_marginal:    the marginal price of the position; if not given, it is calculated
+        :p_marginal:    the marginal price of the position*
+        :y_int:         the initial value of y_int (must be >= amt)*
         :returns:       the id of the order added
+
+        *out of the parameters `p_marginal` and `y_int`, zero or one can be given, but
+        not both; the casese are treated as follows
+
+        :none:          y_int = amt, which means p_marg = p_start = p_a
+        :p_marg:        y_int is set so that the marginal price matches p_marg
+        :y_int:         y_int >= amt is used as curve capacity, marginal price adapts
         """
 
+        #print("[_add_order_sell_tkn] yint", y_int)
+        
         # create order tracking ids
         if id1 is None:
             id1 = self._posid
@@ -195,6 +207,9 @@ class CarbonSimulatorUI:
 
         if amt is None:
             amt = 0
+
+        if not y_int is None and not p_marginal is None:
+            raise ValueError("Not both y_int and p_marginal can be specificed", y_int, p_marginal)
 
         if not (p_lo is None and p_hi is None):
 
@@ -207,7 +222,7 @@ class CarbonSimulatorUI:
                 pp = p_lo
                 p_lo = p_hi
                 p_hi = pp
-                print("WARNING: swapped start and end of the range")
+                print("[_add_order_sell_tkn] WARNING: swapped start and end of the range")
 
             disabled = False
 
@@ -219,7 +234,7 @@ class CarbonSimulatorUI:
         # enter order
         order_params = {
             "tkn": tkn,                                     # the token being sold
-            "_y": amt,                                       # the marginal price of the curve
+            "_y": amt,                                      # the marginal price of the curve
             "p_low": p_lo,                                  # the lower end of the range (`tkn` numeraire); also p_b, p_end
             "p_high": p_hi,                                 # the upper end of the range (`tkn` numeraire); also p_a, p_start
             "disabled": disabled,                           # if True, order is disabled (p=0)
@@ -228,17 +243,30 @@ class CarbonSimulatorUI:
             "id": id1,                                      # the id of the new curve generated
             "linked_to_id": id2,                            # the id to which this curve is linked (=id if single curve)
         }
-        if p_marginal is not None:
-            order_params["p_marginal"] = p_marginal         # the marginal price of the curve
+        if not p_marginal is None:
+            order_params["p_marginal"] = p_marginal         # marginal price        
 
-        if p_marginal is None:
-            order_params["y_int"] = amt                     # the capacity of the curve
+        elif not y_int is None:                             # curve capacity
+            if y_int < amt:
+                raise ValueError("Must have y_int >= amt", y_int, amt)
+            order_params["y_int"] = y_int                     
+        else:
+            order_params["y_int"] = amt
 
         self.orders[id1] = Order(**order_params)
+        #print("[_add_order_sell_tkn] params", order_params )
         return id1
 
     def add_order(
-            self, tkn: str, amt: Any, p_start: Any, p_end: Any, pair: Any = None
+            self, 
+            tkn: str, 
+            amt: Any, 
+            p_start: Any, 
+            p_end: Any,
+            pair: Any = None,
+            p_marginal: Any = None, 
+            y_int: Any = None, 
+            
     ) -> Dict[str, Any]:
         """
         adds a sell order for tkn
@@ -247,15 +275,41 @@ class CarbonSimulatorUI:
         :amt:           the amount of `tkn` that is added to the position
         :p_start:       the start* of the range, quoted in the currency of the pair
         :p_end:         ditto end*
-        :pair:          the token pair to which the position corresponds, eg "ETHUSD"*
+        :p_marginal:    the marginal price of the position**
+        :y_int:         the initial value of y_int (must be >= amt)**
+        :pair:          the token pair to which the position corresponds, eg "ETH/USD"*
 
         *p_start, p_end are interchangeable, the code deals with sorting them correctly,
         albeit with a warning message if they were in the wrong order
+
+        **out of the parameters `p_marginal` and `y_int`, zero or one can be given, but
+        not both; the casese are treated as follows
+
+        :none:          y_int = amt, which means p_marg = p_start = p_a
+        :p_marg:        y_int is set so that the marginal price matches p_marg
+        :y_int:         y_int >= amt is used as curve capacity, marginal price adapts
         """
-        return self.add_strategy(tkn, amt, p_start, p_end, pair=pair)
+        return self.add_strategy(
+            tkn             = tkn, 
+            amt_sell        = amt, 
+            psell_start     = p_start, 
+            psell_end       = p_end, 
+            psell_marginal  = p_marginal, 
+            y_int_sell      = y_int, 
+            pair            = pair
+        )
 
     def _add_replace_single_order(
-            self, tkn: str, amt=None, p_start=None, p_end=None, pair=None, oid=None, lid=None
+            self, 
+            tkn: str, 
+            amt, 
+            p_start, 
+            p_end, 
+            p_marginal =    None,
+            y_int =         None,
+            pair =          None, 
+            oid =           None, 
+            lid =           None,
     ) -> Dict[str, Any]:
         """
         adds or modifies a single sell order for tkn (not part of public interface)
@@ -264,6 +318,8 @@ class CarbonSimulatorUI:
         :amt:           the amount of `tkn` that is added to the position
         :p_start:       the start* of the range, quoted in the currency of the pair
         :p_end:         ditto end*
+        :p_marginal:    the marginal price of the position***
+        :y_int:         the initial value of y_int (must be >= amt)***
         :pair:          the token pair to which the position corresponds, eg "ETHUSD"*
         :oid:           the id of the order; if None, a new id is created
         :lid:           the linked order id; if None, linked to itself**
@@ -273,6 +329,13 @@ class CarbonSimulatorUI:
 
         **if orders are linked to themselves then the tokens the curve receives are not
         stored or recorded anywhere; they simply disappear
+
+        ***out of the parameters `p_marginal` and `y_int`, zero or one can be given, but
+        not both; the casese are treated as follows
+
+        :none:          y_int = amt, which means p_marg = p_start = p_a
+        :p_marg:        y_int is set so that the marginal price matches p_marg
+        :y_int:         y_int >= amt is used as curve capacity, marginal price adapts
         """
         try:
             # this is a non-MVP feature
@@ -304,13 +367,21 @@ class CarbonSimulatorUI:
             # ugly hack, but somehow we need to switch lo and hi to have the
             # boundary closer to the money always first
             order_id = self._add_order_sell_tkn(
-                tkn, amt, p_end_c, p_start_c, carbon_pair, id1, id2
+                tkn = tkn, 
+                amt = amt, 
+                p_lo = p_end_c, 
+                p_hi = p_start_c, 
+                carbon_pair = carbon_pair, 
+                id1 = id1, 
+                id2 = id2,
+                p_marginal = p_marginal,
+                y_int = y_int,
             )
 
             if self.verbose:
                 print(
-                    f"[add_sgl_pos] added position: tkn={tkn}, amt={amt}, p_start={p_start}, p_end={p_end}, "
-                    f"pair={carbon_pair.pair_iso}, id={id1}, lid={id2}"
+                    f"[_add_replace_single_order] added position: tkn={tkn}, amt={amt}, p_start={p_start}, p_end={p_end}, "
+                    f", p_marginal={p_marginal}, y_int={y_int}, pair={carbon_pair.pair_iso}, id={id1}, lid={id2}"
                 )
 
             orders = self._to_pandas(self.orders[order_id], decimals=self.decimals)
@@ -321,9 +392,6 @@ class CarbonSimulatorUI:
                 raise
             return {"success": False, "error": str(e), "exception": e}
         return {"success": True, "orders": orders, "orderuis": orderuis, "id": id1, "lid": id2}
-
-    #add_sgl_pos = add_sellorder
-    #add_order = add_sellorder
 
     def add_strategy(
             self,
@@ -337,29 +405,42 @@ class CarbonSimulatorUI:
             pair: str = None,
             psell_marginal: Any = None,
             pbuy_marginal: Any = None,
+            y_int_sell: Any = None,
+            y_int_buy: Any = None,
+            
     ) -> Dict[str, Any]:
         """
         adds two linked orders (one buy, one sell; aka a "strategy")
 
-        :tkn:           the token that is sold in the range psell_start/_end, eg "ETH"*
-        :amt_sell:      the amount of `tkn` that is available for sale in range psell_start/psell_end
-        :psell_start:   start of the sell `tkn` range*, quoted in the price convention of `pair`
-        :psell_end:     ditto end
-        :amt_buy:       the amount of the other token that is available for selling against tkn in range pbuy_start
-        :pbuy_start:    start of the of the buy `tkn` range*, quoted in the price convention of `pair`
-        :pbuy_end:      ditto end
-        :pair:          the token pair to which the strategy corresponds, eg "ETHUSD"
-        :pbuy_marginal: the current price of the other token in the pair
-        :psell_marginal: the current price of `tkn` in the pair
+        :tkn:               the token that is sold in the range psell_start/_end, eg "ETH"*
+        :amt_sell:          the amount of `tkn` that is available for sale in range psell_start/psell_end
+        :psell_start:       start of the sell `tkn` range*, quoted in the price convention of `pair`
+        :psell_end:         ditto end
+        :amt_buy:           the amount of the other token that is available for selling against tkn in range pbuy_start
+        :pbuy_start:        start of the of the buy `tkn` range*, quoted in the price convention of `pair`
+        :pbuy_end:          ditto end
+        :pair:              the token pair to which the strategy corresponds, eg "ETHUSD"
+        :pbuy_marginal:     the marginal price of the buy position**
+        :psell_marginal:    the marginal price of the sell position**
+        :y_int_buy:        the initial value of y_int on the buy curve (must be >= amt_buy)**
+        :y_int_sell:        the initial value of y_int on the sell curve (must be >= amt_sell)**
 
         *px_start, px_end are interchangeable, the code deals with sorting them, albeit issuing a warning
         message if they are in the wrong order; sell and buy is seen from the perspective of the AMM, which
         is the same as that of the strategy (liquidity) provider
 
-        amounts that are None (default) are set to zero
-        pbuy that are None are effectively set to 0 (disabled)
-        psell that are None are effectively set to 1/0 (disabled)
+        - amounts that are None (default) are set to zero
+        - pbuy that are None are effectively set to 0 (disabled)
+        - psell that are None are effectively set to 1/0 (disabled)
+        
+        **out of the parameters `pxxx_marginal` and `y_int_xxx`, zero or one can be given, but
+        not both; the casese are treated as follows
+
+        :none:          y_int = amt, which means p_marg = p_start = p_a
+        :p_marg:        y_int is set so that the marginal price matches p_marg
+        :y_int:         y_int >= amt is used as curve capacity, marginal price adapts
         """
+
         try:
 
             # validate tkn, pair and get CarbonPair object
@@ -383,10 +464,26 @@ class CarbonSimulatorUI:
             # ugly hack but the 1/2 range boundaries are in the wrong order
             # we want the closer boundary first
             self._add_order_sell_tkn(
-                tkn, amt_sell, psell_end_c, psell_start_c, carbon_pair, id1, id2, psell_marginal_c
+                tkn = tkn,
+                amt = amt_sell,
+                p_lo = psell_end_c,
+                p_hi = psell_start_c,
+                carbon_pair = carbon_pair,
+                id1 = id1,
+                id2 = id2,
+                p_marginal = psell_marginal_c,
+                y_int = y_int_sell,
             )
             self._add_order_sell_tkn(
-                tkn2, amt_buy, pbuy_end_c, pbuy_start_c, carbon_pair, id2, id1, pbuy_marginal_c
+                tkn = tkn2,
+                amt = amt_buy,
+                p_lo = pbuy_end_c,
+                p_hi = pbuy_start_c,
+                carbon_pair = carbon_pair,
+                id1 = id2,
+                id2 = id1,
+                p_marginal = pbuy_marginal_c,
+                y_int = y_int_buy,
             )
 
             if self.verbose:
@@ -412,8 +509,6 @@ class CarbonSimulatorUI:
                 raise
             return {"success": False, "error": str(e), "exception": e}
         return {"success": True, "orders": orders, "orderuis": orderuis}
-
-    #add_linked_pos = add_strategy
 
     def delete_order(self, position_id):
         """
@@ -453,8 +548,6 @@ class CarbonSimulatorUI:
         return (
             [position_id, linked_position_id] if linked_position_id else [position_id]
         )
-
-    #delete_pos = delete_order
     delete_strategy = delete_order
 
     MATCH_BY_SOURCE = "match_by_source"
