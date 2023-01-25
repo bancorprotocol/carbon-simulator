@@ -197,8 +197,9 @@ class CarbonSimulatorUI:
         :y_int:         y_int >= amt is used as curve capacity, marginal price adapts
         """
 
-        #print("[_add_order_sell_tkn] yint", y_int)
-        
+        #print("[_add_order_sell_tkn] y_int", y_int)
+        assert y_int is None, "yint != None not operational yet"
+
         # create order tracking ids
         if id1 is None:
             id1 = self._posid
@@ -337,6 +338,10 @@ class CarbonSimulatorUI:
         :p_marg:        y_int is set so that the marginal price matches p_marg
         :y_int:         y_int >= amt is used as curve capacity, marginal price adapts
         """
+        
+        assert y_int is None, "yint != None not operational yet"
+        
+        
         try:
             # this is a non-MVP feature
             self._raise_if_future_restricted()
