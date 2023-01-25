@@ -4,8 +4,8 @@ represents a Carbon order book position
 (c) Copyright Bprotocol foundation 2022.
 Licensed under MIT
 """
-__version__ = "1.0"
-__date__ = "8/Dec/2022"
+__version__ = "1.0.1"
+__date__ = "25/Jan/2023"
 
 import pprint
 from dataclasses import dataclass
@@ -154,7 +154,10 @@ class Order:
 
         if self.p_marginal is not None:
             self.p_marginal = Decimal(self.p_marginal)
-
+        
+        if self._y is not None:
+            self._y = Decimal(self._y)
+        
         if self.auto_convert_variables:
 
             # Init original variables if alternate variables are set
