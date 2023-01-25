@@ -1,8 +1,8 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "1.1"
-__DATE__ = "25/01/2023"
+__VERSION__ = "1.2"
+__DATE__ = "26/01/2023"
 
 
 from dataclasses import dataclass as _dataclass
@@ -39,10 +39,19 @@ class strategy():
 
     psell_marginal:float = None
     pbuy_marginal:float = None
+
+    y_int_sell:float = None
+    y_int_buy:float = None
         
     rsk: str = "RSK"
     csh: str = "CSH"
 
+    def __post_init__(self):
+        pm_provided = not self.psell_marginal is None or not self.pbuy_marginal is None
+        yi_provided = not self.y_int_sell is None or not self.y_int_buy is None
+        if pm_provided and yi_provided:
+            raise ValueError("Not both p_marginal and y_int can be provided", self.psell_marginal, self.y_int_sell, self.pbuy_marginal, self.y_int_buy)
+        
     MIN_SEED_AMT = 1e-10
 
     @property
@@ -66,13 +75,15 @@ class strategy():
         return self.p_sell_b
 
     def __post_init__(self):
-        if self.amt_rsk == 0: self.amt_risk = self.MIN_SEED_AMT
-        if self.amt_csh == 0: self.amt_csh  = self.MIN_SEED_AMT
+        if not self.amt_rsk: self.amt_risk = self.MIN_SEED_AMT
+        if not self.amt_csh: self.amt_csh  = self.MIN_SEED_AMT
+        if self.rsk is None: self.rsk = "RSK"
+        if self.csh is None: self.csh = "CSH"
 
     MAX_UTIL = 0.999 # all MAXUTIL < u <= 1 are set to u = MAXUTIL
 
     @classmethod
-    def from_mgw(cls, m=100, g=0, w=0, u=0, amt_rsk=0, amt_csh=0, rsk="RSK", csh="CSH"):
+    def from_mgw(cls, m=100, g=0, w=0, u=0, amt_rsk=None, amt_csh=None, rsk=None, csh=None):
         """
         create instance from mid `m`, gap width `g`, and range width `w`
         
@@ -127,28 +138,67 @@ class strategy():
         )
     
     @classmethod
-    def from_u3(cls, p_lo, p_hi, p_marginal, tvl_csh=None, fee_pc=None, rsk=None, csh=None):
+    def from_u3(cls, p_lo, p_hi, start_below, tvl_csh=None, fee_pc=None, rsk=None, csh=None):
         """
         creates a strategy equivalent to a uniswap v3 position
 
         :p_lo:          the low price of the range
         :p_hi:          the high price of the range
         :fee_pc:        percentage fees (0.1=1%)
-        :p_marginal:    the current marginal price of the range
-        :tvl_csh:       the TVL (rsk+csh) at p_marginal, measured in csh
+        :start_below:   if True/False, the start price is below/above the range, so 
+                        the combined range is 100% in RSK/CSH p_marginal at p_lo/p_hi
+        :tvl_csh:       the TVL (rsk+csh) at top of the range, measured in csh (default: 1000)
         :rsk:           risk asset name (default RSK)
         :csh:           cash name (default CSH)
         """
-        assert fee_pc is None, "fees not implemented yet"
+        #assert fee_pc is None, "fees not implemented yet"
         if not p_hi >= p_lo:
             raise ValueError("Must have p_hi > p_lo", p_hi, p_lo)
-        p_sell_a = p_buy_b = p_hi   # sell, buy refers to the risk asset
-        p_sell_b = p_buy_a = p_lo   # a,b is start and end respectively
-    
+        if tvl_csh is None:
+            tvl_csh = 1000
 
-        amt_rsk: float = 0
-        amt_csh: float = 0
+        if start_below:
+            p_sell_a = p_buy_b = p_lo   
+            p_sell_b = p_buy_a = p_hi   
+        else:
+            p_sell_a = p_buy_b = p_hi  
+            p_sell_b = p_buy_a = p_lo   
 
+        if not fee_pc is None:
+            fee_mult = 1+0.5*fee_pc
+            fee_shift = sqrt(p_lo*p_hi)*fee_pc*0.5
+            # p_sell_a *= fee_mult
+            # p_sell_b *= fee_mult
+            # p_buy_a  /= fee_mult
+            # p_buy_b  /= fee_mult
+            p_sell_a += fee_shift
+            p_sell_b += fee_shift
+            p_buy_a  -= fee_shift
+            p_buy_b  -= fee_shift
+
+        if start_below:
+            p_marginal = p_lo*1.0000000001
+            amt_rsk = 100 # tvl_csh/sqrt(p_lo*p_hi)
+            amt_csh = 0
+        else:
+            p_marginal = p_hi*0.9999999999
+            amt_rsk = 0
+            amt_csh = tvl_csh
+
+        return cls(
+            p_buy_a = p_buy_a, 
+            p_buy_b = p_buy_b,
+            p_sell_a = p_sell_a,
+            p_sell_b = p_sell_b,
+            amt_rsk = amt_rsk,
+            amt_csh = amt_csh,
+            rsk = rsk,
+            csh = csh,
+            # psell_marginal = p_marginal*fee_mult,
+            # pbuy_marginal = p_marginal/fee_mult,
+            y_int_sell = 100, # RSK NUMBER
+            y_int_buy = 100 * sqrt(p_lo*p_hi), # CSH NUMBER
+        )
 
     @property
     def descr(s):
@@ -178,6 +228,8 @@ class strategy():
             "pair":             s.slashpair,
             "psell_marginal":   s.psell_marginal,
             "pbuy_marginal":    s.pbuy_marginal,
+            "y_int_sell":       s.y_int_sell,
+            "y_int_buy":        s.y_int_buy,
         }
 
         # def add_strategy(
