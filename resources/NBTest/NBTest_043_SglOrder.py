@@ -110,7 +110,7 @@ assert ro.iloc[0]["id"] == r['id']
 assert ro.iloc[0]["lid"] == r['lid']
 ro
 
-r = Sim._add_replace_single_order("USDC")
+r = Sim._add_replace_single_order("USDC", p_start=None, p_end=None, amt=None, )
 ro=r["orders"]
 print(f"id={r['id']}, lid={r['lid']}")
 assert ro.iloc[0]["id"] == r['id']
@@ -151,7 +151,7 @@ Sim
 
 # Setting up the collection account in USDC
 
-r = Sim._add_replace_single_order("USDC")
+r = Sim._add_replace_single_order("USDC", p_start=None, p_end=None, amt=None, )
 coid = r["id"]
 print(f"Collection order id coid={coid}")
 r["orders"]

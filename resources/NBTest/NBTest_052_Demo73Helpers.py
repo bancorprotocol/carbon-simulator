@@ -233,6 +233,10 @@ except VersionRequirementNotMetError as e:
 # +
 # from carbon.helpers import strategy as _strategy
 # help(_strategy)
+
+# +
+# assert strategy.from_mgw() == strategy(p_buy_a=100.0, p_buy_b=100.0, p_sell_a=100, p_sell_b=100, 
+#                                        amt_rsk=0, amt_csh=0, rsk='RSK', csh='CSH')
 # -
 
 assert strategy.from_mgw(m=100) == strategy.from_mgw()
@@ -241,12 +245,55 @@ assert strategy.from_mgw(w=0) == strategy.from_mgw()
 
 assert strategy.from_mgw(g=0.1).p_buy_a == 100/(1.05)
 assert strategy.from_mgw(g=0.1).p_sell_a == 100*(1.05)
+assert strategy.from_mgw(g=0.1).p_buy_b/strategy.from_mgw(g=0.1).p_buy_a > 0.999
+assert strategy.from_mgw(g=0.1).p_buy_b/strategy.from_mgw(g=0.1).p_buy_a < 1.001
+assert strategy.from_mgw(g=0.1).p_sell_b / strategy.from_mgw(g=0.1).p_sell_a < 1.001
+assert strategy.from_mgw(g=0.1).p_sell_b / strategy.from_mgw(g=0.1).p_sell_a > 0.999
 
-assert strategy.from_mgw(g=0.1, w=0.1).p_buy_b == 100/1.05/1.1
-assert strategy.from_mgw(g=0.1, w=0.1).p_sell_b == 100*1.05*1.1
+assert strategy.from_mgw(w=0.1).p_buy_a / strategy.from_mgw(w=0.1).p_sell_a > 0.999
+assert strategy.from_mgw(w=0.1).p_buy_b / (100/1.1) > 0.999
+assert strategy.from_mgw(w=0.1).p_buy_b / (100/1.1) < 1.001
+assert strategy.from_mgw(w=0.1).p_sell_b / (100*1.1) > 0.999
+assert strategy.from_mgw(w=0.1).p_sell_b / (100*1.1) < 1.001
 
 assert strategy.from_mgw().slashpair == "RSK/CSH"
 assert strategy.from_mgw(rsk="ETH", csh="USD").slashpair == "ETH/USD"
+
+assert strategy(90, 80, 110, 120).dct == {
+    'tkn': 'RSK',
+    'amt_sell': 0,
+    'psell_start': 90,
+    'psell_end': 80,
+    'amt_buy': 1e-10,
+    'pbuy_start': 110,
+    'pbuy_end': 120,
+    'pair': 'RSK/CSH',
+    'psell_marginal': None,
+    'pbuy_marginal': None
+}
+
+assert strategy(90, 80, 110, 120).p == ('RSK', 0, 90, 80, 1e-10, 110, 120)
+
+Sim = CarbonSimulatorUI(pair="RSK/CSH", raiseonerror=True)
+r = Sim.add_strategy(**strategy(p_buy_a=80, p_buy_b=70, p_sell_a=110, p_sell_b=120, amt_rsk=1, amt_csh=100).dct)["orders"]
+r
+
+assert r.iloc[0]["p_start"] == 110
+assert r.iloc[0]["p_end"] == 120
+assert r.iloc[1]["p_start"] == 80
+assert r.iloc[1]["p_end"] == 70
+assert r.iloc[0]["y"] == 1
+assert r.iloc[1]["y"] == 100
+
+Sim = CarbonSimulatorUI(pair="RSK/CSH", raiseonerror=True)
+r = Sim.add_strategy(**strategy.from_mgw(m=100, g=0.5, w=0.5, amt_rsk=1, amt_csh=100).dct)["orders"]
+r
+
+assert r.iloc[0]["p_start"] == 125
+assert r.iloc[0]["p_end"] == 187.5
+assert r.iloc[1]["p_start"] == 80
+assert r.iloc[0]["y"] == 1
+assert r.iloc[1]["y"] == 100
 
 # ## helpers pdread
 
@@ -304,3 +351,44 @@ assert len(pdread(DATAFN, period_days=10)) == 3
 assert len(pdread(DATAFN, period_pc=0.1)) == 11
 assert len(pdread(DATAFN, from_ts="2020-07-01")) == 51
 assert len(pdread(DATAFN, from_pc=0.5)) == 51
+
+# ## demo 7 3 [NOTEST]
+
+# +
+DATAID = "RAN-050-00"
+
+DATAPATH = "resources/data"
+#DATAPATH = "../data"           # uncomment to run this as Jupyter notebook
+
+DATAFN = j(DATAPATH, f"{DATAID}.pickle")
+print(f"Chose data id {DATAID}")
+# -
+
+strats = (
+    strategy.from_mgw(m=100, g=0.10, w=0.05, amt_rsk=1, amt_csh=0),
+)
+
+for colnm in ["p0000"]:
+    for ix, strat in enumerate(strats):
+    
+        path = pdread(DATAFN, colnm)
+        simresults = run_sim(strat, path)
+        if DATAPATH == "../data":
+            plot_sim(strat, path, simresults, f"{DATAID} [{colnm}]", params=None)
+            plt.show()
+
+
+# +
+# assert simresults.rskamt_r[0] == 1
+# assert round(simresults.rskamt_r[35] - 0.57736478, 5) == 0
+# assert simresults.cshamt_r[0] == 0
+# assert round(simresults.cshamt_r[36] - 112.7164584255556, 5) == 0
+# assert round(simresults.value_r[4] - 98.135103, 5) == 0
+# assert round(simresults.value_r[-1] - 109.973544, 5) == 0
+# assert str(simresults.value_r.index[0]) == '2020-01-01 00:00:00'
+# assert str(simresults.value_r.index[-1]) == '2020-12-31 06:00:00'
+# -
+
+simresults.rskamt_r[35]
+
+
