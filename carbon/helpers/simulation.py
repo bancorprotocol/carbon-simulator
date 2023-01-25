@@ -31,8 +31,10 @@ def run_sim(strat, path):
             raise ValueError("All pairs must be the same", ix, slashpair, strat_.slashpair, strat[0], strat_)
     
     Sim = _CarbonSimulatorUI(pair=slashpair)
+    #print("[run_sim] strategies", strat)
     for strat_ in strat:
-        Sim.add_strategy(**strat_.dct)
+        r = Sim.add_strategy(**strat_.dct)
+        #print("[run_sim] add_strategy", r)
     ouis = Sim.state()["orderuis"]
 
     # FACTS:
@@ -67,8 +69,7 @@ def run_sim(strat, path):
     value_r = rskamt_r * path + cshamt_r
     hodl_r = rskamt_r[0]*path+cshamt_r[0]
     #print(f"f[run_sim] initial amounts RSK={rskamt_r[0]}, CSH={cshamt_r[0]}", )
-    
-    
+
     return simresults_nt(
         rskamt_r    = rskamt_r, 
         cshamt_r    = cshamt_r, 
@@ -83,7 +84,7 @@ SIM_DEFAULT_PARAMS = Params(
     plotValueCsh    = False,     # whether to plot the cash portion of the portfolio value
     plotValueRsk    = False,     # whether to plot the risk asset portion of the portfolio value
     plotValueTotal  = True,      # whether to plot the aggregate portfolio value
-    plotValueHODL   = False,      # whether to plot the HODL value of the initial portfolio
+    plotValueHODL   = True,     # whether to plot the HODL value of the initial portfolio
     plotRanges      = True,      # whether to shade the ranges
     plotMargP       = True,      # whetger to plot the marginal price for the ranges
     plotBid         = True,      # whether to plot buy (bid) ranges and marginal prices
