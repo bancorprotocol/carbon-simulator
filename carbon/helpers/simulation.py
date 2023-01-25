@@ -32,7 +32,7 @@ def run_sim(strat, path):
     
     Sim = _CarbonSimulatorUI(pair=slashpair)
     for strat_ in strat:
-        Sim.add_strategy(*strat_.p)
+        Sim.add_strategy(**strat_.dct)
     ouis = Sim.state()["orderuis"]
 
     # FACTS:
