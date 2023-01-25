@@ -4,8 +4,8 @@ represents a Carbon order book position
 (c) Copyright Bprotocol foundation 2022.
 Licensed under MIT
 """
-__version__ = "1.0.1"
-__date__ = "25/Jan/2023"
+__version__ = "1.1FAILING" # TODO MIKE: CLEAN UP INITIALIZATION
+__date__ = "25/Jan/2022"
 
 import pprint
 from dataclasses import dataclass
@@ -46,8 +46,10 @@ class Order:
     _y: DecFloatInt = None      # the current balance of the curve
 
     # Alternate variables
-    D: DecFloatInt = None       # the current intercept of the curve
-    _C: DecFloatInt = None      # the current balance of the curve
+    D: DecFloatInt = None       # the current intercept of the curve (MUST ALWAYS be equal to y_int)
+    _C: DecFloatInt = None      # the current balance of the curve (MUST ALWAYS be equal to _y)
+
+    # TODO: MIKE - PLEASE CLEAN UP THE Y, YINT, C, D BUSINESS; THIS IS SUPER UGLY
 
     pair: CarbonPair = None
     tkn: str = None
@@ -64,7 +66,8 @@ class Order:
         """
         The current balance of the curve... Equal to y_int upon genesis.
         """
-        return self.y_int if self._y is None else self._y
+        #return self.y_int if self._y is None else self._y
+        return self._y
 
     @y.setter
     def y(self, value: Decimal) -> None:
@@ -148,6 +151,7 @@ class Order:
         if self.p_high is not None and self.p_low is not None:
             self.p_high = Decimal(self.p_high)
             self.p_low = Decimal(self.p_low)
+            # TODO MIKE: WHAT HAPPENS IF ONLY ONE OF THEM IS GIVEN?
 
         if self.y_int is not None:
             self.y_int = Decimal(self.y_int)
@@ -176,7 +180,7 @@ class Order:
                     self.p_high = self.pa
 
             # Init alternate variables if original variables are set
-            elif self.p_low is not None and self.p_high is not None:
+            elif not self.p_low is None and not self.p_high is None:
 
                 if self.p_high < self.p_low:
                     paa = self.p_high
@@ -186,19 +190,45 @@ class Order:
                 self.B = sqrt(self.p_low)
                 self.S = sqrt(self.p_high) - sqrt(self.p_low)
 
-            if self.y_int is not None:
-                self.D = self.C = self._y = self.y_int
+            if not self.y_int is None: # note: D is the same as y_int
+               #self.D = self.C = self._y = self.y_int
+                self.D =                    self.y_int
 
-            elif self.y_int is None and self.p_marginal is not None:
+            #elif not self.y_int is None and not self.p_marginal is None:
+            elif not self.p_marginal is None:
                 if type(self.p_marginal) is Decimal:
                     self.y_int = self._y * (self.p_high.sqrt() - self.p_low.sqrt()) / (self.p_marginal.sqrt() - self.p_low.sqrt())
                 else:
                     self.y_int = float(self._y) * (sqrt(self.p_high) - sqrt(self.p_low)) / (sqrt(self.p_marginal) - sqrt(self.p_low))
 
-            elif self.D is not None:
-                self.y_int = self.C = self._y = self.D
+            elif not self.D is None: # note: D is the same as y_int
+               #self.y_int = self.C = self._y = self.D
+                self.y_int =                    self.D
 
             if self.p_high == self.p_low:
                 self.adj_n_mode = True
+        
+        if self.C is None:
+            self.C = self._y
+
+        if self.D is None:
+            self.D = self.y_int
+
+        if self.y_int is None:
+            if not self.D is None:
+                self.y_int = self.D
+            else:
+                self.y_int = self.D = self._y
+ 
+        assert not self._y is None, "self._y has not been initialized"
+        assert self.C == self._y, f"self.C != self._y, [{self.C}, {self._y}]"
+        assert not self.y_int is None, "self.y_int has not been initialized"
+        assert self.D == self.y_int, "self.D != self.y_int [{self.D}, {self.y_int}]"
+        assert not self.p_high is None, "self.p_high has not been initialized"
+        assert not self.p_low is None, "self.p_low has not been initialized"
+
+        # TODO: MIKE -- PLEASE ADD ALL NECESSARY ASSERTIONS TO ENSURE THAT
+        # THE OBJECT IS (A) FULLY INITIALIZED AND (B) INTERNALLY CONSISTENT
+        
 
 
