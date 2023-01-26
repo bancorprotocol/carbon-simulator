@@ -6,11 +6,14 @@ __DATE__ = "25/01/2023"
 
 from collections import namedtuple as _nt
 import numpy as _np
+import pandas as _pd
 from math import sqrt
 from matplotlib import pyplot as _plt
+import pickle as _pickle
 from .. import CarbonSimulatorUI as _CarbonSimulatorUI
 from .params import Params
 from .strategy import strategy as _strategy
+
 
 simresults_nt = _nt("simresults", "rskamt_r, cshamt_r, value_r, hodl_r, margpbuy_r, margpsell_r")
 
@@ -171,3 +174,81 @@ def plot_sim(strat, path, simresults, dataid, params):
     plots_labels = [(p,l) for l,p in zip(labels[::-1], plots[::-1]) if not l[0] == "_"]
     #_plt.legend(plots[::-1], labels[::-1])
     _plt.legend(*zip(*plots_labels))
+
+
+class StartConditions():
+    def __init__(self, rawdata=None):
+        self._d = rawdata
+        self.start_dt = _pd.Timestamp("2020-01-01")
+        self.end_dt   = _pd.Timestamp("2021-01-01")
+    
+    @classmethod
+    def load(cls, fn):
+        with open(fn, 'rb') as f:
+            SC=StartConditions(_pickle.load(f))
+        return SC
+    
+    @property
+    def strategy_carbon(self):
+        p_sell_b, p_sell_a, p_buy_a, p_buy_b = self.carbon_ranges_raw
+        psell_marginal, pbuy_marginal = self.carbon_prices
+        w0, w1 = self.carbon_order_weights
+        fctr = self.starting_portfolio_valuation/(w0+w1)
+        amt_rsk, amt_csh = fctr*w0/self.path_raw[0], fctr*w1
+        return _strategy(
+            p_sell_a=p_sell_a,
+            p_sell_b=p_sell_b,
+            p_buy_a=p_buy_a,
+            p_buy_b=p_buy_b,
+            psell_marginal=psell_marginal,
+            pbuy_marginal=pbuy_marginal,
+            amt_rsk=amt_rsk,
+            amt_csh=amt_csh,
+        )
+        
+    @property
+    def num_points(self):
+        return len(self.path_raw)
+    
+    @property
+    def time_period(self):
+        return self.end_dt-self.start_dt
+    
+    @property
+    def time_step(self):
+        return self.time_period / (self.num_points-1)
+    
+    @property
+    def path_raw(self):
+        return [float(x) for x in self._d["filtered price chart"]]
+    
+    @property
+    def path(self):
+        df = _pd.DataFrame(zip(self.datetime,self.path_raw), columns=["datetime", "spot"]).set_index("datetime")
+        return df["spot"]
+
+    @property
+    def datetime(self):
+        dt = self.time_step
+        return [self.start_dt+i*dt for i in range(self.num_points+1)]
+    
+    @property
+    def carbon_order_weights(self):
+        return [float(x) for x in self._d["carbon order weights"]]
+
+    @property
+    def carbon_ranges_raw(self):
+        return [float(x) for x in self._d["carbon order boundaries"]]
+    
+    @property
+    def carbon_prices(self):
+        return [float(x) for x in self._d["carbon starting prices"]]  
+   
+    @property
+    def starting_portfolio_valuation(self):
+        return [float(x) for x in self._d["starting portfolio valuation"]][0]
+    
+    @property
+    def uni_ranges_raw(self):
+        return [float(x) for x in self._d["uniswap range boundaries"]]
+    
