@@ -18,8 +18,8 @@ import sys
 import os
 import re
 from collections import namedtuple
-__VERSION__ = "1.2.1"
-__DATE__ = "21/Jan/2022"
+__VERSION__ = "1.3"
+__DATE__ = "26/Jan/2023"
 
 # VERSION HISTORY
 #
@@ -61,7 +61,7 @@ print("---")
 
 rawlist = os.listdir(SRCPATH)
 rawlist.sort()
-#rawlist
+rawlist
 
 # +
 dr_nt = namedtuple("datarecord_nt", "tid, comment, fn, outfn")
@@ -94,6 +94,7 @@ filterfn("NBTest_0000_Bla.py")
 
 fnlst = (filterfn(fn) for fn in rawlist)
 fnlst = tuple(r for r in fnlst if not r is None)
+#fnlst = (fnlst[1],)
 fnlst
 
 
@@ -176,11 +177,17 @@ def process_code(code, dr, srcpath=None, trgpath=None):
     ]
     is_precode = True
     for l in lines:
+#         print(l)
+#         try:
+#             print(l[:5], l[:5].encode(), ord(l[1]), ord(l[4]), l[:5]=="# ## ")
+#         except:
+#             pass
+        
         if l[:4] == "# # ":
             print(f"""Processing "{l[4:]}" ({r.fn})""")
             outlines += [""]
             
-        elif l[:5] == "# ## ":
+        elif l[:5] == "# ## " or l[:5].encode() == b'# ##\xc2\xa0':
             title = l[5:].strip()
             fcn = funcn(title)
             print(f"  creating function `{fcn}()` from section {title}")
