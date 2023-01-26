@@ -13,9 +13,15 @@
 #     name: python3
 # ---
 
-from generatelib import *
+from carbon.helpers import PathGenerator
+from carbon.helpers.pdread import *
 from math import sin, cos, pi
 import os
+from math import sqrt, exp, log
+from datetime import timedelta as _timedelta, datetime as _datetime
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [8,4]
 
@@ -50,15 +56,21 @@ FILENAME2 = None
 
 dfs = {
     (sig,mu): PathGenerator(sig=sig, mu=mu).pathdf(10)
-    for sig in (0.01, 0.05, 0.25, 0.5, 0.75, 1)
     for mu in [0,0.05,0.2]
+    for sig in (0.01, 0.05, 0.25, 0.5, 0.75, 1)
 }
 df_aggr = pd.concat(dfs.values(), axis=1)
 #df.to_csv(FILENAME(sig=sig, mu=0)+".csv.gz", index=False, compression="gzip")
 #df.to_csv(FILENAME(sig=sig, mu=0)+".csv", index=False)
 if not FILENAME2 is None:
-    df_aggr.to_pickle(FILENAME2(mu=int(mu*100))+".pickle")
-#df_aggr
+    df_aggr.to_pickle(FILENAME2()+".pickle")
+df_aggr
+
+[ df_aggr.columns[i*10] for i in range(6) ]
+
+[ df_aggr.columns[i*10+60] for i in range(6) ]
+
+[ df_aggr.columns[i*10+61] for i in range(6) ]
 
 # !ls
 

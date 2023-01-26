@@ -164,6 +164,8 @@ We use [semantic versioning][semver] (`major.minor.patch`), so the major number 
 
 The API in this respect is defined as _"all public methods in the `SimulationUI`"_ object, as well as those in the objects it returns (currently `CarbonPair` and `CarbonOrderUI`). 
 
+Note that all modules contained in `carbon.helpers` are **not** part of the public API, and breaking changes can occur in those at any point in time. If you are using them in your own code, we recomend copying the module(s) you are using into your own codebase. 
+
 The in-library location of those objects is _not_ part of the API, they need to be imported from the top level. There may be additional objects in the top-level of the library that are not currently considered part of the API. As of version 1.0, those objects are `ExactRouterX0Y0N` and `analytics` which we do not currently consider in a state suitable for semantic versioning. 
 
 Modules may have version numbers of their own. Those are mostly for use of the dev team and they do not follow any specific policies.

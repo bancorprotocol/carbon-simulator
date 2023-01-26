@@ -5,7 +5,8 @@ from .sharedvar import SharedVar
 from .strategy import strategy
 from .version import require_version
 from .helpers import listdir
-#from .simulation import run_sim, plot_sim
+from .pathgenerator import PathGenerator
+from .simulation import run_sim, plot_sim, SIM_DEFAULT_PARAMS
 
 from .. import (
     CarbonSimulatorUI as _CarbonSimulatorUI, 

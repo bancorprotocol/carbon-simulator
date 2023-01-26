@@ -8,11 +8,6 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-
-##############################################################
-# Random data generation code
-
-# +
 class PathGenerator():
     """
     generate random lognormal paths
@@ -148,41 +143,3 @@ class PathGenerator():
         alias for path
         """
         return self.path()
-    
-##############################################################
-# Data retrieval code [now in carbon.helpers]
-
-# +
- 
-def pdread(fn, datacol=None, indexcol=None):
-    """
-    reads a dataframe and returns a single column with index
-    
-    :fn:        the full filename incl path
-    :datacol:   name or index of the data col; None returns frame
-    :indexcol:  name of the index col (default: "datetime")
-    :returns:   pandas series
-    """
-    df = pd.read_pickle(fn)
-    if datacol is None:
-        return df
-    elif isinstance(datacol, str):
-        return df[datacol]
-    elif isinstance(datacol, int):
-        return df.iloc[:, datacol]
-    else:
-        raise ValueError("datacol must be None, str or int", datacol)
-
-def pdcols(fn):
-    """
-    reads a dataframe and returns a single column with index
-    
-    :fn:        the (full) filename
-    :returns:   the column names (excluding the first two)
-    """
-    return pd.read_pickle(fn).columns
-
-def pathtime(path):
-    """returns the time (in years) covered by the series `path`"""
-    (path.index[-1]-path.index[0])/pd.Timedelta(days=1)/365.25
-
