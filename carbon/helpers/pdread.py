@@ -1,8 +1,8 @@
 """
 Carbon helper module - read time series from data frame
 """
-__VERSION__ = "1.0"
-__DATE__ = "23/01/2023"
+__VERSION__ = "2.0"
+__DATE__ = "25/01/2023"
 
 import pandas as _pd
 
@@ -10,17 +10,7 @@ import pandas as _pd
 from os.path import join as j
 import os
 
-def dfread(fn):
-    """reads dataframe from file and asserts format"""
-    
-    if fn[-7:] == ".pickle":
-        df = _pd.read_pickle(fn)
-    else:
-        df = _pd.read_csv(fn)
-    assert df.columns[0] == "time"
-    assert df.columns[1] == "datetime"
-    return df
-    
+
 def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_days=None, period_pc=None):
     """
     reads a dataframe and returns a single column with index
@@ -37,8 +27,7 @@ def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_d
     """
     if indexcol is None: indexcol = "datetime"
 
-    df = dfread(fn)
-    df = df.set_index(indexcol)
+    df = _pd.read_pickle(fn)
     
     if not period_days is None and not period_pc is None:
         raise ValueError("Not both period_days and period_pc can not-None")
@@ -71,11 +60,11 @@ def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_d
     df = df[(df.index >= from_ts) & (df.index <= to_ts)]
     
     if datacol is None:
-        return df.iloc[:, 1:]
+        return df
     elif isinstance(datacol, str):
         return df[datacol]
     elif isinstance(datacol, int):
-        return df.iloc[:, datacol+1]
+        return df.iloc[:, datacol]
     else:
         raise ValueError("datacol must be None, str or int", datacol)
 
@@ -86,7 +75,7 @@ def pdcols(fn):
     :fn:        the (full) filename
     :returns:   the column names (excluding the first two)
     """
-    return dfread(fn).columns[2:]
+    return _pd.read_pickle(fn).columns
 
 def pathtime(path):
     """

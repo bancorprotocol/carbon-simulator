@@ -12,6 +12,8 @@ class SharedVar:
 
     :value:      the value with which to initialise the object
     :oid:        disregarded; just for the benefit of __repr__
+
+    see https://rszalski.github.io/magicmethods/
     """
     __VERSION__ = __VERSION__
     __DATE__ = __DATE__

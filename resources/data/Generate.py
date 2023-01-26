@@ -13,206 +13,19 @@
 #     name: python3
 # ---
 
-from math import sqrt, exp, log
-from datetime import timedelta as _timedelta, datetime as _datetime
-import numpy as np
-import pandas as pd
-from matplotlib import pyplot as plt
+from generatelib import *
+from math import sin, cos, pi
+import os
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [8,4]
 
 # # Generate Data
+# ## Generate big random path samples
 
-FILENAME = lambda sig, mu: f"RANPTH-{int(sig*10000):05d}-{int(mu*10000):04d}"
+FILENAME = lambda sig, mu: f"RAN-{int(sig*100):05d}-{int(mu*100):04d}-NEW"
 FILENAME(sig=0.2, mu=0)
 
 FILENAME = None    # comment out to generate paths
-
-
-# ## Code
-
-# ### Data retrieval code
-
-# +
-def dfread(fn):
-    """reads dataframe from file and asserts format"""
-    
-    if fn[-7:] == ".pickle":
-        df = pd.read_pickle(fn)
-    else:
-        df = pd.read_csv(fn)
-    assert df.columns[0] == "time"
-    assert df.columns[1] == "datetime"
-    return df
-    
-def pdread(fn, datacol=None, indexcol=None):
-    """
-    reads a dataframe and returns a single column with index
-    
-    :fn:        the (full) filename
-    :datacol:   name or index of the data col; None returns frame
-    :indexcol:  name of the index col (default: "datetime")
-    :returns:   pandas series
-    """
-    if indexcol is None: indexcol = "datetime"
-
-    df = dfread(fn)
-    df = df.set_index(indexcol)
-    if datacol is None:
-        return df.iloc[:, 1:]
-    elif isinstance(datacol, str):
-        return df[datacol]
-    elif isinstance(datacol, int):
-        return df.iloc[:, datacol+1]
-    else:
-        raise ValueError("datacol must be None, str or int", datacol)
-
-def pdcols(fn):
-    """
-    reads a dataframe and returns a single column with index
-    
-    :fn:        the (full) filename
-    :returns:   the column names (excluding the first two)
-    """
-    return dfread(fn).columns[2:]
-
-def pathtime(path):
-    """returns the time (in years) covered by the series `path`"""
-    (path.index[-1]-path.index[0])/pd.Timedelta(days=1)/365.25
-
-
-# -
-
-# ### Data generation code
-
-# +
-class PathGenerator():
-    """
-    generate random lognormal paths
-    
-    :mu:       drift parameter; eg 0.05 = 5%
-    :sig:      volatility parameter; eg 0.2 = 20%
-    :s0:       spot value at time zero
-    :time:     time period (in years)
-    :N:        number of steps (excluding t=0)
-    """
-    
-    DEFAULTS = {
-        "mu": 0,
-        "sig": 0.5,
-        "s0": 100,
-        "time": 1,
-        "N": 100,
-        "startdt": (2020, 1, 1),
-        "numpaths": 100,
-        "colname": "p{i:04d}",
-    }
-    
-    def __init__(self, mu=None, sig=None, s0=None, time=None, N=None, startdt=None):
-        
-        if mu is None: 
-            mu = self.DEFAULTS["mu"]
-        if sig is None: 
-            sig = self.DEFAULTS["sig"]
-        if s0 is None: 
-            s0 = self.DEFAULTS["s0"]        
-        if time is None: 
-            time = self.DEFAULTS["time"] 
-        if N is None: 
-            N = self.DEFAULTS["N"]  
-        if startdt is None: 
-            startdt = self.DEFAULTS["startdt"]  
-            
-        self.mu = mu
-        self.sig =sig
-        self.s0 = s0
-        self.time = time
-        self.N = N
-        self.startdt = startdt
-        
-        self.dt = time/N
-        self.dt_td = _timedelta(days=self.dt*365.25)
-        self.mudt = self.mu*self.dt
-        self.halfsig2dt = 0.5*self.sig*self.sig*self.dt
-        self.volsqrtdt = self.sig*sqrt(self.dt)
-        self.times = np.array([i*self.dt for i in range(self.N+1)])
-        self.datetimes = self._datetime_r(self.startdt)
-            
-
-    def path(self, plot=False):
-        """
-        generates a new random path
-        
-        :plot:     if True, plot the path
-        """
-        increments = np.random.default_rng().lognormal(
-                        mean=        self.mudt - self.halfsig2dt, 
-                        sigma=       self.volsqrtdt, 
-                        size=        self.N)
-        
-        path = np.cumprod(np.insert(increments, 0, self.s0))
-        if plot:
-            self._plot(path)
-        return path
-    
-    def _plot(self, path=None, datetimes=None):
-        """
-        plots the path with maplotlib
-        """
-        if path is None: path = self.path()
-        if datetimes is None: datetimes = self.datetimes
-        
-        plt.title(f"random path (sig={self.sig*100:.0f}%, mu={self.mu*100:.0f}%, N={self.N})")
-        plt.xlabel("time")
-        plt.ylabel("spot")
-        plt.plot(datetimes, path)
-        plt.grid()
-    
-    def _datetime_r(self, startdt=None):
-        """
-        generates a datetime range
-        
-        :startdt:    either a datetime object, or tuple (day, month, year)
-        """
-        if startdt is None: startdt = self.DEFAULTS["startdt"]
-        if not isinstance(startdt, _datetime):
-            if not len(startdt) == 3:
-                raise ValueError("startdate must be a tuple of lenght 3", startdt)
-            startdt = _datetime(*startdt)
-        return np.array([startdt+i*self.dt_td for i in range(self.N+1)])
-    
-    @staticmethod
-    def vec2ar(paths):
-        """concatenates list of vectors into a single numpy array"""
-        return np.concatenate([p.reshape(-1,1) for p in paths], axis=1)
-    
-    def pathdf(self, numpaths=None, colname=None):
-        """
-        generate a pandas dataframe with newly generated paths
-        
-        :numpaths:    number of paths to generate
-        :colname:     column name (format string; {i} is the path index)
-        """
-        
-        if numpaths is None: numpaths = self.DEFAULTS["numpaths"]
-        if colname is None: colname = self.DEFAULTS["colname"]
-        
-        paths = [self.path() for _ in range(numpaths)]
-        df0 = pd.DataFrame(data=self.vec2ar([self.times, self.datetimes]), columns=["time", "datetime"])
-        df1 = pd.DataFrame(data=self.vec2ar(paths), columns=[colname.format(i=i) for i in range(len(paths))])
-        df = pd.concat([df0, df1], axis=1)
-        return df
-    
-    def __call__(self):
-        """
-        alias for path
-        """
-        return self.path()
-    
-path = PathGenerator().path(plot=True)
-# -
-
-# ## Data generation
 
 if not FILENAME is None:
     print("Generating paths")
@@ -230,20 +43,90 @@ else:
 
 # !ls *.csv
 
+# ## Generate single random path repo
+
+FILENAME2 = lambda mu: f"RAN-SIGMU"
+FILENAME2 = None
+
+dfs = {
+    (sig,mu): PathGenerator(sig=sig, mu=mu).pathdf(10)
+    for sig in (0.01, 0.05, 0.25, 0.5, 0.75, 1)
+    for mu in [0,0.05,0.2]
+}
+df_aggr = pd.concat(dfs.values(), axis=1)
+#df.to_csv(FILENAME(sig=sig, mu=0)+".csv.gz", index=False, compression="gzip")
+#df.to_csv(FILENAME(sig=sig, mu=0)+".csv", index=False)
+if not FILENAME2 is None:
+    df_aggr.to_pickle(FILENAME2(mu=int(mu*100))+".pickle")
+#df_aggr
+
+# !ls
+
+# +
+# #!rm RAN-AGGR.pickle
+
+# +
+# fns = [fn for fn in os.listdir() if fn[:3]=="RAN"]
+# fns = ['RAN-005-00.pickle',
+#  'RAN-010-00.pickle',
+#  'RAN-100-00.pickle',
+#  'RAN-075-00.pickle',
+#  'RAN-020-00.pickle',
+#  'RAN-050-00.pickle']
+# # for fn in fns:
+# #     df = pd.read_pickle(fn)
+# #     del df["time"]
+# #     df = df.set_index("datetime")
+# #     df.to_pickle(fn)
+# pd.read_pickle(fns[2])
+# -
+
+# ## Generate Sin, Cos paths
+
+PathGenerator.DEFAULTS
+
+# +
+start_dt=pd.Timestamp("2020-01-01")
+end_dt=pd.Timestamp("2021-01-01")
+nsteps = 200
+delt = (end_dt-start_dt)/nsteps
+x = lambda n: 2*pi*n/nsteps
+t = lambda n: start_dt + delt*n
+p = lambda i, f: 75+50*cos((f+1)*x(i))
+assert x(nsteps) == 2*pi
+assert t(nsteps) == end_dt
+
+
+ix = 10
+time = np.array([t(i) for i in range(nsteps+1)])
+
+dfs = [
+    pd.DataFrame(
+        np.array([p(i,ix) for i in range(nsteps+1)]), 
+        index=time, 
+        columns=[f"p-a-{ix:02d}"]
+    )
+for ix in range(10)
+]
+df_aggr = pd.concat(dfs, axis=1)
+df_aggr.to_pickle("COS.pickle")
+plt.plot(dfs[0])
+# -
+
+p(100,5)
+
+# !ls
+
 # ## Data retrieval examples
 
-fn = "RANPTH-05000-0000.pickle"
-
-# +
-#pd.read_csv(fn)
-
-# +
-#pdread(fn)
-# -
+fn = "COS.pickle"
 
 pdcols(fn)
 
-pdread(fn, "p0000")
+ser=pdread(fn, "p-a-01")
+ser
+
+plt.plot(ser)
 
 ser = pdread(fn, 0)
 ser
@@ -251,9 +134,5 @@ ser
 ser.index[0]
 
 pd.Timedelta(days=1)
-
-ser.index[-1]-ser.index[0]
-
-(ser.index[-1]-ser.index[0])/pd.Timedelta(days=1)
 
 

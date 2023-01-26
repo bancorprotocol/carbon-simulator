@@ -18,7 +18,7 @@ from carbon.helpers.widgets import CheckboxManager, DropdownManager, PcSliderMan
 
 from carbon.helpers import fload, fsave
 from carbon.helpers import Params
-from carbon.helpers import dfread, pdread, pathtime, pathtime_yrs, pathtime_days, pdcols, j
+from carbon.helpers import pdread, pathtime, pathtime_yrs, pathtime_days, pdcols, j
 from carbon.helpers import strategy
 from carbon.helpers import require_version
 from carbon.helpers import print_version
@@ -304,7 +304,9 @@ def test_helpers_strategy():
         'pbuy_end': 120,
         'pair': 'RSK/CSH',
         'psell_marginal': None,
-        'pbuy_marginal': None
+        'pbuy_marginal': None,
+        'y_int_sell': None,
+         'y_int_buy': None
     }
     
     assert strategy(90, 80, 110, 120).p == ('RSK', 0, 90, 80, 1e-10, 110, 120)
