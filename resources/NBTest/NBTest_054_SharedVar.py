@@ -17,7 +17,7 @@
 from carbon import CarbonSimulatorUI, CarbonOrderUI, P, __version__, __date__
 from carbon.helpers import SharedVar, print_version
 from math import floor, ceil, trunc
-print_version(require="2.3")
+print_version(require="2.2.4")
 
 # # SharedVar class in helpers (NBTest 54)
 

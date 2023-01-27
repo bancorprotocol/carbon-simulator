@@ -31,7 +31,7 @@ from carbon.helpers import print_version
 
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
-print_version(require="2.3")
+print_version(require="2.2.4")
 # -
 
 # # Carbon Helpers (NBTest 052)
