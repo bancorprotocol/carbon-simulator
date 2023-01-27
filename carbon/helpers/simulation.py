@@ -1,8 +1,8 @@
 """
 Carbon helper module - run the simulation
 """
-__VERSION__ = "1.1"
-__DATE__ = "25/01/2023"
+__VERSION__ = "2.0"
+__DATE__ = "27/01/2023"
 
 from collections import namedtuple as _nt
 import numpy as _np
@@ -15,7 +15,7 @@ from .params import Params
 from .strategy import strategy as _strategy
 
 
-simresults_nt = _nt("simresults", "rskamt_r, cshamt_r, value_r, hodl_r, margpbuy_r, margpsell_r")
+simresults_nt = _nt("simresults", "strat, spot_r, rskamt_r, cshamt_r, value_r, hodl_r, margpbuy_r, margpsell_r")
 
 def run_sim(strat, path):
     """
@@ -32,6 +32,16 @@ def run_sim(strat, path):
     for ix, strat_ in enumerate(strat):
         if not strat_.slashpair == slashpair:
             raise ValueError("All pairs must be the same", ix, slashpair, strat_.slashpair, strat[0], strat_)
+    
+    path_first_date =min(path.index)
+    path_first_data_above_0 = min(path.index[path>0])
+    if path_first_data_above_0 > path_first_date:
+        print(f"[run_sim] warning: zero price data below {path_first_data_above_0} (path start {path_first_date})")
+        path = path[path>0]
+    
+    spot = path.iloc[0]
+    #print("[run_sim] rescaling", strat)
+    strat = tuple(s.rescale_strat(spot) for s in strat)
     
     Sim = _CarbonSimulatorUI(pair=slashpair)
     #print("[run_sim] strategies", strat)
@@ -74,6 +84,8 @@ def run_sim(strat, path):
     #print(f"f[run_sim] initial amounts RSK={rskamt_r[0]}, CSH={cshamt_r[0]}", )
 
     return simresults_nt(
+        strat       = strat,
+        spot_r      = path,
         rskamt_r    = rskamt_r, 
         cshamt_r    = cshamt_r, 
         value_r     = value_r,
@@ -94,16 +106,17 @@ SIM_DEFAULT_PARAMS = Params(
     plotAsk         = True,      # whether to plot sell (ask) ranges and marginal prices
 )
 
-def plot_sim(strat, path, simresults, dataid, params):
+def plot_sim(simresults, dataid, params):
     """
     plots the simulation chart
 
-    :strat:         the strategy object, or a list thereof in case of multiple strategies
-    :path:          the spot path used in the simulation, as pandas series
     :simresults:    the simresults_nt returned by run_sim (rskamt_r, cshamt_r, value_r, ...)
     :dataid:        a description of the data the will be used in the title
     :params:        the parameter object (can be a dict; defaults SIM_DEFAULT_PARAMS)
     """
+
+    strat = simresults.strat
+    path = simresults.spot_r
 
     p = Params.construct(params, defaults=SIM_DEFAULT_PARAMS.params)
     
