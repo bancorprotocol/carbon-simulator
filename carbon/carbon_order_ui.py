@@ -11,8 +11,8 @@ VERSION HISTORY
 - v1.6: linked curves incl trading (final), addliqy, tradeto; minor formula improvement (1.5.1)
 - v1.6.1: bugfix
 """
-__version__ = "1.6.1"
-__date__ = "21/Jan/2023"
+__version__ = "1.6.2"
+__date__ = "27/Jan/2023"
 
 try:
     from .pair import CarbonPair
@@ -745,6 +745,7 @@ class CarbonOrderUI:
             if b/a-1 < eps:
                 return m
 
+    EPSILON = 1e-10
     def selly(self, dy, execute=True, allowneg=True, expandcurve=False, raiseonerror=False):
         """
         executes a trade selling dy for dx (dy given)
@@ -758,11 +759,15 @@ class CarbonOrderUI:
         """
         if dy < 0:
             if not allowneg:
-                if raiseonerror:
-                    raise ValueError(f"Negative dy is not allowed (allowneg={allowneg})", dy)
-                return None
+                if dy < -self.EPSILON:
+                    if raiseonerror:
+                        raise ValueError(f"Negative dy is not allowed (allowneg={allowneg})", dy)
+                    return None
+                else:
+                    dy = 0
 
-        if dy == 0:
+        if abs(dy) < self.EPSILON:
+            dy = 0
             execute = False
 
         yold = self.y
@@ -771,9 +776,10 @@ class CarbonOrderUI:
         pnew = self.p_marg_f(dy, checkbounds=False)
 
         if ynew < 0:
-            if raiseonerror:
-                raise ValueError(f"Traded beyond capacity (yold={yold}, ynew={ynew}, dy={dy})")
-            return None
+            if ynew < -self.EPSILON:
+                if raiseonerror:
+                    raise ValueError(f"Traded beyond capacity (yold={yold}, ynew={ynew}, dy={dy})")
+                return None
 
         elif ynew > self.yint:
             if not expandcurve:
@@ -840,13 +846,12 @@ class CarbonOrderUI:
         result["action"] = "bytarget[buyx]"
         return result
 
-    def tradeto(self, p_marg, execute=True, raiseonerror=False):
+    def tradeto(self, p_marg, execute=True):
         """
         executes a trade dy for dx (target marginal price p_marg given)
 
         :p:             the target marginal price
         :execute:       if False, only display results, but do not update the object
-        :raiseonerror:  if True, error lead to raising on exception
         """
         if self.yint == 0:
             self.yint = 1e-50 # selly fails on a fully empty curve, even with dy=0
@@ -857,9 +862,9 @@ class CarbonOrderUI:
             dy = 0
         except self.PriceOutOfBoundsErrorBeyondEnd:
             dy = self.dyfromp_f(self.p_end, checkbounds=False, raiseonerror=False)
-        result = self.selly(dy, execute, allowneg=False, expandcurve=False, raiseonerror=raiseonerror)
+        result = self.selly(dy, execute, allowneg=False, expandcurve=False, raiseonerror=True)
         if result is None:
-            raise RuntimeError("Unexpected None value", dy, self.yint, self.y, self.p_marg, p_marg, self)
+            raise RuntimeError(f"Unexpected None value at {p_marg}", dy, self.yint, self.y, self.p_marg, p_marg, self)
         result["action"] = "byprice[tradeto]"
         return result
         
