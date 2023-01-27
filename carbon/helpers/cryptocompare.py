@@ -1,7 +1,7 @@
 """
 Carbon helper module - retrieve data from CryptoCompare
 """
-__VERSION__ = "1.0"
+__VERSION__ = "1.1"
 __DATE__ = "27/Jan/2023"
 
 import os as _os
@@ -9,7 +9,10 @@ import pandas as _pd
 import hashlib as _hashlib
 import requests as _requests
 import pickle as _pickle
+from collections import namedtuple as _namedtuple
 
+
+pair_t = _namedtuple("pair", "tknb,tknq")
 
 class CryptoCompare():
     """
@@ -39,14 +42,11 @@ class CryptoCompare():
         if apikey is None:
             if apikeyname is None:
                 apikeyname = self.APIKEYNAME
-            apikey = self.read_apikey(apikeyname)
+            apikey = _os.getenv(self.keyname)
             if apikey is None:
-                print(f"Can't find API key {keyname} in environment variables.")
-                print(f"Use `export {keyname}=<value>` to set it BEFORE you launch Jupyter")
-                raise RuntimeError(f"API key not present. Use `export {keyname}=<value>` to set it before launching Jupyter.")
-            else:
-                pass
-                #print (f"API key {keyname} found [len={len(APIKEY)}]", )
+                print(f"Can't find API key {apikeyname} in environment variables.")
+                print(f"Use `export {apikeyname}=<value>` to set it BEFORE you launch Jupyter")
+                raise RuntimeError(f"API key not present. Use `export {apikeyname}=<value>` to set it before launching Jupyter.")
         self.apikey = apikey
     
     def url(self, endpoint):
@@ -61,13 +61,6 @@ class CryptoCompare():
         if self.apikey is True:
             return "0"*40
         return _hashlib.sha1(self.apikey.encode()).hexdigest()
-            
-    def read_apikey(self, keyname):
-        """
-        reads the API key from the `keyname` environment variable, and returns it
-        """
-        apikey = _os.getenv(keyname)
-        return apikey
     
     def datafn(self, fn):
         """returns the full data file name, including path"""
@@ -375,7 +368,46 @@ class CryptoCompare():
             ], axis=1
         )
 
+    @staticmethod
+    def pt_from_pair(pair):
+        """
+        creates a pair tuple (tknb, tknq) from a pair 'TKNB/TKNQ'
+        """
+        return pair_t(*pair.split("/"))
     
+    @staticmethod
+    def pair_from_pt(pair_t):
+        """
+        creates a pair 'TKNB/TKNQ' from a pair tuple (tknb, tknq)
+        """
+        return "/".join(pair_t)
 
+    @staticmethod
+    def coinlist(coins, sep=","):
+        """
+        creates a coin list from separated string (does not touch lists)
+        """
+        if isinstance(coins, str):
+            return tuple(c.strip() for c in coins.split(sep))
+        else:
+            return coins
+
+    @classmethod
+    def create_pairs(cls, coins, quotecoins=None):
+        """
+        create pair tuples from all possible combinations of coins and quotecoins
+        
+        :coins:        a list of coins, either ("tkn1", "tkn2") or "tkn1, tkn2"
+        :quotecoins:   a list of quote coins; if None set equal to coins
+        :returns:      all combinations as tuples (c, qc) with c!=qc
+        """
+        coins = cls.coinlist(coins)
+        if quotecoins is None:
+            quotecoins = coins
+        else:
+            quotecoins = cls.coinlist(quotecoins)
+        result = ( (c,q) for q in quotecoins for c in coins)
+        result = ( pair_t(c,q) for c,q in result if c != q)
+        return tuple (result)
 
       
