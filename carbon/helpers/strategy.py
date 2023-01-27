@@ -1,8 +1,8 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "1.2"
-__DATE__ = "26/01/2023"
+__VERSION__ = "2.0"
+__DATE__ = "27/01/2023"
 
 
 from dataclasses import dataclass as _dataclass
@@ -23,6 +23,9 @@ class strategy():
     :pbuy_marginal:     the current marginal price of the buy range
     :rsk:               risk asset name (default RSK)
     :csh:               cash name (default CSH)
+    :rescale:           whether or not the strategy should be rescaled when
+                        calling the rescale method
+    :rescalted_fctr:    the factor this strategy was rescaled (None if not rescaled)
 
     *p_bid_x and p_ask_x are provided as alias properties
 
@@ -46,6 +49,9 @@ class strategy():
     rsk: str = "RSK"
     csh: str = "CSH"
 
+    rescale: bool = True
+    rescaled_fctr: float = None
+
     def __post_init__(self):
         pm_provided = not self.psell_marginal is None or not self.pbuy_marginal is None
         yi_provided = not self.y_int_sell is None or not self.y_int_buy is None
@@ -53,6 +59,43 @@ class strategy():
             raise ValueError("Not both p_marginal and y_int can be provided", self.psell_marginal, self.y_int_sell, self.pbuy_marginal, self.y_int_buy)
         
     MIN_SEED_AMT = 1e-10
+
+    def rescale_strat(self, newspot=100, oldspot=100, force=False):
+        """
+        rescale the strategy to another spot price (returns new object)
+
+        :newspot:     the new spot price  to which to rescale
+        :oldspot:     the old spot price basis for rescaling
+        :force:       normally, strategies with rescale = False are not rescaled
+                      using force = True forces a rescale
+        """
+        if not self.rescale:
+            if not force:
+                print("[rescale_strat] not rescaling", newspot, oldspot, self)
+                return self
+        fctr = newspot / oldspot
+        #print(f"[rescale_strat] rescaling new={newspot}, old={oldspot}, fctr={fctr}", self)
+        return self.__class__(
+            p_sell_a = self.p_sell_a*fctr,
+            p_sell_b = self.p_sell_b*fctr,
+            p_buy_a  = self.p_buy_a*fctr,
+            p_buy_b  = self.p_buy_b*fctr,
+
+            amt_rsk  = self.amt_rsk,
+            amt_csh  = self.amt_csh,
+
+            psell_marginal  = self.psell_marginal*fctr if not self.psell_marginal is None else None,
+            pbuy_marginal   = self.pbuy_marginal*fctr if not self.pbuy_marginal is None else None,
+
+            y_int_sell  = self.y_int_sell,
+            y_int_buy   = self.y_int_buy,
+
+            rsk  = self.rsk,
+            csh  = self.csh,
+
+            rescale = False,
+            rescaled_fctr = fctr,
+        )
 
     @property
     def p_bid_a(self):
