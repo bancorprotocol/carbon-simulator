@@ -1,8 +1,8 @@
 """
 Carbon helper module - read time series from data frame
 """
-__VERSION__ = "2.0"
-__DATE__ = "25/01/2023"
+__VERSION__ = "2.1"
+__DATE__ = "26/01/2023"
 
 import pandas as _pd
 
@@ -11,7 +11,7 @@ from os.path import join as j
 import os
 
 
-def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_days=None, period_pc=None):
+def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_days=None, period_pc=None, min_dt=None):
     """
     reads a dataframe and returns a single column with index
     
@@ -23,11 +23,13 @@ def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_d
     :from_pc:       alternative to from_ts; sets the start date as perc of full time
     :period_days:   the observation period in days (inclusive); default end of series
     :period_pc:     alternative to period_days; sets period as perc of full time
+    :min_dt:        before anything else is applied, everything before min_dt is discarded
     :returns:       pandas series (or data frame if indexcol is None)
     """
     if indexcol is None: indexcol = "datetime"
 
     df = _pd.read_pickle(fn)
+    if min_dt: df = df[df.index >= min_dt]
     
     if not period_days is None and not period_pc is None:
         raise ValueError("Not both period_days and period_pc can not-None")
@@ -60,11 +62,11 @@ def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_d
     df = df[(df.index >= from_ts) & (df.index <= to_ts)]
     
     if datacol is None:
-        return df
+        return df.copy()
     elif isinstance(datacol, str):
-        return df[datacol]
+        return df[datacol].copy()
     elif isinstance(datacol, int):
-        return df.iloc[:, datacol]
+        return df.iloc[:, datacol].copy()
     else:
         raise ValueError("datacol must be None, str or int", datacol)
 
