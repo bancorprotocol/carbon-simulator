@@ -1,8 +1,8 @@
 """
 Carbon helper module - parameter management
 """
-__VERSION__ = "1.0"
-__DATE__ = "22/01/2023"
+__VERSION__ = "1.1"
+__DATE__ = "27/01/2023"
 
 class Params():
     """
@@ -66,7 +66,6 @@ class Params():
             result._defaults = {**defaults}
         return result
         
-
     def add(self, **kwargs):
         """
         adds additional parameters from kwargs (params must not yet exist)
@@ -117,6 +116,20 @@ class Params():
             self.set_default()
         return self._defaults
     
+    def set(self, item, value, allowupdate=True):
+        """
+        sets an item
+
+        :item:          the item to be set
+        :value:         the value to set it to
+        :allowupdate:   if True (default), existing items can be changed
+        :returns:       self (for chaining)
+        """
+        if not allowupdate:
+            if item in self._params:
+                raise ValueError(f"Item {item} already exists with value {self._params[item]} and update not allowed.", value, self._params, allowupdate)
+        self._params[item] = value
+        return self
 
     def __getitem__(self, item):
         try:
@@ -125,9 +138,7 @@ class Params():
             return self.get_default(item, raiseonerror=False) 
     
     def __setitem__(self, item, value):
-        if item in self._params:
-            raise ValueError(f"Item {item} already exists with value {self._params[item]}", value, self._params)
-        self._params[item] = value
+        self.set(item, value, allowupdate=False)
     
     def __getattr__(self, item):
         try:
