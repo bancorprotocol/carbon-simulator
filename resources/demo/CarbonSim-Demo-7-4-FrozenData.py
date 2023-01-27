@@ -19,21 +19,25 @@ from carbon.helpers import j, strategy, pdread, pdcols, Params, fsave, listdir
 from carbon.helpers.widgets import CheckboxManager, DropdownManager, PcSliderManager
 from carbon.helpers.simulation import run_sim, plot_sim, SIM_DEFAULT_PARAMS
 
-try:
-    plt.style.use('seaborn-v0_8-dark')
-except:
-    plt.style.use('seaborn-dark')
-
 plt.rcParams['figure.figsize'] = [12,6]
-print_version(require="2.2.3")
+plt_style('seaborn-v0_8-dark', 'seaborn-dark')
+print_version(require="2.2.4")
 # -
 
 # # Carbon Simulation - Demo 7-4 
-# _[frozen_20230124](https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230124)_
+# _[frozen_20230127][frozen]: this notebook on [Binder][frozen_nb] and on [github][frozen_gh]_
 #
 # Use **Run -- Run All Cells** in the menu above to run the notebook, then adjust the simulation parameters using the widgets provided. You can find **further usage instructions at the end of this notebook**, and throughout the notebook.
 #
-# You can find this notebook on [Binder/frozen_20230124](https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230124?labpath=Frozen%2FDemo7-4%2FDemo7-4.ipynb)
+# Further resources are (1) the github repo [github:carbon-simulator-binder][repob] associated with this binder, (2) the main simulator repo [github:carbon-simulator][repo], (3) the carbon package [pypi:carbon-simulator][simpypi] and finally (4) the ["Carbon Simulator" presentation][presn]
+#
+# [presn]:https://github.com/bancorprotocol/carbon-simulator/blob/beta/resources/notes/202301%20Simulating%20Carbon.pdf
+# [simpypi]:https://pypi.org/project/carbon-simulator/
+# [repo]:https://github.com/bancorprotocol/carbon-simulator
+# [repob]:https://github.com/bancorprotocol/carbon-simulator-binder
+# [frozen]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230127
+# [frozen_nb]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230127?labpath=Frozen%2FDemo7-4%2FDemo7-4.ipynb
+# [frozen_gh]:https://github.com/bancorprotocol/carbon-simulator-binder/blob/main/Frozen/Demo7-4/Demo7-4.ipynb
 
 # ## Setup
 
@@ -69,7 +73,7 @@ DATAPATH = "../data"
 try:
     datafn_w()
 except:
-    datafn_w = DropdownManager(listdir(DATAPATH, ".pickle"), defaultval="RAN-050-00")
+    datafn_w = DropdownManager(listdir(DATAPATH, ".pickle"), defaultval="BTC-COINS")
     datafn_w()
 
 # ### The data columns within that data collection (scenarios)
@@ -78,10 +82,15 @@ except:
 
 cols = tuple(pdcols(j(DATAPATH, f"{datafn_w.value}.pickle")))
 try:
+    assert datafn_w.value == old_datafn_w_value
     datacols_w(vertical=False)
 except:
-    COL0, NCOLS, NCCOLS = 0, 20, 2
-    datacols_w = CheckboxManager(cols[COL0:COL0+NCOLS], values=NCCOLS*[True]+(NCOLS-NCCOLS)*[False])
+    old_datafn_w_value = datafn_w.value
+    COL0, NCOLS, NCCOLS = 0, min(20, len(cols)), 3
+    try:
+        datacols_w = CheckboxManager(cols[COL0:COL0+NCOLS], values=NCCOLS*[True]+(NCOLS-NCCOLS)*[False])
+    except:
+        datacols_w = CheckboxManager(cols, values=[1,]+[0,]*(len(cols)-1))
     datacols_w(vertical=False)
 
 # ### Strategies
@@ -94,15 +103,17 @@ except:
     strats = {
          "slider":  None,
          "s1":      strategy.from_mgw(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0),
+         "s2":      strategy.from_mgw(m=100, g=0.05, w=0.15, u=0.7, amt_rsk=1, amt_csh=0),
+         "s3":      strategy(p_buy_a=80, p_buy_b=70, p_sell_a=110, p_sell_b=120, amt_rsk= 1, amt_csh=0),
          "m1":     [strategy.from_mgw(m=100, g=0.25, w=0.05, amt_rsk=1, amt_csh=0),
                     strategy.from_mgw(m=100, g=0.10, w=0.03, amt_rsk=1, amt_csh=0)],  
          "m2":     [strategy.from_mgw(m=100, g=0.10, w=0.1,  amt_rsk=1, amt_csh=0),
                     strategy.from_mgw(m=100, g=0.20, w=0.1,  amt_rsk=1, amt_csh=0)],  
-         "s3":      strategy.from_mgw(m=100, g=0.20, w=0.05, amt_rsk=1, amt_csh=0),
-         "s4":      strategy.from_mgw(m=100, g=0.10, w=0.20, amt_rsk=1, amt_csh=0),
-         "s5":      strategy.from_mgw(m=100, g=0.20, w=0.20, amt_rsk=1, amt_csh=0),
+         "uv3":     strategy.from_u3(p_lo=100, p_hi=150, start_below=True, fee_pc=0.05, tvl_csh=1000),
     }
-    strats_w = CheckboxManager(strats.keys(), values=[1,0,1,0,0,0,0])
+    strats_w = CheckboxManager(strats.keys(), values=[1,0,0,0,1,0,0])
+    #strats_w = CheckboxManager(strats.keys(), values=[1,0,0,0,0,0,0])
+    #strats_w = CheckboxManager(strats.keys(), values=[0,0,0,0,0,0,1])
     strats_w(vertical=False)
 
 # The checkboxes above determined which strategies are tested, one by one.
@@ -117,28 +128,27 @@ except:
 
 # ### Time period
 #
-# this is the time period that is plotted; periods and start dates are quoted as percentage total time; the window is cut at the left, eg start=0.9 and length=0.5 shows 0.9...1.0
+# this is the time period that is plotted; periods and start dates are quoted as percentage total time; the window is cut at the left, eg start=0.9 and length=0.5 shows 0.9...1.0. Before the sliders are applied, everything before `PATH_MIN_DATE` is discarded. 
 
+PATH_MIN_DATE = "2022-01-01"
 try:
     segment_w(vertical=True)
 except:
     segment_w = PcSliderManager(["Start date %", "Length %"], values=[0,1])
     segment_w(vertical=True)
 
-segment_w.values
-
 # ### The `slider` strategy
 #
-# This is the strategy called `slider`. Here `m` is the mid price of the range (adjust `S0`, `SMIN`, `SMAX` to change), `g%` is the gap between the ranges in percent, and `w%` is the width of the ranges in percent. 
+# This is the strategy called `slider`. Here `m` is the mid price of the range (adjust `S0`, `SMIN`, `SMAX` to change), `g%` is the gap between the ranges in percent, and `w%` is the width of the ranges in percent. The parameter `u%` is the range utilisation rate, where `u=0%` means the range is full, and `u~100%` means that it is almost empty. The parameter `rsk:csh` is the initial risk/cash ratio (where 0% means all csh, 100% all rsk, and 50% even split). Total cash value of the initial portfolio is `TVL` and the reference price is `SREF`.
 
 try:
     strat1_w(vertical=True)
 except:
-    S0, SMIN, SMAX = 100, 50, 150
-    strat1_w = PcSliderManager(["m", "g%", "w%"], values=[S0/100,0.05,0.05], range=[(SMIN/100,SMAX/100),(0,0.25),(0,0.25)])
+    S0, SMIN, SMAX, TVL, SREF = 100, 50, 150, 1000, 100
+    strat1_w = PcSliderManager(["m", "g%", "w%", "u%", "rsk:csh"], 
+                        values=[S0/100, 0.1, 0.25, 0, 0.5], 
+                        range=[(SMIN/100,SMAX/100),(0,0.25),(0,0.25),(0,1),(0,1)])
     strat1_w(vertical=True)
-
-strat1_w.values
 
 # ## Simulation
 
@@ -151,16 +161,16 @@ if output_w.values[3]:
 
 DATAID, DATAFN = datafn_w.value, j(DATAPATH, f"{datafn_w.value}.pickle") 
 OUTPATH = outpath_w.value if output_w.values[0] else None
-STARTPC, LENPC, MGW = segment_w.values[0], segment_w.values[1], strat1_w.values
-strats["slider"] = strategy.from_mgw(m=100*MGW[0], g=MGW[1], w=MGW[2], amt_rsk=1, amt_csh=0.001)
+STARTPC, LENPC, SV = segment_w.values[0], segment_w.values[1], strat1_w.values
+strats["slider"] = strategy.from_mgw(m=100*SV[0], g=SV[1], w=SV[2], u=SV[3], amt_rsk=TVL/SREF*SV[4], amt_csh=TVL*(1-SV[4]))
 for colnm in datacols_w.checked:
     for ix, stratid in enumerate(strats_w.checked):
         strat = strats[stratid]
-        path = pdread(DATAFN, colnm, from_pc=STARTPC, period_pc=LENPC)
+        path = pdread(DATAFN, colnm, from_pc=STARTPC, period_pc=LENPC, min_dt=PATH_MIN_DATE)
         simresults = run_sim(strat, path)
-        plot_sim(strat, path, simresults, f"{DATAID}/{colnm}", Params(**params_w.values_dct))
+        plot_sim(simresults, f"{DATAID}:{colnm}", Params(**params_w.values_dct))
         if isinstance(OUTPATH, str):
-            plt.savefig(j(OUTPATH, f"{DATAID}-{colnm}-{ix}-{STARTPC*100:.0f}-{LENPC*100:.0f}.png"))
+            plt.savefig(j(OUTPATH, f"{DATAID}-{colnm.replace('/', '')}-{ix}-{STARTPC*100:.0f}-{LENPC*100:.0f}.png"))
         plt.show()
 
 # Provide the corresponding box above (_"Show target directory listing"_) is checked, this will create a list of all `png` files generated throughout your analysis. Those files will only be generated is the box _"Save output to target directory"_ box is checked. The target directory is preset to the directory of this notebook, but you can change this in the code above. Keep in minds that if you run this analysis **on Binder, you have to download all files you want to keep before the server is destroyed.**
