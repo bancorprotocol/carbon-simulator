@@ -1,12 +1,13 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "2.1"
-__DATE__ = "28/01/2023"
+__VERSION__ = "2.2"
+__DATE__ = "29/01/2023"
 
 
 from dataclasses import dataclass as _dataclass
-from math import sqrt
+from math import sqrt as _sqrt
+from copy import copy as _copy
 
 @_dataclass
 class strategy():
@@ -37,8 +38,8 @@ class strategy():
     p_sell_b: float 
     p_buy_a: float
     p_buy_b: float
-    amt_rsk: float = 0
-    amt_csh: float = 0
+    amt_rsk: float = None
+    amt_csh: float = None
 
     psell_marginal:float = None
     pbuy_marginal:float = None
@@ -72,7 +73,10 @@ class strategy():
         if not self.rescale:
             if not force:
                 print("[rescale_strat] not rescaling", newspot, oldspot, self)
-                return self
+                return _copy(self)
+            else:
+                print("[rescale_strat] forcing rescale", newspot, oldspot, self)
+
         fctr = newspot / oldspot
         #print(f"[rescale_strat] rescaling new={newspot}, old={oldspot}, fctr={fctr}", self)
         return self.__class__(
@@ -87,8 +91,12 @@ class strategy():
             psell_marginal  = self.psell_marginal*fctr if not self.psell_marginal is None else None,
             pbuy_marginal   = self.pbuy_marginal*fctr if not self.pbuy_marginal is None else None,
 
-            y_int_sell  = self.y_int_sell,
-            y_int_buy   = self.y_int_buy,
+            # it is not really clear what to do here; strategies
+            # that do set yint should probably just set "do not rescale"
+            # we may come up with a better solution once we have marginal
+            # prices sorted in strategy creation
+            y_int_sell  = self.y_int_sell,  
+            y_int_buy = self.y_int_buy*fctr if not self.y_int_buy is None else None,   # CSH number
 
             rsk  = self.rsk,
             csh  = self.csh,
@@ -99,16 +107,25 @@ class strategy():
 
     def set_tvl(self, spot, cashpc, tvl):
         """
-        sets amt_csh and amt_rsk based on TVL, percentage cash and spot
+        creates new strategy and sets amt_csh and amt_rsk based on TVL, pc cash and spot
 
         :spot:      the spot price (in CSH per RSK)
         :cashpc:    the percentage of the portfolio in CSH (1.0=100%)
         :tvl:       the total portfolio value in CSH (default=1,000)
-        :returns:   self for chaining
+        :returns:   in every case this function returns a new object;
+                    provided both amt_rsk and amt_csh were None (not 0!)
+                    they are changed; otherwise newobj = self
         """
-        self.amt_rsk = tvl/spot*(1-cashpc)
-        self.amt_csh = tvl*cashpc
-        return self
+        #print("[set_tvl] spot, cashpc, tvl" , spot, cashpc, tvl)
+        newobj = _copy(self)
+        if self.amt_rsk is None and self.amt_csh is None:
+            #print("[set_tvl] setting new values for amt_rsk, amt_csh")
+            newobj.amt_rsk = tvl/spot*(1-cashpc)
+            newobj.amt_csh = tvl*cashpc
+        else:
+            #print("[set_tvl] existing values for amt_rsk, amt_csh; won't touch")
+            pass
+        return newobj
 
     @property
     def p_bid_a(self):
@@ -131,8 +148,10 @@ class strategy():
         return self.p_sell_b
 
     def __post_init__(self):
-        if not self.amt_rsk: self.amt_risk = self.MIN_SEED_AMT
-        if not self.amt_csh: self.amt_csh  = self.MIN_SEED_AMT
+        # the ==0 is important: do not touch None!
+        # (None means: to be filled in later)
+        if self.amt_rsk == 0: self.amt_risk = self.MIN_SEED_AMT
+        if self.amt_csh == 0: self.amt_csh  = self.MIN_SEED_AMT
         if self.rsk is None: self.rsk = "RSK"
         if self.csh is None: self.csh = "CSH"
 
@@ -213,16 +232,16 @@ class strategy():
         if tvl_csh is None:
             tvl_csh = 1000
 
-        if start_below:
-            p_sell_a = p_buy_b = p_lo   
-            p_sell_b = p_buy_a = p_hi   
-        else:
-            p_sell_a = p_buy_b = p_hi  
-            p_sell_b = p_buy_a = p_lo   
+        # the SELL range is always the (red) UPPER range
+        # for the sell range pa < pb
+        # the BUY range is always the (green) LOWER range
+        # for the buy range pa > pb
+        p_sell_a = p_buy_b = p_lo   
+        p_sell_b = p_buy_a = p_hi
 
         if not fee_pc is None:
             #fee_mult = 1+0.5*fee_pc
-            fee_shift = sqrt(p_lo*p_hi)*fee_pc*0.5
+            fee_shift = _sqrt(p_lo*p_hi)*fee_pc*0.5
             # p_sell_a *= fee_mult
             # p_sell_b *= fee_mult
             # p_buy_a  /= fee_mult
@@ -234,7 +253,7 @@ class strategy():
 
         if start_below:
             #p_marginal = p_lo*1.0000000001
-            amt_rsk = 100 # tvl_csh/sqrt(p_lo*p_hi)
+            amt_rsk = tvl_csh/_sqrt(p_lo*p_hi)
             amt_csh = 0
         else:
             #p_marginal = p_hi*0.9999999999
@@ -252,8 +271,12 @@ class strategy():
             csh = csh,
             # psell_marginal = p_marginal*fee_mult,
             # pbuy_marginal = p_marginal/fee_mult,
-            y_int_sell = 100, # RSK NUMBER
-            y_int_buy = 100 * sqrt(p_lo*p_hi), # CSH NUMBER
+            y_int_sell = tvl_csh/_sqrt(p_lo*p_hi), # RSK NUMBER
+            y_int_buy  = tvl_csh, # CSH NUMBER
+
+            # rescale = False is extremely important as rescaling
+            # typically changes the finely balanced ratios
+            rescale = False,
         )
 
     @property
@@ -261,7 +284,7 @@ class strategy():
         """returns a description of the strategy"""
         bid_s = f"BID {s.p_buy_b:.1f}-{s.p_buy_a:.1f} [{s.amt_csh} {s.csh}]"
         ask_s = f"ASK {s.p_sell_a:.1f}-{s.p_sell_b:.1f} [{s.amt_rsk} {s.rsk}]"
-        mid_s = f"MID {sqrt(s.p_buy_a*s.p_sell_a):.1f}"
+        mid_s = f"MID {_sqrt(s.p_buy_a*s.p_sell_a):.1f}"
         return f"{bid_s} - {mid_s} - {ask_s}"
     
     @property
@@ -287,22 +310,6 @@ class strategy():
             "y_int_sell":       s.y_int_sell,
             "y_int_buy":        s.y_int_buy,
         }
-
-        # def add_strategy(
-        #     self,
-        #     tkn: str,
-        #     amt_sell: Any = None,
-        #     psell_start: Any = None,
-        #     psell_end: Any = None,
-        #     amt_buy: Any = None,
-        #     pbuy_start: Any = None,
-        #     pbuy_end: Any = None,
-        #     pair: str = None,
-        #     psell_marginal: Any = None,
-        #     pbuy_marginal: Any = None,
-        #     y_int_sell: Any = None,
-        #     y_int_buy: Any = None, 
-        # ) -> Dict[str, Any]:
     
     @property
     def slashpair(self):
