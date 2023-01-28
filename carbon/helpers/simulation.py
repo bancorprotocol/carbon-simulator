@@ -41,6 +41,8 @@ def run_sim(strat, path, shift):
     :returns:   simresults tuple (rskamt_r, cshamt_r, value_r) where
                 each of the ranges numpy vectors
     """
+
+    #print("[run_sim] strat", strat)
     if isinstance(strat, _strategy):
         strat = (strat,)
     slashpair = strat[0].slashpair
@@ -63,6 +65,7 @@ def run_sim(strat, path, shift):
     for strat_ in strat:
         r = Sim.add_strategy(**strat_.dct)
         #print("[run_sim] add_strategy", r)
+        assert r["success"] == True, f"error adding strategy {r}"
     ouis = Sim.state()["orderuis"]
 
     # FACTS:
@@ -76,6 +79,10 @@ def run_sim(strat, path, shift):
     ouis_buy  = tuple(o for _,o in ouis.items() if o.bidask == "BID") # 0
     ouis_sell = tuple(o for _,o in ouis.items() if o.bidask == "ASK") # 1
     
+    assert len(ouis_buy) + len(ouis_sell) == len(ouis), f"wrong numbers {ouis_buy}{ouis_sell}{ouis}"
+    assert len(ouis) > 0, "don't have any positions"
+    #print("[run_sim] ouis", ouis, ouis_buy, ouis_sell)
+
     rskamt_r     = _np.array([sum(o.y for o in ouis_buy),])
     cshamt_r     = _np.array([sum(o.y for o in ouis_sell),])
     margpbuy_rz  = [tuple(o.p_marg for o in ouis_buy),]
