@@ -775,12 +775,11 @@ class CarbonOrderUI:
         ynew = self.y - dy
         pnew = self.p_marg_f(dy, checkbounds=False)
 
-        if ynew < 0:
-            if ynew < -self.EPSILON:
+        if ynew < -self.EPSILON:
                 if raiseonerror:
                     raise ValueError(f"Traded beyond capacity (yold={yold}, ynew={ynew}, dy={dy})")
                 return None
-
+        
         elif ynew > self.yint:
             if not expandcurve:
                 if raiseonerror:
@@ -792,10 +791,10 @@ class CarbonOrderUI:
                 if execute:
                     self.yint = ynew
                 curve_expanded = True
-        
         else:
             curve_expanded = False
             yint = self.yint
+            if ynew<0: ynew = 0  # see if ynew < -self.EPSILON
 
         dx = self.dxfromdy_f(dy, checkbounds=False, raiseonerror=True)
         if execute:
