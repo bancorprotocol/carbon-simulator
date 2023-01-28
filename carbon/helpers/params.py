@@ -34,6 +34,8 @@ class Params():
         
         
     """
+    __VERSION__ = __VERSION__
+    __DATE__ = __DATE__
     
     def __init__(self, **kwargs):
         self._params = dict(kwargs)

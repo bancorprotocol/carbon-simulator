@@ -27,5 +27,16 @@ def print_version(require=None, all=True):
     if not require is None:
         require_version(require)
 
-
+def plt_style(style, alt_style):
+    """
+    calls plt.style.use(style) and as fallback alt_style, all wrapped in try blocks
+    """
+    from matplotlib import pyplot as plt
+    try:
+        plt.style.use(style)
+    except:
+        try:
+            plt.style.use(alt_style)
+        except:
+            print("[plt_style] both styles failed", style, alt_style)
 

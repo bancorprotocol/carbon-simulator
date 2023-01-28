@@ -1,6 +1,8 @@
 """
 Carbon -- data generation library
 """
+__VERSION__ = "1.0"
+__DATE__ = "10/01/2023"
 
 from math import sqrt, exp, log
 from datetime import timedelta as _timedelta, datetime as _datetime
@@ -18,6 +20,8 @@ class PathGenerator():
     :time:     time period (in years)
     :N:        number of steps (excluding t=0)
     """
+    __VERSION__ = __VERSION__
+    __DATE__ = __DATE__
     
     DEFAULTS = {
         "mu": 0,

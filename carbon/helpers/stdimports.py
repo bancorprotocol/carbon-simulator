@@ -20,16 +20,5 @@ print("[stdimports] imported np, pd, plt, os, sqrt, exp, log")
 
 from .. import CarbonSimulatorUI, CarbonOrderUI, analytics as cal, P, __version__, __date__
 from .version import require_version
-from . import print_version
+from . import print_version, plt_style
 
-def plt_style(style, alt_style):
-    """
-    calls plt.style.use(style) and as fallback alt_style, all wrapped in try blocks
-    """
-    try:
-        plt.style.use(style)
-    except:
-        try:
-            plt.style.use(alt_style)
-        except:
-            print("[plt_style] both styles failed", style, alt_style)

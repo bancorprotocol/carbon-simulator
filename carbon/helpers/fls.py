@@ -26,7 +26,7 @@ import yaml as _yaml
 
 #########################################################
 # FSAVE
-def fsave(data, fn, path=None, binary=False, json=False, yaml=False, wrapper=None, quiet=False, compressed=False):
+def fsave(data, fn, path=None, binary=False, json=False, yaml=False, wrapper=None, quiet=True, compressed=False):
     """
     saves data to the file fn
 
@@ -68,7 +68,7 @@ def fsave(data, fn, path=None, binary=False, json=False, yaml=False, wrapper=Non
 
 #########################################################
 # FLOAD
-def fload(fn, path=None, binary=False, json=False, yaml=False, wrapper=None, quiet=False, compressed=False):
+def fload(fn, path=None, binary=False, json=False, yaml=False, wrapper=None, quiet=True, compressed=False):
     """
     loads data from the file fn
 
