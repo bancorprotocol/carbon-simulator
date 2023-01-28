@@ -1,7 +1,7 @@
 """
 Carbon helper module - run the simulation
 """
-__VERSION__ = "2.0"
+__VERSION__ = "2.1"
 __DATE__ = "27/01/2023"
 
 from collections import namedtuple as _nt
@@ -16,6 +16,7 @@ from .strategy import strategy as _strategy
 
 
 simresults_nt = _nt("simresults", "strat, spot_r, rskamt_r, cshamt_r, value_r, hodl_r, margpbuy_r, margpsell_r")
+pair_nt = _nt("pair", "tknb, tknq")
 
 def run_sim(strat, path):
     """
@@ -106,17 +107,20 @@ SIM_DEFAULT_PARAMS = Params(
     plotAsk         = True,      # whether to plot sell (ask) ranges and marginal prices
 )
 
-def plot_sim(simresults, dataid, params):
+def plot_sim(simresults, dataid, params, pair=None):
     """
     plots the simulation chart
 
     :simresults:    the simresults_nt returned by run_sim (rskamt_r, cshamt_r, value_r, ...)
     :dataid:        a description of the data the will be used in the title
     :params:        the parameter object (can be a dict; defaults SIM_DEFAULT_PARAMS)
+    :pair:          the pair as pair_nt or tuple (tknb,tknq)
     """
 
     strat = simresults.strat
     path = simresults.spot_r
+    if not pair is None: 
+        pair = pair_nt(*pair)
 
     p = Params.construct(params, defaults=SIM_DEFAULT_PARAMS.params)
     
@@ -133,8 +137,8 @@ def plot_sim(simresults, dataid, params):
     p_sell_b = max(strat_.p_sell_b for strat_ in strat)
     amt_rsk  = sum(strat_.amt_rsk  for strat_ in strat)
     amt_csh  = sum(strat_.amt_csh  for strat_ in strat)
-    rsk      = strat[0].rsk
-    csh      = strat[0].csh
+    rsk      = strat[0].rsk if not pair else pair.tknb
+    csh      = strat[0].csh if not pair else pair.tknq
     mid      = sqrt(p_buy_a*p_sell_a)
 
     descr = strat[0].descr if len(strat)==1 else f"strategy portfolio ({len(strat)} items)"

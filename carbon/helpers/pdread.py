@@ -1,8 +1,8 @@
 """
 Carbon helper module - read time series from data frame
 """
-__VERSION__ = "2.1"
-__DATE__ = "26/01/2023"
+__VERSION__ = "2.2"
+__DATE__ = "27/01/2023"
 
 import pandas as _pd
 
@@ -10,8 +10,29 @@ import pandas as _pd
 from os.path import join as j
 import os
 
+def tknpair(slashpair, invert=False):
+    """
+    returns (tknb, tnkq) is pair is slashpaur, else ("RSK", "CSH") (or inverted)
+    """
+    split = slashpair.split("/")
+    if len(split) == 2:
+        result = split[0].strip(), split[1].strip()
+    else:
+        result = ("RSK", "CSH")
+    return result if not invert else tuple(result[::-1])
 
-def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_days=None, period_pc=None, min_dt=None):
+def pdread(
+        fn, 
+        datacol=None, 
+        indexcol=None, 
+        from_ts=None, 
+        from_pc=None, 
+        period_days=None, 
+        period_pc=None, 
+        min_dt=None,
+        invert=False,
+        tkns=False,
+    ):
     """
     reads a dataframe and returns a single column with index
     
@@ -24,6 +45,8 @@ def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_d
     :period_days:   the observation period in days (inclusive); default end of series
     :period_pc:     alternative to period_days; sets period as perc of full time
     :min_dt:        before anything else is applied, everything before min_dt is discarded
+    :invert:        if True, invert the data series (raises if datacol is None)
+    :tkns:          if True, also return token names in case of series
     :returns:       pandas series (or data frame if indexcol is None)
     """
     if indexcol is None: indexcol = "datetime"
@@ -62,11 +85,21 @@ def pdread(fn, datacol=None, indexcol=None, from_ts=None, from_pc=None, period_d
     df = df[(df.index >= from_ts) & (df.index <= to_ts)]
     
     if datacol is None:
+        if invert:
+            raise ValueError("Can't use invert when returning a whole dataframe", fn, indexcol)
         return df.copy()
     elif isinstance(datacol, str):
-        return df[datacol].copy()
+        result = df[datacol].copy()
+        if tkns:
+            return (result if not invert else 1/result, tknpair(datacol, invert))
+        else:
+            return result if not invert else 1/result
     elif isinstance(datacol, int):
-        return df.iloc[:, datacol].copy()
+        result = df.iloc[:, datacol].copy()
+        if tkns:
+            return (result if not invert else 1/result, tknpair("RSK/CSH", invert))
+        else:
+            return result if not invert else 1/result
     else:
         raise ValueError("datacol must be None, str or int", datacol)
 
