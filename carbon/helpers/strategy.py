@@ -1,8 +1,8 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "2.0"
-__DATE__ = "27/01/2023"
+__VERSION__ = "2.1"
+__DATE__ = "28/01/2023"
 
 
 from dataclasses import dataclass as _dataclass
@@ -96,6 +96,19 @@ class strategy():
             rescale = False,
             rescaled_fctr = fctr,
         )
+
+    def set_tvl(self, spot, cashpc, tvl):
+        """
+        sets amt_csh and amt_rsk based on TVL, percentage cash and spot
+
+        :spot:      the spot price (in CSH per RSK)
+        :cashpc:    the percentage of the portfolio in CSH (1.0=100%)
+        :tvl:       the total portfolio value in CSH (default=1,000)
+        :returns:   self for chaining
+        """
+        self.amt_rsk = tvl/spot*(1-cashpc)
+        self.amt_csh = tvl*cashpc
+        return self
 
     @property
     def p_bid_a(self):
@@ -208,7 +221,7 @@ class strategy():
             p_sell_b = p_buy_a = p_lo   
 
         if not fee_pc is None:
-            fee_mult = 1+0.5*fee_pc
+            #fee_mult = 1+0.5*fee_pc
             fee_shift = sqrt(p_lo*p_hi)*fee_pc*0.5
             # p_sell_a *= fee_mult
             # p_sell_b *= fee_mult
@@ -220,11 +233,11 @@ class strategy():
             p_buy_b  -= fee_shift
 
         if start_below:
-            p_marginal = p_lo*1.0000000001
+            #p_marginal = p_lo*1.0000000001
             amt_rsk = 100 # tvl_csh/sqrt(p_lo*p_hi)
             amt_csh = 0
         else:
-            p_marginal = p_hi*0.9999999999
+            #p_marginal = p_hi*0.9999999999
             amt_rsk = 0
             amt_csh = tvl_csh
 
