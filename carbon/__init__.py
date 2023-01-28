@@ -17,6 +17,6 @@ from .simulators import sim_analytics as analytics
 
 P = CarbonPair
 
-__version__ = "2.3"
+__version__ = "2.3.1-BETA0"
 __date__ = "29/Jan/2022"
 
