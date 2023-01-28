@@ -16,7 +16,7 @@ from .. import (
     __date__,
 )
 
-def print_version(require=None, all=True):
+def print_version(require=None, all=False):
     """
     prints Carbon version numbers; calls require_version(require) if not require is None
     """
