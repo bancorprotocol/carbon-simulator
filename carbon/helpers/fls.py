@@ -16,13 +16,13 @@ FLS - File Load Save (simple wrappers for loading and saving data)
 :license:       [MIT](https://opensource.org/licenses/MIT)
 :canonicurl:    https://github.com/topazeblue/TopazePublishing/blob/main/code/fls.py
 """
-__VERSION__ = "1.2"
+__VERSION__ = "1.2-noyaml"
 __DATE__ = "06/Jan/2023"
 
 import os as _os
 import gzip as _gzip
 import json as _json
-import yaml as _yaml
+#import yaml as _yaml
 
 #########################################################
 # FSAVE
@@ -42,6 +42,7 @@ def fsave(data, fn, path=None, binary=False, json=False, yaml=False, wrapper=Non
 
     *binary, json, yaml == True are mutually exclusive; behaviour is undefined otherwise
     """
+    assert yaml is False
     if path is None:
         path = "."
     ffn = _os.path.join(path, fn)
@@ -83,6 +84,8 @@ def fload(fn, path=None, binary=False, json=False, yaml=False, wrapper=None, qui
 
     *binary, json, yaml == True are mutually exclusive; behaviour is undefined otherwise
     """
+    assert yaml is False
+
     if path is None:
         path = "."
     ffn = _os.path.join(path, fn)
