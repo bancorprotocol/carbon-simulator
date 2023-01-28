@@ -1,11 +1,11 @@
 # ------------------------------------------------------------
-# Auto generated test file `test_037_Match.py`
+# Auto generated test file `test_904_MatchSlow.py`
 # ------------------------------------------------------------
-# source file   = NBTest_037_Match.py
+# source file   = NBTest_904_MatchSlow.py
 # source path   = /Users/skl/REPOES/Bancor/CarbonSimulator/resources/NBTest/
 # target path   = /Users/skl/REPOES/Bancor/CarbonSimulator/resources/NBTest/
-# test id       = 037
-# test comment  = Match
+# test id       = 904
+# test comment  = MatchSlow
 # ------------------------------------------------------------
 
 
@@ -19,8 +19,8 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonSimulatorUI))
 
 
 # ------------------------------------------------------------
-# Test      037
-# File      test_037_Match.py
+# Test      904
+# File      test_904_MatchSlow.py
 # Segment   Match
 # ------------------------------------------------------------
 def test_match():
