@@ -6,6 +6,7 @@ from .strategy import strategy
 from .version import require_version
 from .helpers import listdir
 from .pathgenerator import PathGenerator
+from .pathinterpolation import PathInterpolation, interpolate
 from .simulation import run_sim, plot_sim, SIM_DEFAULT_PARAMS
 
 from .. import (
