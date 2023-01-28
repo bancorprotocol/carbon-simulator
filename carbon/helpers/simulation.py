@@ -1,30 +1,44 @@
 """
 Carbon helper module - run the simulation
 """
-__VERSION__ = "2.1"
-__DATE__ = "27/01/2023"
+__VERSION__ = "3.0"
+__DATE__ = "28/01/2023"
 
-from collections import namedtuple as _nt
+from collections import namedtuple
 import numpy as _np
 import pandas as _pd
 from math import sqrt
 from matplotlib import pyplot as _plt
 import pickle as _pickle
+from dataclasses import dataclass as _dataclass
+
 from .. import CarbonSimulatorUI as _CarbonSimulatorUI
 from .params import Params
 from .strategy import strategy as _strategy
 
 
-simresults_nt = _nt("simresults", "strat, spot_r, rskamt_r, cshamt_r, value_r, hodl_r, margpbuy_r, margpsell_r")
-pair_nt = _nt("pair", "tknb, tknq")
+pair_nt = namedtuple("pair", "tknb, tknq")
 
-def run_sim(strat, path):
+@_dataclass
+class simresults():
+    strat       : any
+    spot_r      : any
+    rskamt_r    : any
+    cshamt_r    : any
+    value_r     : any
+    hodl_r      : any
+    margpbuy_r  : any
+    margpsell_r : any
+
+
+def run_sim(strat, path, shift):
     """
     runs the simulation
 
     :strat:     the strategy object, or a list thereof
     :path:      the path as pandas or np series
-    :returns:   simresults_nt tuple (rskamt_r, cshamt_r, value_r) where
+    :shift:     the strategy shift [strat centered at (1+shift)*spot]
+    :returns:   simresults tuple (rskamt_r, cshamt_r, value_r) where
                 each of the ranges numpy vectors
     """
     if isinstance(strat, _strategy):
@@ -42,7 +56,7 @@ def run_sim(strat, path):
     
     spot = path.iloc[0]
     #print("[run_sim] rescaling", strat)
-    strat = tuple(s.rescale_strat(spot) for s in strat)
+    strat = tuple(s.rescale_strat(spot*(1+shift)) for s in strat)
     
     Sim = _CarbonSimulatorUI(pair=slashpair)
     #print("[run_sim] strategies", strat)
@@ -84,7 +98,7 @@ def run_sim(strat, path):
     hodl_r = rskamt_r[0]*path+cshamt_r[0]
     #print(f"f[run_sim] initial amounts RSK={rskamt_r[0]}, CSH={cshamt_r[0]}", )
 
-    return simresults_nt(
+    return simresults(
         strat       = strat,
         spot_r      = path,
         rskamt_r    = rskamt_r, 
@@ -96,29 +110,34 @@ def run_sim(strat, path):
     ) 
 
 SIM_DEFAULT_PARAMS = Params(
-    plotPrice       = True,      # whether to plot the price
-    plotValueCsh    = False,     # whether to plot the cash portion of the portfolio value
-    plotValueRsk    = False,     # whether to plot the risk asset portion of the portfolio value
-    plotValueTotal  = True,      # whether to plot the aggregate portfolio value
-    plotValueHODL   = True,     # whether to plot the HODL value of the initial portfolio
-    plotRanges      = True,      # whether to shade the ranges
-    plotMargP       = True,      # whetger to plot the marginal price for the ranges
-    plotBid         = True,      # whether to plot buy (bid) ranges and marginal prices
-    plotAsk         = True,      # whether to plot sell (ask) ranges and marginal prices
+    plotPrice           = True,      # whether to plot the price
+    plotValueCsh        = False,     # whether to plot the cash portion of the portfolio value
+    plotValueRsk        = False,     # whether to plot the risk asset portion of the portfolio value
+    plotValueTotal      = True,      # whether to plot the aggregate portfolio value
+    plotValueHODL       = True,     # whether to plot the HODL value of the initial portfolio
+    plotRanges          = True,      # whether to shade the ranges
+    plotMargP           = True,      # whetger to plot the marginal price for the ranges
+    plotBid             = True,      # whether to plot buy (bid) ranges and marginal prices
+    plotAsk             = True,      # whether to plot sell (ask) ranges and marginal prices
+    plotInterpolated    = True,      # whether to plot interpolated data
 )
 
-def plot_sim(simresults, dataid, params, pair=None):
+def plot_sim(simresults, simresults0, dataid, params, pair=None):
     """
     plots the simulation chart
 
-    :simresults:    the simresults_nt returned by run_sim (rskamt_r, cshamt_r, value_r, ...)
+    :simresults:    the simresults returned by run_sim running with path 
+    :simresults0:   ditto, but for path0 (the uninterpolated path)
+                    if path is path0 then simresults is simresults0
     :dataid:        a description of the data the will be used in the title
     :params:        the parameter object (can be a dict; defaults SIM_DEFAULT_PARAMS)
     :pair:          the pair as pair_nt or tuple (tknb,tknq)
     """
 
+    has_interpolated_results = not simresults is simresults0
     strat = simresults.strat
     path = simresults.spot_r
+    path0 = simresults0.spot_r
     if not pair is None: 
         pair = pair_nt(*pair)
 
@@ -147,6 +166,7 @@ def plot_sim(simresults, dataid, params, pair=None):
     rskamt_r    = simresults.rskamt_r 
     cshamt_r    = simresults.cshamt_r 
     value_r     = simresults.value_r 
+    value0_r    = simresults0.value_r 
     hodl_r      = simresults.hodl_r 
     margpbuy_r  = simresults.margpbuy_r 
     margpsell_r = simresults.margpsell_r
@@ -169,26 +189,30 @@ def plot_sim(simresults, dataid, params, pair=None):
                 plots += ax1.plot(path.index, margpbuy_ri, color="red", linestyle="dotted", linewidth=0.8, label="ask [lhs]" if not ix else None)
             
     if p.plotPrice:
-        plots += ax1.plot(path, color="0.7", label="price [lhs]")
+        plots += ax1.plot(path0, color="darkorange", alpha=0.4, label="price [lhs]")
+        if has_interpolated_results and p.plotInterpolated:
+            plots += ax1.plot(path, color="darkorange", alpha=0.6, linewidth=0.4)
     
     if p.plotValueHODL:
         plots += ax2.plot(value_r.index, hodl_r, color="cyan", linestyle="dotted", linewidth=1, label=f"HODL value [rhs]")
     
     if p.plotValueCsh:
-        plots += ax2.plot(value_r.index, cshamt_r, color="blue", linestyle="dashed", linewidth=0.8, label=f"{csh} portion [rhs]")
+        plots += ax2.plot(value_r.index, cshamt_r, color="blue", linestyle="dashed", linewidth=0.8, alpha=0.7, label=f"{csh} portion [rhs]")
 
     if p.plotValueRsk:
-        plots += ax2.plot(value_r.index, rskamt_r, color="blue", linestyle="dotted", linewidth=1, label=f"{rsk} portion [rhs]")
+        plots += ax2.plot(value_r.index, rskamt_r*path, color="blue", linestyle="dotted", linewidth=1.2, alpha=1, label=f"{rsk} portion [rhs]")
     
     if p.plotValueTotal:
-        plots += ax2.plot(value_r, color = "blue", label="portfolio value [rhs]")
-
+        plots += ax2.plot(value0_r, color="blue", label="portfolio value [rhs]")
+        if has_interpolated_results and p.plotInterpolated:
+            plots += ax2.plot(value_r, linewidth=0.2, color="royalblue", label="portfolio value [rhs]")
+        
     ax2.set_ylabel(f"portfolio value ({csh})")
     ax1.set_ylabel(f"price ({csh} per {rsk})")
     #ax1.set_xlabel("date")
     _plt.title(f"{descr} on {dataid}")
-    labels = [p.get_label() for p in plots]
-    plots_labels = [(p,l) for l,p in zip(labels[::-1], plots[::-1]) if not l[0] == "_"]
+    labels=[p.get_label() for p in plots]
+    plots_labels=[(p,l) for l,p in zip(labels[::-1], plots[::-1]) if not l[0] == "_"]
     #_plt.legend(plots[::-1], labels[::-1])
     _plt.legend(*zip(*plots_labels))
 
