@@ -15,99 +15,118 @@
 
 # +
 from carbon.helpers.stdimports import *
-#from carbon.helpers.pdread import *
-from carbon.helpers import j, strategy, pdread, Params, fsave
-from carbon.helpers.simulation import run_sim, plot_sim
+from carbon.helpers import j, strategy, pdread, pdcols, fsave, listdir, Params
+from carbon.helpers.widgets import CheckboxManager, DropdownManager, PcSliderManager
+from carbon.helpers.simulation import run_sim, plot_sim, SIM_DEFAULT_PARAMS
 
-plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
-print_version(require="2.2.3")
+plt_style('seaborn-v0_8-dark', 'seaborn-dark')
+print_version(require="2.2.5")
 # -
 
-# # Carbon Simulation - Demo 7-3 (frozen data)
+# # Carbon Simulation - Demo 7-3
+
+# _[frozen_20230128][frozen]: **this** notebook on [Binder][frozen_nb] and on [github][frozen_gh];  **latest** notebook on [Binder][latest_nb] and on [github][latest_gh]_
+#
+# Use **Run -- Run All Cells** in the menu above to run the notebook, then adjust the simulation parameters as desired. Further resources are (1) the github repo [github:carbon-simulator-binder][repob] associated with this binder, (2) the main simulator repo [github:carbon-simulator][repo], (3) the carbon package [pypi:carbon-simulator][simpypi] and finally (4) the ["Carbon Simulator" presentation][presn]
+#
+# [presn]:https://github.com/bancorprotocol/carbon-simulator/blob/beta/resources/notes/202301%20Simulating%20Carbon.pdf
+# [simpypi]:https://pypi.org/project/carbon-simulator/
+# [repo]:https://github.com/bancorprotocol/carbon-simulator
+# [repob]:https://github.com/bancorprotocol/carbon-simulator-binder
+# [frozen]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230128
+# [frozen_nb]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230128?labpath=Frozen%2FDemo7-3%2FDemo7-3.ipynb
+# [frozen_gh]:https://github.com/bancorprotocol/carbon-simulator-binder/blob/frozen_20230128/Frozen/Demo7-3/Demo7-3.ipynb
+# [latest_nb]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/latest_7_3?labpath=Frozen%2FDemo7-3%2FDemo7-3.ipynb
+# [latest_gh]:https://github.com/bancorprotocol/carbon-simulator-binder/blob/latest_7_3/Frozen/Demo7-3/Demo7-3.ipynb
 
 # ## Setup
 
-# ### Parameter
-
-params = Params(
-    plotRanges        = True,    # whether to shade the ranges
-    plotMargP         = True,    # whetger to plot the marginal price for the ranges
-    plotBuy           = True,    # whether to plot buy (bid) ranges and marginal prices
-    plotSell          = True,    # whether to plot sell (ask) ranges and marginal prices
-    plotPrice         = True,    # whether to plot the price
-    plotValueTotal    = True,    # whether to plot the aggregate portfolio value
-    plotValueCsh      = False,   # whether to plot the cash portion of the portfolio value
-    plotValueRsk      = False,   # whether to plot the risk asset portion of the portfolio value
-)
-
+import datetime 
+fname = lambda data, col, strat: f"{datetime.datetime.now().strftime('%m%d-%H%M%S')}-{data}-{col.replace('/', '')}-{strat}.png"
 
 # ### Generated output
-#
-# If `OUTPATH` is `None`, output will not be saved, otherwise it will be saved to the indicated directory (use `"."` for current)
 
-OUTPATH = "/Users/skl/Desktop/sim7-3"       # uncomment to save charts in specific location
-OUTPATH = "."                               # uncomment to save charts in current directory
-OUTPATH = None                              # uncomment to not save charts
-if OUTPATH and OUTPATH != ".":
-    # !mkdir {OUTPATH}
-    # !rm {OUTPATH}/*.png
+OUTPATH = "."                               # where to save generated charts (None to not save)
+DELETE_BEFORE_SIM = True                    # if True, delete all output files before running a new Sim
 print(f"OUTPATH = {OUTPATH}")
 
 # ### Path data
-# filename determines collection, eg `RANPTH-05000-0000` is sig=50% vol and mu=0% drift; see available collections in the `ls` command below
 
 # +
-DATAID = "RAN-050-00"
+DATAID = "COINS-CROSS"
 
 DATAPATH = "../data"
 DATAFN = j(DATAPATH, f"{DATAID}.pickle")
-print(f"Chose data id {DATAID}")
+print(f"DATAID = {DATAID}")
 # -
 
 # !ls {DATAPATH}/*.pickle
 
-# ### Strategies
-#
-# This is the list of strategies to be tested against the paths. Note: it is recommended to always to a minimal amount of tokens into either side of the strategy in order to ensure that that marginal price is well defined. For the simulation it does not make a difference, provided the amounts are small. 
+", ".join(pdcols(DATAFN))
 
-# +
-# strats = (
-#     strategy.from_mwh(m=100, g=0.10, w=0.05, amt_rsk=1, amt_csh=0),
-#     strategy.from_mwh(m=100, g=0.20, w=0.05, amt_rsk=1, amt_csh=0),
-#     strategy.from_mwh(m=100, g=0.10, w=0.20, amt_rsk=1, amt_csh=0),
-#     strategy.from_mwh(m=100, g=0.20, w=0.20, amt_rsk=1, amt_csh=0),
-# )
-# #strats
-# -
+COLS_INVERT = {
+    "ETH/LTC"   : False,
+    "ETH/OKB"   : False, 
+    "DOT/MATIC" : False, 
+    "BNB/AVAX"  : False
+}
+print(f"COLS_INVERT = {COLS_INVERT}")
 
-strats = (
-    strategy.from_mgw(m=100, g=0.02, w=0.13, amt_rsk=1, amt_csh=0.001),
-    strategy.from_mgw(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0.001),
-    [strategy.from_mgw(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0.001),
-    strategy.from_mgw(m=100, g=0.02, w=0.1, amt_rsk=1, amt_csh=0.001)],
-)
+# ### Simulation parameters
+
+SIM_PARAMS = {
+    'plotPrice': True,
+    'plotValueCsh': False,
+    'plotValueRsk': False,
+    'plotValueTotal': True,
+    'plotValueHODL': True,
+    'plotRanges': True,
+    'plotMargP': True,
+    'plotBid': True,
+    'plotAsk': True
+}
+print(f"SIM_PARAMS = {SIM_PARAMS}")
+
+# ### Strategies 
+
+STRATS = {
+     "single":     strategy.from_mgw(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0),
+     "multiple":   [strategy.from_mgw(m=100, g=0.25, w=0.05, amt_rsk=1, amt_csh=0),
+                   strategy.from_mgw(m=100, g=0.10, w=0.03, amt_rsk=1, amt_csh=0)],  
+     "univ3":      strategy.from_u3(p_lo=100, p_hi=150, start_below=True, fee_pc=0.05, tvl_csh=1000),
+}
+print(f"STRATS ids = {tuple(STRATS)}")
+
+STARTPC = 0
+LENPC = 1
+PATH_MIN_DATE = "2022-01-01"
 
 # ## Simulation
 
-for colnm in ["p0000", "p0001", "p0002"][:1]:
-    for ix, strat in enumerate(strats):
-    
-        path = pdread(DATAFN, colnm)
-        simresults = run_sim(strat, path)
-        plot_sim(strat, path, simresults, f"{DATAID} [{colnm}]", params)
-        
-        # save charts
+if DELETE_BEFORE_SIM:
+    # !rm {OUTPATH}/*.png
+    # !rm {OUTPATH}/_CHARTS.*
+
+for colnm, invert in COLS_INVERT.items():
+    path, pair = pdread(DATAFN, colnm, from_pc=STARTPC, period_pc=LENPC, min_dt=PATH_MIN_DATE, invert=invert, tkns=True)
+    for stratid, strat in STRATS.items():
+        simresults = run_sim(strat, path, shift=0)
+        plot_sim(simresults, simresults, f"{DATAID}:{colnm}", Params(**SIM_PARAMS), pair=pair)
         if isinstance(OUTPATH, str):
-            plt.savefig(j(OUTPATH, f"{DATAID}-{colnm}-{ix}.png"))
+            plt.savefig(j(OUTPATH, fname(DATAID, colnm, stratid)))
         plt.show()
 
-if OUTPATH:
-    # !ls {OUTPATH}/*.png
+
+if OUTPATH and False:
+    print("Listing OUTPATH [uncheck box at top to disable]")
+    print ("\n".join([fn[:-4] for fn in os.listdir(OUTPATH) if fn[-4:]==".png"]))
 
 if OUTPATH:
-    filelist = os.listdir(OUTPATH)
-    filelist = [fn for fn in filelist if fn[-4:]==".png"]
-    markdown = "\n\n".join(f"![]({OUTPATH}/{fn})" for fn in filelist)
-    fsave(markdown, "_sim-charts.md", OUTPATH)
-    # !pandoc {OUTPATH}/_sim-charts.md -o {OUTPATH}/_sim-charts.docx
+    print("Creating consolidated docx and zip from charts [uncheck box at top to disable]")
+    markdown = "\n\n".join(f"![]({OUTPATH}/{fn})" for fn in [fn for fn in os.listdir(OUTPATH) if fn[-4:]==".png"])
+    fsave(markdown, "_CHARTS.md", OUTPATH, quiet=True)
+    # !pandoc {OUTPATH}/_CHARTS.md -o {OUTPATH}/_CHARTS.docx
+    # !zip _CHARTS.zip -qq *.png 
+
+

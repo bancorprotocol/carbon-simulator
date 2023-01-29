@@ -15,19 +15,21 @@
 
 # +
 from carbon.helpers.stdimports import *
-from carbon.helpers import j, strategy, pdread, pdcols, Params, fsave, listdir
+from carbon.helpers import j, strategy, pdread, pdcols, fsave, listdir, Params, PathInterpolation as PI
 from carbon.helpers.widgets import CheckboxManager, DropdownManager, PcSliderManager
 from carbon.helpers.simulation import run_sim, plot_sim, SIM_DEFAULT_PARAMS
+import pickle
+import datetime 
 
 plt.rcParams['figure.figsize'] = [12,6]
 plt_style('seaborn-v0_8-dark', 'seaborn-dark')
-print_version(require="2.2.4")
+print_version(require="2.2.6")
 # -
 
 # # Carbon Simulation - Demo 7-4 
-# _[frozen_20230127][frozen]: this notebook on [Binder][frozen_nb] and on [github][frozen_gh]_
+# _[frozen_20230128][frozen]: **this** notebook on [Binder][frozen_nb] and on [github][frozen_gh];  **latest** notebook on [Binder][latest_nb] and on [github][latest_gh]_
 #
-# Use **Run -- Run All Cells** in the menu above to run the notebook, then adjust the simulation parameters using the widgets provided. You can find **further usage instructions at the end of this notebook**, and throughout the notebook.
+# Use **Run -- Run All Cells** in the menu above to run the notebook, then adjust the simulation parameters using the widgets provided. 
 #
 # Further resources are (1) the github repo [github:carbon-simulator-binder][repob] associated with this binder, (2) the main simulator repo [github:carbon-simulator][repo], (3) the carbon package [pypi:carbon-simulator][simpypi] and finally (4) the ["Carbon Simulator" presentation][presn]
 #
@@ -35,9 +37,11 @@ print_version(require="2.2.4")
 # [simpypi]:https://pypi.org/project/carbon-simulator/
 # [repo]:https://github.com/bancorprotocol/carbon-simulator
 # [repob]:https://github.com/bancorprotocol/carbon-simulator-binder
-# [frozen]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230127
-# [frozen_nb]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230127?labpath=Frozen%2FDemo7-4%2FDemo7-4.ipynb
-# [frozen_gh]:https://github.com/bancorprotocol/carbon-simulator-binder/blob/main/Frozen/Demo7-4/Demo7-4.ipynb
+# [frozen]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230128
+# [frozen_nb]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/frozen_20230128?labpath=Frozen%2FDemo7-4%2FDemo7-4.ipynb
+# [frozen_gh]:https://github.com/bancorprotocol/carbon-simulator-binder/blob/frozen_20230128/Frozen/Demo7-4/Demo7-4.ipynb
+# [latest_nb]:https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator-binder/latest_7_4?labpath=Frozen%2FDemo7-4%2FDemo7-4.ipynb
+# [latest_gh]:https://github.com/bancorprotocol/carbon-simulator-binder/blob/latest_7_4/Frozen/Demo7-4/Demo7-4.ipynb
 
 # ## Setup
 
@@ -45,16 +49,7 @@ print_version(require="2.2.4")
 #
 # If `OUTPATH` is `None`, output will not be saved, otherwise it will be saved to the indicated directory (use `"."` for current)
 
-try:
-    outpath_w()
-except:
-    outpath_w = DropdownManager({
-        "."                          : "Current",
-        "/Users/skl/Desktop/sim7-4"  : "SKL Desktop/sim7-4", 
-    },
-    descr="Target", defaultix=0)
-    outpath_w()
-
+OUTPATH = "."
 try:
     output_w()
 except:
@@ -66,161 +61,151 @@ except:
         })
     output_w()
 
-# ### The source data collection (filename)
-# filename determines collection, eg `RAN-050-00` is sig=50% vol and mu=0% drift; see available collections in dropdown
+fname = lambda data, col: f"{datetime.datetime.now().strftime('%m%d-%H%M%S')}-{data}-{col.replace('/', '')}.png"
+fname("DATA", "COL")
+
+# ### The source data collection (filename) and columns (data series)
+# Filename determines collection, eg `BTC-COINS`is a collection of coins with prices expressted in BTC, and `RAN-050-00` is sig=50% vol and mu=0% drift. If you change the top dropdown, use **Run All** to update the bottom dropdown allowing you to choose the pair. Check `invert` if you want inverse quotation, and choose `hf interpolate` and if you want to augment the path with random high frequency data of the same overall volatility.
 
 DATAPATH = "../data"
 try:
     datafn_w()
 except:
-    datafn_w = DropdownManager(listdir(DATAPATH, ".pickle"), defaultval="BTC-COINS")
+    datafn_w = DropdownManager(listdir(DATAPATH, ".pickle"), defaultval="COINS-ETH")
     datafn_w()
-
-# ### The data columns within that data collection (scenarios)
-#
-# Withing the collection there are multiple columns (up to 1000!). With the check boxes, you can choose from a specific subset of those colums. You can specify this subset setting `COL0` and `NCOLS`. The first `NCCOLS` are checked.
 
 cols = tuple(pdcols(j(DATAPATH, f"{datafn_w.value}.pickle")))
 try:
     assert datafn_w.value == old_datafn_w_value
-    datacols_w(vertical=False)
+    datacols_w1()
 except:
     old_datafn_w_value = datafn_w.value
-    COL0, NCOLS, NCCOLS = 0, min(20, len(cols)), 3
-    try:
-        datacols_w = CheckboxManager(cols[COL0:COL0+NCOLS], values=NCCOLS*[True]+(NCOLS-NCCOLS)*[False])
-    except:
-        datacols_w = CheckboxManager(cols, values=[1,]+[0,]*(len(cols)-1))
-    datacols_w(vertical=False)
-
-# ### Strategies
-#
-# This is the list of strategies to be tested against the paths. The first strategy is driven by the sliders below. The other strategies are hard-coded in the dict. The strategies `m1`, `m2` are strategy portfolios.
+    datacols_w = DropdownManager(cols, defaultval="BTC/ETH" if datafn_w.value=="COINS-ETH" else None)
+    datacols_w()
 
 try:
-    strats_w(vertical=False)
+    pathops_w()
 except:
-    strats = {
-         "slider":  None,
-         "s1":      strategy.from_mgw(m=100, g=0.01, w=0.02, amt_rsk=1, amt_csh=0),
-         "s2":      strategy.from_mgw(m=100, g=0.05, w=0.15, u=0.7, amt_rsk=1, amt_csh=0),
-         "s3":      strategy(p_buy_a=80, p_buy_b=70, p_sell_a=110, p_sell_b=120, amt_rsk= 1, amt_csh=0),
-         "m1":     [strategy.from_mgw(m=100, g=0.25, w=0.05, amt_rsk=1, amt_csh=0),
-                    strategy.from_mgw(m=100, g=0.10, w=0.03, amt_rsk=1, amt_csh=0)],  
-         "m2":     [strategy.from_mgw(m=100, g=0.10, w=0.1,  amt_rsk=1, amt_csh=0),
-                    strategy.from_mgw(m=100, g=0.20, w=0.1,  amt_rsk=1, amt_csh=0)],  
-         "uv3":     strategy.from_u3(p_lo=100, p_hi=150, start_below=True, fee_pc=0.05, tvl_csh=1000),
-    }
-    strats_w = CheckboxManager(strats.keys(), values=[1,0,0,0,1,0,0])
-    #strats_w = CheckboxManager(strats.keys(), values=[1,0,0,0,0,0,0])
-    #strats_w = CheckboxManager(strats.keys(), values=[0,0,0,0,0,0,1])
-    strats_w(vertical=False)
+    pathops_w = CheckboxManager(["invert", "hf interpolate"], values=[0,0])
+    pathops_w()
 
-# The checkboxes above determined which strategies are tested, one by one.
+PIPERIOD = PI.hours(1)  # the granulariy of the path if "hf interpolate" was checked
+PIFACTOR = 1            # the scaling factor applied to the macroscopic vol of the path
+
+# ### Strategy selection
+
+strats = {
+     "slider":     None, # driven by sliders below
+     "wide1":      [strategy.from_mgw(m=100, g=0.1, w=0.4)],
+     "wide2":      [strategy.from_mgw(m=100, g=0.4, w=0.1)],
+     "mid1":       [strategy.from_mgw(m=100, g=0.2, w=0.1)],
+     "mid2":       [strategy.from_mgw(m=100, g=0.3, w=0.01)],
+     "narrow":     [strategy.from_mgw(m=100, g=0.05, w=0.01)],
+     "uni v3":     [strategy.from_u3(p_lo=10, p_hi=14, start_below=False, fee_pc=0.05, tvl_csh=1000)],
+}
+try:
+    strats_w()
+except:
+    strats_w = CheckboxManager(strats.keys(), values=True)
+    #strats_w = CheckboxManager(strats.keys(), values=[1,0,0,0,0,0])
+    strats_w()
 
 # ### Elements to show on the chart
 
+sim_defaults = {
+    'plotPrice': True,
+    'plotValueCsh': True,
+    'plotValueRsk': False,
+    'plotValueTotal': True,
+    'plotValueHODL': True,
+    'plotRanges': True,
+    'plotMargP': True,
+    'plotBid': True,
+    'plotAsk': True,
+    'plotInterpolated': True
+}
+
 try: 
-    params_w(vertical=False)
+    params_w()
 except:
-    params_w = CheckboxManager.from_idvdct(SIM_DEFAULT_PARAMS.params)
-    params_w(vertical=False)
+    params_w = CheckboxManager.from_idvdct(sim_defaults)
+    params_w()
+
+SIM_DEFAULT_PARAMS.params
 
 # ### Time period
 #
 # this is the time period that is plotted; periods and start dates are quoted as percentage total time; the window is cut at the left, eg start=0.9 and length=0.5 shows 0.9...1.0. Before the sliders are applied, everything before `PATH_MIN_DATE` is discarded. 
 
-PATH_MIN_DATE = "2022-01-01"
+PATH_MIN_DATE = "2021-01-01" # 2021-01-01 for ETH/BTC and Uni v3 range
 try:
     segment_w(vertical=True)
 except:
     segment_w = PcSliderManager(["Start date %", "Length %"], values=[0,1])
     segment_w(vertical=True)
 
+# ### All strategies
+#
+#  The parameter `csh` is the initial cash percentage of the portfolio (100%=all cash), and it total cash value is `TVL`. The slider `shift` allows shifting _all_ strategies up or down (eg, 5 is 5% up)
+
+TVL = 1000
+try:
+    stratall_w(vertical=True)
+except:
+    stratall_w = PcSliderManager(["csh", "shift"], values=[0.5, 0], range=[(0,1), (-0.5,0.5)])
+    stratall_w(vertical=True)
+
 # ### The `slider` strategy
 #
-# This is the strategy called `slider`. Here `m` is the mid price of the range (adjust `S0`, `SMIN`, `SMAX` to change), `g%` is the gap between the ranges in percent, and `w%` is the width of the ranges in percent. The parameter `u%` is the range utilisation rate, where `u=0%` means the range is full, and `u~100%` means that it is almost empty. The parameter `rsk:csh` is the initial risk/cash ratio (where 0% means all csh, 100% all rsk, and 50% even split). Total cash value of the initial portfolio is `TVL` and the reference price is `SREF`.
+# This is the strategy called `slider`. Here `m` is the mid price of the range (adjust `S0`, `SMIN`, `SMAX` to change), `g%` is the gap between the ranges in percent, and `w%` is the width of the ranges in percent. The parameter `u%` is the range utilisation rate, where `u=0%` means the range is full, and `u~100%` means that it is almost empty.
 
 try:
     strat1_w(vertical=True)
 except:
-    S0, SMIN, SMAX, TVL, SREF = 100, 50, 150, 1000, 100
-    strat1_w = PcSliderManager(["m", "g%", "w%", "u%", "rsk:csh"], 
-                        values=[S0/100, 0.1, 0.25, 0, 0.5], 
-                        range=[(SMIN/100,SMAX/100),(0,0.25),(0,0.25),(0,1),(0,1)])
+    S0, SMIN, SMAX = 100, 50, 200
+    strat1_w = PcSliderManager(["m", "g%", "w%", "u%"], 
+                        values=[S0/100, 0.1, 0.25, 0], 
+                        range=[(SMIN/100,SMAX/100),(0,0.50),(0,0.50),(0,1)])
     strat1_w(vertical=True)
 
 # ## Simulation
 
 if output_w.values[3]:
-    print("CLEARING OUT PREVIOUS FILES [UNCHECK BOX ABOVE TO DISABLE]")
     # !rm {OUTPATH}/*.png
-    # !rm {OUTPATH}/_CHARTS.zip
-    # !rm {OUTPATH}/_CHARTS.md
-    # !rm {OUTPATH}/_CHARTS.docx
+    # !rm {OUTPATH}/*.data
+    # !rm {OUTPATH}/_CHARTS.*
 
 DATAID, DATAFN = datafn_w.value, j(DATAPATH, f"{datafn_w.value}.pickle") 
-OUTPATH = outpath_w.value if output_w.values[0] else None
-STARTPC, LENPC, SV = segment_w.values[0], segment_w.values[1], strat1_w.values
-strats["slider"] = strategy.from_mgw(m=100*SV[0], g=SV[1], w=SV[2], u=SV[3], amt_rsk=TVL/SREF*SV[4], amt_csh=TVL*(1-SV[4]))
-for colnm in datacols_w.checked:
-    for ix, stratid in enumerate(strats_w.checked):
-        strat = strats[stratid]
-        path = pdread(DATAFN, colnm, from_pc=STARTPC, period_pc=LENPC, min_dt=PATH_MIN_DATE)
-        simresults = run_sim(strat, path)
-        plot_sim(simresults, f"{DATAID}:{colnm}", Params(**params_w.values_dct))
-        if isinstance(OUTPATH, str):
-            plt.savefig(j(OUTPATH, f"{DATAID}-{colnm.replace('/', '')}-{ix}-{STARTPC*100:.0f}-{LENPC*100:.0f}.png"))
-        plt.show()
+STARTPC, LENPC, SV, COLNM = segment_w.values[0], segment_w.values[1], strat1_w.values, datacols_w.value
+path0, pair = pdread(DATAFN, COLNM, from_pc=STARTPC, period_pc=LENPC, min_dt=PATH_MIN_DATE, invert=pathops_w.values[0], tkns=True)
+path = PI.interpolate(path0, PIPERIOD, sigfctr=PIFACTOR, enable=pathops_w.values[1])
+strats["slider"] = [strategy.from_mgw(m=100*SV[0], g=SV[1], w=SV[2], u=SV[3])]
+for ix, stratid in enumerate(strats_w.checked):
+    strat = [s.set_tvl(spot=path0[0], cashpc=stratall_w.values[0], tvl=TVL) for s in strats[stratid]]
+    simresults  = run_sim(strat, path, shift=stratall_w.values[1])
+    simresults0 = run_sim(strat, path0, shift=stratall_w.values[1]) if not path is path0 else simresults
+    v0, v1, v1a = simresults.value_r[0], simresults.value_r[-1], simresults0.value_r[-1]
+    print(f"TVL0={v0:.1f}, TVL1_hf={v1:.1f} ({v1/v0*100-100:.1f}%) TVL1_lf={v1a:.1f} ({v1a/v0*100-100:.1f}%)")
+    plot_sim(simresults, simresults0, f"{DATAID}:{COLNM}", Params(**params_w.values_dct), pair=pair)
+    if isinstance(OUTPATH, str):
+        plt.savefig(j(OUTPATH, fname(DATAID, COLNM)))
+        fsave(pickle.dumps((simresults, simresults0)), f"{fname(DATAID, COLNM)}.data", OUTPATH, binary=True)
+    plt.show()
 
 # Provide the corresponding box above (_"Show target directory listing"_) is checked, this will create a list of all `png` files generated throughout your analysis. Those files will only be generated is the box _"Save output to target directory"_ box is checked. The target directory is preset to the directory of this notebook, but you can change this in the code above. Keep in minds that if you run this analysis **on Binder, you have to download all files you want to keep before the server is destroyed.**
 
 if OUTPATH and output_w.values[1]:
     print("Listing OUTPATH [uncheck box at top to disable]")
-    print ([fn[:-4] for fn in os.listdir(OUTPATH) if fn[-4:]==".png"])
+    print ("\n".join([fn[:-4] for fn in os.listdir(OUTPATH) if fn[-4:]==".png"]))
 
-# Provide the corresponding box above (_"Generate docx & zip from charts"_) is checked, this code will create a Word `docx` file embedding all the `png` files in this folder. You can simply download this file via the Jupyter Lab interface to have all charts together in one convenient place. You can then extract them at a later stage from the `docx` files for example via copy and paste. The files will also all be consolidated into a single zip file.
+# Provide the corresponding box above (_"Generate docx & zip from charts"_) is checked, this will create a Word `docx` file embedding all the `png` files
 
 if OUTPATH and output_w.values[2]:
-    print("Creating consolidated docx and zip from charts [uncheck box at top to disable]")
-    filelist = os.listdir(OUTPATH)
-    filelist = [fn for fn in filelist if fn[-4:]==".png"]
-    markdown = "\n\n".join(f"![]({OUTPATH}/{fn})" for fn in filelist)
-    fsave(markdown, "_CHARTS.md", OUTPATH)
+    print("Creating consolidated docx and zip from charts and data [uncheck box at top to disable]")
+    markdown = "\n\n".join(f"![]({OUTPATH}/{fn})" for fn in [fn for fn in os.listdir(OUTPATH) if fn[-4:]==".png"])
+    # !zip _CHARTS.zip -qq *.png
+    # !zip _DATA.zip -qq *.data 
+    fsave(markdown, "_CHARTS.md", OUTPATH, quiet=True)
     # !pandoc {OUTPATH}/_CHARTS.md -o {OUTPATH}/_CHARTS.docx
-    # !zip _CHARTS.zip *.png 
-    print("---")
-    # !ls
-
-# ## Usage instructions
-#
-# ### Installation
-#
-# This notebook should run straight out of the box at the Binder URL provided above. Alternatively you can download it locally and make sure `carbon-simulator` and the dependencies in `requirements.txt` are installed. You can install `carbon-simulator` [via pypi](https://pypi.org/project/carbon-simulator/). Alternatively, you can download the simulator [from github](https://github.com/bancorprotocol/carbon-simulator-binder) and then place this notebook in the root directory of the repo, or any other directory on your system that contains a `carbon` directory symlinked to the `carbon` directory in the repo.
-#
-#
-# ### Parameter updates
-#
-# This notebook is controlled with a combination of code-based parameter pre-sets, and UI-driven choices using [Jupyter Widgets](https://ipywidgets.readthedocs.io/en/stable/). You can usually refresh the simulation by running the cell generating the simulation output, but recommended procedure is a **Run All Cells** after every change. There is one gotcha, and its TLDR is: **If you run into a problem after changing parameters, restart the kernel and Run All again**. The longer version is as follows:
-#
-#
-# The widgets all appear in codeblocks of this style:
-#
-#     try:
-#         segment_w(vertical=True)
-#     except:
-#         segment_w = PcSliderManager(["Start date %", "Length %"], values=[0,1])
-#         segment_w(vertical=True)
-#         
-#  
-# The reason is as follows: the `segment_w = ...` statement recreates the widget at every run, which mean it will lose state at every run, which breaks our workflow. The statement `segment_w(...)` only displays the widget, which means it is safe to run repeatedly, without losing state. Therefore at every run, we try to run the widget. This will fail at the first run, so the initialization code in the except-block is executed. Subsequent runs then no longer touch that initialization code, as then the try-block succeeds.
-#
-# Herein lies the problem: once a widget has been created, changes to the initialization code won't take effect unless the try-block fails, hence the **Restart kernel and run all** procedure above. This however leads you to lose state in _all_ widgets. If you want to avoid this, you can make the specific try-block fail, eg by temporarily renaming the function to `segment_w1(...)` and changing it back once the initializations work properly.
-#
-# ### JupyText `.py` file
-#
-# This notebook is set up for [JupyText](https://jupytext.readthedocs.io/en/latest/) which, when installed, tracks the notebook code in a `.py` file with the same base name as the notebook. If you have JupyText installed (which is not the case on Binder) then you can open either the `.py` or the `.ipynb` file, they will both open the same notebook, and the two files will be kept in synch. 
-#
-# For practical work on Binder you can ignore the `.py` file. However, its diffs -- if available -- are more meaningful than the diffs on the `.ipynb` file where most of the changes you'll see will related to changes in outputs, many of them spurious. 
 
 
