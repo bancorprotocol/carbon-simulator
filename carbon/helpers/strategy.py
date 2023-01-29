@@ -72,7 +72,7 @@ class strategy():
         """
         if not self.rescale:
             if not force:
-                print("[rescale_strat] not rescaling", newspot, oldspot, self)
+                #print("[rescale_strat] not rescaling", newspot, oldspot, self)
                 return _copy(self)
             else:
                 print("[rescale_strat] forcing rescale", newspot, oldspot, self)
