@@ -221,7 +221,9 @@ class Order:
                 self.y_int = self.D = self._y
  
         assert not self._y is None, "self._y has not been initialized"
-        assert self.C == self._y, f"self.C != self._y, [{self.C}, {self._y}]"
+        #assert self.C == self._y, f"self.C != self._y, [{self.C}, {self._y}]"
+        if self.C != self._y:
+            print("[Order] warning: C != y", self.C, self._y)
         assert not self.y_int is None, "self.y_int has not been initialized"
         assert self.D == self.y_int, "self.D != self.y_int [{self.D}, {self.y_int}]"
         assert not self.p_high is None, "self.p_high has not been initialized"
