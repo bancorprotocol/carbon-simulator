@@ -55,9 +55,9 @@ class AlphaRouter(BaseRouter):
 
     def assertion_checks(full_fill, current_sum, threshold, max_fill, threshold_list, num_values):
         if full_fill == True:
-            assert(current_sum >= threshold)
+            assert(f"{current_sum:.12f}" >=  f"{threshold:.12f}")
         else:
-            assert(current_sum == max_fill)
+            assert(f"{current_sum:.12f}" ==  f"{max_fill:.12f}")
 
         if len(threshold_list) < num_values:
             pass
