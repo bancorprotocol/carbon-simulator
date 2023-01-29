@@ -118,10 +118,10 @@ def run_sim(strat, path, shift):
 
 SIM_DEFAULT_PARAMS = Params(
     plotPrice           = True,      # whether to plot the price
-    plotValueCsh        = False,     # whether to plot the cash portion of the portfolio value
+    plotValueCsh        = True,      # whether to plot the cash portion of the portfolio value
     plotValueRsk        = False,     # whether to plot the risk asset portion of the portfolio value
     plotValueTotal      = True,      # whether to plot the aggregate portfolio value
-    plotValueHODL       = True,     # whether to plot the HODL value of the initial portfolio
+    plotValueHODL       = True,      # whether to plot the HODL value of the initial portfolio
     plotRanges          = True,      # whether to shade the ranges
     plotMargP           = True,      # whetger to plot the marginal price for the ranges
     plotBid             = True,      # whether to plot buy (bid) ranges and marginal prices
