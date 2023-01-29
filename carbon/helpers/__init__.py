@@ -28,7 +28,7 @@ def print_version(require=None, all=False):
     if not require is None:
         require_version(require)
 
-def plt_style(style, alt_style):
+def plt_style(style, alt_style=None):
     """
     calls plt.style.use(style) and as fallback alt_style, all wrapped in try blocks
     """
