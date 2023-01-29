@@ -1,8 +1,8 @@
 """
 Carbon helper module - retrieve data from CryptoCompare
 """
-__VERSION__ = "1.1"
-__DATE__ = "27/Jan/2023"
+__VERSION__ = "1.2"
+__DATE__ = "29/Jan/2023"
 
 import os as _os
 import pandas as _pd
@@ -42,7 +42,7 @@ class CryptoCompare():
         if apikey is None:
             if apikeyname is None:
                 apikeyname = self.APIKEYNAME
-            apikey = _os.getenv(self.keyname)
+            apikey = _os.getenv(apikeyname)
             if apikey is None:
                 print(f"Can't find API key {apikeyname} in environment variables.")
                 print(f"Use `export {apikeyname}=<value>` to set it BEFORE you launch Jupyter")
@@ -243,10 +243,18 @@ class CryptoCompare():
         """
         return _pd.to_datetime(ts, unit='s', origin='unix') 
     
-    def query_dailypair(self, fsym=None, tsym=None, e=None, limit=False, toTs=None, aspandas=True):
+    FREQ_DAILY = "day"
+    FD = FREQ_DAILY
+    FREQ_HOURLY = "hour"
+    FH = FREQ_HOURLY
+    FREQ_MINUTELY = "minute"
+    FM = FREQ_MINUTELY
+    FREQS = (FREQ_DAILY, FREQ_HOURLY, FREQ_MINUTELY)
+    def query_freqlypair(self, freq, fsym=None, tsym=None, e=None, limit=False, toTs=None, aspandas=True):
         """
-        endpoint = /data/v2/histoday
+        endpoints = /data/v2/histoday, /data/v2/histohour, /data/v2/histominute
         
+        :freq:     FREQ_DAILY/FD, FREQ_HOURLY/FH, or FREQ_MINUTELY/FM
         :fsym:     cryptocurrency symbol of interest
         :tsym:     currency symbol to convert into
         :e:        exchange to obtain data from
@@ -255,9 +263,14 @@ class CryptoCompare():
                    timestamp format either 1452680400 or pd.Timestamp compatible string 
         
         https://min-api.cryptocompare.com/documentation?key=Historical&cat=dataHistoday
+        https://min-api.cryptocompare.com/documentation?key=Historical&cat=dataHistohour
+        https://min-api.cryptocompare.com/documentation?key=Historical&cat=dataHistominute
         """
+        if not freq in self.FREQS:
+            raise ValueError("Unknow frequency {}. Use the FREQ_XXX constants provided.")
+        
         r = self.query(
-            endpoint="/data/v2/histoday",
+            endpoint=f"/data/v2/histo{freq}",
             params = {
                 "fsym":     fsym,
                 "tsym":     tsym if not tsym is None else self.DEFAULT_TSYM,
@@ -281,6 +294,18 @@ class CryptoCompare():
         except:
             if self.raiseonerror: raise
             return None
+    
+    def query_dailypair(self, *args, **kwargs):
+        """alias for query_freqlypair(FREQ_DAILY, ...)"""
+        return self.query_freqlypair(self.FREQ_DAILY, *args, **kwargs)
+    
+    def query_hourlypair(self, *args, **kwargs):
+        """alias for query_freqlypair(FREQ_HOURLY, ...)"""
+        return self.query_freqlypair(self.FREQ_HOURLY, *args, **kwargs)
+
+    def query_minutelypair(self, *args, **kwargs):
+        """alias for query_freqlypair(FREQ_MINUTELY, ...)"""
+        return self.query_freqlypair(self.FREQ_MINUTELY, *args, **kwargs)
 
     def ccycodes(self, symonly=True, fn=None):
         """
