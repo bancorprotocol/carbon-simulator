@@ -31,16 +31,18 @@ class simresults():
     margpsell_r : any
 
 
-def run_sim(strat, path, shift):
+def run_sim(strat, path, shift=None):
     """
     runs the simulation
 
     :strat:     the strategy object, or a list thereof
     :path:      the path as pandas or np series
-    :shift:     the strategy shift [strat centered at (1+shift)*spot]
+    :shift:     the strategy shift [strat centered at (1+shift)*spot]; default=0
     :returns:   simresults tuple (rskamt_r, cshamt_r, value_r) where
                 each of the ranges numpy vectors
     """
+
+    if shift is None: shift = 0
 
     #print("[run_sim] strat", strat)
     if isinstance(strat, _strategy):
