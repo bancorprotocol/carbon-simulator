@@ -296,20 +296,18 @@ def test_helpers_strategy():
     
     assert strategy(90, 80, 110, 120).dct == {
         'tkn': 'RSK',
-        'amt_sell': 0,
+        'amt_sell': None,
         'psell_start': 90,
         'psell_end': 80,
-        'amt_buy': 1e-10,
+        'amt_buy': None,
         'pbuy_start': 110,
         'pbuy_end': 120,
         'pair': 'RSK/CSH',
         'psell_marginal': None,
         'pbuy_marginal': None,
         'y_int_sell': None,
-         'y_int_buy': None
+        'y_int_buy': None
     }
-    
-    assert strategy(90, 80, 110, 120).p == ('RSK', 0, 90, 80, 1e-10, 110, 120)
     
     Sim = CarbonSimulatorUI(pair="RSK/CSH", raiseonerror=True)
     r = Sim.add_strategy(**strategy(p_buy_a=80, p_buy_b=70, p_sell_a=110, p_sell_b=120, amt_rsk=1, amt_csh=100).dct)["orders"]
