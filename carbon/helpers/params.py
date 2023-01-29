@@ -1,8 +1,8 @@
 """
 Carbon helper module - parameter management
 """
-__VERSION__ = "1.1"
-__DATE__ = "27/01/2023"
+__VERSION__ = "1.2"
+__DATE__ = "29/01/2023"
 
 class Params():
     """
@@ -143,6 +143,11 @@ class Params():
         self.set(item, value, allowupdate=False)
     
     def __getattr__(self, item):
+        """
+        for all item starting with _ this refers to super().__getattr__
+        """
+        if item[:1] == "_":
+            return super().__getattr__(item)
         try:
             return self._params[item]
         except KeyError:
