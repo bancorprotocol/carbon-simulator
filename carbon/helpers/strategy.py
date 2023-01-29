@@ -1,7 +1,7 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "2.2"
+__VERSION__ = "2.3"
 __DATE__ = "29/01/2023"
 
 
@@ -156,6 +156,18 @@ class strategy():
         if self.csh is None: self.csh = "CSH"
 
     MAX_UTIL = 0.999 # all MAXUTIL < u <= 1 are set to u = MAXUTIL
+    
+    @classmethod
+    def _validate(cls, u):
+        """validates the u value for from_mgw"""
+        if not u: return None
+        if u<0:
+            raise ValueError("Must have u >= 0", u)
+        elif u>1:
+            raise ValueError("Must have u < 1", u)
+        elif u > cls.MAX_UTIL:
+            u = cls.MAX_UTIL
+        return u
 
     @classmethod
     def from_mgw(cls, m=100, g=0, w=0, u=0, amt_rsk=None, amt_csh=None, rsk=None, csh=None):
@@ -166,6 +178,8 @@ class strategy():
         :g:             geometric gap between the two ranges
         :w:             geometric width of the range
         :u:             percentage utilization of the range (0.01=1%; 0<=u<1)**
+                        note: a tuple/list is also accepted, in which case it
+                        is (usell, ubuy)
         :amt_rsk:       amount of risk asset the strategy is seeded with*
         :amt_csh:       amount of cash the strategy is seeded with*
         :rsk:           risk asset name (default RSK)
@@ -186,13 +200,15 @@ class strategy():
         """
         if w==0: w=0.0001
         if g==0: g=0.0001
-        if u<0:
-            raise ValueError("Must have u >= 0", u)
-        elif u>1:
-            raise ValueError("Must have u < 1", u)
-        elif u > cls.MAX_UTIL:
-            u = cls.MAX_UTIL
-        
+        try:
+            # this will work on tuple / list of length 2...
+            usell, ubuy = (cls._validate(uu) for uu in u)
+        except:
+            # ...and this for a single one
+            usell = ubuy = cls._validate(u)
+
+        #print("[from_mgw] u, usell, ubuy", u, usell, ubuy)
+    
         g2 = 0.5*g
         p_buy_a     = m/(1+g2)
         p_buy_b     = m/(1+g2)/(1+w)
@@ -208,8 +224,8 @@ class strategy():
             amt_csh = amt_csh,
             rsk = rsk,
             csh = csh,
-            psell_marginal = (1-u)*p_sell_a + u*p_sell_b if u else None,
-            pbuy_marginal = (1-u)*p_buy_a + u*p_buy_b if u else None,
+            psell_marginal = (1-usell)*p_sell_a + usell*p_sell_b if usell else None,
+            pbuy_marginal = (1-ubuy)*p_buy_a + ubuy*p_buy_b if ubuy else None,
         )
     
     @classmethod
