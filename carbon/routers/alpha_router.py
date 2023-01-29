@@ -399,6 +399,7 @@ class AlphaRouter(BaseRouter):
             is_by_target=is_by_target,
             check_sufficient_liquidity=check_sufficient_liquidity,
             threshold_orders=threshold_orders,
+            support_partial=support_partial,
         )
 
     def match(
@@ -410,6 +411,7 @@ class AlphaRouter(BaseRouter):
             cmp: Callable = None,
             check_sufficient_liquidity: bool = True,
             threshold_orders: int = None,
+            support_partial: bool = False,
     ) -> List[Action]:
         """
         Main algorithm to handle matching a trade amount against the curves/orders.
@@ -420,4 +422,5 @@ class AlphaRouter(BaseRouter):
             check_sufficient_liquidity=check_sufficient_liquidity,
             threshold_orders=threshold_orders,
             use_positions_matchlevel=self.use_positions_matchlevel,
+            support_partial=support_partial,
         )
