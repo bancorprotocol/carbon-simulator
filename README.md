@@ -174,6 +174,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 
 # Change log
 
+- **v2.3** consolidation and benchmark release with minor fixes (including for uni v3 style strategies) to the features introduced since v2.2
 - **v2.2.5, 2.2.6** pdcompare allows inversion; dealing with numeric issues; params improvements; path interpolation; removed yaml; print_version, plt_style; numeric bugfix
 - **v2.2.4** marginal price at init; also yint, but still issues; added HODL and better legend to sim; strategy object; SharedVar; NBTest bugfix; adding PathGenerator to helpers; adding StartConditions to simulation; adding uniswap constructor to strategy; adding CryptoCompare to data and helpers; updated various helpers for market data, including scaling  
 - **v2.2.1, 2.2.2, 2.2.3** - created Demo 7-3 (key sim); created carbon.helpers module; widgets (for Demo 7-4 which is 7-3 with widgets); Binder optimizations
