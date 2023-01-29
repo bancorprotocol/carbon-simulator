@@ -259,8 +259,11 @@ class AlphaRouter(BaseRouter):
                 x = -results.ordered_associated_liquidity.sum() + Decimal('0.0000000001')
             else:
                 x = results.ordered_associated_liquidity.sum() - Decimal('0.0000000001')
-        passed_indexes = AlphaRouter.gen_one_order_selector(results.ordered_associated_liquidity, abs(x), threshold_orders)
-        top_n_threshold_orders = [results.indexes[i] for i in passed_indexes]
+        if support_partial:
+            top_n_threshold_orders = results[:threshold_orders].indexes.values
+        else:
+            passed_indexes = AlphaRouter.gen_one_order_selector(results.ordered_associated_liquidity, abs(x), threshold_orders)
+            top_n_threshold_orders = [results.indexes[i] for i in passed_indexes]
 
         # (step 4.)
         # Constrain the exact router to just the top n threshold orders and match
@@ -387,8 +390,11 @@ class AlphaRouter(BaseRouter):
                 x = -results.available_value.sum() + Decimal('0.0000000001')
             else:
                 x = results.available_value.sum() - Decimal('0.0000000001')
-        passed_indexes = AlphaRouter.gen_one_order_selector(results.available_value, abs(x), threshold_orders)
-        top_n_threshold_orders = [results.indexes[i] for i in passed_indexes]
+        if support_partial:
+            top_n_threshold_orders = results[:threshold_orders].indexes.values
+        else:
+            passed_indexes = AlphaRouter.gen_one_order_selector(results.available_value, abs(x), threshold_orders)
+            top_n_threshold_orders = [results.indexes[i] for i in passed_indexes]
 
         # (step 4.)
         # Constrain the exact router to just the top n threshold orders and match
