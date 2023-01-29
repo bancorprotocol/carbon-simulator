@@ -1,8 +1,8 @@
 """
 Carbon helper module - run the simulation
 """
-__VERSION__ = "3.0"
-__DATE__ = "28/01/2023"
+__VERSION__ = "3.1"
+__DATE__ = "29/01/2023"
 
 from collections import namedtuple
 import numpy as _np
@@ -12,10 +12,13 @@ from matplotlib import pyplot as _plt
 import pickle as _pickle
 from dataclasses import dataclass as _dataclass
 
-from .. import CarbonSimulatorUI as _CarbonSimulatorUI
-from .params import Params
-from .strategy import strategy as _strategy
-
+try:
+    from .. import CarbonSimulatorUI as _CarbonSimulatorUI
+    from .params import Params
+    from .strategy import strategy as _strategy
+except:
+    from carbon import CarbonSimulatorUI as _CarbonSimulatorUI
+    from carbon.helpers import Params, strategy as _strategy
 
 pair_nt = namedtuple("pair", "tknb, tknq")
 
@@ -123,15 +126,28 @@ SIM_DEFAULT_PARAMS = Params(
     plotValueCsh        = True,      # whether to plot the cash portion of the portfolio value
     plotValueRsk        = False,     # whether to plot the risk asset portion of the portfolio value
     plotValueTotal      = True,      # whether to plot the aggregate portfolio value
+    plotValueGrey       = False,     # whether to plot the values in grey (or blue)
     plotValueHODL       = True,      # whether to plot the HODL value of the initial portfolio
     plotRanges          = True,      # whether to shade the ranges
     plotMargP           = True,      # whetger to plot the marginal price for the ranges
     plotBid             = True,      # whether to plot buy (bid) ranges and marginal prices
     plotAsk             = True,      # whether to plot sell (ask) ranges and marginal prices
+    plotDark            = False,     # whether to use the dark background scheme
     plotInterpolated    = True,      # whether to plot interpolated data
 )
 
-def plot_sim(simresults, simresults0, dataid, params, pair=None):
+COLORS = Params(
+    bidFill = "lightgreen",
+    askFill = "lightcoral",
+    bid = "green",
+    ask = "red",
+    price = "darkorange",
+    hodl = "cyan",
+    value = ("blue", "silver"),
+    valuehf = ("royalblue", "silver"),
+)
+
+def plot_sim(simresults, simresults0, dataid, params, pair=None, colors=None):
     """
     plots the simulation chart
 
@@ -141,6 +157,7 @@ def plot_sim(simresults, simresults0, dataid, params, pair=None):
     :dataid:        a description of the data the will be used in the title
     :params:        the parameter object (can be a dict; defaults SIM_DEFAULT_PARAMS)
     :pair:          the pair as pair_nt or tuple (tknb,tknq)
+    :colors:        the colors as Params or dict (default: COLORS)
     """
 
     has_interpolated_results = not simresults is simresults0
@@ -151,6 +168,8 @@ def plot_sim(simresults, simresults0, dataid, params, pair=None):
         pair = pair_nt(*pair)
 
     p = Params.construct(params, defaults=SIM_DEFAULT_PARAMS.params)
+    c = Params.construct(colors, defaults=COLORS.params)
+    bg = 1 if p.plotValueGrey else 0 # choice between the two colors in c.value
     
     if isinstance(strat, _strategy):
         strat = (strat,)
@@ -186,35 +205,35 @@ def plot_sim(simresults, simresults0, dataid, params, pair=None):
     if p.plotRanges:
         for s in strat:
             if p.plotBid:
-                [ax1.fill_between(path.index, s.p_buy_a, s.p_buy_b, color="lightgreen", alpha=0.1, label="bid range [lhs]")]
+                [ax1.fill_between(path.index, s.p_buy_a, s.p_buy_b, color=c.bidFill, alpha=0.1, label="bid range [lhs]")]
             if p.plotAsk:
-                [ax1.fill_between(path.index, s.p_sell_a, s.p_sell_b, color="lightcoral", alpha=0.1, label="ask range [lhs]")]
+                [ax1.fill_between(path.index, s.p_sell_a, s.p_sell_b, color=c.askFill, alpha=0.1, label="ask range [lhs]")]
             
     if p.plotMargP:
         for margpsell_ri, margpbuy_ri, ix in zip(margpsell_r, margpbuy_r, range(len(margpsell_r))):
             if p.plotBid:
-                plots += ax1.plot(path.index, margpsell_ri, color="green", linestyle="dotted", linewidth=0.8, label="bid [lhs]" if not ix else None)
+                plots += ax1.plot(path.index, margpsell_ri, color=c.bid, linestyle="dotted", linewidth=0.8, label="bid [lhs]" if not ix else None)
             if p.plotAsk:
-                plots += ax1.plot(path.index, margpbuy_ri, color="red", linestyle="dotted", linewidth=0.8, label="ask [lhs]" if not ix else None)
+                plots += ax1.plot(path.index, margpbuy_ri, color=c.ask, linestyle="dotted", linewidth=0.8, label="ask [lhs]" if not ix else None)
             
     if p.plotPrice:
-        plots += ax1.plot(path0, color="darkorange", alpha=0.4, label="price [lhs]")
+        plots += ax1.plot(path0, color=c.price, alpha=0.4, label="price [lhs]")
         if has_interpolated_results and p.plotInterpolated:
-            plots += ax1.plot(path, color="darkorange", alpha=0.6, linewidth=0.4)
+            plots += ax1.plot(path, color=c.price, alpha=0.6, linewidth=0.4)
     
     if p.plotValueHODL:
-        plots += ax2.plot(value_r.index, hodl_r, color="cyan", linestyle="dotted", linewidth=1, label=f"HODL value [rhs]")
+        plots += ax2.plot(value_r.index, hodl_r, color=c.hodl, linestyle="dotted", linewidth=1, label=f"HODL value [rhs]")
     
     if p.plotValueCsh:
-        plots += ax2.plot(value_r.index, cshamt_r, color="blue", linestyle="dashed", linewidth=0.8, alpha=0.7, label=f"{csh} portion [rhs]")
+        plots += ax2.plot(value_r.index, cshamt_r, color=c.value[bg], linestyle="dashed", linewidth=0.8, alpha=0.7, label=f"{csh} portion [rhs]")
 
     if p.plotValueRsk:
-        plots += ax2.plot(value_r.index, rskamt_r*path, color="blue", linestyle="dotted", linewidth=1.2, alpha=1, label=f"{rsk} portion [rhs]")
+        plots += ax2.plot(value_r.index, rskamt_r*path, color=c.value[bg], linestyle="dotted", linewidth=1.2, alpha=1, label=f"{rsk} portion [rhs]")
     
     if p.plotValueTotal:
-        plots += ax2.plot(value0_r, color="blue", label="portfolio value [rhs]")
+        plots += ax2.plot(value0_r, color=c.value[bg], label="portfolio value [rhs]")
         if has_interpolated_results and p.plotInterpolated:
-            plots += ax2.plot(value_r, linewidth=0.2, color="royalblue", label="portfolio value [rhs]")
+            plots += ax2.plot(value_r, linewidth=0.2, color=c.valuehf[bg], label="portfolio value [rhs]")
         
     ax2.set_ylabel(f"portfolio value ({csh})")
     ax1.set_ylabel(f"price ({csh} per {rsk})")
