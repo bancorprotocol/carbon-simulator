@@ -37,20 +37,6 @@ except:
 print("[CryptoCompare] key digest", CC.keydigest[:4])
 # -
 
-# ## Chose the data items to be downloaded
-
-coins ="ETH, BTC, BNB, XRP, ADA, DOGE, MATIC, SOL, OKB, DOT, LTC, TRX, AVAX, ATOM"
-usdstables = "USDT, USDC, UST, BUSD"
-ccies = "USD, BTC, ETH"
-
-# ### Code
-
-CC.pt_from_pair("ETH/USDC"), CC.pair_from_pt(CC.pt_from_pair("ETH/USDC"))
-
-CC.coinlist("ETH, BTC"), CC.coinlist(CC.coinlist("ETH, BTC"))
-
-CC.create_pairs("ETH,BTC", "USD,BTC")
-
 # ## Coin lists
 
 # Here we populate the various coin lists that we will use to download data. They are as follows:
@@ -68,7 +54,7 @@ usdstables = "USDT, USDC, UST, BUSD"
 ccies = "USD, BTC, ETH"
 
 #excludes = ['COINS-CROSS', 'STABLES-USD', 'COINS-USD', 'COINS-BTC', 'COINS-ETH']
-#includes = ["STABLES-USD"]
+includes = ["STABLES-USD"]
 # -
 
 # The table `dltable0` has as keys the filename, and the data is a tuple of pairs. The table `dltable` contains the final downloads, the difference being the `excludes` to avoid redownloading data that is not needed. 
@@ -85,11 +71,14 @@ dltable0 = {
 }
 try:
     dltable = {k:v for k, v in dltable0.items() if k in includes}
+    print("restricted execution to the pairs in `includes`", includes)
 except:
     try:
         dltable = {k:v for k, v in dltable0.items() if not k in excludes}
+        print("the items in `excludes` were excluded", excludes)
     except:
         dltable = dltable0
+        print("no `includes` or `excludes` info present; all tables are being process")
 dltable0.keys(), dltable.keys()
 
 # ## Data download

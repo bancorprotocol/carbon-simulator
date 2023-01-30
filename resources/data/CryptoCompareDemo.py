@@ -117,5 +117,23 @@ help(CCA.query_freqlypair)
 
 help(CCA.query_minutelypair)
 
+# ## Aggregate query
+
+
+r = CCA.aggr_query(
+    "ETC/USD, BTC/USD", 
+    fields=[CCA.FIELD_OPEN, CCA.FIELD_CLOSE], 
+    freq=CCA.FREQ_HOURLY)
+r.keys()
+
+r["rawaggr"]
+
+r["raw"]["ETC/USD"]
+
+r["aggr"]["close"]
+
+r["gaggr"]
+
+help(CCA.aggr_query)
 
 
