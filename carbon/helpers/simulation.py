@@ -1,9 +1,9 @@
 """
 Carbon helper module - run the simulation
 """
-__VERSION__ = "3.1"
-__DATE__ = "29/01/2023"
-
+__VERSION__ = "3.3"
+__DATE__ = "30/01/2023"
+ 
 from collections import namedtuple
 import numpy as _np
 import pandas as _pd
@@ -15,7 +15,7 @@ from dataclasses import dataclass as _dataclass
 try:
     from .. import CarbonSimulatorUI as _CarbonSimulatorUI
     from .params import Params
-    from .strategy import strategy as _strategy
+    from .strategym import strategy as _strategy
 except:
     from carbon import CarbonSimulatorUI as _CarbonSimulatorUI
     from carbon.helpers import Params, strategy as _strategy
@@ -126,14 +126,15 @@ SIM_DEFAULT_PARAMS = Params(
     plotValueCsh        = True,      # whether to plot the cash portion of the portfolio value
     plotValueRsk        = False,     # whether to plot the risk asset portion of the portfolio value
     plotValueTotal      = True,      # whether to plot the aggregate portfolio value
-    plotValueGrey       = False,     # whether to plot the values in grey (or blue)
+    plotValue0          = False,     # whether to plot a horizontal line at the intial portfolio value
     plotValueHODL       = True,      # whether to plot the HODL value of the initial portfolio
     plotRanges          = True,      # whether to shade the ranges
     plotMargP           = True,      # whetger to plot the marginal price for the ranges
     plotBid             = True,      # whether to plot buy (bid) ranges and marginal prices
     plotAsk             = True,      # whether to plot sell (ask) ranges and marginal prices
-    plotDark            = False,     # whether to use the dark background scheme
     plotInterpolated    = True,      # whether to plot interpolated data
+    plotDark            = False,     # whether to use the dark background scheme
+    plotValueGrey       = False,     # whether to plot the values in grey (or blue)
 )
 
 COLORS = Params(
@@ -143,6 +144,7 @@ COLORS = Params(
     ask = "red",
     price = "darkorange",
     hodl = "cyan",
+    value0 = "lightblue",
     value = ("blue", "silver"),
     valuehf = ("royalblue", "silver"),
 )
@@ -220,6 +222,9 @@ def plot_sim(simresults, simresults0, dataid, params, pair=None, colors=None):
         plots += ax1.plot(path0, color=c.price, alpha=0.4, label="price [lhs]")
         if has_interpolated_results and p.plotInterpolated:
             plots += ax1.plot(path, color=c.price, alpha=0.6, linewidth=0.4)
+    
+    if p.plotValue0:
+        plots += ax2.plot(value_r.index, [value_r[0]]*len(value_r), color=c.value0, linestyle="dashed", linewidth=1.2)
     
     if p.plotValueHODL:
         plots += ax2.plot(value_r.index, hodl_r, color=c.hodl, linestyle="dotted", linewidth=1, label=f"HODL value [rhs]")
