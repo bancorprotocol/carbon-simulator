@@ -1,8 +1,8 @@
 """
 Carbon helper module - retrieve data from CryptoCompare
 """
-__VERSION__ = "1.2"
-__DATE__ = "29/Jan/2023"
+__VERSION__ = "1.3"
+__DATE__ = "30/Jan/2023"
 
 import os as _os
 import pandas as _pd
@@ -362,6 +362,88 @@ class CryptoCompare():
         result = ( filter(c.strip()) for c in result)
         return tuple(result)
 
+    def aggr_query(self, 
+            pairs, 
+            fields=None, 
+            incl_raw=True, 
+            incl_raw_aggr=True, 
+            incl_grand_aggr=True, 
+            freq=None, **kwargs):
+        """
+        gets the data for pairs from the API and converts it into tables 
+        
+        :pairs:             the pairs to download, either "ETH/USD, BTC/GBP, ..." or (("ETH", "USD"), ...)
+        :fields:            the fields for which to create aggredate data frames, either as comma
+                            separated string, or as tuple/list
+        :incl_raw:          whether to include the individual raw data frames
+        :incl_raw_aggr:     whether to include the aggregate raw data frame
+        :incl_grand_aggr:   whether to include a grand aggregate (with double col name)
+        :freq:              the data frequency [FREQ_DAILY (default, FREQ_HOURLY, FREQ_MINUTELY] 
+        :kwargs:            passed through to `query_freqlypair` (eg `e`, `limit`, `toTs`)
+        :returns:           dict with the results
+        
+        dict structure
+        
+        -gaggr
+            - [data]
+        -aggr
+            -open
+                - [data]
+            -close
+                - [data]
+            ...
+        -rawaggr
+            - [data]
+        -raw
+            - "ETH/USD"
+                - [data]
+            ...
+        """
+        if fields is None:
+            fields = self.FIELD_DEFAULT
+        if isinstance(fields, str):
+            fields = self.unjoin(fields)
+        print("[aggr_query] fields", fields)
+            
+        if isinstance(pairs, str):
+            pairs = tuple( self.pt_from_pair(p) for p in self.unjoin(pairs) )
+        print("[aggr_query] pairs", pairs)
+        
+        if freq is None:
+            freq = self.FREQ_DAILY
+            
+        result = {
+            "gaggr": None,
+            "aggr": None,
+            "rawaggr": None,
+            "raw": None,
+        }
+            
+        print("[aggr_query] Querying for raw table", len(pairs))
+        raw_tables = {
+            (fsym, tsym): self.query_freqlypair(freq, fsym=fsym, tsym=tsym)
+            for fsym, tsym in pairs
+        }
+        df_raw = _pd.concat(raw_tables, axis=1)
+        result_raw = {self.pair_from_pt(p):v for p, v in raw_tables.items()}
+        if incl_raw:
+            result["raw"] = result_raw
+        if incl_raw_aggr:
+            result["rawaggr"] = _pd.concat(result_raw, axis=1)
+        
+        print("[aggr_query] Creating aggregate table")
+        result["aggr"] = {
+            field: self.reformat_raw_df(df_raw, field=field, dblcolnm=incl_grand_aggr) 
+            for field in fields
+        }
+        if incl_grand_aggr:
+            result["gaggr"] = _pd.concat(result["aggr"].values(), axis=1)
+        return result
+    
+        
+    
+    
+    
     @staticmethod
     def pairs_fields_from_df(df):
         """
@@ -376,22 +458,37 @@ class CryptoCompare():
         fields = tuple(set(fields))
         return {"pairs": pairs, "fields": fields}
 
-    DEFAULT_DF_FIELD = "close"
-    def reformat_raw_df(self, df, field=None):
+    FIELD_CLOSE = "close"
+    FIELD_OPEN = "open"
+    FIELD_HIGH = "high"
+    FIELD_LOW = "low"
+    FIELD_DEFAULT = FIELD_CLOSE
+    @classmethod
+    def reformat_raw_df(cls, df, field=None, dblcolnm=False):
         """
         reformats a raw df
         
-        :df:     the raw df, as returned by a concatenation eg of daily_pair calls
-        :field:  the name of the price field to use for the price (default: DEFAULT_DF_FIELD)
+        :df:        the raw df, as returned by a concatenation eg of daily_pair calls
+        :field:     the name of the price field to use for the price
+                    use FIELD_OPEN, FIELD_CLOSE etc; default: FIELD_DEFAULT
+        :dblcolnm:  if True, the colname is (field, pair) instead of pair
+        :returns:   the reformatted data frame
         """
         if field is None:
-            field = self.DEFAULT_DF_FIELD
-        return _pd.concat(
-            [
-                df[(*pair, "open")].rename(f"{pair[0]}/{pair[1]}", inplace=True)
-                for pair in self.pairs_fields_from_df(df)["pairs"]
-            ], axis=1
-        )
+            field = cls.FIELD_DEFAULT
+
+        if dblcolnm:
+            result = (
+                df[(*pair, field)].rename((field, f"{pair[0]}/{pair[1]}"), inplace=True)
+                for pair in cls.pairs_fields_from_df(df)["pairs"]
+            )
+        else:
+            result = (
+                df[(*pair, field)].rename(f"{pair[0]}/{pair[1]}", inplace=True)
+                for pair in cls.pairs_fields_from_df(df)["pairs"]
+            )
+
+        return _pd.concat(list(result), axis=1)
 
     @staticmethod
     def pt_from_pair(pair):
