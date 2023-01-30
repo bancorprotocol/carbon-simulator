@@ -1,8 +1,8 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "2.3"
-__DATE__ = "29/01/2023"
+__VERSION__ = "2.4"
+__DATE__ = "30/01/2023"
 
 
 from dataclasses import dataclass as _dataclass
@@ -34,6 +34,9 @@ class strategy():
     `cls.MIN_SEED_AMT` which is set to 1e-10 (it can be changed in a derived
     class). The reason is that zero-seeded ranges do not allow for marginal prices.
     """
+    __VERSION__ = __VERSION__
+    __DATE__ = __DATE__
+
     p_sell_a: float
     p_sell_b: float 
     p_buy_a: float
@@ -169,10 +172,49 @@ class strategy():
             u = cls.MAX_UTIL
         return u
 
+    @staticmethod
+    def _sorted(x1, x2, inverse=False):
+        """
+        returns x1,x2 in order x1<x2 (x1>x2 if inverse)
+        """
+        invert = (x2 > x1) ^ bool(inverse) 
+        return (x1,x2) if invert else (x2,x1)
+    
+    @classmethod 
+    def from_sb(cls, sell, buy, fixed=True, overlapping=False):
+        """
+        alternative constructor: create instance from sell range and buy range
+
+        :sell:          the sell (ask) range, as tuple (start=lo, end=hi)
+        :end:           the buy (bid) range, as tuple (start=him end=lo)
+        :fixed:         whether the range is fixed or rescaleable
+        :overlapping:   if False (default), raises on overlapping ranges
+        """
+        try:
+            p_sell_a, p_sell_b = cls._sorted(*sell)
+        except TypeError:
+            p_sell_a = p_sell_b = sell
+
+        try:
+            p_buy_a, p_buy_b = cls._sorted(*buy, inverse=True)
+        except TypeError:
+            p_buy_a = p_buy_b = buy
+
+        if p_buy_a > p_sell_a and not overlapping:
+            raise ValueError("Must not have overlapping ranges unless overlapping True", sell, buy, p_sell_a, p_buy_a)
+
+        return cls(
+            p_sell_a = p_sell_a,
+            p_sell_b = p_sell_b,
+            p_buy_a = p_buy_a,
+            p_buy_b = p_buy_b,  
+            rescale = not fixed,    
+         )
+
     @classmethod
     def from_mgw(cls, m=100, g=0, w=0, u=0, amt_rsk=None, amt_csh=None, rsk=None, csh=None):
         """
-        create instance from mid `m`, gap width `g`, and range width `w`
+        alternative constructor: create instance from mid `m`, gap width `g`, and range width `w`
         
         :m:             (geometric) middle between the two ranges
         :g:             geometric gap between the two ranges
@@ -206,14 +248,20 @@ class strategy():
         except:
             # ...and this for a single one
             usell = ubuy = cls._validate(u)
-
         #print("[from_mgw] u, usell, ubuy", u, usell, ubuy)
     
+        try:
+            wsell, wbuy = (cls._validate(ww) for ww in w)
+        except:
+            wsell = wbuy = cls._validate(w)
+        #print("[from_mgw] w, wsell, wbuy", w, wsell, wbuy)
+    
+        
         g2 = 0.5*g
         p_buy_a     = m/(1+g2)
-        p_buy_b     = m/(1+g2)/(1+w)
+        p_buy_b     = m/(1+g2)/(1+wbuy)
         p_sell_a    = m*(1+g2)
-        p_sell_b    = m*(1+g2)*(1+w)
+        p_sell_b    = m*(1+g2)*(1+wsell)
 
         return cls(
             p_buy_a = p_buy_a, 
