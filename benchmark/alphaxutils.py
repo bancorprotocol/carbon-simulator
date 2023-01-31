@@ -61,7 +61,7 @@ class Order:
         # y = yint * (sqrt(dydx) - B) / S
         dydx = p #if self.pair.has_quotetoken(self.tkn) else 1/p
         #print(f"[yfromp_f] pa={self.pa_raw} dydx={dydx} pb={self.pb_raw}")
-
+        # print("1/dydx", 1/dydx)
         if checkbounds:
             if dydx > self.pa:
                 if raiseonerror:
@@ -111,7 +111,7 @@ class Order:
         #       ----------------------------------------------------------------------------------
         denom = (self.A*self.y+self.B*self.z) * (self.A*self.y+self.B*self.z-self.A*dy)
 
-        return dy/(num/denom)   
+        return dy*(num/denom)   
 
     def xfromy_f(self, y, checkbounds=True, raiseonerror=False):
         """
