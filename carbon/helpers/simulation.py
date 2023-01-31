@@ -1,7 +1,7 @@
 """
 Carbon helper module - run the simulation
 """
-__VERSION__ = "3.3"
+__VERSION__ = "3.3.1"
 __DATE__ = "30/01/2023"
  
 from collections import namedtuple
@@ -11,6 +11,7 @@ from math import sqrt
 from matplotlib import pyplot as _plt
 import pickle as _pickle
 from dataclasses import dataclass as _dataclass
+
 
 try:
     from .. import CarbonSimulatorUI as _CarbonSimulatorUI
@@ -170,7 +171,11 @@ def plot_sim(simresults, simresults0, dataid, params, pair=None, colors=None):
         pair = pair_nt(*pair)
 
     p = Params.construct(params, defaults=SIM_DEFAULT_PARAMS.params)
-    c = Params.construct(colors, defaults=COLORS.params)
+    try:
+        colors1 = colors["darkmode" if p.plotDark else "lightmode"]
+    except:
+        colors1 = colors
+    c = Params.construct(colors1, defaults=COLORS.params)
     bg = 1 if p.plotValueGrey else 0 # choice between the two colors in c.value
     
     if isinstance(strat, _strategy):
