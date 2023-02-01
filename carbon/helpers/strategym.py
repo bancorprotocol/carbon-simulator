@@ -1,7 +1,7 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "2.6"
+__VERSION__ = "2.6.1"
 __DATE__ = "01/02/2023"
 
 
@@ -156,11 +156,11 @@ class strategy():
         try:
             if r["strat_type"].lower() == "mgw":
                 try:
-                    w = (r["strat_wbuy"], r["strat_wsell"])
+                    w = (r["strat_wsell"], r["strat_wbuy"])
                 except:
                     w = r["strat_w"]
                 try:
-                    u = (r["strat_ubuy"], r["strat_usell"])
+                    u = (r["strat_usell"], r["strat_ubuy"])
                 except:
                     u = r["strat_u"]
 
