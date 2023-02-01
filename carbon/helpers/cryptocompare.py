@@ -1,8 +1,8 @@
 """
 Carbon helper module - retrieve data from CryptoCompare
 """
-__VERSION__ = "1.3"
-__DATE__ = "30/Jan/2023"
+__VERSION__ = "1.4"
+__DATE__ = "01/Feb/2023"
 
 import os as _os
 import pandas as _pd
@@ -38,7 +38,9 @@ class CryptoCompare():
     def __init__(self, apikeyname=None, apikey=None, raiseonerror=None):
         if raiseonerror is None:
             raiseonerror = self.RAISEONERROR
-        self.raiseonerror = raiseonerror        
+        self.raiseonerror = raiseonerror  
+        if not (isinstance(apikey, str) or apikey is None or apikey is True):
+            raise ValueError("apikey must be a string, None, or True", apikey)  
         if apikey is None:
             if apikeyname is None:
                 apikeyname = self.APIKEYNAME
@@ -268,22 +270,29 @@ class CryptoCompare():
         """
         if not freq in self.FREQS:
             raise ValueError("Unknow frequency {}. Use the FREQ_XXX constants provided.")
-        
-        r = self.query(
-            endpoint=f"/data/v2/histo{freq}",
-            params = {
+        endpoint = f"/data/v2/histo{freq}"
+        params = {
                 "fsym":     fsym,
                 "tsym":     tsym if not tsym is None else self.DEFAULT_TSYM,
                 "e":        e,
                 "limit":    limit if not limit is False else self.DEFAULT_LIMIT,
                 "toTs":     toTs,
-            }
-        )
+        }
+        r = self.query(endpoint=endpoint, params=params)
         if r is None: return r
+        r_json = r.json()
+        if r_json.get("Response") == "Error":
+            if self.raiseonerror:
+                raise RuntimeError("Query not successfull", r, r_json, endpoint, params)
+            else:
+                return None
         if not aspandas:
-            return r.json().get("Data")
+            return r_json().get("Data")
         try:   
-            df = _pd.DataFrame.from_records(r.json()["Data"]["Data"])
+            # print("[query_freqlypair]", endpoint, params, r)
+            # print("[query_freqlypair] r", r_json())
+            
+            df = _pd.DataFrame.from_records(r_json["Data"]["Data"])
             df["datetime"] = [self.ts_fromcc(ts) for ts in df["time"]]
             df = df.set_index("datetime")
             del df["conversionType"]
@@ -291,8 +300,9 @@ class CryptoCompare():
             del df["time"]
             df = df[['open', 'close', 'high', 'low', 'volumefrom', 'volumeto']]
             return df
-        except:
-            if self.raiseonerror: raise
+        except RuntimeError as e:
+            if self.raiseonerror: 
+                raise RuntimeError("Error {e}", endpoint, params, r)
             return None
     
     def query_dailypair(self, *args, **kwargs):
@@ -372,13 +382,14 @@ class CryptoCompare():
         """
         gets the data for pairs from the API and converts it into tables 
         
-        :pairs:             the pairs to download, either "ETH/USD, BTC/GBP, ..." or (("ETH", "USD"), ...)
-        :fields:            the fields for which to create aggredate data frames, either as comma
-                            separated string, or as tuple/list
+        :pairs:             the pairs to download, either comma separeted "ETH/USD, BTC/GBP, ..." 
+                            or as tuple of tuples (("ETH", "USD"), ...)
+        :fields:            the fields for which to create aggredate data frames, either comma separated
+                            or as tuple/list; use FREQ_CLOSE and other FIELD_XXX constants here
         :incl_raw:          whether to include the individual raw data frames
         :incl_raw_aggr:     whether to include the aggregate raw data frame
         :incl_grand_aggr:   whether to include a grand aggregate (with double col name)
-        :freq:              the data frequency [FREQ_DAILY (default, FREQ_HOURLY, FREQ_MINUTELY] 
+        :freq:              the data frequency [FREQ_DAILY (default), FREQ_HOURLY, FREQ_MINUTELY] 
         :kwargs:            passed through to `query_freqlypair` (eg `e`, `limit`, `toTs`)
         :returns:           dict with the results
         
@@ -440,10 +451,6 @@ class CryptoCompare():
             result["gaggr"] = _pd.concat(result["aggr"].values(), axis=1)
         return result
     
-        
-    
-    
-    
     @staticmethod
     def pairs_fields_from_df(df):
         """
@@ -504,13 +511,19 @@ class CryptoCompare():
         """
         return "/".join(pair_t)
 
-    @staticmethod
-    def coinlist(coins, sep=","):
+    @classmethod
+    def coinlist(cls, coins, sep=",", aspt=False):
         """
         creates a coin list from separated string (does not touch lists)
+
+        :coins:    either a string or a list/tuple
+        :sep:      the separator of the string
+        :aspt:     if True, result returned as pair tuple (using `pt_from_pair`)
+        :returns:  original if not str; otherwise tuple of string or pr
         """
+        f = cls.pt_from_pair if aspt else lambda x: x
         if isinstance(coins, str):
-            return tuple(c.strip() for c in coins.split(sep))
+            return tuple(f(c.strip()) for c in coins.split(sep))
         else:
             return coins
 
