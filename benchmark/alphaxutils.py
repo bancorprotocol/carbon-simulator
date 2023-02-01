@@ -7,6 +7,54 @@ def assertAlmostEqual(actual, expected, maxError):
         error = abs(actual - expected) / expected
         assert error <= maxError, 'error = {:f}'.format(error)
 
+def tradeBySourceAmount(x, order):
+    y, z, A, B = [order.y, order.z, order.A, order.B]
+    n = x * (A * y + B * z) ** 2
+    d = A * x * (A * y + B * z) + z ** 2
+    return x, n / d
+
+def tradeByTargetAmount(x, order):
+    y, z, A, B = [order.y, order.z, order.A, order.B]
+    n = x * z ** 2
+    d = (A * y + B * z) * (A * y + B * z - A * x)
+    return n / d, x
+
+def get_geoprice(i, orders):
+    pb = orders[i].B**2
+    pa = (orders[i].A + orders[i].B)**2
+    return(((pa * pb)**Decimal('0.5')))
+
+def goalseek(func, a, b, eps=None):
+    """
+    helper method: solves for x, a<x<b, such that func(x) == 0
+    
+    :func:    a function f(x), eg lambda x: x-3
+    :a:       the lower bound
+    :b:       the upper bound
+    :eps:     precision, ie b/a value where goal seek returns
+    :returns: the x value found
+    """
+    if eps is None:
+        eps = Decimal('0.00000000001')
+    if not a<b:
+        raise ValueError("Bracketing value a must be smaller than b", a, b)
+    fa = func(a)
+    fb = func(b)
+    if not fa*fb<0:
+        raise ValueError("Sign of f(a) must be opposite of sign of f(b)", fa, fb, a, b)
+        
+    while 1:
+        m = Decimal('0.5')*(a+b)
+        fm = func(m)
+        if fm * fa > 0:
+            a = m
+        else:
+            b = m
+        
+        #print(f"m={m}, m={m}, b={b}")
+        if b/a-1 < eps:
+            return m
+
 class Order:
     def __init__(self, order):
         liq = Decimal(order['liquidity'])
@@ -182,18 +230,6 @@ class Order:
 
         return dx * (num/denom) 
 
-def tradeBySourceAmount(x, order):
-    y, z, A, B = [order.y, order.z, order.A, order.B]
-    n = x * (A * y + B * z) ** 2
-    d = A * x * (A * y + B * z) + z ** 2
-    return x, n / d
-
-def tradeByTargetAmount(x, order):
-    y, z, A, B = [order.y, order.z, order.A, order.B]
-    n = x * z ** 2
-    d = (A * y + B * z) * (A * y + B * z - A * x)
-    return n / d, x
-
 class AlphaRouter:
     """
     Alpha method - Restricts the exact algo calculation to specifically n threshold number of orders.
@@ -314,37 +350,3 @@ class AlphaRouter:
                     return(AlphaRouter.list_indexes(threshold_list))
                 indexed_values = indexed_values[1:]
 
-class CarbonOrderUI:
-
-
-    @staticmethod
-    def goalseek(func, a, b, eps=None):
-        """
-        helper method: solves for x, a<x<b, such that func(x) == 0
-        
-        :func:    a function f(x), eg lambda x: x-3
-        :a:       the lower bound
-        :b:       the upper bound
-        :eps:     precision, ie b/a value where goal seek returns
-        :returns: the x value found
-        """
-        if eps is None:
-            eps = Decimal('0.00000000001')
-        if not a<b:
-            raise ValueError("Bracketing value a must be smaller than b", a, b)
-        fa = func(a)
-        fb = func(b)
-        if not fa*fb<0:
-            raise ValueError("Sign of f(a) must be opposite of sign of f(b)", fa, fb, a, b)
-            
-        while 1:
-            m = Decimal('0.5')*(a+b)
-            fm = func(m)
-            if fm * fa > 0:
-                a = m
-            else:
-                b = m
-            
-            #print(f"m={m}, m={m}, b={b}")
-            if b/a-1 < eps:
-                return m
