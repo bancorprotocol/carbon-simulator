@@ -173,7 +173,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 [semver]:https://semver.org/
 
 # Change log
-
+- **v2.3.2**
 - **v2.3.1** cryptocompare; run_shift parameter fix; sim: colors and local use; ubuy/sell; various sim improvements; cryprocompare aggregate query; routing and benchmarking; workflows
 - **v2.3** consolidation and benchmark release with minor fixes (including for uni v3 style strategies) to the features introduced since v2.2
 - **v2.2.5, 2.2.6** pdcompare allows inversion; dealing with numeric issues; params improvements; path interpolation; removed yaml; print_version, plt_style; numeric bugfix
