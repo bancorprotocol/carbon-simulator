@@ -1,13 +1,14 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "2.5"
-__DATE__ = "31/01/2023"
+__VERSION__ = "2.6.1"
+__DATE__ = "01/02/2023"
 
 
 from dataclasses import dataclass as _dataclass
 from math import sqrt as _sqrt
 from copy import copy as _copy
+from math import isnan as _isnan
 
 @_dataclass
 class strategy():
@@ -155,11 +156,11 @@ class strategy():
         try:
             if r["strat_type"].lower() == "mgw":
                 try:
-                    w = (r["strat_wbuy"], r["strat_wsell"])
+                    w = (r["strat_wsell"], r["strat_wbuy"])
                 except:
                     w = r["strat_w"]
                 try:
-                    u = (r["strat_ubuy"], r["strat_usell"])
+                    u = (r["strat_usell"], r["strat_ubuy"])
                 except:
                     u = r["strat_u"]
 
@@ -394,3 +395,74 @@ class strategy():
     def slashpair(self):
         """returns the slashpair as str, eg 'RSK/CSH'"""
         return f"{self.rsk}/{self.csh}"
+
+    @staticmethod
+    def rr(df):
+        """
+        returns the data frame df as dict {index -> {field -> value}}
+
+        :df:    in this context, the data frame holding all key parameters of a chart 
+        """
+        rr = df.to_dict(orient="index")
+        return rr
+
+    @staticmethod
+    def r0(rr):
+        """
+        returns the first element of the dict `rr` (here: the reference record)
+        """
+        return rr[tuple(rr)[0]]
+
+    @staticmethod
+    def dr(r, r0, purge=True):
+        """
+        difference between the record `r` and baseline record `r0`
+
+        :r:         the record to be evaluated
+        :r0:        baseline record
+        :purge:     if False, fields that don't change contain None; otherwise purged
+        :returns:   the difference record as dict
+        """
+        result = {k: r[k] if r[k] != r0[k] else None for k in r0}
+        if not purge: return result
+        return {k:v for k,v in result.items() if not v is None and not k in ["id0", "comment"]}
+
+    @staticmethod
+    def drr(rr, baseline=False, purge=True, asdf=False, comment=False):
+        """
+        run `dr` on dict {id -> r[id]}
+
+        :rr:            the dict of records dict {id -> r[id]}
+        :baseline:      if True, add content for baseline (=first) record r0
+        :purge:         same as in `dr`
+        :asdf:          if True, result returned as data frame, otherwise dict
+        :comment:       if False does never return comment column in the dataframe
+        :returns:       dict or data frame, depending on asdf
+        """
+        r0k = tuple(rr)[0]
+        r0 = rr[r0k]
+        if not asdf:
+            result = {k:dr(r, r0, purge) for k,r in rr.items()}
+            if not baseline:
+                return result
+            result[r0k] = {k:v for k,v in r0.items() if not k in ["id0", "comment"]}
+            return result
+        else:
+            result = {k:dr(r, r0, purge=False) for k,r in rr.items()}
+            df = pd.DataFrame.from_records(result).T.fillna("")
+            del df["id0"]
+            if not comment: 
+                del df["comment"]
+            df = df[ [col for col in df.columns  if (df[col]!= "").any()] ]                
+            return df
+
+    @staticmethod
+    def filter_isnan(val):
+        """
+        returns val unless val==nan, then it returns ''
+        """
+        try:
+            if _isnan(val):
+                return ""
+        except TypeError:
+            return val
