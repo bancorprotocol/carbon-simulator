@@ -24,6 +24,20 @@ print( "{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CryptoCompare))
 #
 # https://min-api.cryptocompare.com/documentation
 
+# ## Selection
+#
+# Please enter the pairs for the `SELECTION` data collection below
+
+selection = "MIM/LTC, BNT/LINK, NMR/USD"
+
+pd.read_pickle("cryptocompare/SELECTION.pickle").head()
+
+# +
+# # !cp cryptocompare/SELECTION.pickle .
+# # !cp cryptocompare/SELECTION.pickle ../../../JupyLiteCarbonSim/content/data
+# # !cp cryptocompare/SELECTION.pickle ../../../BinderCarbonSimulator/Frozen/data
+# -
+
 # ## SetUp
 #
 # If you have a private API key, run `export CCAPIKEY=<YOURKEY>` before you launch Jupyter on the same shell. In case no key is found the free API is used. You can also provide the API key in the constructor, but this is not recommended for security reasons.
@@ -54,7 +68,7 @@ usdstables = "USDT, USDC, UST, BUSD"
 ccies = "USD, BTC, ETH"
 
 #excludes = ['COINS-CROSS', 'STABLES-USD', 'COINS-USD', 'COINS-BTC', 'COINS-ETH']
-includes = ["STABLES-USD"]
+includes = ["SELECTION"]
 # -
 
 # The table `dltable0` has as keys the filename, and the data is a tuple of pairs. The table `dltable` contains the final downloads, the difference being the `excludes` to avoid redownloading data that is not needed. 
@@ -67,7 +81,8 @@ dltable0 = {
     **{
         f"COINS-{ccy}": CC.create_pairs(coins_for_ccy, ccy)
         for ccy in CC.coinlist(ccies)
-    }
+    },
+    "SELECTION": CC.coinlist(selection, aspt=True),
 }
 try:
     dltable = {k:v for k, v in dltable0.items() if k in includes}
@@ -108,8 +123,7 @@ for item in dltable:
 
 # !ls cryptocompare
 
-df = pd.read_pickle("cryptocompare/COINS-ETH.pickle")
-df = pd.read_pickle("cryptocompare/COINS-CROSS.pickle")
+df = pd.read_pickle("cryptocompare/SELECTION.pickle")
 df
 
 
