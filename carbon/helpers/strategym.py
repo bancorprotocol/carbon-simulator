@@ -1,8 +1,8 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "2.4"
-__DATE__ = "30/01/2023"
+__VERSION__ = "2.5"
+__DATE__ = "31/01/2023"
 
 
 from dataclasses import dataclass as _dataclass
@@ -130,26 +130,6 @@ class strategy():
             pass
         return newobj
 
-    @property
-    def p_bid_a(self):
-        """alias for p_buy_a"""
-        return self.p_buy_a
-    
-    @property
-    def p_ask_a(self):
-        """alias for p_sell_a"""
-        return self.p_sell_a
-    
-    @property
-    def p_bid_b(self):
-        """alias for p_buy_b"""
-        return self.p_buy_b
-
-    @property
-    def p_ask_b(self):
-        """alias for p_sell_b"""
-        return self.p_sell_b
-
     def __post_init__(self):
         # the ==0 is important: do not touch None!
         # (None means: to be filled in later)
@@ -157,6 +137,41 @@ class strategy():
         if self.amt_csh == 0: self.amt_csh  = self.MIN_SEED_AMT
         if self.rsk is None: self.rsk = "RSK"
         if self.csh is None: self.csh = "CSH"
+
+    @classmethod
+    def from_dct(cls, dct, raiseonerror=True):
+        """
+        alternative constructor: reconstruct class from dict
+
+        :dct:               a big dict, typically read from a full scenario description
+        :raiseonerror:      if True, raises on error, otherwise returns None
+
+        NOTE: the dict fields expected all start with `strat_`, and `strat_type`
+        indicates which constructor to call; eg `mgw` expects data records suitable
+        for the mgw constructor. For exact field names expected, please check
+        the source code of this method
+        """
+        r = dct
+        try:
+            if r["strat_type"].lower() == "mgw":
+                try:
+                    w = (r["strat_wbuy"], r["strat_wsell"])
+                except:
+                    w = r["strat_w"]
+                try:
+                    u = (r["strat_ubuy"], r["strat_usell"])
+                except:
+                    u = r["strat_u"]
+
+                return cls.from_mgw(m=r["strat_m"], g=r["strat_g"], w=w, u=u)
+            else:
+                raise ValueError(f"Unknown strategy {dct['strat_type']}")
+        except:
+            if raiseonerror:
+                raise
+            return None
+        
+
 
     MAX_UTIL = 0.999 # all MAXUTIL < u <= 1 are set to u = MAXUTIL
     
