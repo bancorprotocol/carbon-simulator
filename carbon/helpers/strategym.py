@@ -1,8 +1,8 @@
 """
 Carbon helper module -- encapsulate parameters for a single strategy
 """
-__VERSION__ = "2.6.1"
-__DATE__ = "01/02/2023"
+__VERSION__ = "2.7"
+__DATE__ = "02/02/2023"
 
 
 from dataclasses import dataclass as _dataclass
@@ -163,8 +163,25 @@ class strategy():
                     u = (r["strat_usell"], r["strat_ubuy"])
                 except:
                     u = r["strat_u"]
-
                 return cls.from_mgw(m=r["strat_m"], g=r["strat_g"], w=w, u=u)
+
+            elif r["strat_type"].lower() == "fixed":
+                return cls(
+                    r["p_sell_a"], 
+                    r["p_sell_b"], 
+                    r["p_buy_a"], 
+                    r["p_buy_b"], 
+                    rescale=False,
+                )
+
+            elif r["strat_type"].lower() == "uv3": 
+                return cls.from_u3(
+                    p_lo=r["p_lo"],
+                    p_hi=r["p_hi"],
+                    start_below=bool(r["start_below"]),
+                    fee_pc=r["fee_pc"],
+                )
+                
             else:
                 raise ValueError(f"Unknown strategy {dct['strat_type']}")
         except:
@@ -172,8 +189,6 @@ class strategy():
                 raise
             return None
         
-
-
     MAX_UTIL = 0.999 # all MAXUTIL < u <= 1 are set to u = MAXUTIL
     
     @classmethod
