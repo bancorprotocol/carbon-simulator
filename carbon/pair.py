@@ -8,9 +8,10 @@ VERSION HISTORY
 v2.0 -- changed constructor to allow for slashpair string
 v2.0.1 -- convert_price
 v2.0.2 -- allow constructor to take CarbonPair
+v2.1 -- distinguish display and original symbols
 """
-__version__ = "2.0.2"
-__date__ = "11/Dec/2022"
+__version__ = "2.1"
+__date__ = "04/Feb/2022"
 
 from dataclasses import dataclass
 
@@ -24,6 +25,8 @@ class CarbonPair:
                     can also be a CarbonPair instance
     :tknb:          the base token (risk token) of the pair, eg ETH*
     :tknq:          the quote token (numeraire token) of the pair, eg USDC*
+    :display_orig:  if True the display value [_d] is the original provided
+                    one, otherwise (default) the uppercase one
 
     * the differentiation between numeraire and risk tokens matter only for price quotes:
     in a given pair, _all_ prices will be quote as tknn per tknr, eg USDC per ETH
@@ -36,6 +39,7 @@ class CarbonPair:
     slashpair: any = None
     tknb: str = None 
     tknq: str = None
+    display_orig: bool = False
 
     def __post_init__(self):
 
@@ -51,11 +55,6 @@ class CarbonPair:
             if isinstance(self.slashpair, self.__class__):
                 #print("[CarbonPair] creating pair from CarbonPair", self.__class__, self.slashpair.__class__, self.slashpair.slashpair)
                 self.slashpair = self.slashpair.slashpair
-            else:
-                pass
-                #print("[CarbonPair] creating pair from string", self.__class__, self.slashpair)
-
-            self.slashpair = self.slashpair.upper()
 
             try:
                 self.tknb, self.tknq = self.slashpair.split("/")
@@ -67,13 +66,48 @@ class CarbonPair:
             #print("[CarbonPair] tknb, tknq has hopefully been provided", self.tknb, self.tknq)
             if self.tknb is None or self.tknq is None:
                 raise ValueError("If pair is None must provide tknb, tknq", self.slashpair, self.tknb, self.tknq)            
-            self.tknb = self.tknb.upper()
-            self.tknq = self.tknq.upper()
-            self.slashpair = f"{self.tknb}/{self.tknq}"
+    
+        # keep the original ones
+        self._tknb_orig = self.tknb
+        self._tknq_orig = self.tknq
+
+        self.tknb = self.tknb.upper()
+        self.tknq = self.tknq.upper()
+        self.slashpair = f"{self.tknb}/{self.tknq}"
 
     def __repr__(self):
         return f"P('{self.slashpair}')"
         return f"{self.__class__.__name__}('{self.slashpair}')"
+
+    @property
+    def tknb_o(self):
+        """the original tknb value provided (before upper case)"""
+        return self._tknb_orig
+    
+    @property
+    def tknq_o(self):
+        """the original tknq value provided (before upper case)"""
+        return self._tknq_orig
+
+    @property
+    def slashpair_o(self):
+        """the original slashpair value provided (before upper case)"""
+        return f"{self.tknb_o}/{self.tknq_o}"
+
+    @property
+    def tknb_d(self):
+        """the tknb display value"""
+        return self.tknb_o if self.display_orig else self.tknb
+    
+    @property
+    def tknq_d(self):
+        """the tknq display value"""
+        return self.tknq_o if self.display_orig else self.tknq
+
+    @property
+    def slashpair_d(self):
+        """the slashpair display value"""
+        return self.slashpair_o if self.display_orig else self.slashpair
 
     @classmethod
     def from_isopair_and_tkn(cls, isopair, tkn=None):
