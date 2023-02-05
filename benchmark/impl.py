@@ -17,7 +17,7 @@ class Order:
         max = int(encode(Decimal(order['highestRate'])))
         mid = int(encode(Decimal(order['marginalRate'])))
         self.y = liq
-        self.z = liq * (max - min) // (mid - min)
+        self.z = liq * (max - min) // (mid - min) if max > mid else liq
         self.A = max - min
         self.B = min
     def __iter__(self):

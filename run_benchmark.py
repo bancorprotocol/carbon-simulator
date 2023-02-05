@@ -76,6 +76,15 @@ for batch in [
         }
     },
     {
+        'fileName': 'resources/benchmark/ConstantRateTrade',
+        'maxError': {
+            'liquidity'    : '0.000004586147',
+            'lowestRate'   : '0.000000000642',
+            'highestRate'  : '0.000000000642',
+            'marginalRate' : '0.000000000642',
+        }
+    },
+    {
         'fileName': 'resources/benchmark/EthUsdcTrade',
         'maxError': {
             'liquidity'    : '0.000001288756294',

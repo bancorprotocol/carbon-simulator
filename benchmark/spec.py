@@ -9,7 +9,7 @@ class Order:
         max = Decimal(order['highestRate']).sqrt()
         mid = Decimal(order['marginalRate']).sqrt()
         self.y = liq
-        self.z = liq * (max - min) / (mid - min)
+        self.z = liq * (max - min) / (mid - min) if max > mid else liq
         self.A = max - min
         self.B = min
     def __iter__(self):
