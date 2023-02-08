@@ -109,7 +109,7 @@ plt.grid()
 #
 # The interaction between the scaling factor and the above numbers is somewhat complex -- essentially the scaling factor is there to (a) allow for numbers < 1 to be transmitted into the contract, and to (b) scale the numerator of the above equations to a multiple of its denominator. So there is a certain amount of double counting here, but it is not entirely clear how much. **We assume for the time being full double counting, ie we do not consider any extra size requirements due to the scaling factor.** We believe this to make sense, but we do need to point out this is an aggressive assumption, and that we may need to revise it at a later stage.
 
-# ### Conclusion
+# ### Conclusion on prices
 #
 # We have shown above that only about 20 bits are required to obtain a reasonable resolution of $10^{-5}$ on the prices, both via direct estimation and by looking at the charts. The remainder of those bits -- ie the largest portion of the requirement -- is because of scaling. This is similar in the decimal case to a situation where we have eg 1.2345 vs 0.00000012345 vs 12,345,000,000. It is well known that the most efficient way to represent numbers with constant precision requirements across a wide scale _in storage_ is through a floating point representation. Here specifically we could go for a _storage_ representation of
 #
@@ -129,7 +129,34 @@ plt.grid()
 #
 # We currently have a scaling factor of 32, and an associated representation of $a,b$ as 64 bit integers. A scaling factor of 32 seems to be a good compromise that works in many of the situations we have studied. However, we have found issues arising in particular in the case of SHIB/USDC where the decimality is 18/6 and the price is of the order of $10^{-5}$. We are now proposing the increase the scaling factor to $2^{40}$ _for all curves_ and commensurately increase the storage of a,b to 80 bits.
 #
-# **Having looked at the 40 bit proposal we have found no obvious cases where (a) it goes wrong, and (b) that matters. In other words: we have established some boundaries of this approach, but the boundaries we have established seem to be acceptable at this state.** It is important however to understand that the fixed format for storing $a,b$ is not well adapted to the problem it hand, so it is clear that it _will_ break, and as pointed out above we have established some boundaries where it breaks alreadly. At the moment it looks like those areas are outside the region that we want Carbon to cover. However -- **this is not a high confidence assessment and there is a non-negligible risk of running into cases where it breaks and that we expected Carbon to cover.**
+# **we have now established that the 40 bit proposal does not in the cases where it matters is in improvement over the current 32 bit state so it is being scrapped**
+
+# ## Can smart scaling address the overflow and precision issues at the same time?
+#
+# ### Summary
+# We know that the optimal choice of the scaling factor matters greatly because there lies failure at both ends of it: if it is too large, the calculation will overflow already at small curve loadings, and if it is too small then the price grid is very wide [see the charts above] and entirely disappears below a certain point.
+#
+# The idea behind that dynamic scaling factor was that as we clearly can not find a single scaling factor that works across _all_ curves, we may be able to choose this compromise on a curve-by-curve level, so that on curves that are prone to overflow we choose a smaller factor, and on curves that present too coarse a price grid we choose a bigger factor. It turns out unfortunately that what appears to be the most important overflow in practice is strongly correlated to the coarseness of the price grid, ie those problems appear in tandem. In other words: **it is not possible to address what appears to be the most important overflow issue by changing the scaling factor, either dynamic or static.**
+#
+# This leaves us two options: (1) the use of a big number library, and (2) a different kind of rescaling where we reduce the decimality of the offending token virtually. This works because the problem lies in low value tokens that on to of this are divided in very many decimals that are traded against higher value tokens divided into fewer decimals. It is clear that not every desired output value can be achievedL one token wei of the higher value token corresponds to a very large (mid-size-power-of-ten-large) amount of the lower value token, and this is the smallest possible chunk that is tradeable in this case anyway.
+#
+# ### Details
+#
+# We have seen the issue of price granularity first arising that the SHIB/USDC pair which trades at both a very low value (1 SHIB ~ 1e-5 USD) and has a big decimalty differential (USDC has 6, SHIB the standard 18). Our propopsed solution was to increase the scaling factor from $2^{32}$ to $2^{40}$ on this particular curve to address the granularity issue there, whilst not increasing the overflow risk elsewhere. Unfortunately it turned out that this particular curve was not only at risk of low granularity, but also at risk of overflow, which means that any increase in scaling factor -- dynamic or static -- just shifts the problem from a price-grid problem to a curve size problem. For reference -- at scaling factor of $2^{32}$, SHIB had a grid granularity of about 30% at this price point, and at the same time a maximum curve loading of 15,000 USDC. The latter makes it clear that there was no room to increase the scaling factor.
+#
+# Further analysis suggests that this is not by chance. Details are somewhat complex, but on a high level they are the following: our exchange formulas are predicated upon the exchange of token wei against token wei, and in the cases where things break we have two effects pushing in the same direction: not only the actual price itself is very low, but also the price per token wei is even lower (to the tune of $10^{12}$ lower in this case) because of the differential in decimals. In order to allow for sufficient price granularity we need to place ourself at a certain minimum point in $b$ space -- details are in the charts above, but generally we need a $b$ between 1,000 and 1,000,000 for price granularity to be sufficient (and of course we need at least $b=1$ to have a price in the first place). Because of the way our price formula is structured, this point in b space corresponds to exactly one token wei of the low value token. 
+#
+# This is the crux of the problem: we fix the location of 1 token wei of the low value token at a certain minimum point in b space. Because of this fixing, there is a maximum headroom in b space at any given number of bits, meaning that there is a maximum multiple of bs that we can pack onto the curve before overflow happens. As a consequence, our curve capacity, measured in token wei of the low value token, can never exceed a fixed number that is only driven by the number of bits in our implementation. This implies that, the lower the price of one token wei of the low value token is compared to one token wei of the high value token*, the lower the maximum amount, measured in the high value token, that we can pack on the curve. 
+#
+# There are only two ways we can address this issue:
+#
+# 1. Increase the headroom by using a big number library
+# 2. Change the trading formulas to allow for decimality scaling, ie to treat the low value token as if it had a higher decimality as it actually has
+#
+# Whilst the latter seems to be in contradiction of the stated trading goals especially when trading by target it is important to understand that (1) those trading goals are not achievable anyway because of the lack of inputs granulariy, and (2) the actual difference will be de minimis, and lower by order of magnitudes than the fees we charge, even at very low levels of fees. 
+#
+#
+# *note that in theory it is mostly decimality that matters: even a higher value token will ultimately be too low in value per token wei if the decimality is too high; however, this currently has no practical implications because no such tokens exist
 
 # ## Pseudo code
 
@@ -155,32 +182,32 @@ def readStorage():
 # ### Trade by source
 #
 
-def getTradeTargetAmount_bySource(x):
+def getTradeTargetAmount_bySource(dy):
 
     y,z,A,B,s = readStorage()
     ONE = s
     temp1 = y * A + z * B               # 177 bits at most; cannot overflow
-    temp2 = temp1 * x / ONE             # 224 bits at most; can overflow; some precision loss
+    temp2 = temp1 * dy / ONE            # 224 bits at most; can overflow; some precision loss
     temp3 = temp2 * A + z * z * ONE     # 256 bits at most; can overflow
-    res = mulDiv(temp1, temp2, temp3)
-    assert res < MAX
-    return res
+    dx = mulDiv(temp1, temp2, temp3)
+    assert dx < MAX
+    return dx
 
 # ### Trade by target
 #
 # note: in practice, the term `temp2*temp3` is the most likely to overflow across both functions.
 #
 
-def getTradeSourceAmount_byTarget(x):
+def getTradeSourceAmount_byTarget(dx):
 
     y,z,A,B,s = readStorage()
     ONE = s
     temp1 = z * ONE                                 # 144 bits at most; cannot overflow
     temp2 = y * A + z * B                           # 177 bits at most; cannot overflow
-    temp3 = temp2 - x * A                           # 177 bits at most; can underflow
-    res = mulDiv(x * temp1, temp1, temp2 * temp3)   # each multiplication can overflow
-    assert res < MAX
-    return res
+    temp3 = temp2 - dx * A                          # 177 bits at most; can underflow
+    dy = mulDiv(x * temp1, temp1, temp2 * temp3)    # each multiplication can overflow
+    assert dy < MAX
+    return dy
 
 
 # ## Some calculations
