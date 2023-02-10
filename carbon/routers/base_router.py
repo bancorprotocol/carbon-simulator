@@ -59,25 +59,91 @@ class Action:
 class BaseRouter:
     """
     Base class for both Simple and Complex routers.
+
+    :order:         list of Order class
+    :parameters:    parameter dict; can containing amongst others
+                    :debug:                 debug mode [False]
+                    :verbose:               verbose logging [False]
+                    :raiseonerror:          whether to raise expception on error [False]
+                    :assert_precision:      precision number [4]
+                    :use_floor_division:    floor vs regular division [False]
+    
+    NOTE: to remain compatible with previous code, the parameters verbose, 
+    debug, raiseonerror, assert_precision and use_floor_division will also
+    exposed as properties of the object 
     """
 
-    # A list of all curves for a given token pair.
-    orders: List[Order] = field(default_factory=list)
+    # # A list of all curves for a given token pair.
+    # orders: List[Order] = field(default_factory=list)
 
-    # Allows for toggling between floor division vs regular division
-    use_floor_division: bool = False
+    # # Allows for toggling between floor division vs regular division
+    # use_floor_division: bool = False # DEPRECATED; use p("...") = ...
 
-    # Verbosity mode for logging.
-    verbose: bool = False
+    # # Verbosity mode for logging.
+    # verbose: bool = False # DEPRECATED; use p("...") = ...
 
-    # Extra verbose logging mode.
-    debug: bool = False
+    # # Extra verbose logging mode.
+    # debug: bool = False # DEPRECATED; use p("...") = ...
 
-    # if False (default), errors are caught and returned in the result dict
-    raiseonerror: bool = False
+    # # if False (default), errors are caught and returned in the result dict
+    # raiseonerror: bool = False # DEPRECATED; use p("...") = ...
 
-    assert_precision: int = 4
+    # assert_precision: int = 4 # DEPRECATED; use p("...") = ...
 
+    parameters: dict = None
+
+    def __post_init__(self):
+        if self.parameters is None:
+            self.parameters = dict()
+        
+        self.logger = logging
+        if self.verbose:
+            self.logger.basicConfig(level=logging.INFO)
+        else:
+            self.logger.basicConfig(level=logging.WARNING)
+
+        # copy over the legacy parameters (if present)
+        # THEY MUST NOT BE CHANGED AS THEY ARE THEN NO LONGER CONSISTENT
+        # THE PARAMETERS ABOVE WILL SOON REMOVED
+        # _p = self.parameters
+        # if not _p.get("debug"): _p["debug"] = self.debug
+        # if not _p.get("verbose"): _p["verbose"] = self.verbose
+        # if not _p.get("raiseonerror"): _p["raiseonerror"] = self.raiseonerror
+        # if not _p.get("assert_precision"): _p["assert_precision"] = self.assert_precision
+        # if not _p.get("use_floor_division"): _p["use_floor_division"] = self.use_floor_division
+    
+    def p(self, item, default=None):
+        """
+        returns `item` from params; default if does not exist
+        """
+        return self.parameters.get(item, default)
+    
+
+    @property
+    def debug(self):
+        """alias for p("debug")"""
+        return self.p("debug", False)
+
+    @property
+    def verbose(self):
+        """alias for p("verbose")"""
+        return self.p("verbose", False)
+
+    @property
+    def raiseonerror(self):
+        """alias for p("raiseonerror")"""
+        return self.p("raiseonerror", False)
+    
+    @property
+    def assert_precision(self):
+        """alias for p("assert_precision")"""
+        return self.p("assert_precision", 4)
+    
+    @property
+    def use_floor_division(self):
+        """alias for p("use_floor_division")"""
+        return self.p("use_floor_division", False)   
+    
     @property
     def indexes(self) -> list:
         """
@@ -118,7 +184,6 @@ class BaseRouter:
                 return available_liquidity
             else:
                 raise e
-
 
     @abstractmethod
     def amt_by_target(
@@ -283,9 +348,4 @@ class BaseRouter:
         else:
             return curves
 
-    def __post_init__(self):
-        self.logger = logging
-        if self.verbose:
-            self.logger.basicConfig(level=logging.INFO)
-        else:
-            self.logger.basicConfig(level=logging.WARNING)
+
