@@ -21,7 +21,7 @@ plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
 plt.rc('font', size=14)
 
-# # Carbon Precision Considerations -- DRAFT
+# # Carbon Precision Analysis
 
 # ## Storage requirements for A,B
 
@@ -209,7 +209,7 @@ xs(12,1.4e-5)
 
 # For the charts below, mote that `lambda=15` corresponds to a grid spacing of around $10^{-4}$ as can be seen in the charts above. The decimality choices are d=12 (18/6, most TKNUSDC), d=10 (18/8, most BTCTKN) and d=0 (18/18, most TKNTKN). We ignored 24/x and x/0 because those are not common tokens, but eg d=18 (18/0 or 24/6) is a combination for some existing tokens. 
 
-P_r = [10**xp for xp in np.linspace(-7, 0)]
+P_r = [10**xp for xp in np.linspace(-10, 0)]
 lam=15
 fig, ax = plt.subplots()
 for dd, col in [(12, "red"), (10, "orange"), (0, "lawngreen")]:
@@ -225,11 +225,12 @@ ax.invert_xaxis()
 plt.legend(loc="lower right")
 plt.grid()
 
-P_r = [10**xp for xp in np.linspace(-13, 0)]
+P_r = [10**xp for xp in np.linspace(-15, 0)]
 lam=15
 for dd, col in [(12, "red"), (10, "orange"), (0, "lawngreen")]:
     plt.plot([xs(dd, p)+lam for p in P_r], P_r, color=col, label=f"Loaded d={dd}, lam={lam}")
     plt.plot([xs(dd, p)+0 for p in P_r], P_r, color=col, linewidth=0.5, linestyle="dashed", label=f"Base (lam=0)")
+plt.plot([xs(10, p)+0 for p in P_r], P_r, color="grey", linewidth=0.5, linestyle="dashed", label=f"Base (lam=0)")
 #plt.plot(P_r, [32 for p in P_r], label="xs = 32", color="grey", linestyle="dashed")
 plt.plot([40 for p in P_r], P_r, label="xs = 40", color="grey", linestyle="dashed")
 plt.yscale("log")
@@ -280,7 +281,39 @@ def getTradeTargetAmount_bySource(dy,readStorage):
     temp3 = temp2 * A + z * z * ONE     # 256 bits at most; can overflow
     dx = mulDiv(temp1, temp2, temp3)
     assert dx < MAX
-    return int(dx), (l2(temp2), l2(temp3))
+
+    # BEGIN DIAGNOSTICS
+    warnings, errors = [], []
+
+    if l2(temp1) > 255: errors += [f"temp1: overflow ({l2(temp1)})"]
+    elif l2(temp1) > 220: warnings += [f"temp1: critical length ({l2(temp1)})"]
+    
+    if l2(temp2) > 255: errors += [f"temp2: overflow ({l2(temp2)})"]
+    elif l2(temp2) > 220: warnings += [f"temp2: critical length ({l2(temp2)})"]
+    
+    if l2(temp3) > 255: errors += [f"temp3: overflow ({l2(temp3)})"]
+    elif l2(temp3) > 220: warnings += [f"temp3: critical length ({l2(temp3)})"]
+
+    if l2(temp2) < 8: errors += [f"temp2: underflow ({l2(temp2)})"]
+    elif l2(temp2) < 16: warnings += [f"temp2: close to underflow ({l2(temp2)})"]
+    
+    diagnostics = {
+        "success": True if len(errors) == 0 else False,
+        "type":  "bySource",
+        "yaABS": (y,z,A,B,s),
+        "dy":  dy,
+        "len": {
+            "temp1": l2(temp1),
+            "temp2": l2(temp2),
+            "temp3": l2(temp3),  
+        "warnings": warnings,
+        "error": errors,
+        }
+    }
+    # END DIAGNOSTICS
+    
+    
+    return int(dx), diagnostics
 
 # ### Trade by target
 #
@@ -293,10 +326,39 @@ def getTradeSourceAmount_byTarget(dx,readStorage):
     ONE = s
     temp1 = z * ONE                                 # 144 bits at most; cannot overflow
     temp2 = y * A + z * B                           # 177 bits at most; cannot overflow
-    temp3 = temp2 - dx * A                          # 177 bits at most; can underflow
+    temp3 = temp2 - dx * A                          # 177 bits at most
     dy = mulDiv(dx * temp1, temp1, temp2 * temp3)   # each multiplication can overflow
     assert dy < MAX
-    return int(dy), (l2(temp3), l2(temp2*temp3), l2(dx*temp1))
+    
+    # BEGIN DIAGNOSTICS
+    warnings, errors = [], []
+    
+    if l2(dx*temp1) > 255: errors += [f"dx*temp1: overflow ({l2(dx*temp1)})"]
+    elif l2(dx*temp1) > 220: warnings += [f"dx*temp1: critical length ({l2(dx*temp1)})"]
+    
+    if l2(temp2*temp3) > 255: warnings += [f"temp2*temp3: overflow ({l2(temp2*temp3)})"]
+    
+    if l2(temp2) > 255: errors += [f"temp2: overflow ({l2(temp2)})"]
+    elif l2(temp2) > 220: warnings += [f"temp2: critical length ({l2(temp2)})"]
+
+    diagnostics = {
+        "success": True if len(errors) == 0 else False,
+        "type":  "byTarget",
+        "yaABS": (y,z,A,B,s),
+        "dy":  dy,
+        "len": {
+            "temp1": l2(temp1),
+            "temp2": l2(temp2),
+            "temp3": l2(temp3),
+            "dx*temp1": l2(dx*temp1),
+            "temp2*temp3": l2(temp2*temp3),   
+        "warnings": warnings,
+        "error": errors,
+        }
+    }
+    # END DIAGNOSTICS
+    
+    return int(dy), diagnostics
 
 
 # ## Price precision and float int storage for A,B
@@ -535,6 +597,12 @@ def yzABS(pb, w, y, z, decx, decy, sx):
 
 yzABS(120, 100, 111, 111, 18, 18, 32)
 
-getTradeSourceAmount_byTarget(1e10, lambda: yzABS(1e-5, 1.1, 111, 111, 18, 18, 40))
+# ### Trade by source
 
-getTradeTargetAmount_bySource(1000, lambda: yzABS(100, 1.1, 111, 111, 6, 18, 200))
+getTradeTargetAmount_bySource(1000, lambda: yzABS(100, 1.1, 111, 111, 6, 18, 100))
+
+# ### Trade by target
+
+getTradeSourceAmount_byTarget(1e10, lambda: yzABS(1e-5, 1.1, 111, 111, 18, 18, 200))
+
+
