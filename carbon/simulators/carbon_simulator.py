@@ -61,10 +61,11 @@ class CarbonSimulatorUI:
             decimals: int = 50,
             matching_method: str = MATCH_EXACT,
             exclude_future: bool = True,
+            debug: bool = False,
     ):
         self._pos_id = itertools.count()
         self.verbose = verbose
-        self.debug = False  # setting this to True enables debug output
+        self.debug = debug
         self.exclude_future = exclude_future
 
         self._carbon_pair = CarbonPair.create(pair)
@@ -73,14 +74,19 @@ class CarbonSimulatorUI:
         self.numtrades = 0
         self.decimals = decimals
         self._mm = matching_method
+        params = {
+            "debug":                self.debug,
+            "verbose":              self.verbose,
+            "raiseonerror":         self.raiseonerror,
+            "assert_precision":     4,
+            "use_floor_division":   False,
+        }
         if matching_method == self.MATCH_ALPHA:
-            self.matcher = AlphaRouter(verbose=False)
+            self.matcher = AlphaRouter(parameters=params)
         elif matching_method == self.MATCH_EXACT:
-            self.matcher = ExactRouterX0Y0N(verbose=False)
+            self.matcher = ExactRouterX0Y0N(parameters=params)
         elif matching_method == self.MATCH_FAST:
-            self.matcher = FastRouter(verbose=False)
-        elif matching_method == self.MATCH_FAST:
-            raise ValueError("Fast router not implemented", matching_method)
+            self.matcher = FastRouter(parameters=params)
         else:
             raise ValueError("Illegal value for matching_method", matching_method)
 
@@ -570,7 +576,6 @@ class CarbonSimulatorUI:
             amt: Any,
             support_partial: bool,
             carbon_pair: CarbonPair,
-            #trade_action: Callable = None,
             match_by: str = None,
             trade_description: str = None,
             execute: bool = True,
