@@ -9,9 +9,10 @@ v2.0 -- changed constructor to allow for slashpair string
 v2.0.1 -- convert_price
 v2.0.2 -- allow constructor to take CarbonPair
 v2.1 -- distinguish display and original symbols
+v2.2 -- decimals
 """
-__version__ = "2.1"
-__date__ = "04/Feb/2022"
+__version__ = "2.2"
+__date__ = "11/Feb/2022"
 
 from dataclasses import dataclass
 
@@ -43,6 +44,7 @@ class CarbonPair:
 
     def __post_init__(self):
 
+        source_carbon_pair=None
         if self.slashpair:
             #print("[CarbonPair] slashpair has been provided", self.slashpair, self.tknb, self.tknq)
             if self.tknb or self.tknq:
@@ -54,8 +56,9 @@ class CarbonPair:
             
             if isinstance(self.slashpair, self.__class__):
                 #print("[CarbonPair] creating pair from CarbonPair", self.__class__, self.slashpair.__class__, self.slashpair.slashpair)
+                source_carbon_pair = self.slashpair
                 self.slashpair = self.slashpair.slashpair
-
+                
             try:
                 self.tknb, self.tknq = self.slashpair.split("/")
             except:
@@ -74,10 +77,65 @@ class CarbonPair:
         self.tknb = self.tknb.upper()
         self.tknq = self.tknq.upper()
         self.slashpair = f"{self.tknb}/{self.tknq}"
+        if source_carbon_pair is None:
+            self._tknb_decimals = self.DECIMALS_DEFAULT_VALUE
+            self._tknq_decimals = self.DECIMALS_DEFAULT_VALUE
+        else:
+            self._tknb_decimals = source_carbon_pair._tknb_decimals
+            self._tknq_decimals = source_carbon_pair._tknq_decimals
+         
+    DECIMALS_DEFAULT_VALUE = None
+    def set_decimals(self, dec_tknb=None, dec_tknq=None, dct=None):
+        """
+        set decimals; returns self
+
+        :dec_tknb:   decimals of tknb
+        :dec_tknq:   decimals of tknq
+        :dct:        a decimals dict allowing to look up missing decimals
+        """
+        if dct is None: dct = dict()
+        self._tknb_decimals = dec_tknb if not dec_tknb is None else dct.get(self.tknb)
+        self._tknq_decimals = dec_tknq if not dec_tknq is None else dct.get(self.tknq)
+        return self
+    sd = set_decimals
+
+    DECDICT = {
+        "ETH": 18,
+        "USDC": 6,
+        "WBTC": 8,
+        "NEAR": 0,
+        "SHIB": 18,
+        "DAI": 18,
+    }
+
+    @property
+    def decimals(self):
+        """returns dict with info on decimals"""
+        diffqb = self.decdiffqb
+        return {
+            self.tknb: self._tknb_decimals,
+            self.tknq: self._tknq_decimals,
+            "_TKNB": self._tknb_decimals,
+            "_TKNQ": self._tknq_decimals,
+            "_DIFFQB": diffqb
+        } 
+    @property
+    def decdiffqb(self):
+        """decimals difference quote minus base, or None"""
+        try:
+            return self._tknq_decimals-self._tknb_decimals
+        except:
+            return None
+
+    @property 
+    def has_decimals(self):
+        """returns True iff has decimals"""
+        return not self._tknb_decimals is None and not self._tknq_decimals is None
 
     def __repr__(self):
-        return f"P('{self.slashpair}')"
-        return f"{self.__class__.__name__}('{self.slashpair}')"
+        sd = f".sd({self._tknb_decimals},{self._tknq_decimals})" if self.has_decimals else ""
+        return f"P('{self.slashpair}'){sd}"
+        #return f"{self.__class__.__name__}('{self.slashpair}')"
 
     @property
     def tknb_o(self):
@@ -156,11 +214,12 @@ class CarbonPair:
         return cls(tknb=tknb, tknq=tknq)
 
     @classmethod
-    def from_slashpair(cls, slashpair):
+    def from_slashpair(cls, slashpair, decimals=None):
         """
         creates a pair from a slashstring (tknb/tknq, eg "ETH/USDC")
 
         :slashpair:     the pair, in the format tknb/tknq, eg "ETH/USDC"
+        :decimals:      the decimals as tuple(d_tknb, d_tknq)
         """
         slashpair = slashpair.upper()
         tokens = slashpair.split("/")
@@ -168,7 +227,9 @@ class CarbonPair:
             raise ValueError("slashpair must be of form TKNB/TKNQ", slashpair, tokens)
         tknb = tokens[0].strip()
         tknq = tokens[1].strip()
-        return cls(f"{tknb}/{tknq}")
+        newobj = cls(f"{tknb}/{tknq}")
+        newobj.set_decimals(decimals)
+        return newobj
         
 
     @classmethod
