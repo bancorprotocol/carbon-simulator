@@ -315,10 +315,24 @@ def getTradeTargetAmount_bySource(dy,readStorage):
     
     return int(dx), diagnostics
 
+# #### New formula for trade by source
+
+# +
+mulDivF = lambda x, y, z: x * y // z
+mulDivC = lambda x, y, z: (x * y + z - 1) // z
+
+temp1 = z * ONE
+temp2 = y * A + z * B
+temp3 = temp2 * dy
+scale = mulDivC(temp3, A, 2**256-1)
+temp4 = mulDivC(temp1, temp1, scale)
+temp5 = mulDivC(temp3, A, scale)
+dx    = mulDivF(temp2, temp3 // scale, temp4 + temp5)
+
+
+# -
+
 # ### Trade by target
-#
-# note: in practice, the term `temp2*temp3` is the most likely to overflow across both functions.
-#
 
 def getTradeSourceAmount_byTarget(dx,readStorage):
 
@@ -360,6 +374,21 @@ def getTradeSourceAmount_byTarget(dx,readStorage):
     
     return int(dy), diagnostics
 
+
+# #### New formula for trade by target
+
+# +
+mulDivF = lambda x, y, z: x * y // z
+mulDivC = lambda x, y, z: (x * y + z - 1) // z
+
+temp1 = z * ONE
+temp2 = y * A + z * B
+temp3 = temp2 - dx * A
+scale = mulDivC(temp2, temp3, 2**256-1)
+temp4 = mulDivC(temp1, temp1, scale)
+temp5 = mulDivF(temp2, temp3, scale)
+dy    = mulDivC(dx, temp4, temp5)
+# -
 
 # ## Price precision and float int storage for A,B
 # ### Code
@@ -586,7 +615,7 @@ mulDiv = lambda a,b,c: (a*b)//c
 
 
 def yzABS(pb, w, y, z, decx, decy, sx):
-    """returns (A,B) from prices and scaling exponent and decimals"""
+    """returns (y,z,A,B,s) from prices, curve loading and capacity, decimals and scaling exponent"""
     decf = 10**(decy-decx)
     one = 2**sx
     pa = w*pb
