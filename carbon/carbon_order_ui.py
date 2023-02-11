@@ -10,9 +10,10 @@ VERSION HISTORY
 - v1.5: linked curves (beta); bidask, curves_by_pair_bidask, checks for B,S=0 (1.4.1)
 - v1.6: linked curves incl trading (final), addliqy, tradeto; minor formula improvement (1.5.1)
 - v1.6.1: bugfix
+- v1.7: integration with solidity testing (yzABS)
 """
-__version__ = "1.6.2"
-__date__ = "27/Jan/2023"
+__version__ = "1.7"
+__date__ = "11/Feb/2023"
 
 try:
     from .pair import CarbonPair
@@ -21,6 +22,7 @@ except:
 
 from dataclasses import dataclass
 from math import sqrt
+from collections import namedtuple
 
 @dataclass
 class CarbonOrderUI:
@@ -302,18 +304,15 @@ class CarbonOrderUI:
     def price_convention(self):
         """
         the price convention of the prices quoted
-        
-        :raw:   if False (default) return convention for all prices except 
-                pa_raw and pb_raw which is returned for raw=True
         """
-        if raw:
-            return self.pair.price_convention(self.reverseq)
-        return self.pair.price_convention()
+        # if raw:
+        #     return self.pair.price_convention(self.reverseq)
+        return self.pair.price_convention
 
     def descr(self, full=False):
         """provides a description of the order and curve"""
         s1 = f"Sell {self.tkn} buy {self.pair.other(self.tkn)}"
-        s2 = f"from {self.pa:.4f} to {self.pb:.4f} {self.price_convention()}"
+        s2 = f"from {self.pa:.4f} to {self.pb:.4f} {self.price_convention}"
         s2 = f"from {self.pa:.4f} to {self.pb:.4f} {self.price_convention}"
         if full:
             s3 = f" ({self.y} {self.tkn} on curve, {self.y/self.yint*100:.0f}% of capacity)"
@@ -925,7 +924,49 @@ class CarbonOrderUI:
         }            
         return result
     
+    def yzABS(self, sx=0, verbose=False):
+        """
+        returns the parameters y,z,A,B,S needed for the smart contract
+
+        :sx:        the scaling exponent, scaling factor = 2**sx
+        :returns:   tuple of ints (y,z,A,B,S)
+                        :y:     y * 10**decy
+                        :z:     yint * 10**decy
+                        :A:     sqrt(10**(dec-dec)) * S * A
+                        :B:     sqrt(...) * S * B
+                        :S:     2**sx          
+        """
+        if not self.pair.has_decimals:
+            raise ValueError("pair must have decimals", self.pair)
+
+        tkny = self.tkn
+        tknx = self.pair.other(tkny)
+        scale = 2**sx
+        dec  = self.pair.decimals
+        decy = dec[tkny]
+        decx = dec[tknx]
+        y_wei = self.y*10**decy
+        z_wei = self.yint*10**decy
+        B_ns = self.B * 10 ** ( (decy-decx)/2)
+        A_ns = self.S * 10 ** ( (decy-decx)/2)
+        yzABS = yzABS_nt(y_wei, z_wei, int(A_ns*scale), int(B_ns*scale), scale)
+
+        if verbose:
+            print(f"[yzABS] pair={self.pair}, y={tkny}({decy}), x={tknx}({decx})")
+            print(f"[yzABS] scale = 2**{sx} = {scale}")
+            print(f"[yzABS] y={self.y} -> y_wei={y_wei} [{tkny}-wei]")
+            print(f"[yzABS] yint={self.yint} -> z_wei={z_wei} [{tkny}-wei]")
+            print(f"[yzABS] pa_raw={self.pa_raw} {tkny} per {tknx} -> {int(self.pa_raw*10**(decy-decx))} {tkny}-wei per {tknx}-wei")
+            print(f"[yzABS] pb_raw={self.pb_raw} {tkny} per {tknx} -> {int(self.pb_raw*10**(decy-decx))} {tkny}-wei per {tknx}-wei")
+            print(f"[yzABS] a={self.S} -> {A_ns} * scale = {yzABS.A}")
+            print(f"[yzABS] b={self.B} -> {B_ns} * scale = {yzABS.B}")
+            print(f"[yzABS] yzABS = {yzABS}")
+        
+        return yzABS
+
     def __repr__(self):
-        s1 = f"pair={self.pair.slashpair}, tkn={self.tkn}, B={self.B}, S={self.S}, yint={self.yint}, y={self.y}, id={self.id}"
+        s1 = f"pair={str(self.pair)}, tkn={self.tkn}, B={self.B}, S={self.S}, yint={self.yint}, y={self.y}, id={self.id}"
         s2 = f"linked=<{self.linked.id}>" if self.linked else "linked=None"
-        return f"{self.__class__.__name__}({s1}, {s2})" 
+        return f"{self.__class__.__name__}({s1}, {s2})"
+
+yzABS_nt = namedtuple("r", "y,z,A,B,S")
