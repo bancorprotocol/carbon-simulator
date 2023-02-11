@@ -70,7 +70,8 @@ def getTradeTargetAmount_bySource(dy,storage):
     temp1 = z * ONE
     temp2 = y * A + z * B
     temp3 = temp2 * dy
-    scale = mulDivC(temp3, A, 2**256-1)
+    # scale = mulDivC(temp3, A, 2**256-1)
+    scale = mulDivF(temp3, A, 2**255) + 1
     temp4 = mulDivC(temp1, temp1, scale)
     temp5 = mulDivC(temp3, A, scale)
     dx    = mulDivF(temp2, temp3 // scale, temp4 + temp5)
@@ -120,7 +121,8 @@ def getTradeSourceAmount_byTarget(dx,storage):
     temp1 = z * ONE
     temp2 = y * A + z * B
     temp3 = temp2 - dx * A
-    scale = mulDivC(temp2, temp3, 2**256-1)
+    # scale = mulDivC(temp2, temp3, 2**256-1)
+    scale = mulDivF(temp2, temp3, 2**255) + 1
     temp4 = mulDivC(temp1, temp1, scale)
     temp5 = mulDivF(temp2, temp3, scale)
     dy    = mulDivC(dx, temp4, temp5)
@@ -187,13 +189,15 @@ def create_order(order_inputs, BITS_SIGNIFICANT, BITS_EXPONENT, ONE_EXPONENT):
 
 def trade(amount, tradeByTarget, storage, order_inputs):
     pa, pb, y, z, decx, decy = unpack_order_inputs(order_inputs)  # just to bring in the correct decimals
-    if not tradeByTarget:
+    if tradeByTarget:
         dx, dy, diagnostics = getTradeSourceAmount_byTarget(amount * 10**decy ,storage)
         print('TradeByTarget', amount)
         print('inputAmount', dx, 'outputAmount', dy)
         print("Scaled by decimals:", dy / 10**decx)
         # print(diagnostics)
         if len(diagnostics['len']['error']) > 0:
+            raise
+        if len(diagnostics['len']['warnings']) > 0:
             raise
         print("\n")
     else:
@@ -203,5 +207,7 @@ def trade(amount, tradeByTarget, storage, order_inputs):
         print("Scaled by decimals:", dy / 10**decy)
         # print(diagnostics)
         if len(diagnostics['len']['error']) > 0:
+            raise
+        if len(diagnostics['len']['warnings']) > 0:
             raise
         print("\n")
