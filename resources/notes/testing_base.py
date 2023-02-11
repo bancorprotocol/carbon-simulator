@@ -189,7 +189,7 @@ def create_order(order_inputs, BITS_SIGNIFICANT, BITS_EXPONENT, ONE_EXPONENT):
 
 def trade(amount, tradeByTarget, storage, order_inputs):
     pa, pb, y, z, decx, decy = unpack_order_inputs(order_inputs)  # just to bring in the correct decimals
-    if tradeByTarget:
+    if not tradeByTarget:
         dx, dy, diagnostics = getTradeSourceAmount_byTarget(amount * 10**decy ,storage)
         print('TradeByTarget', amount)
         print('inputAmount', dx, 'outputAmount', dy)
