@@ -168,9 +168,9 @@ def notest_demo():
     mulDivC = lambda x, y, z: (x * y + z - 1) // z
     
     
-    # **this is actually by target**
+    # #### trade_by_source_dy_from_dx
     
-    def trade_by_target_act(params, C):
+    def trade_by_source_dy_from_dx(params, C):
     
         dx = params[0]
         y,z,A,B,s = params[1]
@@ -185,8 +185,6 @@ def notest_demo():
     
     
     # +
-
-    
     # temp1 = z * ONE
     # temp2 = y * A + z * B
     # temp3 = temp2 * dy
@@ -196,11 +194,11 @@ def notest_demo():
     # dx    = mulDivF(temp2, temp3 // scale, temp4 + temp5)
     # -
     
-    # **those are actually by source**
+    # #### trade_by_target_dx_from_dy
     #
     # this one is SKL version of the fixed code
     
-    def trade_by_source_act(params, C):
+    def trade_by_target_dx_from_dy(params, C):
     
         dy = params[0]
         y,z,A,B,s = params[1]
@@ -239,7 +237,7 @@ def notest_demo():
     
     # that's the previous, failing, version of the code
     
-    def trade_by_source_old_act(params, C):
+    def trade_by_target_dx_from_dy_old(params, C):
     
         dy = params[0]
         y,z,A,B,s = params[1]
@@ -271,11 +269,11 @@ def notest_demo():
     c = curve = oui.yzABS(sx=40, verbose=VERBOSE)
     
     params_bysrc  = (1e18, curve) # dy = wei sent (by source, 1 TKN)
-    dx = trade_by_source_act( params_bysrc, STB(context=("by_source", curve)))
+    dx = trade_by_target_dx_from_dy( params_bysrc, STB(context=("by_source", curve)))
     dx/1e18 # 1 TKN -> 5 DAI ==> 5 DAI per TKN
     
     params_bytarg = (5e18, curve)       # dx = token wei received (target, DAI)
-    dy = trade_by_target_act( params_bytarg, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params_bytarg, STB(context=("by_target", curve)) )
     dy/1e18 # 1 TKN ->  5 DAI --> 5 DAI per TKN
     
     # #### ETH/USDC -- y=ETH, x=USDC
@@ -285,11 +283,11 @@ def notest_demo():
     curve = oui.yzABS(sx=40, verbose=VERBOSE)
     
     params_bysrc  = (1*1e18, curve) # dy = token wei sent (by source, 1 ETH)
-    dx = trade_by_source_act( params_bysrc, STB(context=("by_source", curve)))
+    dx = trade_by_target_dx_from_dy( params_bysrc, STB(context=("by_source", curve)))
     dx/1e6 # 1 ETH -> 2000 USDC
     
     params_bytarg = (2000*1e6, curve)       # dx = token wei received (target, USDC)
-    dy = trade_by_target_act( params_bytarg, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params_bytarg, STB(context=("by_target", curve)) )
     dy/1e18 # 1 ETH -> 2000 USDC
     
     # #### ETH/USDC -- y=USDC, x=ETH
@@ -299,11 +297,11 @@ def notest_demo():
     print(curve)
     
     params_bysrc  = (1000*1e6, curve)       # dy = USDC-wei
-    dx = trade_by_source_act( params_bysrc, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params_bysrc, STB(context=("by_source", curve)) )
     dx/1e18 # 1000 USDC -> 1 ETH
     
     params_bytarg = (1e18, curve)  # dx = ETH-wei
-    dy = trade_by_target_act( params_bytarg, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params_bytarg, STB(context=("by_target", curve)) )
     dy/1e6 # 1000 USDC -> 1 ETH
     
     # #### SHIB/USDC -- y=SHIB, x=USDC
@@ -315,11 +313,11 @@ def notest_demo():
     print(curve)
     
     params_bysrc  = (1*1e5*1e18, curve)      # dy = SHIB-wei (1 USD worth of SHIB)
-    dx = trade_by_source_act( params_bysrc, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params_bysrc, STB(context=("by_source", curve)) )
     dx / 1e6 # 1e5 SHIB -> 1 USDC
     
     params_bytarg = (1*1e6, curve) # dx = USDC-wei
-    dy = trade_by_target_act( params_bytarg, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params_bytarg, STB(context=("by_target", curve)) )
     dy/1e18 # 1e5 SHIB -> 1 USDC
     
     # #### Nick's example DAI/USDC -- Selling DAI
@@ -331,12 +329,12 @@ def notest_demo():
     print(curve)
     
     params_bysrc  = (1*1e18, curve)        # dy = DAI-wei
-    dx = trade_by_source_act( params_bysrc, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params_bysrc, STB(context=("by_source", curve)) )
     dx/1e6 # 1 DAI -> 1 USDC
     
     
     params_bytarg = (1*1e6, curve)  # dx = USDC-wei
-    dy = trade_by_target_act( params_bytarg, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params_bytarg, STB(context=("by_target", curve)) )
     dy / 1e18 # 1 DAI -> 1 USDC
     
     
@@ -348,11 +346,11 @@ def notest_demo():
     curve = oui.yzABS(sx=40, verbose=VERBOSE)
     
     params_bysrc  = (1*1e6, curve)       # dy = USDC-wei
-    dx = trade_by_source_act( params_bysrc, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params_bysrc, STB(context=("by_source", curve)) )
     dx/1e18
     
     params_bytarg = (1e18, curve)      # dx = DAI-wei
-    dy = trade_by_target_act( params_bytarg, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params_bytarg, STB(context=("by_target", curve)) )
     dy/1e6
     
     
@@ -379,11 +377,11 @@ def notest_more_examples():
     curve
     
     params  = (1*1e6, curve)       # dy = USDC-wei
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e18
     
     params = (1e18, curve)      # dx = DAI-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e6
     
     # ### SHIB/USDC
@@ -395,11 +393,11 @@ def notest_more_examples():
     curve
     
     params  = (1*1e5*1e18, curve)       # dy = SHIB-wei
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e6
     
     params = (1e6, curve)      # dx = USDC-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e18
     
     # ### SHIB/BTC (selling SHIB)
@@ -414,31 +412,31 @@ def notest_more_examples():
     # #### Trading 1e10 SHIB -> 1 BTC
     
     params  = (1*1e5*1e5*1e18, curve)       # dy = SHIB-wei (1USD)
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e8 # 1e10 SHIB = 1 BTC
     
     params = (1e8, curve)      # dx = BTC-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e18/1e10 #1e10 SHIB = 1 BTC
     
     # #### Trading 1e5 SHIB -> 1e-5 BTC (1USD)
     
     params  = (1*1e5*1e18, curve)       # dy = SHIB-wei (1USD)
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e8/1e-5 # 1e5 SHIB = 1e-5 BTC
     
     params = (1e-5*1e8, curve)      # dx = BTC-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e18/1e5 # 1e5 SHIB = 1e-5 BTC
     
     # #### Trading 1e3 SHIB -> 1e-7 BTC (0.01USD)
     
     params  = (1*1e3*1e18, curve)       # dy = SHIB-wei (1USD cent)
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e8/1e-7 # 1e3 SHIB = 1e-7 BTC
     
     params = (1e-7*1e8, curve)      # dx = BTC-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e18/1e3 # 1e3 SHIB = 1e-7 BTC
     
     # ### SHIB/BTC (selling BTC)
@@ -453,51 +451,51 @@ def notest_more_examples():
     # #### Trading 1 BTC -> 1e10 SHIB
     
     params  = (1*1e8, curve)       # dy = BTC-wei
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e18/1e10 # 1e10 SHIB <- 1 BTC
     
     params = (1e10*1e18, curve)      # dx = SHIB-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e8 # 1e3 SHIB <- 1 BTC
     
     # #### Trading 1e-5 BTC -> 1e5 SHIB (1USD)
     
     params  = (1e-5*1e8, curve)       # dy = BTC-wei
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e18/1e5 # 1e5 SHIB <- 1e-5 BTC
     
     params = (1e5*1e18, curve)      # dx = SHIB-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e8/1e-5 # 1e3 SHIB <- 1e-5 BTC
     
     # #### Trading 1e-7 BTC -> 1e3 SHIB (0.01USD)
     
     params  = (1e-7*1e8, curve)       # dy = BTC-wei
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e18/1e3 # 1e3 SHIB <- 1e-7 BTC
     
     params = (1e3*1e18, curve)      # dx = SHIB-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e8/1e-7 # 1e3 SHIB <- 1e-7 BTC
     
     # #### Trading 10 BTC -> 1e11 SHIB
     
     params  = (10*1e8, curve)       # dy = BTC-wei
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e18/1e11 # 1e11 SHIB <- 10 BTC
     
     params = (1e11*1e18, curve)      # dx = SHIB-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e8/10 # 1e3 SHIB <- 100 BTC
     
     # #### Trading 100 BTC -> 1e12 SHIB
     
     params  = (100*1e8, curve)       # dy = BTC-wei
-    dx = trade_by_source_act( params, STB(context=("by_source", curve)) )
+    dx = trade_by_target_dx_from_dy( params, STB(context=("by_source", curve)) )
     dx/1e18/1e12 # 1e12 SHIB <- 100 BTC
     
     params = (1e12*1e18, curve)      # dx = SHIB-wei
-    dy = trade_by_target_act( params, STB(context=("by_target", curve)) )
+    dy = trade_by_source_dy_from_dx( params, STB(context=("by_target", curve)) )
     dy/1e8/100 # 1e3 SHIB <- 100 BTC
     
 
