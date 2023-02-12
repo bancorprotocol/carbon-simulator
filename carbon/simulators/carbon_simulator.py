@@ -11,9 +11,10 @@ v2.2.1 - CarbonOrderUI linked
 v2.3 - added fast router
 v2.4 - limit orders, changed trade_action -> match_by in _trade
 v2.5 - ability to specify y_int
+v2.5.1 - link orderuis 
 """
-__version__ = "2.5"
-__date__ = "25/Jan/2023"
+__version__ = "2.5.1"
+__date__ = "12/Feb/2023"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -506,10 +507,13 @@ class CarbonSimulatorUI:
                     for o in [self.orders[id1], self.orders[id2]]
                 ]
             )
-            orderuis = {
-                id1: CarbonOrderUI.from_order(self.orders[id1]),
-                id2: CarbonOrderUI.from_order(self.orders[id2]),
-            }
+            oui1 = CarbonOrderUI.from_order(self.orders[id1])
+            oui2 = CarbonOrderUI.from_order(self.orders[id2])
+            oui1.set_linked(oui2)
+            oui2.set_linked(oui1)            
+            orderuis = {id1: oui1, id2: oui2,}
+
+
 
         except Exception as e:
             if self.raiseonerror:
