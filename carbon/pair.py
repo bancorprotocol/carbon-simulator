@@ -377,7 +377,7 @@ class CarbonPair:
         :price0:    the raw price, as tknq0 per tknb0
         :tknb0:     the base token of price0
         :tknq0:     the quote token of price0
-        :returns:   the amount of tarket token to be returned
+        :returns:   the amount of target token to be returned
         """
         if not self.has_token(tknb0):
             return None

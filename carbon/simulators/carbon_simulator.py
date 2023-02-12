@@ -11,10 +11,10 @@ v2.2.1 - CarbonOrderUI linked
 v2.3 - added fast router
 v2.4 - limit orders, changed trade_action -> match_by in _trade
 v2.5 - ability to specify y_int
-v2.5.1 - link orderuis 
+v2.6 - add orders from SDK, link orderuis; add carbon_id field 
 """
-__version__ = "2.5.1"
-__date__ = "12/Feb/2023"
+__version__ = "2.6"
+__date__ = "8/Mar/2023"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -182,6 +182,7 @@ class CarbonSimulatorUI:
             id2: int = None,
             p_marginal: Any = None,
             y_int: Any = None,
+            carbon_id: str = None,
     ) -> int:
         """
         PRIVATE - adds a position for sale of tkn
@@ -194,6 +195,7 @@ class CarbonSimulatorUI:
         :id1/2:         the order ids of the two orders that make up the position; if not given, they are generated
         :p_marginal:    the marginal price of the position*
         :y_int:         the initial value of y_int (must be >= amt)*
+        :carbon_id:     the carbon id of the position (if available)
         :returns:       the id of the order added
 
         *out of the parameters `p_marginal` and `y_int`, zero or one can be given, but
@@ -203,6 +205,8 @@ class CarbonSimulatorUI:
         :p_marg:        y_int is set so that the marginal price matches p_marg
         :y_int:         y_int >= amt is used as curve capacity, marginal price adapts
         """
+
+        if carbon_id is None: carbon_id = ""
 
         #print("[_add_order_sell_tkn] y_int", y_int)
         #assert y_int is None, "yint != None not operational yet"
@@ -252,6 +256,7 @@ class CarbonSimulatorUI:
             "pair": carbon_pair,                            # the CarbonPair object
             "id": id1,                                      # the id of the new curve generated
             "linked_to_id": id2,                            # the id to which this curve is linked (=id if single curve)
+            "carbon_id": carbon_id,                         # the carbon id of the position (if available)
         }
         if not p_marginal is None:
             order_params["p_marginal"] = p_marginal         # marginal price        
@@ -407,6 +412,29 @@ class CarbonSimulatorUI:
             return {"success": False, "error": str(e), "exception": e}
         return {"success": True, "orders": orders, "orderuis": orderuis, "id": id1, "lid": id2}
 
+    def add_fromsdk(self, sdkStrategy, nsd=None):
+        """
+        adds a strategy returned by the SDK
+
+        :sdkStrategy:   SDK strategy dict, eg returned by `getUserStrategies`
+        :nsd:           number of significant decimals to round to (None=no rounding)
+        :returns:       return value of add_strategy
+        """
+        obuy, osell = CarbonOrderUI.from_SDK(sdkStrategy, nsd)
+        return self.add_strategy(
+            tkn = osell.tkn,
+            amt_sell = osell.y,
+            y_int_sell = osell.yint,
+            psell_start= osell.pa,
+            psell_end = osell.pb,
+            amt_buy = obuy.y,
+            y_int_buy = obuy.yint,
+            pbuy_start = obuy.pa,
+            pbuy_end = obuy.pb,
+            pair = osell.pair,
+            carbon_id = sdkStrategy["id"]
+        )
+        
     def add_strategy(
             self,
             tkn: str,
@@ -421,23 +449,25 @@ class CarbonSimulatorUI:
             pbuy_marginal: Any = None,
             y_int_sell: Any = None,
             y_int_buy: Any = None,
+            carbon_id: str = None,
             
     ) -> Dict[str, Any]:
         """
         adds two linked orders (one buy, one sell; aka a "strategy")
 
-        :tkn:               the token that is sold in the range psell_start/_end, eg "ETH"*
-        :amt_sell:          the amount of `tkn` that is available for sale in range psell_start/psell_end
+        :tkn:               token that is sold in the range psell_start/_end, eg "ETH"*
+        :amt_sell:          amount of `tkn` that is available for sale in range psell_start/psell_end
         :psell_start:       start of the sell `tkn` range*, quoted in the price convention of `pair`
         :psell_end:         ditto end
-        :amt_buy:           the amount of the other token that is available for selling against tkn in range pbuy_start
+        :amt_buy:           amount of the other token that is available for selling against tkn in range pbuy_start
         :pbuy_start:        start of the of the buy `tkn` range*, quoted in the price convention of `pair`
         :pbuy_end:          ditto end
-        :pair:              the token pair to which the strategy corresponds, eg "ETHUSD"
+        :pair:              token pair to which the strategy corresponds, eg "ETHUSD"
         :pbuy_marginal:     the marginal price of the buy position**
         :psell_marginal:    the marginal price of the sell position**
-        :y_int_buy:        the initial value of y_int on the buy curve (must be >= amt_buy)**
-        :y_int_sell:        the initial value of y_int on the sell curve (must be >= amt_sell)**
+        :y_int_buy:         initial value of y_int on the buy curve (must be >= amt_buy)**
+        :y_int_sell:        initial value of y_int on the sell curve (must be >= amt_sell)**
+        :carbon_id:         carbon id of the strategy (if any)
 
         *px_start, px_end are interchangeable, the code deals with sorting them, albeit issuing a warning
         message if they are in the wrong order; sell and buy is seen from the perspective of the AMM, which
@@ -454,7 +484,7 @@ class CarbonSimulatorUI:
         :p_marg:        y_int is set so that the marginal price matches p_marg
         :y_int:         y_int >= amt is used as curve capacity, marginal price adapts
         """
-
+        
         try:
 
             # validate tkn, pair and get CarbonPair object
@@ -487,6 +517,7 @@ class CarbonSimulatorUI:
                 id2 = id2,
                 p_marginal = psell_marginal_c,
                 y_int = y_int_sell,
+                carbon_id = carbon_id,
             )
             self._add_order_sell_tkn(
                 tkn = tkn2,
@@ -498,6 +529,7 @@ class CarbonSimulatorUI:
                 id2 = id1,
                 p_marginal = pbuy_marginal_c,
                 y_int = y_int_buy,
+                carbon_id = carbon_id,
             )
 
             if self.verbose:
@@ -1081,6 +1113,7 @@ class CarbonSimulatorUI:
             "p_marg":       orderui.p_marg,
             "p_unit":       order.pair.price_convention,
             "lid":          order.linked_to_id,
+            "cid":          order.carbon_id,
         }
         return pd.DataFrame(dic, index=[order.id])
 
