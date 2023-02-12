@@ -18,7 +18,7 @@ print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonFloatInt32))
 print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
 print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(P))
 from math import log2, floor, ceil, sqrt
-print_version(require="2.3.2")
+print_version(require="2.3.3")
 
 
 #
@@ -69,6 +69,88 @@ def test_demo_and_test_of_yzabs_in_carbonorderui_and_pair_decimals():
     assert r.A == int(oui.S * ddf2 * r.S)
     assert r.B == int(oui.B * ddf2 * r.S)
     assert r.S == 2**40
+    
+
+# ------------------------------------------------------------
+# Test      058
+# File      test_058_CurveTest.py
+# Segment   Sundry tests of other carbonui stuff
+# ------------------------------------------------------------
+def test_sundry_tests_of_other_carbonui_stuff():
+# ------------------------------------------------------------
+    
+    oui = CarbonOrderUI.from_prices(P("ETH/USDC").sd(18,6), "USDC", 1000, 500, 1100, 790)
+    r = oui.set_id(1)
+    assert oui.tkn == "USDC"
+    assert oui.tkny == oui.tkn
+    assert oui.tknx == "ETH"
+    assert oui.pair.slashpair == "ETH/USDC"
+    assert abs(oui.S/9.262096826685895-1) < 1e-10
+    assert abs(oui.B/22.360679774997898-1) < 1e-10
+    assert oui.S is oui.A
+    assert abs(oui.pa/1000-1) < 1e-10
+    assert abs(oui.pa_raw/1000-1) < 1e-10
+    assert oui.p_start == oui.pa
+    assert oui.py == oui.pa
+    assert abs(oui.pb/500-1) < 1e-10
+    assert abs(oui.pb_raw/500-1) < 1e-10
+    assert oui.p_end == oui.pb
+    assert oui.py == oui.py
+    assert abs(oui.yint/1100-1) < 1e-10
+    assert abs(oui.y/790-1) < 1e-10
+    assert oui.y == oui.z
+    assert oui.total_liquidity == (790, 'USDC')
+    assert oui.price_convention == 'USDC per ETH'
+    assert oui.price_convention == oui.pair.price_convention
+    assert oui.price_convention == oui.price_convention_raw
+    assert tuple(oui.yzABS(32)) == (790000000, 1100000000, 39780, 96038, 4294967296)
+    assert r is oui
+    try:
+        oui.set_id(1)
+        raise
+    except ValueError as e:
+        print(e)
+    
+    oui.price_convention_raw
+    
+    oui2 = CarbonOrderUI.from_prices(P("ETH/USDC").sd(18,6), "ETH", 1500, 2000, 2, 1)
+    oui2.set_id(2)
+    r  = oui.set_linked(oui2)
+    r2 = oui2.set_linked(oui)  # sets linked here and creates backlink
+    assert oui2.tkn == "ETH"
+    assert oui2.tkny == oui2.tkn
+    assert oui2.tknx == "USDC"
+    assert oui2.pair.slashpair == "ETH/USDC"
+    assert abs(oui2.S/0.0034592091997182155-1) < 1e-10
+    assert abs(oui2.B/0.022360679774997897-1) < 1e-10
+    assert oui2.S is oui2.A
+    assert abs(oui2.pa/1500-1) < 1e-10
+    assert abs(oui2.pa_raw/0.0006666666666666666-1) < 1e-10
+    assert oui2.p_start == oui2.pa
+    assert oui2.py == oui2.pa
+    assert abs(oui2.pb/2000-1) < 1e-10
+    assert abs(oui2.pb_raw/0.0005-1) < 1e-10
+    assert oui2.p_end == oui2.pb
+    assert oui2.py == oui2.py
+    assert abs(oui2.yint/2-1) < 1e-10
+    assert abs(oui2.y/1-1) < 1e-10
+    assert oui2.y == oui2.z
+    assert oui2.total_liquidity == (1, 'ETH')
+    assert oui2.price_convention == 'USDC per ETH'
+    assert oui2.price_convention == oui2.pair.price_convention
+    assert oui2.price_convention != oui2.price_convention_raw
+    assert oui2.price_convention_raw == "ETH per USDC"
+    assert tuple(oui2.yzABS(32)) == (1000000000000000000, 2000000000000000000, 14857190382812, 96038388349944, 4294967296)
+    assert r is oui
+    assert r2 is oui2
+    try:
+        oui2.set_linked(oui)
+        raise
+    except ValueError as e:
+        print(e)
+    
+    assert oui.lid == 2
+    assert oui2.lid == 1
     
 
 # ------------------------------------------------------------
