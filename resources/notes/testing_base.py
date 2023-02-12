@@ -64,12 +64,16 @@ def readStorage(read):
     return y,z,A,B,S
 
 ### tradeBySource ###
-def getTradeTargetAmount_bySource(dy,storage):
+def getTradeTargetAmount_bySource(dy,storage): ## trade by target
     y,z,A,B,S = readStorage(storage)
     ONE = S
     temp1 = z * ONE
     temp2 = y * A + z * B
     temp3 = temp2 * dy
+    print("A", log2(A))
+    print("B", log2(B))
+    print("temp2", log2(temp2))
+    print("temp3", log2(temp3))
     # scale = mulDivC(temp3, A, 2**256-1)
     scale = mulDivF(temp3, A, 2**255) + 1
     temp4 = mulDivC(temp1, temp1, scale)
@@ -115,12 +119,16 @@ def getTradeTargetAmount_bySource(dy,storage):
     return dy, int(dx), diagnostics
 
 ### tradeByTarget ###
-def getTradeSourceAmount_byTarget(dx,storage):
+def getTradeSourceAmount_byTarget(dx,storage):   ## trade by source
     y,z,A,B,S = readStorage(storage)
     ONE = S
     temp1 = z * ONE
     temp2 = y * A + z * B
     temp3 = temp2 - dx * A
+    print("A", log2(A))
+    print("B", log2(B))
+    print("temp2", log2(temp2))
+    print("temp3", log2(temp3))
     # scale = mulDivC(temp2, temp3, 2**256-1)
     scale = mulDivF(temp2, temp3, 2**255) + 1
     temp4 = mulDivC(temp1, temp1, scale)
@@ -191,10 +199,10 @@ def trade(amount, tradeByTarget, storage, order_inputs):
     pa, pb, y, z, decx, decy = unpack_order_inputs(order_inputs)  # just to bring in the correct decimals
     if not tradeByTarget:
         dx, dy, diagnostics = getTradeSourceAmount_byTarget(amount * 10**decy ,storage)
-        print('TradeByTarget', amount)
+        print('TradeBySource', amount)
         print('inputAmount', dx, 'outputAmount', dy)
         print("Scaled by decimals:", dy / 10**decx)
-        # print(diagnostics)
+        print(diagnostics)
         if len(diagnostics['len']['error']) > 0:
             raise
         if len(diagnostics['len']['warnings']) > 0:
@@ -202,10 +210,10 @@ def trade(amount, tradeByTarget, storage, order_inputs):
         print("\n")
     else:
         dx, dy, diagnostics = getTradeTargetAmount_bySource(amount * 10**decx ,storage)
-        print('TradeBySource', amount)
+        print('TradeByTarget', amount)
         print('inputAmount', dx, 'outputAmount', dy)
         print("Scaled by decimals:", dy / 10**decy)
-        # print(diagnostics)
+        print(diagnostics)
         if len(diagnostics['len']['error']) > 0:
             raise
         if len(diagnostics['len']['warnings']) > 0:
