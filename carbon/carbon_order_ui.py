@@ -9,11 +9,11 @@ VERSION HISTORY
 - v1.4: new methods: fromQxy, Q, Gamma, sellx, selly; yfromx_f, xfromy_f, p_eff_f, xint (1.3.1)
 - v1.5: linked curves (beta); bidask, curves_by_pair_bidask, checks for B,S=0 (1.4.1)
 - v1.6: linked curves incl trading (final), addliqy, tradeto; minor formula improvement (1.5.1)
-- v1.6.1: bugfix
-- v1.7: integration with solidity testing (yzABS)
+- v1.7: integration with solidity testing (yzABS); bugfix (1.6.1)
+- v1.7.1: prettification
 """
-__version__ = "1.7"
-__date__ = "11/Feb/2023"
+__version__ = "1.7.1"
+__date__ = "12/Feb/2023"
 
 try:
     from .pair import CarbonPair
@@ -55,9 +55,10 @@ class CarbonOrderUI:
     tkn is also the asset being sold, so the numeraire is always the asset being sold
     - pa, pb are read at the intercepts "left to right", so pa=py is is the y intercept price,
     and pb=px is the x intercept price 
-    - the properties pa_raw and pb_raw correspond to the native pa, pb; the prperties pa, pb
+    - the properties pa_raw and pb_raw correspond to the native pa, pb; the properties pa, pb
     are quoted in the correct currency conventions
-    - the properties py = pa and px = pb are aliases
+    - the properties p_start = py = pa and p_end = px = pb are aliases
+    - the property A is an alias of S (we use A in the smart contracts)
     """
     __VERSION__ = __version__
     __DATE__    = __date__
@@ -75,7 +76,7 @@ class CarbonOrderUI:
         self.pair = CarbonPair(self.pair)
         self.tkn = self.tkn.upper()
         if not self.pair.has_token(self.tkn):
-            raise RuntimeError("token not part of pair", self.tkn, self.pair)
+            raise ValueError("token not part of pair", self.tkn, self.pair)
         self.pb_raw = self.B * self.B
         self.pa_raw = (self.S + self.B)**2
         if self.pa_raw == 0 and self.pb_raw == 0:
@@ -100,10 +101,11 @@ class CarbonOrderUI:
             self.pmax = None        
     
     def set_id(self, id):
-        """sets curve index; raises if curve ID already set"""
+        """sets curve index; raises if curve ID already set (returns self)"""
         if not self.id is None:
             raise ValueError("Curve ID has already been set", id, self.id)
         self.id = id
+        return self
     
     @property
     def lid(self):
@@ -112,15 +114,24 @@ class CarbonOrderUI:
             return None
         return self.linked.id
         
-    def set_linked(self, linked=None):
+    def set_linked(self, linked):
         """
-        sets linked object and index
+        sets linked object
 
-        :linked:    the linked curve (CarbonOrderUI object)
+        :linked:            the linked curve (CarbonOrderUI object)
+        :returns:           self
         """
         if not self.linked is None:
+            #msg = f"Linked object has already been set {linked.id} {self.linked.id}"
+            #print ("[set_linked]", msg)
+            #print ("[set_linked] DEPRECIATION WARNING -- THIS WILL LEAD TO RAISE IN THE FUTURE")
             raise ValueError("Linked object has already been set", linked.id, self.linked.id)
+            
         self.linked = linked
+        # this code setting backlinks breaks previous assertions
+        # if linked.linked is None:
+        #     linked.linked = self
+        return self
 
     @classmethod
     def from_BSy(cls, pair, tkn, B, S, yint, y):
@@ -130,7 +141,7 @@ class CarbonOrderUI:
         :pair:    the corresponding token pair (specifically, its CarbonPair record)
         :tkn:     the token that this order is selling
         :B:       the B-parameter; B = sqrt pb_raw
-        :S:       the S-parameter; S = sqrt pa_raw - Sqrt pb_raw
+        :S:       the S-parameter; S = sqrt pa_raw - Sqrt pb_raw (also called A)
         :yint:    the y-intercept of the curve (also its current maximum capacity)
         :y:       the current y-coordinate on the curve (also current token holdings)
 
@@ -141,7 +152,7 @@ class CarbonOrderUI:
             pair=pair, 
             tkn=tkn, 
             B=B, 
-            S= S, 
+            S=S, 
             yint=yint, 
             y=y
         )
@@ -160,15 +171,15 @@ class CarbonOrderUI:
         
         *in their native quotation, pa, pb = -dy/dx at the y-intercept and x-intercept
         respectively; as the function y(x) is convex we must have pa >= pb; as this can
-        be confusing in reverse quotation we correct by exchanging pa, pb if pb < pa
+        be confusing in reverse quotation, so we correct by exchanging pa, pb if pb < pa
         """
         pair = CarbonPair(pair)
         if yint<0:
-            raise ValueError("yint must be non-negative", yint)
+            raise ValueError(f"yint must be non-negative (yint={yint})", pair, tkn, pa, pb, yint, y)
         if y>yint:
-            raise ValueError("y must not be bigger than yint (y={y}, yint={yint})", yint, y)
+            raise ValueError(f"y must not be bigger than yint (y={y}, yint={yint})", pair, tkn, pa, pb, yint, y)
         if y<0:
-            raise ValueError("y must be non-negative", y)
+            raise ValueError(f"y must be non-negative (y={y})", pair, tkn, pa, pb, yint, y)
 
         if pair.has_basetoken(tkn):
             pa = 1./pa
@@ -279,7 +290,17 @@ class CarbonOrderUI:
         """alias for pa"""
         return self.pa
     p_start = py
+
+    @property
+    def A(self):
+        """alias for S (notation used in smart contracts)"""
+        return self.S
     
+    @property
+    def z(self):
+        """alias for y (notation used in smart contracts)"""
+        return self.y 
+
     @property
     def Q(self):
         """Q parameter = sqrt(Px/Py) < 1"""
@@ -305,9 +326,14 @@ class CarbonOrderUI:
         """
         the price convention of the prices quoted
         """
-        # if raw:
-        #     return self.pair.price_convention(self.reverseq)
         return self.pair.price_convention
+
+    @property
+    def price_convention_raw(self):
+        """
+        the price convention of pa_raw, pb_raw (ie dy/dx)
+        """
+        return f"{self.tkny} per {self.tknx}"
 
     def descr(self, full=False):
         """provides a description of the order and curve"""
@@ -755,6 +781,7 @@ class CarbonOrderUI:
         :expandcurve:   if True, purchasing y beyond yint [sic] expands the curve to yint = y
                         only meaningful with allowneg = True
         :raiseonerror:  if True, error lead to raising on exception
+        :returns:       a dict containing extensive information about the tx
         """
         if dy < 0:
             if not allowneg:
@@ -838,6 +865,7 @@ class CarbonOrderUI:
         :expandcurve:   if True, purchasing y beyond yint [sic] expands the curve to yint = y
                         only meaningful with allowneg = True
         :raiseonerror:  if True, error lead to raising on exception
+        :returns:       a dict containing extensive information about the tx
         """
         dy = self.dyfromdx_f(dx, checkbounds=False, raiseonerror=True)
         result = self.selly(dy, execute, allowneg, expandcurve, raiseonerror)
@@ -850,6 +878,7 @@ class CarbonOrderUI:
 
         :p:             the target marginal price
         :execute:       if False, only display results, but do not update the object
+        :returns:       a dict containing extensive information about the tx
         """
         if self.yint == 0:
             self.yint = 1e-50 # selly fails on a fully empty curve, even with dy=0
@@ -872,6 +901,7 @@ class CarbonOrderUI:
 
         :dy:            the amount of liquidity to be added (must be positive)
         :expandcurve:   if True (default), expand yint=y if need be
+        :returns:       a dict containing extensive information about the tx
         """
         if dy < 0:
             raise ValueError("Liquidity amount dy must not be < 0", dy)
@@ -926,21 +956,27 @@ class CarbonOrderUI:
     
     def yzABS(self, sx=0, verbose=False):
         """
-        returns the parameters y,z,A,B,S needed for the smart contract
+        returns the parameters y,z,A,B,S needed for the smart contract*
 
         :sx:        the scaling exponent, scaling factor = 2**sx
+        :verbose:   if True, prints detailed description of the calculation for audit
         :returns:   tuple of ints (y,z,A,B,S)
                         :y:     y * 10**decy
                         :z:     yint * 10**decy
                         :A:     sqrt(10**(dec-dec)) * S * A
                         :B:     sqrt(...) * S * B
-                        :S:     2**sx          
+                        :S:     2**sx    
+
+        *Important note: the parameter A in the return values corresponds to 
+        the value S (or A) in this object; the value S in the return values
+        corresponds to the scaling factor (!) 2**sx; it has nothing to do
+        with the value S in this object      
         """
         if not self.pair.has_decimals:
             raise ValueError("pair must have decimals", self.pair)
 
-        tkny = self.tkn
-        tknx = self.pair.other(tkny)
+        tkny = self.tkny
+        tknx = self.tknx
         scale = 2**sx
         dec  = self.pair.decimals
         decy = dec[tkny]
@@ -969,4 +1005,5 @@ class CarbonOrderUI:
         s2 = f"linked=<{self.linked.id}>" if self.linked else "linked=None"
         return f"{self.__class__.__name__}({s1}, {s2})"
 
+# return type for yzABS method
 yzABS_nt = namedtuple("r", "y,z,A,B,S")
