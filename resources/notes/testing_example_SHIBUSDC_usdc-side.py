@@ -16,11 +16,11 @@ order_inputs = {        # EXAMPLE SHIB/USDC - USDC-side
 "decy" : 6,             # USDC decimality
 }
 
-# amount = 1              # trade 1 USDC for SHIB
-# tradeByTarget = False
+amount = 6600000000      # trade 6600000000 SHIB for USDC
+tradeByTarget = False
 
-amount = 1        # trade 100000 SHIB for USDC
-tradeByTarget = True
+# amount = 100000        # trade 100000 USDC for SHIB
+# tradeByTarget = True
 
 storage = create_order(order_inputs, BITS_SIGNIFICANT, BITS_EXPONENT, ONE_EXPONENT)
 trade(amount, tradeByTarget, storage, order_inputs)

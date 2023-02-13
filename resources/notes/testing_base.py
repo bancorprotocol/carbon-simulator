@@ -188,6 +188,7 @@ def create_order(order_inputs, BITS_SIGNIFICANT, BITS_EXPONENT, ONE_EXPONENT):
 
 def trade_by_source_act(dy, storage):
     y,z,A,B,s = readStorage(storage)
+    assert dy <= y, 'Insufficient Liquidity'
     ONE = s
     temp1 = z * ONE               
     temp2 = y * A + z * B      
@@ -206,27 +207,32 @@ def trade_by_target_act(dx, storage):
     temp2 = temp1 * dx / ONE            # 224 bits at most; can overflow; some precision loss
     temp3 = temp2 * A + z * z * ONE     # 256 bits at most; can overflow
     dy = mulDiv(temp1, temp2, temp3)
+    assert dy <= y, 'Insufficient Liquidity'
     print(dx, temp1, temp2, temp3, dy)
     return dy
 
 
 def trade(amount, tradeByTarget, storage, order_inputs):
     pa, pb, y, z, decx, decy = unpack_order_inputs(order_inputs)  # just to bring in the correct decimals
-    if tradeByTarget:
+    if not tradeByTarget:
         dy =  trade_by_target_act(amount * 10**decx ,storage)     #getTradeSourceAmount_byTarget(amount * 10**decy ,storage)
         print('TradeByTarget', amount)
         print('inputAmount', amount * 10**decx, 'outputAmount', dy)
+        print("Effective rate    :", (dy / 10**decy)/(amount))
         print("Scaled by decimals:", dy / 10**decy)
         # print(diagnostics)
         # if len(diagnostics['len']['error']) > 0:
         #     raise
         print("\n")
+        return(dy / 10**decy)
     else:
         dx = trade_by_source_act(amount * 10**decy, storage)     #getTradeTargetAmount_bySource(amount * 10**decx ,storage)
         print('TradeBySource', amount)
         print('inputAmount', amount * 10**decy, 'outputAmount', dx)
+        print("Effective rate    :", (dx / 10**decx)/(amount))
         print("Scaled by decimals:", dx / 10**decx)
         # print(diagnostics)
         # if len(diagnostics['len']['error']) > 0:
         #     raise
         print("\n")
+        return(dx / 10**decx)
