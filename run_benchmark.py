@@ -6,7 +6,7 @@ from benchmark import spec
 from benchmark import assertAlmostEqual
 
 def format(val):
-    return '{:.24f}'.format(val).rstrip('0').rstrip('.')
+    return str(val) if type(val) is int else '{:.24f}'.format(val).rstrip('0').rstrip('.')
 
 def execute(test, module):
     targetOrder = module.Order(test)

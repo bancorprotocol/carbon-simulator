@@ -87,7 +87,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "1230000000",
-    "outputAmount": "1230311521969275392"
+    "outputAmount": "1230311521969275330"
   },
   {
     "liquidity": "456000000000",
@@ -96,7 +96,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "4560000000",
-    "outputAmount": "4561154910715181568"
+    "outputAmount": "4561154910715181699"
   },
   {
     "liquidity": "789000000000",
@@ -105,7 +105,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "7890000000",
-    "outputAmount": "7891998299461343232"
+    "outputAmount": "7891998299461343255"
   },
   {
     "liquidity": "123000000000",
@@ -114,7 +114,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "1230000000",
-    "outputAmount": "984251237896955264"
+    "outputAmount": "984251237896955235"
   },
   {
     "liquidity": "456000000000",
@@ -123,7 +123,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "4560000000",
-    "outputAmount": "3648931418544754176"
+    "outputAmount": "3648931418544753998"
   },
   {
     "liquidity": "789000000000",
@@ -132,7 +132,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "7890000000",
-    "outputAmount": "6313611599192760320"
+    "outputAmount": "6313611599192760192"
   },
   {
     "liquidity": "123000000000",
@@ -141,7 +141,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "1230000000",
-    "outputAmount": "820207681334915328"
+    "outputAmount": "820207681334915305"
   },
   {
     "liquidity": "456000000000",
@@ -150,7 +150,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "4560000000",
-    "outputAmount": "3040769940558942720"
+    "outputAmount": "3040769940558942762"
   },
   {
     "liquidity": "789000000000",
@@ -159,7 +159,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "7890000000",
-    "outputAmount": "5261332199782970368"
+    "outputAmount": "5261332199782970220"
   },
   {
     "liquidity": "123000000000000000000",
@@ -168,7 +168,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "1230000000",
-    "outputAmount": "1229688635883262720"
+    "outputAmount": "1229688635883262803"
   },
   {
     "liquidity": "456000000000000000000",
@@ -177,7 +177,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "4560000000",
-    "outputAmount": "4558845674494047232"
+    "outputAmount": "4558845674494047466"
   },
   {
     "liquidity": "789000000000000000000",
@@ -186,7 +186,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "7890000000",
-    "outputAmount": "7888002713104832512"
+    "outputAmount": "7888002713104832129"
   },
   {
     "liquidity": "123000000000000000000",
@@ -195,7 +195,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "1230000000",
-    "outputAmount": "983800716875916928"
+    "outputAmount": "983800716875916934"
   },
   {
     "liquidity": "456000000000000000000",
@@ -204,7 +204,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "4560000000",
-    "outputAmount": "3647261194271692288"
+    "outputAmount": "3647261194271692050"
   },
   {
     "liquidity": "789000000000000000000",
@@ -213,7 +213,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "7890000000",
-    "outputAmount": "6310721671667467264"
+    "outputAmount": "6310721671667467166"
   },
   {
     "liquidity": "123000000000000000000",
@@ -222,7 +222,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "1230000000",
-    "outputAmount": "819861604270213888"
+    "outputAmount": "819861604270213930"
   },
   {
     "liquidity": "456000000000000000000",
@@ -231,7 +231,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "4560000000",
-    "outputAmount": "3039486923148110336"
+    "outputAmount": "3039486923148110179"
   },
   {
     "liquidity": "789000000000000000000",
@@ -240,7 +240,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "7890000000",
-    "outputAmount": "5259112242026006528"
+    "outputAmount": "5259112242026006429"
   },
   {
     "liquidity": "123000000000000000000",
@@ -411,7 +411,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "4920000000",
-    "outputAmount": "4924988139934340096"
+    "outputAmount": "4924988139934339666"
   },
   {
     "liquidity": "456000000000",
@@ -420,7 +420,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "18240000000",
-    "outputAmount": "18258492616341229568"
+    "outputAmount": "18258492616341230264"
   },
   {
     "liquidity": "789000000000",
@@ -429,7 +429,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "31560000000",
-    "outputAmount": "31591997092749127680"
+    "outputAmount": "31591997092749127359"
   },
   {
     "liquidity": "123000000000",
@@ -438,7 +438,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "4920000000",
-    "outputAmount": "3940022886995093504"
+    "outputAmount": "3940022886995093572"
   },
   {
     "liquidity": "456000000000",
@@ -447,7 +447,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "18240000000",
-    "outputAmount": "14606914117640126464"
+    "outputAmount": "14606914117640127397"
   },
   {
     "liquidity": "789000000000",
@@ -456,7 +456,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "31560000000",
-    "outputAmount": "25273805348285980672"
+    "outputAmount": "25273805348285979371"
   },
   {
     "liquidity": "123000000000",
@@ -465,7 +465,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "4920000000",
-    "outputAmount": "3283325426704899072"
+    "outputAmount": "3283325426704899198"
   },
   {
     "liquidity": "456000000000",
@@ -474,7 +474,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "18240000000",
-    "outputAmount": "12172328411199567872"
+    "outputAmount": "12172328411199567171"
   },
   {
     "liquidity": "789000000000",
@@ -483,7 +483,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "31560000000",
-    "outputAmount": "21061331395694235648"
+    "outputAmount": "21061331395694235143"
   },
   {
     "liquidity": "123000000000000000000",
@@ -492,7 +492,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "4920000000",
-    "outputAmount": "4915021954582816768"
+    "outputAmount": "4915021954582816962"
   },
   {
     "liquidity": "456000000000000000000",
@@ -501,7 +501,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "18240000000",
-    "outputAmount": "18221544807233857536"
+    "outputAmount": "18221544807233858008"
   },
   {
     "liquidity": "789000000000000000000",
@@ -510,7 +510,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "31560000000",
-    "outputAmount": "31528067659884900352"
+    "outputAmount": "31528067659884899054"
   },
   {
     "liquidity": "123000000000000000000",
@@ -519,7 +519,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "4920000000",
-    "outputAmount": "3932813406095218688"
+    "outputAmount": "3932813406095218502"
   },
   {
     "liquidity": "456000000000000000000",
@@ -528,7 +528,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "18240000000",
-    "outputAmount": "14580186286011541504"
+    "outputAmount": "14580186286011541763"
   },
   {
     "liquidity": "789000000000000000000",
@@ -537,7 +537,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "31560000000",
-    "outputAmount": "25227559165927866368"
+    "outputAmount": "25227559165927865025"
   },
   {
     "liquidity": "123000000000000000000",
@@ -546,7 +546,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "4920000000",
-    "outputAmount": "3277786788929409536"
+    "outputAmount": "3277786788929409719"
   },
   {
     "liquidity": "456000000000000000000",
@@ -555,7 +555,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "18240000000",
-    "outputAmount": "12151794924811470848"
+    "outputAmount": "12151794924811470179"
   },
   {
     "liquidity": "789000000000000000000",
@@ -564,7 +564,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "31560000000",
-    "outputAmount": "21025803060693532672"
+    "outputAmount": "21025803060693530638"
   },
   {
     "liquidity": "123000000000000000000",
@@ -735,7 +735,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "12300000000",
-    "outputAmount": "12331223356251113472"
+    "outputAmount": "12331223356251112749"
   },
   {
     "liquidity": "456000000000",
@@ -744,7 +744,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "45600000000",
-    "outputAmount": "45715754881709711360"
+    "outputAmount": "45715754881709713239"
   },
   {
     "liquidity": "789000000000",
@@ -753,7 +753,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "78900000000",
-    "outputAmount": "79100286407170752512"
+    "outputAmount": "79100286407170758384"
   },
   {
     "liquidity": "123000000000",
@@ -762,7 +762,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "12300000000",
-    "outputAmount": "9865181649061472256"
+    "outputAmount": "9865181649061471933"
   },
   {
     "liquidity": "456000000000",
@@ -771,7 +771,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "45600000000",
-    "outputAmount": "36573356357495656448"
+    "outputAmount": "36573356357495655473"
   },
   {
     "liquidity": "789000000000",
@@ -780,7 +780,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "78900000000",
-    "outputAmount": "63281531065931825152"
+    "outputAmount": "63281531065931826228"
   },
   {
     "liquidity": "123000000000",
@@ -789,7 +789,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "12300000000",
-    "outputAmount": "8220815571007675392"
+    "outputAmount": "8220815571007675363"
   },
   {
     "liquidity": "456000000000",
@@ -798,7 +798,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "45600000000",
-    "outputAmount": "30477169921786777600"
+    "outputAmount": "30477169921786778592"
   },
   {
     "liquidity": "789000000000",
@@ -807,7 +807,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "78900000000",
-    "outputAmount": "52733524272565878784"
+    "outputAmount": "52733524272565881821"
   },
   {
     "liquidity": "123000000000000000000",
@@ -816,7 +816,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "12300000000",
-    "outputAmount": "12268934364357699584"
+    "outputAmount": "12268934364357699265"
   },
   {
     "liquidity": "456000000000000000000",
@@ -825,7 +825,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "45600000000",
-    "outputAmount": "45484829838594400256"
+    "outputAmount": "45484829838594397278"
   },
   {
     "liquidity": "789000000000000000000",
@@ -834,7 +834,7 @@
     "marginalRate": "1000000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "78900000000",
-    "outputAmount": "78700725312831094784"
+    "outputAmount": "78700725312831095291"
   },
   {
     "liquidity": "123000000000000000000",
@@ -843,7 +843,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "12300000000",
-    "outputAmount": "9820107945069699072"
+    "outputAmount": "9820107945069698173"
   },
   {
     "liquidity": "456000000000000000000",
@@ -852,7 +852,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "45600000000",
-    "outputAmount": "36406253845136441344"
+    "outputAmount": "36406253845136442009"
   },
   {
     "liquidity": "789000000000000000000",
@@ -861,7 +861,7 @@
     "marginalRate": "800000000",
     "tradeBy": "SourceAmount",
     "inputAmount": "78900000000",
-    "outputAmount": "62992399745203183616"
+    "outputAmount": "62992399745203185844"
   },
   {
     "liquidity": "123000000000000000000",
@@ -870,7 +870,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "12300000000",
-    "outputAmount": "8186181417138377728"
+    "outputAmount": "8186181417138377936"
   },
   {
     "liquidity": "456000000000000000000",
@@ -879,7 +879,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "45600000000",
-    "outputAmount": "30348770131830083584"
+    "outputAmount": "30348770131830084056"
   },
   {
     "liquidity": "789000000000000000000",
@@ -888,7 +888,7 @@
     "marginalRate": "666666666.666666666667",
     "tradeBy": "SourceAmount",
     "inputAmount": "78900000000",
-    "outputAmount": "52511358846521786368"
+    "outputAmount": "52511358846521790177"
   },
   {
     "liquidity": "123000000000000000000",
