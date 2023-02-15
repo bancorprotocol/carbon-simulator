@@ -80,7 +80,10 @@ class FastRouter(BaseRouter):
         order = self.orders[subject]
         y, z, A, B = Decimal(order.y), Decimal(order.y_int), Decimal(order.S), Decimal(order.B)
         temp1 = y * A + z * B
-        temp2 = temp1 * dx // self.ONE
+        if self.use_floor_division:
+            temp2 = temp1 * dx // self.ONE
+        else:
+            temp2 = temp1 * dx / self.ONE
         temp3 = temp2 * A + z * z * self.ONE
         res = self.mul_div_f(temp1, temp2, temp3)
         # self.logger.debug(
