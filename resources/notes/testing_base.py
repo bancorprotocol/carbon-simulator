@@ -1,19 +1,18 @@
 from math import *
-from dataclasses import dataclass, asdict
 
-mulDivF = lambda x, y, z: (x * y) // z
-mulDiv = mulDivF
-mulDivC = lambda x, y, z: (x * y + z - 1) // z
-MAX = 2 ** 112
+# mulDivF = lambda x, y, z: (x * y) // z
+# mulDiv = mulDivF
+# mulDivC = lambda x, y, z: (x * y + z - 1) // z
+# MAX = 2 ** 112
 
 ### FRONT END ###
 def encode_order_inputs(pa, pb, y, z, decx, decy, xS):
     """returns (y,z,A,B,s) from prices, curve loading and capacity, decimals and scaling exponent"""
     decf = 10**(decy-decx)
     one = 2**xS
-    a = sqrt(pa*decf)-sqrt(pb*decf) # p_ = dy/dx
-    b = sqrt(pb*decf)               # pw_ = dyw/dxw = dy*decy / dx*decx
-    return int(y*10**decy), int(z*10**decy), int(a*one), int(b*one), one, xS
+    a = sqrt(pa*decf)-sqrt(pb*decf) 
+    b = sqrt(pb*decf)               
+    return int(y*10**decy), int(z*10**decy), int(a*one), int(b*one), int(one), int(xS)
 
 ### Encode for contract storage ###
 
@@ -62,106 +61,106 @@ def readStorage(read):
     A *= 2**xA
     B *= 2**xB
     
-    return y,z,A,B,S
+    return int(y),int(z),int(A),int(B),int(S)
 
-### tradeBySource ###
-def getTradeTargetAmount_bySource(dy,storage):
-    y,z,A,B,S = readStorage(storage)
-    ONE = S
-    temp1 = z * ONE
-    temp2 = y * A + z * B
-    temp3 = temp2 * dy
-    scale = mulDivC(temp3, A, 2**256-1)
-    temp4 = mulDivC(temp1, temp1, scale)
-    temp5 = mulDivC(temp3, A, scale)
-    dx    = mulDivF(temp2, temp3 // scale, temp4 + temp5)
-    assert dx < MAX
+# ### tradeBySource ###
+# def getTradeTargetAmount_bySource(dy,storage):
+#     y,z,A,B,S = readStorage(storage)
+#     ONE = S
+#     temp1 = z * ONE
+#     temp2 = y * A + z * B
+#     temp3 = temp2 * dy
+#     scale = mulDivC(temp3, A, 2**256-1)
+#     temp4 = mulDivC(temp1, temp1, scale)
+#     temp5 = mulDivC(temp3, A, scale)
+#     dx    = mulDivF(temp2, temp3 // scale, temp4 + temp5)
+#     assert dx < MAX
 
-    # BEGIN DIAGNOSTICS
-    warnings, errors = [], []
+#     # BEGIN DIAGNOSTICS
+#     warnings, errors = [], []
 
-    if log2(temp1) > 255: errors += [f"temp1: overflow ({log2(temp1)})"]
-    elif log2(temp1) > 220: warnings += [f"temp1: critical length ({log2(temp1)})"]
+#     if log2(temp1) > 255: errors += [f"temp1: overflow ({log2(temp1)})"]
+#     elif log2(temp1) > 220: warnings += [f"temp1: critical length ({log2(temp1)})"]
     
-    if log2(temp2) > 255: errors += [f"temp2: overflow ({log2(temp2)})"]
-    elif log2(temp2) > 220: warnings += [f"temp2: critical length ({log2(temp2)})"]
+#     if log2(temp2) > 255: errors += [f"temp2: overflow ({log2(temp2)})"]
+#     elif log2(temp2) > 220: warnings += [f"temp2: critical length ({log2(temp2)})"]
     
-    if log2(temp3) > 255: errors += [f"temp3: overflow ({log2(temp3)})"]
-    elif log2(temp3) > 220: warnings += [f"temp3: critical length ({log2(temp3)})"]
+#     if log2(temp3) > 255: errors += [f"temp3: overflow ({log2(temp3)})"]
+#     elif log2(temp3) > 220: warnings += [f"temp3: critical length ({log2(temp3)})"]
 
-    if log2(temp4) < 8: errors += [f"temp4: underflow ({log2(temp4)})"]
-    elif log2(temp4) < 16: warnings += [f"temp4: close to underflow ({log2(temp4)})"]
+#     if log2(temp4) < 8: errors += [f"temp4: underflow ({log2(temp4)})"]
+#     elif log2(temp4) < 16: warnings += [f"temp4: close to underflow ({log2(temp4)})"]
 
-    if log2(temp5) < 8: errors += [f"temp5: underflow ({log2(temp5)})"]
-    elif log2(temp5) < 16: warnings += [f"temp5: close to underflow ({log2(temp5)})"]
+#     if log2(temp5) < 8: errors += [f"temp5: underflow ({log2(temp5)})"]
+#     elif log2(temp5) < 16: warnings += [f"temp5: close to underflow ({log2(temp5)})"]
     
-    diagnostics = {
-        "success": True if len(errors) == 0 else False,
-        "type":  "bySource",
-        "yaABS": (y,z,A,B,S),
-        "dy":  dy,
-        "len": {
-            "temp1": log2(temp1),
-            "temp2": log2(temp2),
-            "temp3": log2(temp3), 
-            "temp4": log2(temp4), 
-            "temp5": log2(temp5),  
-        "warnings": warnings,
-        "error": errors,
-        }
-    }
-    # END DIAGNOSTICS
+#     diagnostics = {
+#         "success": True if len(errors) == 0 else False,
+#         "type":  "bySource",
+#         "yaABS": (y,z,A,B,S),
+#         "dy":  dy,
+#         "len": {
+#             "temp1": log2(temp1),
+#             "temp2": log2(temp2),
+#             "temp3": log2(temp3), 
+#             "temp4": log2(temp4), 
+#             "temp5": log2(temp5),  
+#         "warnings": warnings,
+#         "error": errors,
+#         }
+#     }
+#     # END DIAGNOSTICS
     
-    return dy, int(dx), diagnostics
+#     return dy, int(dx), diagnostics
 
-### tradeByTarget ###
-def getTradeSourceAmount_byTarget(dx,storage):
-    y,z,A,B,S = readStorage(storage)
-    ONE = S
-    temp1 = z * ONE
-    temp2 = y * A + z * B
-    temp3 = temp2 - dx * A
-    scale = mulDivC(temp2, temp3, 2**256-1)
-    temp4 = mulDivC(temp1, temp1, scale)
-    temp5 = mulDivF(temp2, temp3, scale)
-    dy    = mulDivC(dx, temp4, temp5)
-    assert dy < MAX
+# ### tradeByTarget ###
+# def getTradeSourceAmount_byTarget(dx,storage):
+#     y,z,A,B,S = readStorage(storage)
+#     ONE = S
+#     temp1 = z * ONE
+#     temp2 = y * A + z * B
+#     temp3 = temp2 - dx * A
+#     scale = mulDivC(temp2, temp3, 2**256-1)
+#     temp4 = mulDivC(temp1, temp1, scale)
+#     temp5 = mulDivF(temp2, temp3, scale)
+#     dy    = mulDivC(dx, temp4, temp5)
+#     assert dy < MAX
     
-    # BEGIN DIAGNOSTICS
-    warnings, errors = [], []
+#     # BEGIN DIAGNOSTICS
+#     warnings, errors = [], []
     
-    if log2(temp1) > 255: errors += [f"temp1: overflow ({log2(temp1)})"]
-    elif log2(temp1) > 220: warnings += [f"temp1: critical length ({log2(temp1)})"]
+#     if log2(temp1) > 255: errors += [f"temp1: overflow ({log2(temp1)})"]
+#     elif log2(temp1) > 220: warnings += [f"temp1: critical length ({log2(temp1)})"]
     
-    if log2(temp2) > 255: errors += [f"temp2: overflow ({log2(temp2)})"]
-    elif log2(temp2) > 220: warnings += [f"temp2: critical length ({log2(temp2)})"]
+#     if log2(temp2) > 255: errors += [f"temp2: overflow ({log2(temp2)})"]
+#     elif log2(temp2) > 220: warnings += [f"temp2: critical length ({log2(temp2)})"]
     
-    if log2(temp3) > 255: errors += [f"temp3: overflow ({log2(temp3)})"]
-    elif log2(temp3) > 220: warnings += [f"temp3: critical length ({log2(temp3)})"]
+#     if log2(temp3) > 255: errors += [f"temp3: overflow ({log2(temp3)})"]
+#     elif log2(temp3) > 220: warnings += [f"temp3: critical length ({log2(temp3)})"]
 
-    if log2(temp4) < 8: errors += [f"temp4: underflow ({log2(temp4)})"]
-    elif log2(temp4) < 16: warnings += [f"temp4: close to underflow ({log2(temp4)})"]
+#     if log2(temp4) < 8: errors += [f"temp4: underflow ({log2(temp4)})"]
+#     elif log2(temp4) < 16: warnings += [f"temp4: close to underflow ({log2(temp4)})"]
 
-    if log2(temp5) < 8: errors += [f"temp5: underflow ({log2(temp5)})"]
-    elif log2(temp5) < 16: warnings += [f"temp5: close to underflow ({log2(temp5)})"]
+#     if log2(temp5) < 8: errors += [f"temp5: underflow ({log2(temp5)})"]
+#     elif log2(temp5) < 16: warnings += [f"temp5: close to underflow ({log2(temp5)})"]
 
-    diagnostics = {
-        "success": True if len(errors) == 0 else False,
-        "type":  "byTarget",
-        "yaABS": (y,z,A,B,S),
-        "dy":  dy,
-        "len": {
-            "temp1": log2(temp1),
-            "temp2": log2(temp2),
-            "temp3": log2(temp3),
-            "temp4": log2(temp4),
-            "temp5": log2(temp5),
-        "warnings": warnings,
-        "error": errors,
-        }
-    }
-    # END DIAGNOSTICS
-    return dx, int(dy), diagnostics
+#     diagnostics = {
+#         "success": True if len(errors) == 0 else False,
+#         "type":  "byTarget",
+#         "yaABS": (y,z,A,B,S),
+#         "dy":  dy,
+#         "len": {
+#             "temp1": log2(temp1),
+#             "temp2": log2(temp2),
+#             "temp3": log2(temp3),
+#             "temp4": log2(temp4),
+#             "temp5": log2(temp5),
+#         "warnings": warnings,
+#         "error": errors,
+#         }
+#     }
+#     # END DIAGNOSTICS
+#     return dx, int(dy), diagnostics
 
 def unpack_order_inputs(order_inputs):
     pa = order_inputs['pa']
@@ -173,49 +172,125 @@ def unpack_order_inputs(order_inputs):
     return(pa, pb, y, z, decx, decy)
 
 def create_order(order_inputs, BITS_SIGNIFICANT, BITS_EXPONENT, ONE_EXPONENT):
-    pa, pb, y, z, decx, decy = unpack_order_inputs(order_inputs)
-    user_y,user_z,user_A,user_B,user_S,xS = encode_order_inputs(pa, pb, y, z, decx, decy, ONE_EXPONENT) ## USDC-side order
-    storage = store_variables(user_y, user_z, user_A, user_B, xS, BITS_SIGNIFICANT, BITS_EXPONENT)
+    pa, pb, input_y, input_z, decx, decy = unpack_order_inputs(order_inputs)
+    enc_y,enc_z,enc_A,enc_B,enc_S,xS = encode_order_inputs(pa, pb, input_y, input_z, decx, decy, ONE_EXPONENT) ## USDC-side order
+    storage = store_variables(enc_y,enc_z,enc_A,enc_B,xS, BITS_SIGNIFICANT, BITS_EXPONENT)
     y,z,A,B,S = readStorage(storage)
+    print('\nUser input')
+    print("pa(user)", pa)
+    print("pb(user)", pb)
+    print("y(user) ", input_y)
+    print("z(user) ", input_z)
+
     print('\nStandard variables encoded from user input')
-    print(user_y,user_z,user_A,user_B,user_S)
-    print("A contract encoded", from_int(user_A, BITS_SIGNIFICANT, BITS_EXPONENT))
-    print("B contract encoded", from_int(user_B, BITS_SIGNIFICANT, BITS_EXPONENT))
+    print("A(S)    ", enc_A)
+    print("B(B)    ", enc_B)
+    print("y(y)    ", enc_y)
+    print("z(y_int)", enc_z)
+    # print(user_y,user_z,user_A,user_B,user_S)
+    print("A contract encoded", from_int(enc_A, BITS_SIGNIFICANT, BITS_EXPONENT))
+    print("B contract encoded", from_int(enc_B, BITS_SIGNIFICANT, BITS_EXPONENT))
     print('Standard variables read from contract')
-    print(y,z,A,B,S)
+    # print(y,z,A,B,S)
+    print("A(S)    ", A)
+    print("B(B)    ", B)
+    print("y(y)    ", y)
+    print("z(y_int)", z)
     print("\n")
     return(storage)
 
-def trade_by_source_act(dy, storage):
-    y,z,A,B,s = readStorage(storage)
-    assert dy <= y, 'Insufficient Liquidity'
-    ONE = s
-    temp1 = z * ONE               
-    temp2 = y * A + z * B      
-    temp3 = temp2 - dy * A      
-    scale = mulDiv(temp2, temp3, 2**255)+1
-    temp1s = temp1//scale
-    temp2s = temp2//scale
-    dx = mulDiv(dy*temp1s, temp1, temp2s*temp3)
-    print(dy, dx*temp1s, temp1, temp2s*temp3, dx)
-    return dx
+# def trade_by_source_act(dy, storage):
+#     y,z,A,B,s = readStorage(storage)
+#     assert dy <= y, 'Insufficient Liquidity'
+#     ONE = s
+#     temp1 = z * ONE               
+#     temp2 = y * A + z * B      
+#     temp3 = temp2 - dy * A      
+#     scale = mulDiv(temp2, temp3, 2**255)+1
+#     temp1s = temp1//scale
+#     temp2s = temp2//scale
+#     dx = mulDiv(dy*temp1s, temp1, temp2s*temp3)
+#     print('dy', 'dy*temp1s', 'temp1', 'temp2s*temp3', 'dx')
+#     print(dy, dy*temp1s, temp1, temp2s*temp3, dx)
+#     return dx
 
-def trade_by_target_act(dx, storage):
-    y,z,A,B,s = readStorage(storage)
-    ONE = s
-    temp1 = y * A + z * B               # 177 bits at most; cannot overflow
-    temp2 = temp1 * dx / ONE            # 224 bits at most; can overflow; some precision loss
-    temp3 = temp2 * A + z * z * ONE     # 256 bits at most; can overflow
-    dy = mulDiv(temp1, temp2, temp3)
-    assert dy <= y, 'Insufficient Liquidity'
-    print(dx, temp1, temp2, temp3, dy)
-    return dy
+# def trade_by_target_act(dx, storage):
+#     y,z,A,B,s = readStorage(storage)
+#     ONE = s
+#     temp1 = y * A + z * B               # 177 bits at most; cannot overflow
+#     temp2 = temp1 * dx / ONE            # 224 bits at most; can overflow; some precision loss
+#     temp3 = temp2 * A + z * z * ONE     # 256 bits at most; can overflow
+#     dy = mulDiv(temp1, temp2, temp3)
+#     assert dy <= y, 'Insufficient Liquidity'
+#     print(dx, temp1, temp2, temp3, dy)
+#     return dy
+
+MIN = 0
+MAX = 2**256-1
+
+def check(val): assert MIN <= val <= MAX; return val
+
+def add(a, b): return check(a + b)
+def sub(a, b): return check(a - b)
+def mul(a, b): return check(a * b)
+def mulDivF(a, b, c): return check(a * b // c)
+def mulDivC(a, b, c): return check((a * b + c - 1) // c)
+
+# SCALING_FACTOR = 40
+
+def tradeBySourceAmountSolidity(
+    posDx: any, 
+    storage: any,
+    SCALING_FACTOR,
+) -> int:
+    y,y_int,S,B,s = readStorage(storage)
+    posDx, y, y_int, S, B = [int(val) for val in [posDx, y, y_int, S, B]]
+
+    temp1 = mul(y_int, 2**SCALING_FACTOR)
+    temp2 = add(mul(y, S), mul(y_int, B))
+    temp3 = mul(temp2, posDx)
+
+    truncator = max(mulDivC(temp3, S, MAX), 1)
+
+    temp4 = mulDivC(temp1, temp1, truncator)
+    temp5 = mulDivC(temp3, S, truncator)
+    negDy = mulDivF(temp2, temp3 // truncator, add(temp4, temp5))
+
+    return negDy
+
+def tradeByTargetAmountSolidity(
+    negDy: any, 
+    storage: any,
+    SCALING_FACTOR,
+) -> int:
+    y,y_int,S,B,s = readStorage(storage)
+    negDy, y, y_int, S, B = [int(val) for val in [negDy, y, y_int, S, B]]
+
+    temp1 = mul(y_int, 2**SCALING_FACTOR)
+    temp2 = add(mul(B, y_int), mul(S, y))
+    temp3 = sub(temp2, mul(negDy, S))
+
+    truncator = max(mulDivC(temp2, temp3, MAX), 1)
+    # print('temp1', 'temp2', 'temp3', 'truncator')
+    # print(temp1, temp2, temp3, truncator)
+    temp4 = mulDivC(temp1, temp1, truncator)
+    temp5 = mulDivF(temp2, temp3, truncator)
+    # print('negDy', 'temp4', 'temp5')
+    # print(negDy, temp4, temp5)
+    posDx = mulDivC(negDy, temp4, temp5)
+
+    return posDx
 
 
-def trade(amount, tradeByTarget, storage, order_inputs):
+
+def trade(amount, tradeByTarget, storage, order_inputs, SCALING_FACTOR):
     pa, pb, y, z, decx, decy = unpack_order_inputs(order_inputs)  # just to bring in the correct decimals
     if not tradeByTarget:
-        dy =  trade_by_target_act(amount * 10**decx ,storage)     #getTradeSourceAmount_byTarget(amount * 10**decy ,storage)
+        try:
+            dy = tradeBySourceAmountSolidity(amount * 10**decx , storage, SCALING_FACTOR)
+        except AssertionError as e:
+            print('\n**TradeByTarget Trade Errror**\n')
+            return("AssertionError")
         print('TradeByTarget', amount)
         print('inputAmount', amount * 10**decx, 'outputAmount', dy)
         print("Effective rate    :", (dy / 10**decy)/(amount))
@@ -226,7 +301,11 @@ def trade(amount, tradeByTarget, storage, order_inputs):
         print("\n")
         return(dy / 10**decy)
     else:
-        dx = trade_by_source_act(amount * 10**decy, storage)     #getTradeTargetAmount_bySource(amount * 10**decx ,storage)
+        try:
+            dx = tradeByTargetAmountSolidity(amount * 10**decy, storage, SCALING_FACTOR)
+        except AssertionError as e:
+            print('\n**TradeBySource Trade Errror**\n')
+            return("AssertionError")
         print('TradeBySource', amount)
         print('inputAmount', amount * 10**decy, 'outputAmount', dx)
         print("Effective rate    :", (dx / 10**decx)/(amount))

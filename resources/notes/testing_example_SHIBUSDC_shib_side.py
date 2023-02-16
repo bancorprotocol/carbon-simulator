@@ -3,13 +3,13 @@ from dataclasses import dataclass, asdict
 from testing_base import *
 
 ### INIT ###
-BITS_SIGNIFICANT =  40
-BITS_EXPONENT    =   8
-ONE_EXPONENT     =  48
+BITS_SIGNIFICANT =  48
+BITS_EXPONENT    =   6
+SCALING_FACTOR   =  48
 
 order_inputs = {       # EXAMPLE SHIB/USDC - SHIB-side
-"pa" : 1/0.00001453,      # dy/dx - SHIB per USDC
-"pb" : 1/0.00001555,      # dy/dx - SHIB per USDC
+"pa" : 1/0.00001453,   # dy/dx - SHIB per USDC
+"pb" : 1/0.00001555,   # dy/dx - SHIB per USDC
 "y" : 100000,          # SHIB tokens raw
 "z" : 100000,          # SHIB tokens raw
 "decx" : 6,            # USDC decimality
@@ -22,5 +22,5 @@ tradeByTarget = False
 # amount = 100000       # trade 100000 SHIB for USDC
 # tradeByTarget = True
 
-storage = create_order(order_inputs, BITS_SIGNIFICANT, BITS_EXPONENT, ONE_EXPONENT)
-trade(amount, tradeByTarget, storage, order_inputs)
+storage = create_order(order_inputs, BITS_SIGNIFICANT, BITS_EXPONENT, SCALING_FACTOR)
+trade(amount, tradeByTarget, storage, order_inputs, SCALING_FACTOR)
