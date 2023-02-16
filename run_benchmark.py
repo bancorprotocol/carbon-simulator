@@ -17,8 +17,6 @@ def run(fileName, maxAbsErr, maxRelErr):
     file.write(dumps(tests, indent = 2))
     file.close()
 
-    return tests
-
 run('resources/benchmark/ArbitraryTrade' , '2', '0.0000000005')
 run('resources/benchmark/EthUsdcTrade'   , '0', '0.0000000009')
 run('resources/benchmark/ExtremeSrcTrade', '2', '0.0005326707')
