@@ -1,0 +1,752 @@
+[
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "56",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "456",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "23456",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123455",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "56",
+    "implReturn": "123455",
+    "specReturn": "123456"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "456",
+    "implReturn": "123455",
+    "specReturn": "123456"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "23456",
+    "implReturn": "123455",
+    "specReturn": "123456"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123455",
+    "implReturn": "123455",
+    "specReturn": "123456"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456",
+    "implReturn": "123455",
+    "specReturn": "123456"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "56",
+    "implReturn": "560000000000000000000000",
+    "specReturn": "560000000000000000000000"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "456",
+    "implReturn": "4560000000000000000000000",
+    "specReturn": "4560000000000000000000000"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "23456",
+    "implReturn": "234560000000000000000000000",
+    "specReturn": "234560000000000000000000000"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123455",
+    "implReturn": "1234550000000000000000000000",
+    "specReturn": "1234550000000000000000000000"
+  },
+  {
+    "liquidity": "123456",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456",
+    "implReturn": "1234560000000000000000000000",
+    "specReturn": "1234560000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "45678",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1012345678",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "567891012345678",
+    "implReturn": "0",
+    "specReturn": "0.000000056789"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012345677",
+    "implReturn": "0",
+    "specReturn": "0.000123456789"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012345678",
+    "implReturn": "0",
+    "specReturn": "0.000123456789"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "45678",
+    "implReturn": "1234567887675601789",
+    "specReturn": "1234567887675601789.477784100859"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1012345678",
+    "implReturn": "1234567891012195120",
+    "specReturn": "1234567891012195120.941339976196"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "567891012345678",
+    "implReturn": "1234567891012345677",
+    "specReturn": "1234567891012345677.731734303873"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012345677",
+    "implReturn": "1234567891012345677",
+    "specReturn": "1234567891012345678"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012345678",
+    "implReturn": "1234567891012345677",
+    "specReturn": "1234567891012345678"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "45678",
+    "implReturn": "456780000000000000000000000",
+    "specReturn": "456780000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1012345678",
+    "implReturn": "10123456780000000000000000000000",
+    "specReturn": "10123456780000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "567891012345678",
+    "implReturn": "5678910123456780000000000000000000000",
+    "specReturn": "5678910123456780000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012345677",
+    "implReturn": "12345678910123456770000000000000000000000",
+    "specReturn": "12345678910123456770000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012345678",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012345678",
+    "implReturn": "12345678910123456780000000000000000000000",
+    "specReturn": "12345678910123456780000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1012",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "7891012",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "4567891012",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891011",
+    "implReturn": "0",
+    "specReturn": "0.000000000123"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012",
+    "implReturn": "0",
+    "specReturn": "0.000000000123"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1012",
+    "implReturn": "1234567891011",
+    "specReturn": "1234567891011.849391514203"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "7891012",
+    "implReturn": "1234567891011",
+    "specReturn": "1234567891011.999980685011"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "4567891012",
+    "implReturn": "1234567891011",
+    "specReturn": "1234567891011.999999966757"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891011",
+    "implReturn": "1234567891011",
+    "specReturn": "1234567891012"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012",
+    "implReturn": "1234567891011",
+    "specReturn": "1234567891012"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1012",
+    "implReturn": "10120000000000000000000000",
+    "specReturn": "10120000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "7891012",
+    "implReturn": "78910120000000000000000000000",
+    "specReturn": "78910120000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "4567891012",
+    "implReturn": "45678910120000000000000000000000",
+    "specReturn": "45678910120000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891011",
+    "implReturn": "12345678910110000000000000000000000",
+    "specReturn": "12345678910110000000000000000000000"
+  },
+  {
+    "liquidity": "1234567891012",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "1234567891012",
+    "implReturn": "12345678910120000000000000000000000",
+    "specReturn": "12345678910120000000000000000000000"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "9101234",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "3456789101234",
+    "implReturn": "0",
+    "specReturn": "0.000000000346"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "78910123456789101234",
+    "implReturn": "0",
+    "specReturn": "0.007891012346"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "12345678910123456789101233",
+    "implReturn": "1233",
+    "specReturn": "1234.567891012346"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "12345678910123456789101234",
+    "implReturn": "1233",
+    "specReturn": "1234.567891012346"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "9101234",
+    "implReturn": "12344004465585526558902964",
+    "specReturn": "12344004465585526558902965.06176126205"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "3456789101234",
+    "implReturn": "12345678905714284483999339",
+    "specReturn": "12345678905714284483999340.000635698993"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "78910123456789101234",
+    "implReturn": "12345678910123456595951347",
+    "specReturn": "12345678910123456595951347.932109170395"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "12345678910123456789101233",
+    "implReturn": "12345678910123456789101233",
+    "specReturn": "12345678910123456789101234"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "12345678910123456789101234",
+    "implReturn": "12345678910123456789101233",
+    "specReturn": "12345678910123456789101234"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "9101234",
+    "implReturn": "91012340000000000000000000000",
+    "specReturn": "91012340000000000000000000000"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "3456789101234",
+    "implReturn": "34567891012340000000000000000000000",
+    "specReturn": "34567891012340000000000000000000000"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "78910123456789101234",
+    "implReturn": "789101234567891012340000000000000000000000",
+    "specReturn": "789101234567891012340000000000000000000000"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "12345678910123456789101233",
+    "implReturn": "123456789101234567891012330000000000000000000000",
+    "specReturn": "123456789101234567891012330000000000000000000000"
+  },
+  {
+    "liquidity": "12345678910123456789101234",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "12345678910123456789101234",
+    "implReturn": "123456789101234567891012340000000000000000000000",
+    "specReturn": "123456789101234567891012340000000000000000000000"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "345678910",
+    "implReturn": "0",
+    "specReturn": "0"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "67891012345678910",
+    "implReturn": "0",
+    "specReturn": "0.000006789101"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "9101234567891012345678910",
+    "implReturn": "909",
+    "specReturn": "910.123456789101"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456789101234567891012345678909",
+    "implReturn": "12339102729",
+    "specReturn": "12345678910.123456789101"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "0.0000000000000000000001",
+    "marginalRate": "0.0000000000000000000001",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456789101234567891012345678910",
+    "implReturn": "12339102729",
+    "specReturn": "12345678910.123456789101"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "345678910",
+    "implReturn": "3362635337642659335341516213962",
+    "specReturn": "3362635337642659335341516216402.54437746953"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "67891012345678910",
+    "implReturn": "123456766651170152930315846910822",
+    "specReturn": "123456766651170152930315850199349.473992799244"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "9101234567891012345678910",
+    "implReturn": "123456789101234400423867771152784",
+    "specReturn": "123456789101234400423867774441312.443904893221"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456789101234567891012345678909",
+    "implReturn": "123456789101234567891012342390381",
+    "specReturn": "123456789101234567891012345678910"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "0.0000000000000000000001",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456789101234567891012345678910",
+    "implReturn": "123456789101234567891012342390381",
+    "specReturn": "123456789101234567891012345678910"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "345678910",
+    "implReturn": "3456789100000000000000000000000",
+    "specReturn": "3456789100000000000000000000000"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "67891012345678910",
+    "implReturn": "678910123456789100000000000000000000000",
+    "specReturn": "678910123456789100000000000000000000000"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "9101234567891012345678910",
+    "implReturn": "91012345678910123456789100000000000000000000000",
+    "specReturn": "91012345678910123456789100000000000000000000000"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456789101234567891012345678909",
+    "implReturn": "1234567891012345678910123456789090000000000000000000000",
+    "specReturn": "1234567891012345678910123456789090000000000000000000000"
+  },
+  {
+    "liquidity": "123456789101234567891012345678910",
+    "lowestRate": "10000000000000000000000",
+    "highestRate": "10000000000000000000000",
+    "marginalRate": "10000000000000000000000",
+    "tradeBy": "SourceAmount",
+    "inputAmount": "123456789101234567891012345678910",
+    "implReturn": "1234567891012345678910123456789100000000000000000000000",
+    "specReturn": "1234567891012345678910123456789100000000000000000000000"
+  }
+]
