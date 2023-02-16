@@ -16,7 +16,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "4560000000000000000",
-    "implReturn": "4558845672",
+    "implReturn": "4558845673",
     "specReturn": "4558845674.494074906903"
   },
   {
@@ -26,7 +26,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "7890000000000000000",
-    "implReturn": "7888002710",
+    "implReturn": "7888002712",
     "specReturn": "7888002713.104879608654"
   },
   {
@@ -66,7 +66,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "1230000000000000000",
-    "implReturn": "1844299518",
+    "implReturn": "1844299519",
     "specReturn": "1844299519.397733575834"
   },
   {
@@ -76,7 +76,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "4560000000000000000",
-    "implReturn": "6837403094",
+    "implReturn": "6837403095",
     "specReturn": "6837403096.303792768947"
   },
   {
@@ -86,7 +86,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "7890000000000000000",
-    "implReturn": "11830506669",
+    "implReturn": "11830506671",
     "specReturn": "11830506673.20985196206"
   },
   {
@@ -96,7 +96,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "1230000000",
-    "implReturn": "1230311522245753145",
+    "implReturn": "1230311521969275330",
     "specReturn": "1230311521834975305.630674079994"
   },
   {
@@ -106,7 +106,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "4560000000",
-    "implReturn": "4561154911740172623",
+    "implReturn": "4561154910715181699",
     "specReturn": "4561154910217469425.752742930708"
   },
   {
@@ -116,7 +116,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "7890000000",
-    "implReturn": "7891998301234847288",
+    "implReturn": "7891998299461343255",
     "specReturn": "7891998298599963545.874811781422"
   },
   {
@@ -126,7 +126,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "1230000000",
-    "implReturn": "984251237896790783",
+    "implReturn": "984251237896955235",
     "specReturn": "984251237833112731.238739548864"
   },
   {
@@ -136,7 +136,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "4560000000",
-    "implReturn": "3648931418544776737",
+    "implReturn": "3648931418544753998",
     "specReturn": "3648931418308125247.519229547008"
   },
   {
@@ -146,7 +146,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "7890000000",
-    "implReturn": "6313611599192762690",
+    "implReturn": "6313611599192760192",
     "specReturn": "6313611598783137763.799719545151"
   },
   {
@@ -156,7 +156,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "1230000000",
-    "implReturn": "820207681485410765",
+    "implReturn": "820207681334915305",
     "specReturn": "820207681223316870.420449386662"
   },
   {
@@ -166,7 +166,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "4560000000",
-    "implReturn": "3040769941116877152",
+    "implReturn": "3040769940558942762",
     "specReturn": "3040769940144979617.168495287139"
   },
   {
@@ -176,7 +176,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "7890000000",
-    "implReturn": "5261332200748343539",
+    "implReturn": "5261332199782970220",
     "specReturn": "5261332199066642363.916541187615"
   },
   {
@@ -366,7 +366,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "4920000000000000000",
-    "implReturn": "4915021952",
+    "implReturn": "4915021954",
     "specReturn": "4915021954.582846094444"
   },
   {
@@ -376,7 +376,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "18240000000000000000",
-    "implReturn": "18221544801",
+    "implReturn": "18221544805",
     "specReturn": "18221544807.233966008669"
   },
   {
@@ -386,7 +386,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "31560000000000000000",
-    "implReturn": "31528067649",
+    "implReturn": "31528067656",
     "specReturn": "31528067659.885085922894"
   },
   {
@@ -426,7 +426,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "4920000000000000000",
-    "implReturn": "7368805058",
+    "implReturn": "7368805060",
     "specReturn": "7368805061.318842437639"
   },
   {
@@ -436,7 +436,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "18240000000000000000",
-    "implReturn": "27318496804",
+    "implReturn": "27318496809",
     "specReturn": "27318496812.694245134663"
   },
   {
@@ -446,7 +446,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "31560000000000000000",
-    "implReturn": "47268188549",
+    "implReturn": "47268188557",
     "specReturn": "47268188564.069647831686"
   },
   {
@@ -456,7 +456,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "4920000000",
-    "implReturn": "4924988141041512680",
+    "implReturn": "4924988139934339666",
     "specReturn": "4924988139394573939.563320611497"
   },
   {
@@ -466,7 +466,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "18240000000",
-    "implReturn": "18258492620445871680",
+    "implReturn": "18258492616341230264",
     "specReturn": "18258492614340859483.259139827988"
   },
   {
@@ -476,7 +476,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "31560000000",
-    "implReturn": "31591997099851237178",
+    "implReturn": "31591997092749127359",
     "specReturn": "31591997089287145026.954959044479"
   },
   {
@@ -486,7 +486,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "4920000000",
-    "implReturn": "3940022886994444944",
+    "implReturn": "3940022886995093572",
     "specReturn": "3940022886736347901.021027046219"
   },
   {
@@ -496,7 +496,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "18240000000",
-    "implReturn": "14606914117640217083",
+    "implReturn": "14606914117640127397",
     "specReturn": "14606914116681094657.443807585984"
   },
   {
@@ -506,7 +506,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "31560000000",
-    "implReturn": "25273805348285989223",
+    "implReturn": "25273805348285979371",
     "specReturn": "25273805346625841413.866588125749"
   },
   {
@@ -516,7 +516,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "4920000000",
-    "implReturn": "3283325427307567852",
+    "implReturn": "3283325426704899198",
     "specReturn": "3283325426263049293.042213740998"
   },
   {
@@ -526,7 +526,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "18240000000",
-    "implReturn": "12172328413433850959",
+    "implReturn": "12172328411199567171",
     "specReturn": "12172328409560572988.839426551992"
   },
   {
@@ -536,7 +536,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "31560000000",
-    "implReturn": "21061331399560134066",
+    "implReturn": "21061331395694235143",
     "specReturn": "21061331392858096684.636639362986"
   },
   {
@@ -726,7 +726,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "12300000000000000000",
-    "implReturn": "12268934360",
+    "implReturn": "12268934363",
     "specReturn": "12268934364.35776972973"
   },
   {
@@ -736,7 +736,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "45600000000000000000",
-    "implReturn": "45484829823",
+    "implReturn": "45484829833",
     "specReturn": "45484829838.594658510219"
   },
   {
@@ -746,7 +746,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "78900000000000000000",
-    "implReturn": "78700725286",
+    "implReturn": "78700725304",
     "specReturn": "78700725312.831547290708"
   },
   {
@@ -786,7 +786,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "12300000000000000000",
-    "implReturn": "18380190471",
+    "implReturn": "18380190475",
     "specReturn": "18380190477.414453462363"
   },
   {
@@ -796,7 +796,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "45600000000000000000",
-    "implReturn": "68141193943",
+    "implReturn": "68141193956",
     "specReturn": "68141193965.048705519006"
   },
   {
@@ -806,7 +806,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "78900000000000000000",
-    "implReturn": "117902197415",
+    "implReturn": "117902197437",
     "specReturn": "117902197452.682957575648"
   },
   {
@@ -816,7 +816,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "12300000000",
-    "implReturn": "12331223359025373281",
+    "implReturn": "12331223356251112749",
     "specReturn": "12331223354888816289.142879670721"
   },
   {
@@ -826,7 +826,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "45600000000",
-    "implReturn": "45715754891994776674",
+    "implReturn": "45715754881709713239",
     "specReturn": "45715754876660977462.18823682804"
   },
   {
@@ -836,7 +836,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "78900000000",
-    "implReturn": "79100286424966624722",
+    "implReturn": "79100286407170758384",
     "specReturn": "79100286398433138635.233593985358"
   },
   {
@@ -846,7 +846,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "12300000000",
-    "implReturn": "9865181649059896469",
+    "implReturn": "9865181649061471933",
     "specReturn": "9865181648397653915.799321569153"
   },
   {
@@ -856,7 +856,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "45600000000",
-    "implReturn": "36573356357495873313",
+    "implReturn": "36573356357495655473",
     "specReturn": "36573356355035204761.012118988078"
   },
   {
@@ -866,7 +866,7 @@
     "marginalRate": "0.00000000125",
     "tradeBy": "TargetAmount",
     "inputAmount": "78900000000",
-    "implReturn": "63281531065931850156",
+    "implReturn": "63281531065931826228",
     "specReturn": "63281531061672755606.224916407004"
   },
   {
@@ -876,7 +876,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "12300000000",
-    "implReturn": "8220815572517791523",
+    "implReturn": "8220815571007675363",
     "specReturn": "8220815569925877526.095253113814"
   },
   {
@@ -886,7 +886,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "45600000000",
-    "implReturn": "30477169927385258012",
+    "implReturn": "30477169921786778592",
     "specReturn": "30477169917773984974.79215788536"
   },
   {
@@ -896,7 +896,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "78900000000",
-    "implReturn": "52733524282252724501",
+    "implReturn": "52733524272565881821",
     "specReturn": "52733524265622092423.489062656905"
   },
   {
@@ -1096,7 +1096,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "4560000000000000000",
-    "implReturn": "4559999998",
+    "implReturn": "4559999999",
     "specReturn": "4560000000"
   },
   {
@@ -1106,7 +1106,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "7890000000000000000",
-    "implReturn": "7889999997",
+    "implReturn": "7889999999",
     "specReturn": "7890000000"
   },
   {
@@ -1156,7 +1156,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "4560000000000000000",
-    "implReturn": "6839999997",
+    "implReturn": "6839999999",
     "specReturn": "6840000000"
   },
   {
@@ -1166,7 +1166,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "7890000000000000000",
-    "implReturn": "11834999996",
+    "implReturn": "11834999998",
     "specReturn": "11835000000"
   },
   {
@@ -1176,7 +1176,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "1230000000",
-    "implReturn": "1230000000410475314",
+    "implReturn": "1230000000134102504",
     "specReturn": "1230000000000000000"
   },
   {
@@ -1186,7 +1186,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "4560000000",
-    "implReturn": "4560000001521762140",
+    "implReturn": "4560000000497160500",
     "specReturn": "4560000000000000000"
   },
   {
@@ -1196,7 +1196,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "7890000000",
-    "implReturn": "7890000002633048965",
+    "implReturn": "7890000000860218496",
     "specReturn": "7890000000000000000"
   },
   {
@@ -1236,7 +1236,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "1230000000",
-    "implReturn": "820000000262501619",
+    "implReturn": "820000000112063315",
     "specReturn": "820000000000000000"
   },
   {
@@ -1246,7 +1246,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "4560000000",
-    "implReturn": "3040000000973176732",
+    "implReturn": "3040000000415454241",
     "specReturn": "3040000000000000000"
   },
   {
@@ -1256,7 +1256,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "7890000000",
-    "implReturn": "5260000001683851845",
+    "implReturn": "5260000000718845167",
     "specReturn": "5260000000000000000"
   },
   {
@@ -1446,7 +1446,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "4920000000000000000",
-    "implReturn": "4919999998",
+    "implReturn": "4919999999",
     "specReturn": "4920000000"
   },
   {
@@ -1456,7 +1456,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "18240000000000000000",
-    "implReturn": "18239999993",
+    "implReturn": "18239999998",
     "specReturn": "18240000000"
   },
   {
@@ -1466,7 +1466,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "31560000000000000000",
-    "implReturn": "31559999989",
+    "implReturn": "31559999996",
     "specReturn": "31560000000"
   },
   {
@@ -1506,7 +1506,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "4920000000000000000",
-    "implReturn": "7379999997",
+    "implReturn": "7379999998",
     "specReturn": "7380000000"
   },
   {
@@ -1516,7 +1516,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "18240000000000000000",
-    "implReturn": "27359999991",
+    "implReturn": "27359999996",
     "specReturn": "27360000000"
   },
   {
@@ -1526,7 +1526,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "31560000000000000000",
-    "implReturn": "47339999984",
+    "implReturn": "47339999993",
     "specReturn": "47340000000"
   },
   {
@@ -1536,7 +1536,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "4920000000",
-    "implReturn": "4920000001641901256",
+    "implReturn": "4920000000536410013",
     "specReturn": "4920000000000000000"
   },
   {
@@ -1546,7 +1546,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "18240000000",
-    "implReturn": "18240000006087048558",
+    "implReturn": "18240000001988641999",
     "specReturn": "18240000000000000000"
   },
   {
@@ -1556,7 +1556,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "31560000000",
-    "implReturn": "31560000010532195860",
+    "implReturn": "31560000003440873984",
     "specReturn": "31560000000000000000"
   },
   {
@@ -1596,7 +1596,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "4920000000",
-    "implReturn": "3280000001050006474",
+    "implReturn": "3280000000448253260",
     "specReturn": "3280000000000000000"
   },
   {
@@ -1606,7 +1606,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "18240000000",
-    "implReturn": "12160000003892706925",
+    "implReturn": "12160000001661816964",
     "specReturn": "12160000000000000000"
   },
   {
@@ -1616,7 +1616,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "31560000000",
-    "implReturn": "21040000006735407377",
+    "implReturn": "21040000002875380667",
     "specReturn": "21040000000000000000"
   },
   {
@@ -1806,7 +1806,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "12300000000000000000",
-    "implReturn": "12299999995",
+    "implReturn": "12299999998",
     "specReturn": "12300000000"
   },
   {
@@ -1816,7 +1816,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "45600000000000000000",
-    "implReturn": "45599999984",
+    "implReturn": "45599999995",
     "specReturn": "45600000000"
   },
   {
@@ -1826,7 +1826,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "SourceAmount",
     "inputAmount": "78900000000000000000",
-    "implReturn": "78899999973",
+    "implReturn": "78899999991",
     "specReturn": "78900000000"
   },
   {
@@ -1866,7 +1866,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "12300000000000000000",
-    "implReturn": "18449999994",
+    "implReturn": "18449999997",
     "specReturn": "18450000000"
   },
   {
@@ -1876,7 +1876,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "45600000000000000000",
-    "implReturn": "68399999978",
+    "implReturn": "68399999990",
     "specReturn": "68400000000"
   },
   {
@@ -1886,7 +1886,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "SourceAmount",
     "inputAmount": "78900000000000000000",
-    "implReturn": "118349999962",
+    "implReturn": "118349999983",
     "specReturn": "118350000000"
   },
   {
@@ -1896,7 +1896,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "12300000000",
-    "implReturn": "12300000004104753140",
+    "implReturn": "12300000001341025032",
     "specReturn": "12300000000000000000"
   },
   {
@@ -1906,7 +1906,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "45600000000",
-    "implReturn": "45600000015217621394",
+    "implReturn": "45600000004971604996",
     "specReturn": "45600000000000000000"
   },
   {
@@ -1916,7 +1916,7 @@
     "marginalRate": "0.000000001",
     "tradeBy": "TargetAmount",
     "inputAmount": "78900000000",
-    "implReturn": "78900000026330489649",
+    "implReturn": "78900000008602184960",
     "specReturn": "78900000000000000000"
   },
   {
@@ -1956,7 +1956,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "12300000000",
-    "implReturn": "8200000002625016183",
+    "implReturn": "8200000001120633150",
     "specReturn": "8200000000000000000"
   },
   {
@@ -1966,7 +1966,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "45600000000",
-    "implReturn": "30400000009731767313",
+    "implReturn": "30400000004154542408",
     "specReturn": "30400000000000000000"
   },
   {
@@ -1976,7 +1976,7 @@
     "marginalRate": "0.0000000015",
     "tradeBy": "TargetAmount",
     "inputAmount": "78900000000",
-    "implReturn": "52600000016838518442",
+    "implReturn": "52600000007188451666",
     "specReturn": "52600000000000000000"
   },
   {

@@ -4,7 +4,7 @@ ONE = 2 ** 48
 
 def encode(rate):
     data = int(Decimal(rate).sqrt() * ONE)
-    exponent = len(bin(data // ONE)) - 2
+    exponent = len(bin(data // ONE).lstrip('0b').lstrip('0'))
     return (data >> exponent) << exponent
 
 def trade(test):
