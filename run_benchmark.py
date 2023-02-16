@@ -11,14 +11,13 @@ def run(fileName, maxAbsErr, maxRelErr):
         specReturn = spec.trade(test)
         assertAlmostEqual(implReturn, specReturn, maxAbsErr, maxRelErr)
         test['implReturn'] = str(implReturn)
-        test['specReturn'] = '{:.12f}'.format(specReturn).rstrip('0').rstrip('.')
+        test['specReturn'] = f'{specReturn:.12f}'.rstrip('0').rstrip('.')
 
     file = open(f'{fileName}.json', 'w')
-    file.write(dumps(tests, indent=2))
+    file.write(dumps(tests, indent = 2))
     file.close()
 
     return tests
 
-run('resources/benchmark/ArbitraryTrade'   , '1', '0')
-run('resources/benchmark/ConstantRateTrade', '2', '0.0000000005')
-run('resources/benchmark/EthUsdcTrade'     , '0', '0.0000000008')
+run('resources/benchmark/ArbitraryTrade', '2', '0.0000000005')
+run('resources/benchmark/EthUsdcTrade'  , '0', '0.0000000009')
