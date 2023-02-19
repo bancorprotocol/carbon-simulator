@@ -49,7 +49,7 @@ def tradeBySourceAmount(x, y, z, A, B):
     B = decodeFloat(B)
 
     if (A == 0):
-        return mulDivC(x, mul(B, B), mul(ONE, ONE))
+        return mulDivF(x, mul(B, B), mul(ONE, ONE))
 
     temp1 = mul(z, ONE)
     temp2 = add(mul(y, A), mul(z, B))
