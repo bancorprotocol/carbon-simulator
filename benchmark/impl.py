@@ -1,45 +1,88 @@
 from . import Decimal
 
-Amount = int
+ONE = 2 ** 48
+MAX = 2 ** 256 - 1
 
-ONE = 2 ** 32
+def check(val): assert 0 <= val <= MAX; return val
 
-def encode(x): return x.sqrt() * ONE
-def decode(x): return (x / ONE) ** 2
+def add(a, b): return check(a + b)
+def sub(a, b): return check(a - b)
+def mul(a, b): return check(a * b)
+def mulDivF(a, b, c): return check(a * b // c)
+def mulDivC(a, b, c): return check((a * b + c - 1) // c)
 
-def mulDivF(x, y, z): return x * y // z
-def mulDivC(x, y, z): return (x * y + z - 1) // z
+def bitLength(value):
+    return len(bin(value).lstrip('0b')) if value > 0 else 0
 
-class Order:
-    def __init__(self, order):
-        liq = int(Decimal(order['liquidity']))
-        min = int(encode(Decimal(order['lowestRate'])))
-        max = int(encode(Decimal(order['highestRate'])))
-        mid = int(encode(Decimal(order['marginalRate'])))
-        self.y = liq
-        self.z = liq * (max - min) // (mid - min)
-        self.A = max - min
-        self.B = min
-    def __iter__(self):
-        y = Decimal(self.y)
-        z = Decimal(self.z)
-        A = Decimal(self.A)
-        B = Decimal(self.B)
-        yield 'liquidity'    , y
-        yield 'lowestRate'   , decode(B)
-        yield 'highestRate'  , decode(B + A)
-        yield 'marginalRate' , decode(B + A * y / z)
+def encodeRate(value):
+    data = int(Decimal(value).sqrt() * ONE)
+    length = bitLength(data // ONE)
+    return (data >> length) << length
 
-def tradeBySourceAmount(x, order):
-    y, z, A, B = [order.y, order.z, order.A, order.B]
-    temp1 = y * A + z * B
-    temp2 = temp1 * x // ONE
-    temp3 = temp2 * A + z * z * ONE
-    return x, mulDivF(temp1, temp2, temp3)
+def encodeFloat(value):
+    exponent = bitLength(value // ONE)
+    mantissa = value >> exponent
+    return mantissa | (exponent * ONE)
 
-def tradeByTargetAmount(x, order):
-    y, z, A, B = [order.y, order.z, order.A, order.B]
-    temp1 = z * ONE
-    temp2 = y * A + z * B
-    temp3 = temp2 - x * A
-    return mulDivC(x * temp1, temp1, temp2 * temp3), x
+def decodeFloat(value):
+    return (value % ONE) << (value // ONE)
+
+def trade(test):
+    y = int(test['liquidity'])
+    x = int(test['inputAmount'])
+    L = encodeRate(test['lowestRate'])
+    H = encodeRate(test['highestRate'])
+    M = encodeRate(test['marginalRate'])
+    f = globals()['tradeBy' + test['tradeBy']]
+    z = y if H == M else y * (H - L) // (M - L)
+    A = encodeFloat(H - L)
+    B = encodeFloat(L)
+    return f(x, y, z, A, B)
+
+#
+#      x * (A * y + B * z) ^ 2
+# ---------------------------------
+#  A * x * (A * y + B * z) + z ^ 2
+#
+def tradeBySourceAmount(x, y, z, A, B):
+    A = decodeFloat(A)
+    B = decodeFloat(B)
+
+    if (A == 0):
+        return mulDivC(x, mul(B, B), mul(ONE, ONE))
+
+    temp1 = mul(z, ONE)
+    temp2 = add(mul(y, A), mul(z, B))
+    temp3 = mul(temp2, x)
+
+    factor1 = mulDivC(temp1, temp1, MAX)
+    factor2 = mulDivC(temp3, A, MAX)
+    factor = max(factor1, factor2)
+
+    temp4 = mulDivC(temp1, temp1, factor)
+    temp5 = mulDivC(temp3, A, factor)
+    return mulDivF(temp2, temp3 // factor, add(temp4, temp5))
+
+#
+#                  x * z ^ 2
+# -------------------------------------------
+#  (A * y + B * z) * (A * y + B * z - A * x)
+#
+def tradeByTargetAmount(x, y, z, A, B):
+    A = decodeFloat(A)
+    B = decodeFloat(B)
+
+    if (A == 0):
+        return mulDivC(x, mul(ONE, ONE), mul(B, B))
+
+    temp1 = mul(z, ONE)
+    temp2 = add(mul(y, A), mul(z, B))
+    temp3 = sub(temp2, mul(x, A))
+
+    factor1 =  mulDivC(temp1, temp1, MAX)
+    factor2 = mulDivC(temp2, temp3, MAX)
+    factor = max(factor1, factor2)
+
+    temp4 = mulDivC(temp1, temp1, factor)
+    temp5 = mulDivF(temp2, temp3, factor)
+    return mulDivC(x, temp4, temp5)

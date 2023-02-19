@@ -1,35 +1,22 @@
 from . import Decimal
 
-Amount = Decimal
+def encodeRate(value):
+    return Decimal(value).sqrt()
 
-class Order:
-    def __init__(self, order):
-        liq = Decimal(order['liquidity'])
-        min = Decimal(order['lowestRate']).sqrt()
-        max = Decimal(order['highestRate']).sqrt()
-        mid = Decimal(order['marginalRate']).sqrt()
-        self.y = liq
-        self.z = liq * (max - min) / (mid - min)
-        self.A = max - min
-        self.B = min
-    def __iter__(self):
-        y = self.y
-        z = self.z
-        A = self.A
-        B = self.B
-        yield 'liquidity'    , y
-        yield 'lowestRate'   , B ** 2
-        yield 'highestRate'  , (B + A) ** 2
-        yield 'marginalRate' , (B + A * y / z) ** 2
+def trade(test):
+    y = Decimal(test['liquidity'])
+    x = Decimal(test['inputAmount'])
+    L = encodeRate(test['lowestRate'])
+    M = encodeRate(test['marginalRate'])
+    f = globals()['tradeBy' + test['tradeBy']]
+    return f(x, y, L, M)
 
-def tradeBySourceAmount(x, order):
-    y, z, A, B = [order.y, order.z, order.A, order.B]
-    n = x * (A * y + B * z) ** 2
-    d = A * x * (A * y + B * z) + z ** 2
-    return x, n / d
+def tradeBySourceAmount(x, y, L, M):
+    n = M * M * x * y
+    d = M * (M - L) * x + y
+    return n / d
 
-def tradeByTargetAmount(x, order):
-    y, z, A, B = [order.y, order.z, order.A, order.B]
-    n = x * z ** 2
-    d = (A * y + B * z) * (A * y + B * z - A * x)
-    return n / d, x
+def tradeByTargetAmount(x, y, L, M):
+    n = x * y
+    d = M * (L - M) * x + M * M * y
+    return n / d
