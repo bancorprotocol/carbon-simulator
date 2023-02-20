@@ -35,8 +35,8 @@ def trade(test):
     M = encodeRate(test['marginalRate'])
     f = globals()['tradeBy' + test['tradeBy']]
     z = y if H == M else y * (H - L) // (M - L)
-    A = encodeFloat(H - L)
-    B = encodeFloat(L)
+    A = decodeFloat(encodeFloat(H - L))
+    B = decodeFloat(encodeFloat(L))
     return f(x, y, z, A, B)
 
 #
@@ -45,9 +45,6 @@ def trade(test):
 #  A * x * (A * y + B * z) + z ^ 2
 #
 def tradeBySourceAmount(x, y, z, A, B):
-    A = decodeFloat(A)
-    B = decodeFloat(B)
-
     if (A == 0):
         return mulDivF(x, mul(B, B), mul(ONE, ONE))
 
@@ -69,9 +66,6 @@ def tradeBySourceAmount(x, y, z, A, B):
 #  (A * y + B * z) * (A * y + B * z - A * x)
 #
 def tradeByTargetAmount(x, y, z, A, B):
-    A = decodeFloat(A)
-    B = decodeFloat(B)
-
     if (A == 0):
         return mulDivC(x, mul(ONE, ONE), mul(B, B))
 
