@@ -1,5 +1,5 @@
-from benchmark import match
 from json import loads, dumps
+from benchmark.match import impl
 
 def run(fileName):
     file = open(f'{fileName}.json', 'r')
@@ -7,9 +7,9 @@ def run(fileName):
     file.close()
 
     for test in tests:
-        method = getattr(match, test['method'])
+        method = getattr(impl, test['method'])
         amount = int(test['amount'])
-        orders = {id: match.encodeOrder(match.DecodedOrder(test['orders'][id])) for id in range(len(test['orders']))}
+        orders = {id: impl.encodeOrder(impl.DecodedOrder(test['orders'][id])) for id in range(len(test['orders']))}
         actions = method(amount, orders)
 
         formatString = '- order {{:>{}}}: input = {{:>{}}}, output = {{:>{}}}'.format(
