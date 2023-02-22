@@ -35,6 +35,6 @@ def run(fileName):
     file.write(dumps(tests, indent = 2))
     file.close()
 
-run('resources/benchmark/ArbitraryMatch')
-run('resources/benchmark/BigPoolMatch')
-run('resources/benchmark/EthUsdcMatch')
+run('resources/benchmark/match/ArbitraryMatch')
+run('resources/benchmark/match/BigPoolMatch')
+run('resources/benchmark/match/EthUsdcMatch')
