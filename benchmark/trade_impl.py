@@ -22,6 +22,9 @@ def encodeRate(value):
     length = bitLength(data // ONE)
     return (data >> length) << length
 
+def decodeRate(value):
+  return (value / ONE) ** 2
+
 def encodeFloat(value):
     exponent = bitLength(value // ONE)
     mantissa = value >> exponent

@@ -1,5 +1,5 @@
 from json import loads, dumps
-from benchmark import impl, spec, assertAlmostEqual
+from benchmark import trade_impl, trade_spec, assertAlmostEqual
 
 def run(fileName, maxAbsErr, maxRelErr):
     file = open(f'{fileName}.json', 'r')
@@ -7,11 +7,12 @@ def run(fileName, maxAbsErr, maxRelErr):
     file.close()
 
     for test in tests:
-        implReturn = impl.trade(test)
-        specReturn = spec.trade(test)
+        implReturn = trade_impl.trade(test)
+        specReturn = trade_spec.trade(test)
         assertAlmostEqual(implReturn, specReturn, maxAbsErr, maxRelErr)
         test['implReturn'] = str(implReturn)
         test['specReturn'] = f'{specReturn:.12f}'.rstrip('0').rstrip('.')
+        print(fileName.split('/')[-1], test['implReturn'], test['specReturn'])
 
     file = open(f'{fileName}.json', 'w')
     file.write(dumps(tests, indent = 2))
