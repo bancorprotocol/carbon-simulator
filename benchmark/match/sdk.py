@@ -1,5 +1,5 @@
 from functools import cmp_to_key
-from benchmark.trade_impl import *
+from benchmark.trade.impl import *
 
 class DecodedOrder:
     def __init__(self, order: dict):

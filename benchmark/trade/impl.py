@@ -1,4 +1,4 @@
-from . import Decimal
+from .. import Decimal
 
 ONE = 2 ** 48
 

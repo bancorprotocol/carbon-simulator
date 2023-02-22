@@ -1,4 +1,4 @@
-from . import Decimal
+from .. import Decimal
 
 def encodeRate(value):
     return Decimal(value).sqrt()
