@@ -1,20 +1,6 @@
 from functools import cmp_to_key
 from benchmark.trade.impl import *
 
-class DecodedOrder:
-    def __init__(self, order: dict):
-        self.liquidity = Decimal(order['liquidity'])
-        self.lowestRate = Decimal(order['lowestRate'])
-        self.highestRate = Decimal(order['highestRate'])
-        self.marginalRate = Decimal(order['marginalRate'])
-
-class EncodedOrder:
-    def __init__(self, order: dict):
-        self.y = int(order['y'])
-        self.z = int(order['z'])
-        self.A = int(order['A'])
-        self.B = int(order['B'])
-
 class Rate:
     def __init__(self, input, output):
         self.input = input
@@ -31,7 +17,21 @@ class Action:
         self.input = input
         self.output = output
 
-def encodeOrder(order: DecodedOrder) -> EncodedOrder:
+class EncodedOrder:
+    def __init__(self, order):
+        self.y = int(order['y'])
+        self.z = int(order['z'])
+        self.A = int(order['A'])
+        self.B = int(order['B'])
+
+class DecodedOrder:
+    def __init__(self, order):
+        self.liquidity = Decimal(order['liquidity'])
+        self.lowestRate = Decimal(order['lowestRate'])
+        self.highestRate = Decimal(order['highestRate'])
+        self.marginalRate = Decimal(order['marginalRate'])
+
+def encodeOrder(order):
     y = int(order.liquidity)
     L = int(encodeRate(order.lowestRate))
     H = int(encodeRate(order.highestRate))
@@ -43,7 +43,7 @@ def encodeOrder(order: DecodedOrder) -> EncodedOrder:
         'B' : encodeFloat(L),
     })
 
-def decodeOrder(order: EncodedOrder) -> DecodedOrder:
+def decodeOrder(order):
     y = Decimal(order.y)
     z = Decimal(order.z)
     A = Decimal(decodeFloat(order.A))
