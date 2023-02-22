@@ -73,7 +73,7 @@ def tradeByTargetAmount(x, y, z, A, B):
     temp2 = add(mul(y, A), mul(z, B))
     temp3 = sub(temp2, mul(x, A))
 
-    factor1 =  mulDivC(temp1, temp1, MAX)
+    factor1 = mulDivC(temp1, temp1, MAX)
     factor2 = mulDivC(temp2, temp3, MAX)
     factor = max(factor1, factor2)
 
