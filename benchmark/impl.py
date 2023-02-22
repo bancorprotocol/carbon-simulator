@@ -1,15 +1,18 @@
 from . import Decimal
 
 ONE = 2 ** 48
-MAX = 2 ** 256 - 1
 
-def check(val): assert 0 <= val <= MAX; return val
+MAX_UINT128 = 2 ** 128 - 1
+MAX_UINT256 = 2 ** 256 - 1
 
-def add(a, b): return check(a + b)
-def sub(a, b): return check(a - b)
-def mul(a, b): return check(a * b)
-def mulDivF(a, b, c): return check(a * b // c)
-def mulDivC(a, b, c): return check((a * b + c - 1) // c)
+def check(val, max): assert 0 <= val <= max; return val
+
+def uint128(n): return check(n, MAX_UINT128)
+def add(a, b): return check(a + b, MAX_UINT256)
+def sub(a, b): return check(a - b, MAX_UINT256)
+def mul(a, b): return check(a * b, MAX_UINT256)
+def mulDivF(a, b, c): return check(a * b // c, MAX_UINT256)
+def mulDivC(a, b, c): return check((a * b + c - 1) // c, MAX_UINT256)
 
 def bitLength(value):
     return len(bin(value).lstrip('0b')) if value > 0 else 0
@@ -37,7 +40,7 @@ def trade(test):
     z = y if H == M else y * (H - L) // (M - L)
     A = decodeFloat(encodeFloat(H - L))
     B = decodeFloat(encodeFloat(L))
-    return f(x, y, z, A, B)
+    return uint128(f(x, y, z, A, B))
 
 #
 #      x * (A * y + B * z) ^ 2
@@ -52,8 +55,8 @@ def tradeBySourceAmount(x, y, z, A, B):
     temp2 = add(mul(y, A), mul(z, B))
     temp3 = mul(temp2, x)
 
-    factor1 = mulDivC(temp1, temp1, MAX)
-    factor2 = mulDivC(temp3, A, MAX)
+    factor1 = mulDivC(temp1, temp1, MAX_UINT256)
+    factor2 = mulDivC(temp3, A, MAX_UINT256)
     factor = max(factor1, factor2)
 
     temp4 = mulDivC(temp1, temp1, factor)
@@ -73,8 +76,8 @@ def tradeByTargetAmount(x, y, z, A, B):
     temp2 = add(mul(y, A), mul(z, B))
     temp3 = sub(temp2, mul(x, A))
 
-    factor1 = mulDivC(temp1, temp1, MAX)
-    factor2 = mulDivC(temp2, temp3, MAX)
+    factor1 = mulDivC(temp1, temp1, MAX_UINT256)
+    factor2 = mulDivC(temp2, temp3, MAX_UINT256)
     factor = max(factor1, factor2)
 
     temp4 = mulDivC(temp1, temp1, factor)
