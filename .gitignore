@@ -1,0 +1,7 @@
+__pycache__/*
+*.pyc
+*/out/*
+*.pdf
+*resources/demo/carbon*
+*resources/NBTest/carbon*
+*resources/tests/carbon*
