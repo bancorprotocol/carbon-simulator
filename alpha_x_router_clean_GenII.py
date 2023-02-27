@@ -10,7 +10,7 @@ goalseek = alphaxutils_clean.goalseek
 assertAlmostEqual = alphaxutils_clean.assertAlmostEqual
 get_geoprice = alphaxutils_clean.get_geoprice
 
-def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
+def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
     indexes = list(range(len(orders)))   
     hypothetical_output_amts = {i: tradeBySourceAmount(x=inputAmount, order=orders[i])[1] for i in indexes}   # WTF not sure why this is bySource but it works - for input USDC as target, orders defined in ETH per USDC
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
@@ -76,7 +76,7 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
     # print("\n**Actions**")
     return(actions)
 
-def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
+def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
     indexes = list(range(len(orders)))   
     hypothetical_output_amts = {i: tradeByTargetAmount(x=inputAmount, order=orders[i])[0] for i in indexes}   # WTF not sure why this is byTarget but it works
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
