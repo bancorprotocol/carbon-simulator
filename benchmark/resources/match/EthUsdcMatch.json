@@ -1,0 +1,806 @@
+[
+  {
+    "method": "matchBySourceAmount",
+    "amount": "41040000000000000000",
+    "orders": [
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      }
+    ],
+    "actions": [
+      {
+        "id": "8",
+        "input": "41039999999612613913",
+        "output": "61438622968"
+      }
+    ]
+  },
+  {
+    "method": "matchByTargetAmount",
+    "amount": "41040000000",
+    "orders": [
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      }
+    ],
+    "actions": [
+      {
+        "id": "8",
+        "input": "41040000000",
+        "output": "27396082137220999023"
+      }
+    ]
+  },
+  {
+    "method": "matchBySourceAmount",
+    "amount": "41040000000",
+    "orders": [
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      }
+    ],
+    "actions": [
+      {
+        "id": "2",
+        "input": "41040000000",
+        "output": "40986019178566978850"
+      }
+    ]
+  },
+  {
+    "method": "matchByTargetAmount",
+    "amount": "41040000000000000000",
+    "orders": [
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      }
+    ],
+    "actions": [
+      {
+        "id": "2",
+        "input": "41040000000000000000",
+        "output": "41094123201"
+      }
+    ]
+  },
+  {
+    "method": "matchBySourceAmount",
+    "amount": "164160000000000000000",
+    "orders": [
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      }
+    ],
+    "actions": [
+      {
+        "id": "8",
+        "input": "164159999999818711097",
+        "output": "244309387287"
+      }
+    ]
+  },
+  {
+    "method": "matchByTargetAmount",
+    "amount": "164160000000",
+    "orders": [
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      }
+    ],
+    "actions": [
+      {
+        "id": "8",
+        "input": "164160000000",
+        "output": "110019607294006757921"
+      }
+    ]
+  },
+  {
+    "method": "matchBySourceAmount",
+    "amount": "164160000000",
+    "orders": [
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      }
+    ],
+    "actions": [
+      {
+        "id": "2",
+        "input": "164160000000",
+        "output": "163299701565857702164"
+      }
+    ]
+  },
+  {
+    "method": "matchByTargetAmount",
+    "amount": "164160000000000000000",
+    "orders": [
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      }
+    ],
+    "actions": [
+      {
+        "id": "2",
+        "input": "164160000000000000000",
+        "output": "165029410921"
+      }
+    ]
+  },
+  {
+    "method": "matchBySourceAmount",
+    "amount": "410400000000000000000",
+    "orders": [
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      }
+    ],
+    "actions": [
+      {
+        "id": "8",
+        "input": "410399999999727871389",
+        "output": "603673927895"
+      }
+    ]
+  },
+  {
+    "method": "matchByTargetAmount",
+    "amount": "410400000000",
+    "orders": [
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.00000000095",
+        "highestRate": "0.00000000105",
+        "marginalRate": "0.000000001"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001187",
+        "highestRate": "0.000000001312",
+        "marginalRate": "0.00000000125"
+      },
+      {
+        "liquidity": "123000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "456000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      },
+      {
+        "liquidity": "789000000000",
+        "lowestRate": "0.000000001425",
+        "highestRate": "0.000000001575",
+        "marginalRate": "0.0000000015"
+      }
+    ],
+    "actions": [
+      {
+        "id": "8",
+        "input": "410400000000",
+        "output": "277251554129756653576"
+      }
+    ]
+  },
+  {
+    "method": "matchBySourceAmount",
+    "amount": "410400000000",
+    "orders": [
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      }
+    ],
+    "actions": [
+      {
+        "id": "2",
+        "input": "410400000000",
+        "output": "405065072195572728884"
+      }
+    ]
+  },
+  {
+    "method": "matchByTargetAmount",
+    "amount": "410400000000000000000",
+    "orders": [
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "950000000",
+        "highestRate": "1050000000",
+        "marginalRate": "1000000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "760000000",
+        "highestRate": "840000000",
+        "marginalRate": "800000000"
+      },
+      {
+        "liquidity": "123000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "456000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      },
+      {
+        "liquidity": "789000000000000000000",
+        "lowestRate": "633333333.333333333333",
+        "highestRate": "700000000",
+        "marginalRate": "666666666.666666666667"
+      }
+    ],
+    "actions": [
+      {
+        "id": "2",
+        "input": "410400000000000000000",
+        "output": "415877331149"
+      }
+    ]
+  }
+]
