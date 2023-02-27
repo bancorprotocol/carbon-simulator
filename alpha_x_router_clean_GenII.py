@@ -45,10 +45,10 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
     order_subset = [orders[i] for i in top_n_threshold_orders]
     total_subset_liquidity = sum([v for k,v in ordered_available_values.items() if k in top_n_threshold_orders])
 
-    if inputAmount == total_subset_liquidity:
-            rl1 = [o.y for o in order_subset]
-            rl2 = [o.dxfromdy_f(o.y) for o in order_subset]
-    elif inputAmount > total_subset_liquidity:
+    # if inputAmount == total_subset_liquidity:
+    #         rl1 = [o.y for o in order_subset]
+    #         rl2 = [o.dxfromdy_f(o.y) for o in order_subset]
+    if inputAmount > total_subset_liquidity:
         if support_partial:
             print(f'** Partial Match ({total_subset_liquidity/inputAmount*100:0.5f}%) **')
             inputAmount = total_subset_liquidity
@@ -96,10 +96,10 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
     order_subset = [orders[i] for i in top_n_threshold_orders]
     total_subset_liquidity = sum(o.y for o in order_subset)
     
-    if inputAmount == total_subset_liquidity:
-            rl1 = [o.y for o in order_subset]
-            rl2 = [o.dxfromdy_f(o.y) for o in order_subset]
-    elif inputAmount > total_subset_liquidity:
+    # if inputAmount == total_subset_liquidity:
+    #         rl1 = [o.y for o in order_subset]
+    #         rl2 = [o.dxfromdy_f(o.y) for o in order_subset]
+    if inputAmount > total_subset_liquidity:
         if support_partial:
             print(f'** Partial Match ({total_subset_liquidity/inputAmount*100:0.5f}%) **')
             inputAmount = total_subset_liquidity
