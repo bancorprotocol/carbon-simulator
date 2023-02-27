@@ -258,6 +258,7 @@ class FastRouter(BaseRouter):
         )
 
     def __post_init__(self):
+        super().__post_init__()
         if not self.use_floor_division:
             self.ONE = Decimal("1")
             self.MIN = Decimal("0")
