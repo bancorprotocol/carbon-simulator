@@ -29,6 +29,10 @@ print( "{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CryptoCompare))
 # Please enter the pairs for the `SELECTION` data collection below
 
 selection = "MIM/LTC, BNT/LINK, NMR/USD"
+hourly = "DAI/USDC, USDT/USDC, DAI/USDT, USDD/USDT, MIM/USDC, wstETH/ETH, cbETH/ETH, STETH/ETH, USDC/USDT, BTC/ETH, BTC/USD, ETH/USD"
+hourly_unavailable = "frxETH/ETH, rETH/ETH, ETH/sETH2"
+
+
 
 pd.read_pickle("cryptocompare/SELECTION.pickle").head()
 
@@ -68,7 +72,7 @@ usdstables = "USDT, USDC, UST, BUSD"
 ccies = "USD, BTC, ETH"
 
 #excludes = ['COINS-CROSS', 'STABLES-USD', 'COINS-USD', 'COINS-BTC', 'COINS-ETH']
-includes = ["SELECTION"]
+includes = ["HOURLY"]
 # -
 
 # The table `dltable0` has as keys the filename, and the data is a tuple of pairs. The table `dltable` contains the final downloads, the difference being the `excludes` to avoid redownloading data that is not needed. 
@@ -76,13 +80,14 @@ includes = ["SELECTION"]
 # **YOU MUST RESTART THE KERNEL IF YOU MAKE CHANGES TO INCLUDES OR EXCLUDES**.
 
 dltable0 = {
-    "COINS-CROSS": CC.create_pairs(coins_for_cross),
-    "STABLES-USD": CC.create_pairs(usdstables, "USD"),
+    "COINS-CROSS": (CC.create_pairs(coins_for_cross), CC.query_dailypair),
+    "STABLES-USD": (CC.create_pairs(usdstables, "USD"), CC.query_dailypair),
     **{
-        f"COINS-{ccy}": CC.create_pairs(coins_for_ccy, ccy)
+        f"COINS-{ccy}": (CC.create_pairs(coins_for_ccy, ccy), CC.query_dailypair)
         for ccy in CC.coinlist(ccies)
     },
-    "SELECTION": CC.coinlist(selection, aspt=True),
+    "SELECTION": (CC.coinlist(selection, aspt=True), CC.query_dailypair),
+    "HOURLY": (CC.coinlist(hourly, aspt=True), CC.query_hourlypair),
 }
 try:
     dltable = {k:v for k, v in dltable0.items() if k in includes}
@@ -100,10 +105,12 @@ dltable0.keys(), dltable.keys()
 
 # ### Raw tables
 
-for item, pairs in dltable.items():
+for item, val in dltable.items():
+    pairs, cc_query_f = val
     print("Downloading raw table", item, len(pairs))
     results = {
-        (fsym, tsym): CC.query_dailypair(fsym=fsym, tsym=tsym)
+        #(fsym, tsym): CC.query_dailypair(fsym=fsym, tsym=tsym)
+        (fsym, tsym): cc_query_f(fsym=fsym, tsym=tsym)
         for fsym, tsym in pairs
     }
     df = pd.concat(results, axis=1)
@@ -123,7 +130,7 @@ for item in dltable:
 
 # !ls cryptocompare
 
-df = pd.read_pickle("cryptocompare/SELECTION.pickle")
+df = pd.read_pickle("cryptocompare/HOURLY.pickle")
 df
 
 
