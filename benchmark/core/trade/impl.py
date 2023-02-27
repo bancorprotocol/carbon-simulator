@@ -114,7 +114,7 @@ def tradeBySourceAmount(amount, order):
     return tradeFunc(amount, order, tradeBySourceAmountFunc, 0)
 
 def tradeByTargetAmount(amount, order):
-    return tradeFunc(amount, order, tradeByTargetAmountFunc, MAX_UINT256)
+    return tradeFunc(amount, order, tradeByTargetAmountFunc, MAX_UINT128)
 
 def execute(method, amount, order):
     return globals()[method](int(amount), encodeOrder(order))
