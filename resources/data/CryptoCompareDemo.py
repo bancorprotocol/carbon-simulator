@@ -64,7 +64,7 @@ data["exchanges"][exchange]["isTopTier"]
 # ## Coinlist
 
 data = CC.cache_coinlist()
-data_keys = list(data.keys())
+data_keys = tuple(data.keys())
 len(data_keys)
 
 ", ". join(data_keys[100:120])
@@ -135,5 +135,27 @@ r["aggr"]["close"]
 r["gaggr"]
 
 help(CCA.aggr_query)
+
+# ## Staked ETH
+
+"STETH" in data_keys
+
+r = CCA.aggr_query(
+    "STETH/ETH", 
+    fields=[CCA.FIELD_CLOSE], 
+    freq=CCA.FREQ_DAILY)
+r.keys()
+
+r["aggr"]["close"].plot()
+r["aggr"]["close"]
+
+rh = CCA.aggr_query(
+    "STETH/ETH", 
+    fields=[CCA.FIELD_CLOSE], 
+    freq=CCA.FREQ_HOURLY)
+rh.keys()
+
+rh["aggr"]["close"].plot()
+rh["aggr"]["close"]
 
 
