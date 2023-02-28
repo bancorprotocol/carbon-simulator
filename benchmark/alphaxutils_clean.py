@@ -1,4 +1,4 @@
-from . import Decimal
+from benchmark.core import Decimal
 Amount = Decimal
 
 def assertAlmostEqual(actual, expected, maxError):

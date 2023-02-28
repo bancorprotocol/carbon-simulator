@@ -1,4 +1,3 @@
-from benchmark import impl
 from benchmark import alphaxutils_clean
 from decimal import Decimal
 
