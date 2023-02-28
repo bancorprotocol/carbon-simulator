@@ -1,0 +1,3200 @@
+[
+  {
+    "method": "matchBySourceAmount",
+    "amount": "10000000",
+    "orders": [
+      {
+        "liquidity": "254814732",
+        "lowestRate": "256",
+        "highestRate": "257",
+        "marginalRate": "257"
+      },
+      {
+        "liquidity": "253827078",
+        "lowestRate": "255",
+        "highestRate": "256",
+        "marginalRate": "256"
+      },
+      {
+        "liquidity": "252839424",
+        "lowestRate": "254",
+        "highestRate": "255",
+        "marginalRate": "255"
+      },
+      {
+        "liquidity": "251851770",
+        "lowestRate": "253",
+        "highestRate": "254",
+        "marginalRate": "254"
+      },
+      {
+        "liquidity": "6913578",
+        "lowestRate": "5",
+        "highestRate": "6",
+        "marginalRate": "6"
+      },
+      {
+        "liquidity": "7901232",
+        "lowestRate": "6",
+        "highestRate": "7",
+        "marginalRate": "7"
+      },
+      {
+        "liquidity": "248888808",
+        "lowestRate": "250",
+        "highestRate": "251",
+        "marginalRate": "251"
+      },
+      {
+        "liquidity": "9876540",
+        "lowestRate": "8",
+        "highestRate": "9",
+        "marginalRate": "9"
+      },
+      {
+        "liquidity": "10864194",
+        "lowestRate": "9",
+        "highestRate": "10",
+        "marginalRate": "10"
+      },
+      {
+        "liquidity": "11851848",
+        "lowestRate": "10",
+        "highestRate": "11",
+        "marginalRate": "11"
+      },
+      {
+        "liquidity": "244938192",
+        "lowestRate": "246",
+        "highestRate": "247",
+        "marginalRate": "247"
+      },
+      {
+        "liquidity": "13827156",
+        "lowestRate": "12",
+        "highestRate": "13",
+        "marginalRate": "13"
+      },
+      {
+        "liquidity": "14814810",
+        "lowestRate": "13",
+        "highestRate": "14",
+        "marginalRate": "14"
+      },
+      {
+        "liquidity": "15802464",
+        "lowestRate": "14",
+        "highestRate": "15",
+        "marginalRate": "15"
+      },
+      {
+        "liquidity": "16790118",
+        "lowestRate": "15",
+        "highestRate": "16",
+        "marginalRate": "16"
+      },
+      {
+        "liquidity": "239999922",
+        "lowestRate": "241",
+        "highestRate": "242",
+        "marginalRate": "242"
+      },
+      {
+        "liquidity": "18765426",
+        "lowestRate": "17",
+        "highestRate": "18",
+        "marginalRate": "18"
+      },
+      {
+        "liquidity": "19753080",
+        "lowestRate": "18",
+        "highestRate": "19",
+        "marginalRate": "19"
+      },
+      {
+        "liquidity": "20740734",
+        "lowestRate": "19",
+        "highestRate": "20",
+        "marginalRate": "20"
+      },
+      {
+        "liquidity": "21728388",
+        "lowestRate": "20",
+        "highestRate": "21",
+        "marginalRate": "21"
+      },
+      {
+        "liquidity": "22716042",
+        "lowestRate": "21",
+        "highestRate": "22",
+        "marginalRate": "22"
+      },
+      {
+        "liquidity": "234073998",
+        "lowestRate": "235",
+        "highestRate": "236",
+        "marginalRate": "236"
+      },
+      {
+        "liquidity": "24691350",
+        "lowestRate": "23",
+        "highestRate": "24",
+        "marginalRate": "24"
+      },
+      {
+        "liquidity": "25679004",
+        "lowestRate": "24",
+        "highestRate": "25",
+        "marginalRate": "25"
+      },
+      {
+        "liquidity": "231111036",
+        "lowestRate": "232",
+        "highestRate": "233",
+        "marginalRate": "233"
+      },
+      {
+        "liquidity": "27654312",
+        "lowestRate": "26",
+        "highestRate": "27",
+        "marginalRate": "27"
+      },
+      {
+        "liquidity": "28641966",
+        "lowestRate": "27",
+        "highestRate": "28",
+        "marginalRate": "28"
+      },
+      {
+        "liquidity": "29629620",
+        "lowestRate": "28",
+        "highestRate": "29",
+        "marginalRate": "29"
+      },
+      {
+        "liquidity": "227160420",
+        "lowestRate": "228",
+        "highestRate": "229",
+        "marginalRate": "229"
+      },
+      {
+        "liquidity": "31604928",
+        "lowestRate": "30",
+        "highestRate": "31",
+        "marginalRate": "31"
+      },
+      {
+        "liquidity": "32592582",
+        "lowestRate": "31",
+        "highestRate": "32",
+        "marginalRate": "32"
+      },
+      {
+        "liquidity": "33580236",
+        "lowestRate": "32",
+        "highestRate": "33",
+        "marginalRate": "33"
+      },
+      {
+        "liquidity": "34567890",
+        "lowestRate": "33",
+        "highestRate": "34",
+        "marginalRate": "34"
+      },
+      {
+        "liquidity": "35555544",
+        "lowestRate": "34",
+        "highestRate": "35",
+        "marginalRate": "35"
+      },
+      {
+        "liquidity": "36543198",
+        "lowestRate": "35",
+        "highestRate": "36",
+        "marginalRate": "36"
+      },
+      {
+        "liquidity": "37530852",
+        "lowestRate": "36",
+        "highestRate": "37",
+        "marginalRate": "37"
+      },
+      {
+        "liquidity": "219259188",
+        "lowestRate": "220",
+        "highestRate": "221",
+        "marginalRate": "221"
+      },
+      {
+        "liquidity": "39506160",
+        "lowestRate": "38",
+        "highestRate": "39",
+        "marginalRate": "39"
+      },
+      {
+        "liquidity": "40493814",
+        "lowestRate": "39",
+        "highestRate": "40",
+        "marginalRate": "40"
+      },
+      {
+        "liquidity": "41481468",
+        "lowestRate": "40",
+        "highestRate": "41",
+        "marginalRate": "41"
+      },
+      {
+        "liquidity": "42469122",
+        "lowestRate": "41",
+        "highestRate": "42",
+        "marginalRate": "42"
+      },
+      {
+        "liquidity": "43456776",
+        "lowestRate": "42",
+        "highestRate": "43",
+        "marginalRate": "43"
+      },
+      {
+        "liquidity": "44444430",
+        "lowestRate": "43",
+        "highestRate": "44",
+        "marginalRate": "44"
+      },
+      {
+        "liquidity": "45432084",
+        "lowestRate": "44",
+        "highestRate": "45",
+        "marginalRate": "45"
+      },
+      {
+        "liquidity": "46419738",
+        "lowestRate": "45",
+        "highestRate": "46",
+        "marginalRate": "46"
+      },
+      {
+        "liquidity": "47407392",
+        "lowestRate": "46",
+        "highestRate": "47",
+        "marginalRate": "47"
+      },
+      {
+        "liquidity": "48395046",
+        "lowestRate": "47",
+        "highestRate": "48",
+        "marginalRate": "48"
+      },
+      {
+        "liquidity": "49382700",
+        "lowestRate": "48",
+        "highestRate": "49",
+        "marginalRate": "49"
+      },
+      {
+        "liquidity": "50370354",
+        "lowestRate": "49",
+        "highestRate": "50",
+        "marginalRate": "50"
+      },
+      {
+        "liquidity": "51358008",
+        "lowestRate": "50",
+        "highestRate": "51",
+        "marginalRate": "51"
+      },
+      {
+        "liquidity": "52345662",
+        "lowestRate": "51",
+        "highestRate": "52",
+        "marginalRate": "52"
+      },
+      {
+        "liquidity": "53333316",
+        "lowestRate": "52",
+        "highestRate": "53",
+        "marginalRate": "53"
+      },
+      {
+        "liquidity": "54320970",
+        "lowestRate": "53",
+        "highestRate": "54",
+        "marginalRate": "54"
+      },
+      {
+        "liquidity": "55308624",
+        "lowestRate": "54",
+        "highestRate": "55",
+        "marginalRate": "55"
+      },
+      {
+        "liquidity": "56296278",
+        "lowestRate": "55",
+        "highestRate": "56",
+        "marginalRate": "56"
+      },
+      {
+        "liquidity": "200493762",
+        "lowestRate": "201",
+        "highestRate": "202",
+        "marginalRate": "202"
+      },
+      {
+        "liquidity": "58271586",
+        "lowestRate": "57",
+        "highestRate": "58",
+        "marginalRate": "58"
+      },
+      {
+        "liquidity": "59259240",
+        "lowestRate": "58",
+        "highestRate": "59",
+        "marginalRate": "59"
+      },
+      {
+        "liquidity": "60246894",
+        "lowestRate": "59",
+        "highestRate": "60",
+        "marginalRate": "60"
+      },
+      {
+        "liquidity": "61234548",
+        "lowestRate": "60",
+        "highestRate": "61",
+        "marginalRate": "61"
+      },
+      {
+        "liquidity": "62222202",
+        "lowestRate": "61",
+        "highestRate": "62",
+        "marginalRate": "62"
+      },
+      {
+        "liquidity": "63209856",
+        "lowestRate": "62",
+        "highestRate": "63",
+        "marginalRate": "63"
+      },
+      {
+        "liquidity": "64197510",
+        "lowestRate": "63",
+        "highestRate": "64",
+        "marginalRate": "64"
+      },
+      {
+        "liquidity": "65185164",
+        "lowestRate": "64",
+        "highestRate": "65",
+        "marginalRate": "65"
+      },
+      {
+        "liquidity": "66172818",
+        "lowestRate": "65",
+        "highestRate": "66",
+        "marginalRate": "66"
+      },
+      {
+        "liquidity": "190617222",
+        "lowestRate": "191",
+        "highestRate": "192",
+        "marginalRate": "192"
+      },
+      {
+        "liquidity": "189629568",
+        "lowestRate": "190",
+        "highestRate": "191",
+        "marginalRate": "191"
+      },
+      {
+        "liquidity": "69135780",
+        "lowestRate": "68",
+        "highestRate": "69",
+        "marginalRate": "69"
+      },
+      {
+        "liquidity": "70123434",
+        "lowestRate": "69",
+        "highestRate": "70",
+        "marginalRate": "70"
+      },
+      {
+        "liquidity": "71111088",
+        "lowestRate": "70",
+        "highestRate": "71",
+        "marginalRate": "71"
+      },
+      {
+        "liquidity": "72098742",
+        "lowestRate": "71",
+        "highestRate": "72",
+        "marginalRate": "72"
+      },
+      {
+        "liquidity": "73086396",
+        "lowestRate": "72",
+        "highestRate": "73",
+        "marginalRate": "73"
+      },
+      {
+        "liquidity": "74074050",
+        "lowestRate": "73",
+        "highestRate": "74",
+        "marginalRate": "74"
+      },
+      {
+        "liquidity": "75061704",
+        "lowestRate": "74",
+        "highestRate": "75",
+        "marginalRate": "75"
+      },
+      {
+        "liquidity": "76049358",
+        "lowestRate": "75",
+        "highestRate": "76",
+        "marginalRate": "76"
+      },
+      {
+        "liquidity": "77037012",
+        "lowestRate": "76",
+        "highestRate": "77",
+        "marginalRate": "77"
+      },
+      {
+        "liquidity": "78024666",
+        "lowestRate": "77",
+        "highestRate": "78",
+        "marginalRate": "78"
+      },
+      {
+        "liquidity": "79012320",
+        "lowestRate": "78",
+        "highestRate": "79",
+        "marginalRate": "79"
+      },
+      {
+        "liquidity": "177777720",
+        "lowestRate": "178",
+        "highestRate": "179",
+        "marginalRate": "179"
+      },
+      {
+        "liquidity": "80987628",
+        "lowestRate": "80",
+        "highestRate": "81",
+        "marginalRate": "81"
+      },
+      {
+        "liquidity": "81975282",
+        "lowestRate": "81",
+        "highestRate": "82",
+        "marginalRate": "82"
+      },
+      {
+        "liquidity": "82962936",
+        "lowestRate": "82",
+        "highestRate": "83",
+        "marginalRate": "83"
+      },
+      {
+        "liquidity": "83950590",
+        "lowestRate": "83",
+        "highestRate": "84",
+        "marginalRate": "84"
+      },
+      {
+        "liquidity": "84938244",
+        "lowestRate": "84",
+        "highestRate": "85",
+        "marginalRate": "85"
+      },
+      {
+        "liquidity": "171851796",
+        "lowestRate": "172",
+        "highestRate": "173",
+        "marginalRate": "173"
+      },
+      {
+        "liquidity": "86913552",
+        "lowestRate": "86",
+        "highestRate": "87",
+        "marginalRate": "87"
+      },
+      {
+        "liquidity": "87901206",
+        "lowestRate": "87",
+        "highestRate": "88",
+        "marginalRate": "88"
+      },
+      {
+        "liquidity": "88888860",
+        "lowestRate": "88",
+        "highestRate": "89",
+        "marginalRate": "89"
+      },
+      {
+        "liquidity": "89876514",
+        "lowestRate": "89",
+        "highestRate": "90",
+        "marginalRate": "90"
+      },
+      {
+        "liquidity": "90864168",
+        "lowestRate": "90",
+        "highestRate": "91",
+        "marginalRate": "91"
+      },
+      {
+        "liquidity": "91851822",
+        "lowestRate": "91",
+        "highestRate": "92",
+        "marginalRate": "92"
+      },
+      {
+        "liquidity": "164938218",
+        "lowestRate": "165",
+        "highestRate": "166",
+        "marginalRate": "166"
+      },
+      {
+        "liquidity": "93827130",
+        "lowestRate": "93",
+        "highestRate": "94",
+        "marginalRate": "94"
+      },
+      {
+        "liquidity": "94814784",
+        "lowestRate": "94",
+        "highestRate": "95",
+        "marginalRate": "95"
+      },
+      {
+        "liquidity": "95802438",
+        "lowestRate": "95",
+        "highestRate": "96",
+        "marginalRate": "96"
+      },
+      {
+        "liquidity": "96790092",
+        "lowestRate": "96",
+        "highestRate": "97",
+        "marginalRate": "97"
+      },
+      {
+        "liquidity": "97777746",
+        "lowestRate": "97",
+        "highestRate": "98",
+        "marginalRate": "98"
+      },
+      {
+        "liquidity": "98765400",
+        "lowestRate": "98",
+        "highestRate": "99",
+        "marginalRate": "99"
+      },
+      {
+        "liquidity": "99753054",
+        "lowestRate": "99",
+        "highestRate": "100",
+        "marginalRate": "100"
+      },
+      {
+        "liquidity": "100740708",
+        "lowestRate": "100",
+        "highestRate": "101",
+        "marginalRate": "101"
+      },
+      {
+        "liquidity": "101728362",
+        "lowestRate": "101",
+        "highestRate": "102",
+        "marginalRate": "102"
+      },
+      {
+        "liquidity": "102716016",
+        "lowestRate": "102",
+        "highestRate": "103",
+        "marginalRate": "103"
+      },
+      {
+        "liquidity": "154074024",
+        "lowestRate": "154",
+        "highestRate": "155",
+        "marginalRate": "155"
+      },
+      {
+        "liquidity": "104691324",
+        "lowestRate": "104",
+        "highestRate": "105",
+        "marginalRate": "105"
+      },
+      {
+        "liquidity": "105678978",
+        "lowestRate": "105",
+        "highestRate": "106",
+        "marginalRate": "106"
+      },
+      {
+        "liquidity": "151111062",
+        "lowestRate": "151",
+        "highestRate": "152",
+        "marginalRate": "152"
+      },
+      {
+        "liquidity": "107654286",
+        "lowestRate": "107",
+        "highestRate": "108",
+        "marginalRate": "108"
+      },
+      {
+        "liquidity": "108641940",
+        "lowestRate": "108",
+        "highestRate": "109",
+        "marginalRate": "109"
+      },
+      {
+        "liquidity": "109629594",
+        "lowestRate": "109",
+        "highestRate": "110",
+        "marginalRate": "110"
+      },
+      {
+        "liquidity": "110617248",
+        "lowestRate": "110",
+        "highestRate": "111",
+        "marginalRate": "111"
+      },
+      {
+        "liquidity": "111604902",
+        "lowestRate": "111",
+        "highestRate": "112",
+        "marginalRate": "112"
+      },
+      {
+        "liquidity": "112592556",
+        "lowestRate": "112",
+        "highestRate": "113",
+        "marginalRate": "113"
+      },
+      {
+        "liquidity": "113580210",
+        "lowestRate": "113",
+        "highestRate": "114",
+        "marginalRate": "114"
+      },
+      {
+        "liquidity": "114567864",
+        "lowestRate": "114",
+        "highestRate": "115",
+        "marginalRate": "115"
+      },
+      {
+        "liquidity": "115555518",
+        "lowestRate": "115",
+        "highestRate": "116",
+        "marginalRate": "116"
+      },
+      {
+        "liquidity": "116543172",
+        "lowestRate": "116",
+        "highestRate": "117",
+        "marginalRate": "117"
+      },
+      {
+        "liquidity": "117530826",
+        "lowestRate": "117",
+        "highestRate": "118",
+        "marginalRate": "118"
+      },
+      {
+        "liquidity": "118518480",
+        "lowestRate": "118",
+        "highestRate": "119",
+        "marginalRate": "119"
+      },
+      {
+        "liquidity": "119506134",
+        "lowestRate": "119",
+        "highestRate": "120",
+        "marginalRate": "120"
+      },
+      {
+        "liquidity": "137283906",
+        "lowestRate": "137",
+        "highestRate": "138",
+        "marginalRate": "138"
+      },
+      {
+        "liquidity": "136296252",
+        "lowestRate": "136",
+        "highestRate": "137",
+        "marginalRate": "137"
+      },
+      {
+        "liquidity": "122469096",
+        "lowestRate": "122",
+        "highestRate": "123",
+        "marginalRate": "123"
+      },
+      {
+        "liquidity": "123456750",
+        "lowestRate": "123",
+        "highestRate": "124",
+        "marginalRate": "124"
+      },
+      {
+        "liquidity": "124444404",
+        "lowestRate": "124",
+        "highestRate": "125",
+        "marginalRate": "125"
+      },
+      {
+        "liquidity": "125432058",
+        "lowestRate": "125",
+        "highestRate": "126",
+        "marginalRate": "126"
+      },
+      {
+        "liquidity": "126419712",
+        "lowestRate": "126",
+        "highestRate": "127",
+        "marginalRate": "127"
+      },
+      {
+        "liquidity": "127407366",
+        "lowestRate": "127",
+        "highestRate": "128",
+        "marginalRate": "128"
+      },
+      {
+        "liquidity": "128395020",
+        "lowestRate": "128",
+        "highestRate": "129",
+        "marginalRate": "129"
+      },
+      {
+        "liquidity": "129382674",
+        "lowestRate": "129",
+        "highestRate": "130",
+        "marginalRate": "130"
+      },
+      {
+        "liquidity": "130370328",
+        "lowestRate": "130",
+        "highestRate": "131",
+        "marginalRate": "131"
+      },
+      {
+        "liquidity": "131357982",
+        "lowestRate": "131",
+        "highestRate": "132",
+        "marginalRate": "132"
+      },
+      {
+        "liquidity": "132345636",
+        "lowestRate": "132",
+        "highestRate": "133",
+        "marginalRate": "133"
+      },
+      {
+        "liquidity": "133333290",
+        "lowestRate": "133",
+        "highestRate": "134",
+        "marginalRate": "134"
+      },
+      {
+        "liquidity": "134320944",
+        "lowestRate": "134",
+        "highestRate": "135",
+        "marginalRate": "135"
+      },
+      {
+        "liquidity": "135308598",
+        "lowestRate": "135",
+        "highestRate": "136",
+        "marginalRate": "136"
+      },
+      {
+        "liquidity": "121481442",
+        "lowestRate": "121",
+        "highestRate": "122",
+        "marginalRate": "122"
+      },
+      {
+        "liquidity": "120493788",
+        "lowestRate": "120",
+        "highestRate": "121",
+        "marginalRate": "121"
+      },
+      {
+        "liquidity": "138271560",
+        "lowestRate": "138",
+        "highestRate": "139",
+        "marginalRate": "139"
+      },
+      {
+        "liquidity": "139259214",
+        "lowestRate": "139",
+        "highestRate": "140",
+        "marginalRate": "140"
+      },
+      {
+        "liquidity": "140246868",
+        "lowestRate": "140",
+        "highestRate": "141",
+        "marginalRate": "141"
+      },
+      {
+        "liquidity": "141234522",
+        "lowestRate": "141",
+        "highestRate": "142",
+        "marginalRate": "142"
+      },
+      {
+        "liquidity": "142222176",
+        "lowestRate": "142",
+        "highestRate": "143",
+        "marginalRate": "143"
+      },
+      {
+        "liquidity": "143209830",
+        "lowestRate": "143",
+        "highestRate": "144",
+        "marginalRate": "144"
+      },
+      {
+        "liquidity": "144197484",
+        "lowestRate": "144",
+        "highestRate": "145",
+        "marginalRate": "145"
+      },
+      {
+        "liquidity": "145185138",
+        "lowestRate": "145",
+        "highestRate": "146",
+        "marginalRate": "146"
+      },
+      {
+        "liquidity": "146172792",
+        "lowestRate": "146",
+        "highestRate": "147",
+        "marginalRate": "147"
+      },
+      {
+        "liquidity": "147160446",
+        "lowestRate": "147",
+        "highestRate": "148",
+        "marginalRate": "148"
+      },
+      {
+        "liquidity": "148148100",
+        "lowestRate": "148",
+        "highestRate": "149",
+        "marginalRate": "149"
+      },
+      {
+        "liquidity": "149135754",
+        "lowestRate": "149",
+        "highestRate": "150",
+        "marginalRate": "150"
+      },
+      {
+        "liquidity": "150123408",
+        "lowestRate": "150",
+        "highestRate": "151",
+        "marginalRate": "151"
+      },
+      {
+        "liquidity": "106666632",
+        "lowestRate": "106",
+        "highestRate": "107",
+        "marginalRate": "107"
+      },
+      {
+        "liquidity": "152098716",
+        "lowestRate": "152",
+        "highestRate": "153",
+        "marginalRate": "153"
+      },
+      {
+        "liquidity": "153086370",
+        "lowestRate": "153",
+        "highestRate": "154",
+        "marginalRate": "154"
+      },
+      {
+        "liquidity": "103703670",
+        "lowestRate": "103",
+        "highestRate": "104",
+        "marginalRate": "104"
+      },
+      {
+        "liquidity": "155061678",
+        "lowestRate": "155",
+        "highestRate": "156",
+        "marginalRate": "156"
+      },
+      {
+        "liquidity": "156049332",
+        "lowestRate": "156",
+        "highestRate": "157",
+        "marginalRate": "157"
+      },
+      {
+        "liquidity": "157036986",
+        "lowestRate": "157",
+        "highestRate": "158",
+        "marginalRate": "158"
+      },
+      {
+        "liquidity": "158024640",
+        "lowestRate": "158",
+        "highestRate": "159",
+        "marginalRate": "159"
+      },
+      {
+        "liquidity": "159012294",
+        "lowestRate": "159",
+        "highestRate": "160",
+        "marginalRate": "160"
+      },
+      {
+        "liquidity": "159999948",
+        "lowestRate": "160",
+        "highestRate": "161",
+        "marginalRate": "161"
+      },
+      {
+        "liquidity": "160987602",
+        "lowestRate": "161",
+        "highestRate": "162",
+        "marginalRate": "162"
+      },
+      {
+        "liquidity": "161975256",
+        "lowestRate": "162",
+        "highestRate": "163",
+        "marginalRate": "163"
+      },
+      {
+        "liquidity": "162962910",
+        "lowestRate": "163",
+        "highestRate": "164",
+        "marginalRate": "164"
+      },
+      {
+        "liquidity": "163950564",
+        "lowestRate": "164",
+        "highestRate": "165",
+        "marginalRate": "165"
+      },
+      {
+        "liquidity": "92839476",
+        "lowestRate": "92",
+        "highestRate": "93",
+        "marginalRate": "93"
+      },
+      {
+        "liquidity": "165925872",
+        "lowestRate": "166",
+        "highestRate": "167",
+        "marginalRate": "167"
+      },
+      {
+        "liquidity": "166913526",
+        "lowestRate": "167",
+        "highestRate": "168",
+        "marginalRate": "168"
+      },
+      {
+        "liquidity": "167901180",
+        "lowestRate": "168",
+        "highestRate": "169",
+        "marginalRate": "169"
+      },
+      {
+        "liquidity": "168888834",
+        "lowestRate": "169",
+        "highestRate": "170",
+        "marginalRate": "170"
+      },
+      {
+        "liquidity": "169876488",
+        "lowestRate": "170",
+        "highestRate": "171",
+        "marginalRate": "171"
+      },
+      {
+        "liquidity": "170864142",
+        "lowestRate": "171",
+        "highestRate": "172",
+        "marginalRate": "172"
+      },
+      {
+        "liquidity": "85925898",
+        "lowestRate": "85",
+        "highestRate": "86",
+        "marginalRate": "86"
+      },
+      {
+        "liquidity": "172839450",
+        "lowestRate": "173",
+        "highestRate": "174",
+        "marginalRate": "174"
+      },
+      {
+        "liquidity": "173827104",
+        "lowestRate": "174",
+        "highestRate": "175",
+        "marginalRate": "175"
+      },
+      {
+        "liquidity": "174814758",
+        "lowestRate": "175",
+        "highestRate": "176",
+        "marginalRate": "176"
+      },
+      {
+        "liquidity": "175802412",
+        "lowestRate": "176",
+        "highestRate": "177",
+        "marginalRate": "177"
+      },
+      {
+        "liquidity": "176790066",
+        "lowestRate": "177",
+        "highestRate": "178",
+        "marginalRate": "178"
+      },
+      {
+        "liquidity": "79999974",
+        "lowestRate": "79",
+        "highestRate": "80",
+        "marginalRate": "80"
+      },
+      {
+        "liquidity": "178765374",
+        "lowestRate": "179",
+        "highestRate": "180",
+        "marginalRate": "180"
+      },
+      {
+        "liquidity": "179753028",
+        "lowestRate": "180",
+        "highestRate": "181",
+        "marginalRate": "181"
+      },
+      {
+        "liquidity": "180740682",
+        "lowestRate": "181",
+        "highestRate": "182",
+        "marginalRate": "182"
+      },
+      {
+        "liquidity": "181728336",
+        "lowestRate": "182",
+        "highestRate": "183",
+        "marginalRate": "183"
+      },
+      {
+        "liquidity": "182715990",
+        "lowestRate": "183",
+        "highestRate": "184",
+        "marginalRate": "184"
+      },
+      {
+        "liquidity": "183703644",
+        "lowestRate": "184",
+        "highestRate": "185",
+        "marginalRate": "185"
+      },
+      {
+        "liquidity": "184691298",
+        "lowestRate": "185",
+        "highestRate": "186",
+        "marginalRate": "186"
+      },
+      {
+        "liquidity": "185678952",
+        "lowestRate": "186",
+        "highestRate": "187",
+        "marginalRate": "187"
+      },
+      {
+        "liquidity": "186666606",
+        "lowestRate": "187",
+        "highestRate": "188",
+        "marginalRate": "188"
+      },
+      {
+        "liquidity": "187654260",
+        "lowestRate": "188",
+        "highestRate": "189",
+        "marginalRate": "189"
+      },
+      {
+        "liquidity": "188641914",
+        "lowestRate": "189",
+        "highestRate": "190",
+        "marginalRate": "190"
+      },
+      {
+        "liquidity": "68148126",
+        "lowestRate": "67",
+        "highestRate": "68",
+        "marginalRate": "68"
+      },
+      {
+        "liquidity": "67160472",
+        "lowestRate": "66",
+        "highestRate": "67",
+        "marginalRate": "67"
+      },
+      {
+        "liquidity": "191604876",
+        "lowestRate": "192",
+        "highestRate": "193",
+        "marginalRate": "193"
+      },
+      {
+        "liquidity": "192592530",
+        "lowestRate": "193",
+        "highestRate": "194",
+        "marginalRate": "194"
+      },
+      {
+        "liquidity": "193580184",
+        "lowestRate": "194",
+        "highestRate": "195",
+        "marginalRate": "195"
+      },
+      {
+        "liquidity": "194567838",
+        "lowestRate": "195",
+        "highestRate": "196",
+        "marginalRate": "196"
+      },
+      {
+        "liquidity": "195555492",
+        "lowestRate": "196",
+        "highestRate": "197",
+        "marginalRate": "197"
+      },
+      {
+        "liquidity": "196543146",
+        "lowestRate": "197",
+        "highestRate": "198",
+        "marginalRate": "198"
+      },
+      {
+        "liquidity": "197530800",
+        "lowestRate": "198",
+        "highestRate": "199",
+        "marginalRate": "199"
+      },
+      {
+        "liquidity": "198518454",
+        "lowestRate": "199",
+        "highestRate": "200",
+        "marginalRate": "200"
+      },
+      {
+        "liquidity": "199506108",
+        "lowestRate": "200",
+        "highestRate": "201",
+        "marginalRate": "201"
+      },
+      {
+        "liquidity": "57283932",
+        "lowestRate": "56",
+        "highestRate": "57",
+        "marginalRate": "57"
+      },
+      {
+        "liquidity": "201481416",
+        "lowestRate": "202",
+        "highestRate": "203",
+        "marginalRate": "203"
+      },
+      {
+        "liquidity": "202469070",
+        "lowestRate": "203",
+        "highestRate": "204",
+        "marginalRate": "204"
+      },
+      {
+        "liquidity": "203456724",
+        "lowestRate": "204",
+        "highestRate": "205",
+        "marginalRate": "205"
+      },
+      {
+        "liquidity": "204444378",
+        "lowestRate": "205",
+        "highestRate": "206",
+        "marginalRate": "206"
+      },
+      {
+        "liquidity": "205432032",
+        "lowestRate": "206",
+        "highestRate": "207",
+        "marginalRate": "207"
+      },
+      {
+        "liquidity": "206419686",
+        "lowestRate": "207",
+        "highestRate": "208",
+        "marginalRate": "208"
+      },
+      {
+        "liquidity": "207407340",
+        "lowestRate": "208",
+        "highestRate": "209",
+        "marginalRate": "209"
+      },
+      {
+        "liquidity": "208394994",
+        "lowestRate": "209",
+        "highestRate": "210",
+        "marginalRate": "210"
+      },
+      {
+        "liquidity": "209382648",
+        "lowestRate": "210",
+        "highestRate": "211",
+        "marginalRate": "211"
+      },
+      {
+        "liquidity": "210370302",
+        "lowestRate": "211",
+        "highestRate": "212",
+        "marginalRate": "212"
+      },
+      {
+        "liquidity": "211357956",
+        "lowestRate": "212",
+        "highestRate": "213",
+        "marginalRate": "213"
+      },
+      {
+        "liquidity": "212345610",
+        "lowestRate": "213",
+        "highestRate": "214",
+        "marginalRate": "214"
+      },
+      {
+        "liquidity": "213333264",
+        "lowestRate": "214",
+        "highestRate": "215",
+        "marginalRate": "215"
+      },
+      {
+        "liquidity": "214320918",
+        "lowestRate": "215",
+        "highestRate": "216",
+        "marginalRate": "216"
+      },
+      {
+        "liquidity": "215308572",
+        "lowestRate": "216",
+        "highestRate": "217",
+        "marginalRate": "217"
+      },
+      {
+        "liquidity": "216296226",
+        "lowestRate": "217",
+        "highestRate": "218",
+        "marginalRate": "218"
+      },
+      {
+        "liquidity": "217283880",
+        "lowestRate": "218",
+        "highestRate": "219",
+        "marginalRate": "219"
+      },
+      {
+        "liquidity": "218271534",
+        "lowestRate": "219",
+        "highestRate": "220",
+        "marginalRate": "220"
+      },
+      {
+        "liquidity": "38518506",
+        "lowestRate": "37",
+        "highestRate": "38",
+        "marginalRate": "38"
+      },
+      {
+        "liquidity": "220246842",
+        "lowestRate": "221",
+        "highestRate": "222",
+        "marginalRate": "222"
+      },
+      {
+        "liquidity": "221234496",
+        "lowestRate": "222",
+        "highestRate": "223",
+        "marginalRate": "223"
+      },
+      {
+        "liquidity": "222222150",
+        "lowestRate": "223",
+        "highestRate": "224",
+        "marginalRate": "224"
+      },
+      {
+        "liquidity": "223209804",
+        "lowestRate": "224",
+        "highestRate": "225",
+        "marginalRate": "225"
+      },
+      {
+        "liquidity": "224197458",
+        "lowestRate": "225",
+        "highestRate": "226",
+        "marginalRate": "226"
+      },
+      {
+        "liquidity": "225185112",
+        "lowestRate": "226",
+        "highestRate": "227",
+        "marginalRate": "227"
+      },
+      {
+        "liquidity": "226172766",
+        "lowestRate": "227",
+        "highestRate": "228",
+        "marginalRate": "228"
+      },
+      {
+        "liquidity": "30617274",
+        "lowestRate": "29",
+        "highestRate": "30",
+        "marginalRate": "30"
+      },
+      {
+        "liquidity": "228148074",
+        "lowestRate": "229",
+        "highestRate": "230",
+        "marginalRate": "230"
+      },
+      {
+        "liquidity": "229135728",
+        "lowestRate": "230",
+        "highestRate": "231",
+        "marginalRate": "231"
+      },
+      {
+        "liquidity": "230123382",
+        "lowestRate": "231",
+        "highestRate": "232",
+        "marginalRate": "232"
+      },
+      {
+        "liquidity": "26666658",
+        "lowestRate": "25",
+        "highestRate": "26",
+        "marginalRate": "26"
+      },
+      {
+        "liquidity": "232098690",
+        "lowestRate": "233",
+        "highestRate": "234",
+        "marginalRate": "234"
+      },
+      {
+        "liquidity": "233086344",
+        "lowestRate": "234",
+        "highestRate": "235",
+        "marginalRate": "235"
+      },
+      {
+        "liquidity": "23703696",
+        "lowestRate": "22",
+        "highestRate": "23",
+        "marginalRate": "23"
+      },
+      {
+        "liquidity": "235061652",
+        "lowestRate": "236",
+        "highestRate": "237",
+        "marginalRate": "237"
+      },
+      {
+        "liquidity": "236049306",
+        "lowestRate": "237",
+        "highestRate": "238",
+        "marginalRate": "238"
+      },
+      {
+        "liquidity": "237036960",
+        "lowestRate": "238",
+        "highestRate": "239",
+        "marginalRate": "239"
+      },
+      {
+        "liquidity": "238024614",
+        "lowestRate": "239",
+        "highestRate": "240",
+        "marginalRate": "240"
+      },
+      {
+        "liquidity": "239012268",
+        "lowestRate": "240",
+        "highestRate": "241",
+        "marginalRate": "241"
+      },
+      {
+        "liquidity": "17777772",
+        "lowestRate": "16",
+        "highestRate": "17",
+        "marginalRate": "17"
+      },
+      {
+        "liquidity": "240987576",
+        "lowestRate": "242",
+        "highestRate": "243",
+        "marginalRate": "243"
+      },
+      {
+        "liquidity": "241975230",
+        "lowestRate": "243",
+        "highestRate": "244",
+        "marginalRate": "244"
+      },
+      {
+        "liquidity": "242962884",
+        "lowestRate": "244",
+        "highestRate": "245",
+        "marginalRate": "245"
+      },
+      {
+        "liquidity": "243950538",
+        "lowestRate": "245",
+        "highestRate": "246",
+        "marginalRate": "246"
+      },
+      {
+        "liquidity": "12839502",
+        "lowestRate": "11",
+        "highestRate": "12",
+        "marginalRate": "12"
+      },
+      {
+        "liquidity": "245925846",
+        "lowestRate": "247",
+        "highestRate": "248",
+        "marginalRate": "248"
+      },
+      {
+        "liquidity": "246913500",
+        "lowestRate": "248",
+        "highestRate": "249",
+        "marginalRate": "249"
+      },
+      {
+        "liquidity": "247901154",
+        "lowestRate": "249",
+        "highestRate": "250",
+        "marginalRate": "250"
+      },
+      {
+        "liquidity": "8888886",
+        "lowestRate": "7",
+        "highestRate": "8",
+        "marginalRate": "8"
+      },
+      {
+        "liquidity": "249876462",
+        "lowestRate": "251",
+        "highestRate": "252",
+        "marginalRate": "252"
+      },
+      {
+        "liquidity": "250864116",
+        "lowestRate": "252",
+        "highestRate": "253",
+        "marginalRate": "253"
+      },
+      {
+        "liquidity": "5925924",
+        "lowestRate": "4",
+        "highestRate": "5",
+        "marginalRate": "5"
+      },
+      {
+        "liquidity": "4938270",
+        "lowestRate": "3",
+        "highestRate": "4",
+        "marginalRate": "4"
+      },
+      {
+        "liquidity": "3950616",
+        "lowestRate": "2",
+        "highestRate": "3",
+        "marginalRate": "3"
+      },
+      {
+        "liquidity": "2962962",
+        "lowestRate": "1",
+        "highestRate": "2",
+        "marginalRate": "2"
+      }
+    ],
+    "actions": [
+      {
+        "id": "0",
+        "input": "993432",
+        "output": "254814732"
+      },
+      {
+        "id": "1",
+        "input": "993455",
+        "output": "253827078"
+      },
+      {
+        "id": "2",
+        "input": "993478",
+        "output": "252839424"
+      },
+      {
+        "id": "3",
+        "input": "993501",
+        "output": "251851770"
+      },
+      {
+        "id": "251",
+        "input": "993524",
+        "output": "250864116"
+      },
+      {
+        "id": "250",
+        "input": "993547",
+        "output": "249876462"
+      },
+      {
+        "id": "6",
+        "input": "993571",
+        "output": "248888808"
+      },
+      {
+        "id": "248",
+        "input": "993594",
+        "output": "247901154"
+      },
+      {
+        "id": "247",
+        "input": "993618",
+        "output": "246913500"
+      },
+      {
+        "id": "246",
+        "input": "993642",
+        "output": "245925846"
+      },
+      {
+        "id": "10",
+        "input": "64638",
+        "output": "15963477"
+      }
+    ]
+  },
+  {
+    "method": "matchByTargetAmount",
+    "amount": "2519666367",
+    "orders": [
+      {
+        "liquidity": "254814732",
+        "lowestRate": "256",
+        "highestRate": "257",
+        "marginalRate": "257"
+      },
+      {
+        "liquidity": "253827078",
+        "lowestRate": "255",
+        "highestRate": "256",
+        "marginalRate": "256"
+      },
+      {
+        "liquidity": "252839424",
+        "lowestRate": "254",
+        "highestRate": "255",
+        "marginalRate": "255"
+      },
+      {
+        "liquidity": "251851770",
+        "lowestRate": "253",
+        "highestRate": "254",
+        "marginalRate": "254"
+      },
+      {
+        "liquidity": "6913578",
+        "lowestRate": "5",
+        "highestRate": "6",
+        "marginalRate": "6"
+      },
+      {
+        "liquidity": "7901232",
+        "lowestRate": "6",
+        "highestRate": "7",
+        "marginalRate": "7"
+      },
+      {
+        "liquidity": "248888808",
+        "lowestRate": "250",
+        "highestRate": "251",
+        "marginalRate": "251"
+      },
+      {
+        "liquidity": "9876540",
+        "lowestRate": "8",
+        "highestRate": "9",
+        "marginalRate": "9"
+      },
+      {
+        "liquidity": "10864194",
+        "lowestRate": "9",
+        "highestRate": "10",
+        "marginalRate": "10"
+      },
+      {
+        "liquidity": "11851848",
+        "lowestRate": "10",
+        "highestRate": "11",
+        "marginalRate": "11"
+      },
+      {
+        "liquidity": "244938192",
+        "lowestRate": "246",
+        "highestRate": "247",
+        "marginalRate": "247"
+      },
+      {
+        "liquidity": "13827156",
+        "lowestRate": "12",
+        "highestRate": "13",
+        "marginalRate": "13"
+      },
+      {
+        "liquidity": "14814810",
+        "lowestRate": "13",
+        "highestRate": "14",
+        "marginalRate": "14"
+      },
+      {
+        "liquidity": "15802464",
+        "lowestRate": "14",
+        "highestRate": "15",
+        "marginalRate": "15"
+      },
+      {
+        "liquidity": "16790118",
+        "lowestRate": "15",
+        "highestRate": "16",
+        "marginalRate": "16"
+      },
+      {
+        "liquidity": "239999922",
+        "lowestRate": "241",
+        "highestRate": "242",
+        "marginalRate": "242"
+      },
+      {
+        "liquidity": "18765426",
+        "lowestRate": "17",
+        "highestRate": "18",
+        "marginalRate": "18"
+      },
+      {
+        "liquidity": "19753080",
+        "lowestRate": "18",
+        "highestRate": "19",
+        "marginalRate": "19"
+      },
+      {
+        "liquidity": "20740734",
+        "lowestRate": "19",
+        "highestRate": "20",
+        "marginalRate": "20"
+      },
+      {
+        "liquidity": "21728388",
+        "lowestRate": "20",
+        "highestRate": "21",
+        "marginalRate": "21"
+      },
+      {
+        "liquidity": "22716042",
+        "lowestRate": "21",
+        "highestRate": "22",
+        "marginalRate": "22"
+      },
+      {
+        "liquidity": "234073998",
+        "lowestRate": "235",
+        "highestRate": "236",
+        "marginalRate": "236"
+      },
+      {
+        "liquidity": "24691350",
+        "lowestRate": "23",
+        "highestRate": "24",
+        "marginalRate": "24"
+      },
+      {
+        "liquidity": "25679004",
+        "lowestRate": "24",
+        "highestRate": "25",
+        "marginalRate": "25"
+      },
+      {
+        "liquidity": "231111036",
+        "lowestRate": "232",
+        "highestRate": "233",
+        "marginalRate": "233"
+      },
+      {
+        "liquidity": "27654312",
+        "lowestRate": "26",
+        "highestRate": "27",
+        "marginalRate": "27"
+      },
+      {
+        "liquidity": "28641966",
+        "lowestRate": "27",
+        "highestRate": "28",
+        "marginalRate": "28"
+      },
+      {
+        "liquidity": "29629620",
+        "lowestRate": "28",
+        "highestRate": "29",
+        "marginalRate": "29"
+      },
+      {
+        "liquidity": "227160420",
+        "lowestRate": "228",
+        "highestRate": "229",
+        "marginalRate": "229"
+      },
+      {
+        "liquidity": "31604928",
+        "lowestRate": "30",
+        "highestRate": "31",
+        "marginalRate": "31"
+      },
+      {
+        "liquidity": "32592582",
+        "lowestRate": "31",
+        "highestRate": "32",
+        "marginalRate": "32"
+      },
+      {
+        "liquidity": "33580236",
+        "lowestRate": "32",
+        "highestRate": "33",
+        "marginalRate": "33"
+      },
+      {
+        "liquidity": "34567890",
+        "lowestRate": "33",
+        "highestRate": "34",
+        "marginalRate": "34"
+      },
+      {
+        "liquidity": "35555544",
+        "lowestRate": "34",
+        "highestRate": "35",
+        "marginalRate": "35"
+      },
+      {
+        "liquidity": "36543198",
+        "lowestRate": "35",
+        "highestRate": "36",
+        "marginalRate": "36"
+      },
+      {
+        "liquidity": "37530852",
+        "lowestRate": "36",
+        "highestRate": "37",
+        "marginalRate": "37"
+      },
+      {
+        "liquidity": "219259188",
+        "lowestRate": "220",
+        "highestRate": "221",
+        "marginalRate": "221"
+      },
+      {
+        "liquidity": "39506160",
+        "lowestRate": "38",
+        "highestRate": "39",
+        "marginalRate": "39"
+      },
+      {
+        "liquidity": "40493814",
+        "lowestRate": "39",
+        "highestRate": "40",
+        "marginalRate": "40"
+      },
+      {
+        "liquidity": "41481468",
+        "lowestRate": "40",
+        "highestRate": "41",
+        "marginalRate": "41"
+      },
+      {
+        "liquidity": "42469122",
+        "lowestRate": "41",
+        "highestRate": "42",
+        "marginalRate": "42"
+      },
+      {
+        "liquidity": "43456776",
+        "lowestRate": "42",
+        "highestRate": "43",
+        "marginalRate": "43"
+      },
+      {
+        "liquidity": "44444430",
+        "lowestRate": "43",
+        "highestRate": "44",
+        "marginalRate": "44"
+      },
+      {
+        "liquidity": "45432084",
+        "lowestRate": "44",
+        "highestRate": "45",
+        "marginalRate": "45"
+      },
+      {
+        "liquidity": "46419738",
+        "lowestRate": "45",
+        "highestRate": "46",
+        "marginalRate": "46"
+      },
+      {
+        "liquidity": "47407392",
+        "lowestRate": "46",
+        "highestRate": "47",
+        "marginalRate": "47"
+      },
+      {
+        "liquidity": "48395046",
+        "lowestRate": "47",
+        "highestRate": "48",
+        "marginalRate": "48"
+      },
+      {
+        "liquidity": "49382700",
+        "lowestRate": "48",
+        "highestRate": "49",
+        "marginalRate": "49"
+      },
+      {
+        "liquidity": "50370354",
+        "lowestRate": "49",
+        "highestRate": "50",
+        "marginalRate": "50"
+      },
+      {
+        "liquidity": "51358008",
+        "lowestRate": "50",
+        "highestRate": "51",
+        "marginalRate": "51"
+      },
+      {
+        "liquidity": "52345662",
+        "lowestRate": "51",
+        "highestRate": "52",
+        "marginalRate": "52"
+      },
+      {
+        "liquidity": "53333316",
+        "lowestRate": "52",
+        "highestRate": "53",
+        "marginalRate": "53"
+      },
+      {
+        "liquidity": "54320970",
+        "lowestRate": "53",
+        "highestRate": "54",
+        "marginalRate": "54"
+      },
+      {
+        "liquidity": "55308624",
+        "lowestRate": "54",
+        "highestRate": "55",
+        "marginalRate": "55"
+      },
+      {
+        "liquidity": "56296278",
+        "lowestRate": "55",
+        "highestRate": "56",
+        "marginalRate": "56"
+      },
+      {
+        "liquidity": "200493762",
+        "lowestRate": "201",
+        "highestRate": "202",
+        "marginalRate": "202"
+      },
+      {
+        "liquidity": "58271586",
+        "lowestRate": "57",
+        "highestRate": "58",
+        "marginalRate": "58"
+      },
+      {
+        "liquidity": "59259240",
+        "lowestRate": "58",
+        "highestRate": "59",
+        "marginalRate": "59"
+      },
+      {
+        "liquidity": "60246894",
+        "lowestRate": "59",
+        "highestRate": "60",
+        "marginalRate": "60"
+      },
+      {
+        "liquidity": "61234548",
+        "lowestRate": "60",
+        "highestRate": "61",
+        "marginalRate": "61"
+      },
+      {
+        "liquidity": "62222202",
+        "lowestRate": "61",
+        "highestRate": "62",
+        "marginalRate": "62"
+      },
+      {
+        "liquidity": "63209856",
+        "lowestRate": "62",
+        "highestRate": "63",
+        "marginalRate": "63"
+      },
+      {
+        "liquidity": "64197510",
+        "lowestRate": "63",
+        "highestRate": "64",
+        "marginalRate": "64"
+      },
+      {
+        "liquidity": "65185164",
+        "lowestRate": "64",
+        "highestRate": "65",
+        "marginalRate": "65"
+      },
+      {
+        "liquidity": "66172818",
+        "lowestRate": "65",
+        "highestRate": "66",
+        "marginalRate": "66"
+      },
+      {
+        "liquidity": "190617222",
+        "lowestRate": "191",
+        "highestRate": "192",
+        "marginalRate": "192"
+      },
+      {
+        "liquidity": "189629568",
+        "lowestRate": "190",
+        "highestRate": "191",
+        "marginalRate": "191"
+      },
+      {
+        "liquidity": "69135780",
+        "lowestRate": "68",
+        "highestRate": "69",
+        "marginalRate": "69"
+      },
+      {
+        "liquidity": "70123434",
+        "lowestRate": "69",
+        "highestRate": "70",
+        "marginalRate": "70"
+      },
+      {
+        "liquidity": "71111088",
+        "lowestRate": "70",
+        "highestRate": "71",
+        "marginalRate": "71"
+      },
+      {
+        "liquidity": "72098742",
+        "lowestRate": "71",
+        "highestRate": "72",
+        "marginalRate": "72"
+      },
+      {
+        "liquidity": "73086396",
+        "lowestRate": "72",
+        "highestRate": "73",
+        "marginalRate": "73"
+      },
+      {
+        "liquidity": "74074050",
+        "lowestRate": "73",
+        "highestRate": "74",
+        "marginalRate": "74"
+      },
+      {
+        "liquidity": "75061704",
+        "lowestRate": "74",
+        "highestRate": "75",
+        "marginalRate": "75"
+      },
+      {
+        "liquidity": "76049358",
+        "lowestRate": "75",
+        "highestRate": "76",
+        "marginalRate": "76"
+      },
+      {
+        "liquidity": "77037012",
+        "lowestRate": "76",
+        "highestRate": "77",
+        "marginalRate": "77"
+      },
+      {
+        "liquidity": "78024666",
+        "lowestRate": "77",
+        "highestRate": "78",
+        "marginalRate": "78"
+      },
+      {
+        "liquidity": "79012320",
+        "lowestRate": "78",
+        "highestRate": "79",
+        "marginalRate": "79"
+      },
+      {
+        "liquidity": "177777720",
+        "lowestRate": "178",
+        "highestRate": "179",
+        "marginalRate": "179"
+      },
+      {
+        "liquidity": "80987628",
+        "lowestRate": "80",
+        "highestRate": "81",
+        "marginalRate": "81"
+      },
+      {
+        "liquidity": "81975282",
+        "lowestRate": "81",
+        "highestRate": "82",
+        "marginalRate": "82"
+      },
+      {
+        "liquidity": "82962936",
+        "lowestRate": "82",
+        "highestRate": "83",
+        "marginalRate": "83"
+      },
+      {
+        "liquidity": "83950590",
+        "lowestRate": "83",
+        "highestRate": "84",
+        "marginalRate": "84"
+      },
+      {
+        "liquidity": "84938244",
+        "lowestRate": "84",
+        "highestRate": "85",
+        "marginalRate": "85"
+      },
+      {
+        "liquidity": "171851796",
+        "lowestRate": "172",
+        "highestRate": "173",
+        "marginalRate": "173"
+      },
+      {
+        "liquidity": "86913552",
+        "lowestRate": "86",
+        "highestRate": "87",
+        "marginalRate": "87"
+      },
+      {
+        "liquidity": "87901206",
+        "lowestRate": "87",
+        "highestRate": "88",
+        "marginalRate": "88"
+      },
+      {
+        "liquidity": "88888860",
+        "lowestRate": "88",
+        "highestRate": "89",
+        "marginalRate": "89"
+      },
+      {
+        "liquidity": "89876514",
+        "lowestRate": "89",
+        "highestRate": "90",
+        "marginalRate": "90"
+      },
+      {
+        "liquidity": "90864168",
+        "lowestRate": "90",
+        "highestRate": "91",
+        "marginalRate": "91"
+      },
+      {
+        "liquidity": "91851822",
+        "lowestRate": "91",
+        "highestRate": "92",
+        "marginalRate": "92"
+      },
+      {
+        "liquidity": "164938218",
+        "lowestRate": "165",
+        "highestRate": "166",
+        "marginalRate": "166"
+      },
+      {
+        "liquidity": "93827130",
+        "lowestRate": "93",
+        "highestRate": "94",
+        "marginalRate": "94"
+      },
+      {
+        "liquidity": "94814784",
+        "lowestRate": "94",
+        "highestRate": "95",
+        "marginalRate": "95"
+      },
+      {
+        "liquidity": "95802438",
+        "lowestRate": "95",
+        "highestRate": "96",
+        "marginalRate": "96"
+      },
+      {
+        "liquidity": "96790092",
+        "lowestRate": "96",
+        "highestRate": "97",
+        "marginalRate": "97"
+      },
+      {
+        "liquidity": "97777746",
+        "lowestRate": "97",
+        "highestRate": "98",
+        "marginalRate": "98"
+      },
+      {
+        "liquidity": "98765400",
+        "lowestRate": "98",
+        "highestRate": "99",
+        "marginalRate": "99"
+      },
+      {
+        "liquidity": "99753054",
+        "lowestRate": "99",
+        "highestRate": "100",
+        "marginalRate": "100"
+      },
+      {
+        "liquidity": "100740708",
+        "lowestRate": "100",
+        "highestRate": "101",
+        "marginalRate": "101"
+      },
+      {
+        "liquidity": "101728362",
+        "lowestRate": "101",
+        "highestRate": "102",
+        "marginalRate": "102"
+      },
+      {
+        "liquidity": "102716016",
+        "lowestRate": "102",
+        "highestRate": "103",
+        "marginalRate": "103"
+      },
+      {
+        "liquidity": "154074024",
+        "lowestRate": "154",
+        "highestRate": "155",
+        "marginalRate": "155"
+      },
+      {
+        "liquidity": "104691324",
+        "lowestRate": "104",
+        "highestRate": "105",
+        "marginalRate": "105"
+      },
+      {
+        "liquidity": "105678978",
+        "lowestRate": "105",
+        "highestRate": "106",
+        "marginalRate": "106"
+      },
+      {
+        "liquidity": "151111062",
+        "lowestRate": "151",
+        "highestRate": "152",
+        "marginalRate": "152"
+      },
+      {
+        "liquidity": "107654286",
+        "lowestRate": "107",
+        "highestRate": "108",
+        "marginalRate": "108"
+      },
+      {
+        "liquidity": "108641940",
+        "lowestRate": "108",
+        "highestRate": "109",
+        "marginalRate": "109"
+      },
+      {
+        "liquidity": "109629594",
+        "lowestRate": "109",
+        "highestRate": "110",
+        "marginalRate": "110"
+      },
+      {
+        "liquidity": "110617248",
+        "lowestRate": "110",
+        "highestRate": "111",
+        "marginalRate": "111"
+      },
+      {
+        "liquidity": "111604902",
+        "lowestRate": "111",
+        "highestRate": "112",
+        "marginalRate": "112"
+      },
+      {
+        "liquidity": "112592556",
+        "lowestRate": "112",
+        "highestRate": "113",
+        "marginalRate": "113"
+      },
+      {
+        "liquidity": "113580210",
+        "lowestRate": "113",
+        "highestRate": "114",
+        "marginalRate": "114"
+      },
+      {
+        "liquidity": "114567864",
+        "lowestRate": "114",
+        "highestRate": "115",
+        "marginalRate": "115"
+      },
+      {
+        "liquidity": "115555518",
+        "lowestRate": "115",
+        "highestRate": "116",
+        "marginalRate": "116"
+      },
+      {
+        "liquidity": "116543172",
+        "lowestRate": "116",
+        "highestRate": "117",
+        "marginalRate": "117"
+      },
+      {
+        "liquidity": "117530826",
+        "lowestRate": "117",
+        "highestRate": "118",
+        "marginalRate": "118"
+      },
+      {
+        "liquidity": "118518480",
+        "lowestRate": "118",
+        "highestRate": "119",
+        "marginalRate": "119"
+      },
+      {
+        "liquidity": "119506134",
+        "lowestRate": "119",
+        "highestRate": "120",
+        "marginalRate": "120"
+      },
+      {
+        "liquidity": "137283906",
+        "lowestRate": "137",
+        "highestRate": "138",
+        "marginalRate": "138"
+      },
+      {
+        "liquidity": "136296252",
+        "lowestRate": "136",
+        "highestRate": "137",
+        "marginalRate": "137"
+      },
+      {
+        "liquidity": "122469096",
+        "lowestRate": "122",
+        "highestRate": "123",
+        "marginalRate": "123"
+      },
+      {
+        "liquidity": "123456750",
+        "lowestRate": "123",
+        "highestRate": "124",
+        "marginalRate": "124"
+      },
+      {
+        "liquidity": "124444404",
+        "lowestRate": "124",
+        "highestRate": "125",
+        "marginalRate": "125"
+      },
+      {
+        "liquidity": "125432058",
+        "lowestRate": "125",
+        "highestRate": "126",
+        "marginalRate": "126"
+      },
+      {
+        "liquidity": "126419712",
+        "lowestRate": "126",
+        "highestRate": "127",
+        "marginalRate": "127"
+      },
+      {
+        "liquidity": "127407366",
+        "lowestRate": "127",
+        "highestRate": "128",
+        "marginalRate": "128"
+      },
+      {
+        "liquidity": "128395020",
+        "lowestRate": "128",
+        "highestRate": "129",
+        "marginalRate": "129"
+      },
+      {
+        "liquidity": "129382674",
+        "lowestRate": "129",
+        "highestRate": "130",
+        "marginalRate": "130"
+      },
+      {
+        "liquidity": "130370328",
+        "lowestRate": "130",
+        "highestRate": "131",
+        "marginalRate": "131"
+      },
+      {
+        "liquidity": "131357982",
+        "lowestRate": "131",
+        "highestRate": "132",
+        "marginalRate": "132"
+      },
+      {
+        "liquidity": "132345636",
+        "lowestRate": "132",
+        "highestRate": "133",
+        "marginalRate": "133"
+      },
+      {
+        "liquidity": "133333290",
+        "lowestRate": "133",
+        "highestRate": "134",
+        "marginalRate": "134"
+      },
+      {
+        "liquidity": "134320944",
+        "lowestRate": "134",
+        "highestRate": "135",
+        "marginalRate": "135"
+      },
+      {
+        "liquidity": "135308598",
+        "lowestRate": "135",
+        "highestRate": "136",
+        "marginalRate": "136"
+      },
+      {
+        "liquidity": "121481442",
+        "lowestRate": "121",
+        "highestRate": "122",
+        "marginalRate": "122"
+      },
+      {
+        "liquidity": "120493788",
+        "lowestRate": "120",
+        "highestRate": "121",
+        "marginalRate": "121"
+      },
+      {
+        "liquidity": "138271560",
+        "lowestRate": "138",
+        "highestRate": "139",
+        "marginalRate": "139"
+      },
+      {
+        "liquidity": "139259214",
+        "lowestRate": "139",
+        "highestRate": "140",
+        "marginalRate": "140"
+      },
+      {
+        "liquidity": "140246868",
+        "lowestRate": "140",
+        "highestRate": "141",
+        "marginalRate": "141"
+      },
+      {
+        "liquidity": "141234522",
+        "lowestRate": "141",
+        "highestRate": "142",
+        "marginalRate": "142"
+      },
+      {
+        "liquidity": "142222176",
+        "lowestRate": "142",
+        "highestRate": "143",
+        "marginalRate": "143"
+      },
+      {
+        "liquidity": "143209830",
+        "lowestRate": "143",
+        "highestRate": "144",
+        "marginalRate": "144"
+      },
+      {
+        "liquidity": "144197484",
+        "lowestRate": "144",
+        "highestRate": "145",
+        "marginalRate": "145"
+      },
+      {
+        "liquidity": "145185138",
+        "lowestRate": "145",
+        "highestRate": "146",
+        "marginalRate": "146"
+      },
+      {
+        "liquidity": "146172792",
+        "lowestRate": "146",
+        "highestRate": "147",
+        "marginalRate": "147"
+      },
+      {
+        "liquidity": "147160446",
+        "lowestRate": "147",
+        "highestRate": "148",
+        "marginalRate": "148"
+      },
+      {
+        "liquidity": "148148100",
+        "lowestRate": "148",
+        "highestRate": "149",
+        "marginalRate": "149"
+      },
+      {
+        "liquidity": "149135754",
+        "lowestRate": "149",
+        "highestRate": "150",
+        "marginalRate": "150"
+      },
+      {
+        "liquidity": "150123408",
+        "lowestRate": "150",
+        "highestRate": "151",
+        "marginalRate": "151"
+      },
+      {
+        "liquidity": "106666632",
+        "lowestRate": "106",
+        "highestRate": "107",
+        "marginalRate": "107"
+      },
+      {
+        "liquidity": "152098716",
+        "lowestRate": "152",
+        "highestRate": "153",
+        "marginalRate": "153"
+      },
+      {
+        "liquidity": "153086370",
+        "lowestRate": "153",
+        "highestRate": "154",
+        "marginalRate": "154"
+      },
+      {
+        "liquidity": "103703670",
+        "lowestRate": "103",
+        "highestRate": "104",
+        "marginalRate": "104"
+      },
+      {
+        "liquidity": "155061678",
+        "lowestRate": "155",
+        "highestRate": "156",
+        "marginalRate": "156"
+      },
+      {
+        "liquidity": "156049332",
+        "lowestRate": "156",
+        "highestRate": "157",
+        "marginalRate": "157"
+      },
+      {
+        "liquidity": "157036986",
+        "lowestRate": "157",
+        "highestRate": "158",
+        "marginalRate": "158"
+      },
+      {
+        "liquidity": "158024640",
+        "lowestRate": "158",
+        "highestRate": "159",
+        "marginalRate": "159"
+      },
+      {
+        "liquidity": "159012294",
+        "lowestRate": "159",
+        "highestRate": "160",
+        "marginalRate": "160"
+      },
+      {
+        "liquidity": "159999948",
+        "lowestRate": "160",
+        "highestRate": "161",
+        "marginalRate": "161"
+      },
+      {
+        "liquidity": "160987602",
+        "lowestRate": "161",
+        "highestRate": "162",
+        "marginalRate": "162"
+      },
+      {
+        "liquidity": "161975256",
+        "lowestRate": "162",
+        "highestRate": "163",
+        "marginalRate": "163"
+      },
+      {
+        "liquidity": "162962910",
+        "lowestRate": "163",
+        "highestRate": "164",
+        "marginalRate": "164"
+      },
+      {
+        "liquidity": "163950564",
+        "lowestRate": "164",
+        "highestRate": "165",
+        "marginalRate": "165"
+      },
+      {
+        "liquidity": "92839476",
+        "lowestRate": "92",
+        "highestRate": "93",
+        "marginalRate": "93"
+      },
+      {
+        "liquidity": "165925872",
+        "lowestRate": "166",
+        "highestRate": "167",
+        "marginalRate": "167"
+      },
+      {
+        "liquidity": "166913526",
+        "lowestRate": "167",
+        "highestRate": "168",
+        "marginalRate": "168"
+      },
+      {
+        "liquidity": "167901180",
+        "lowestRate": "168",
+        "highestRate": "169",
+        "marginalRate": "169"
+      },
+      {
+        "liquidity": "168888834",
+        "lowestRate": "169",
+        "highestRate": "170",
+        "marginalRate": "170"
+      },
+      {
+        "liquidity": "169876488",
+        "lowestRate": "170",
+        "highestRate": "171",
+        "marginalRate": "171"
+      },
+      {
+        "liquidity": "170864142",
+        "lowestRate": "171",
+        "highestRate": "172",
+        "marginalRate": "172"
+      },
+      {
+        "liquidity": "85925898",
+        "lowestRate": "85",
+        "highestRate": "86",
+        "marginalRate": "86"
+      },
+      {
+        "liquidity": "172839450",
+        "lowestRate": "173",
+        "highestRate": "174",
+        "marginalRate": "174"
+      },
+      {
+        "liquidity": "173827104",
+        "lowestRate": "174",
+        "highestRate": "175",
+        "marginalRate": "175"
+      },
+      {
+        "liquidity": "174814758",
+        "lowestRate": "175",
+        "highestRate": "176",
+        "marginalRate": "176"
+      },
+      {
+        "liquidity": "175802412",
+        "lowestRate": "176",
+        "highestRate": "177",
+        "marginalRate": "177"
+      },
+      {
+        "liquidity": "176790066",
+        "lowestRate": "177",
+        "highestRate": "178",
+        "marginalRate": "178"
+      },
+      {
+        "liquidity": "79999974",
+        "lowestRate": "79",
+        "highestRate": "80",
+        "marginalRate": "80"
+      },
+      {
+        "liquidity": "178765374",
+        "lowestRate": "179",
+        "highestRate": "180",
+        "marginalRate": "180"
+      },
+      {
+        "liquidity": "179753028",
+        "lowestRate": "180",
+        "highestRate": "181",
+        "marginalRate": "181"
+      },
+      {
+        "liquidity": "180740682",
+        "lowestRate": "181",
+        "highestRate": "182",
+        "marginalRate": "182"
+      },
+      {
+        "liquidity": "181728336",
+        "lowestRate": "182",
+        "highestRate": "183",
+        "marginalRate": "183"
+      },
+      {
+        "liquidity": "182715990",
+        "lowestRate": "183",
+        "highestRate": "184",
+        "marginalRate": "184"
+      },
+      {
+        "liquidity": "183703644",
+        "lowestRate": "184",
+        "highestRate": "185",
+        "marginalRate": "185"
+      },
+      {
+        "liquidity": "184691298",
+        "lowestRate": "185",
+        "highestRate": "186",
+        "marginalRate": "186"
+      },
+      {
+        "liquidity": "185678952",
+        "lowestRate": "186",
+        "highestRate": "187",
+        "marginalRate": "187"
+      },
+      {
+        "liquidity": "186666606",
+        "lowestRate": "187",
+        "highestRate": "188",
+        "marginalRate": "188"
+      },
+      {
+        "liquidity": "187654260",
+        "lowestRate": "188",
+        "highestRate": "189",
+        "marginalRate": "189"
+      },
+      {
+        "liquidity": "188641914",
+        "lowestRate": "189",
+        "highestRate": "190",
+        "marginalRate": "190"
+      },
+      {
+        "liquidity": "68148126",
+        "lowestRate": "67",
+        "highestRate": "68",
+        "marginalRate": "68"
+      },
+      {
+        "liquidity": "67160472",
+        "lowestRate": "66",
+        "highestRate": "67",
+        "marginalRate": "67"
+      },
+      {
+        "liquidity": "191604876",
+        "lowestRate": "192",
+        "highestRate": "193",
+        "marginalRate": "193"
+      },
+      {
+        "liquidity": "192592530",
+        "lowestRate": "193",
+        "highestRate": "194",
+        "marginalRate": "194"
+      },
+      {
+        "liquidity": "193580184",
+        "lowestRate": "194",
+        "highestRate": "195",
+        "marginalRate": "195"
+      },
+      {
+        "liquidity": "194567838",
+        "lowestRate": "195",
+        "highestRate": "196",
+        "marginalRate": "196"
+      },
+      {
+        "liquidity": "195555492",
+        "lowestRate": "196",
+        "highestRate": "197",
+        "marginalRate": "197"
+      },
+      {
+        "liquidity": "196543146",
+        "lowestRate": "197",
+        "highestRate": "198",
+        "marginalRate": "198"
+      },
+      {
+        "liquidity": "197530800",
+        "lowestRate": "198",
+        "highestRate": "199",
+        "marginalRate": "199"
+      },
+      {
+        "liquidity": "198518454",
+        "lowestRate": "199",
+        "highestRate": "200",
+        "marginalRate": "200"
+      },
+      {
+        "liquidity": "199506108",
+        "lowestRate": "200",
+        "highestRate": "201",
+        "marginalRate": "201"
+      },
+      {
+        "liquidity": "57283932",
+        "lowestRate": "56",
+        "highestRate": "57",
+        "marginalRate": "57"
+      },
+      {
+        "liquidity": "201481416",
+        "lowestRate": "202",
+        "highestRate": "203",
+        "marginalRate": "203"
+      },
+      {
+        "liquidity": "202469070",
+        "lowestRate": "203",
+        "highestRate": "204",
+        "marginalRate": "204"
+      },
+      {
+        "liquidity": "203456724",
+        "lowestRate": "204",
+        "highestRate": "205",
+        "marginalRate": "205"
+      },
+      {
+        "liquidity": "204444378",
+        "lowestRate": "205",
+        "highestRate": "206",
+        "marginalRate": "206"
+      },
+      {
+        "liquidity": "205432032",
+        "lowestRate": "206",
+        "highestRate": "207",
+        "marginalRate": "207"
+      },
+      {
+        "liquidity": "206419686",
+        "lowestRate": "207",
+        "highestRate": "208",
+        "marginalRate": "208"
+      },
+      {
+        "liquidity": "207407340",
+        "lowestRate": "208",
+        "highestRate": "209",
+        "marginalRate": "209"
+      },
+      {
+        "liquidity": "208394994",
+        "lowestRate": "209",
+        "highestRate": "210",
+        "marginalRate": "210"
+      },
+      {
+        "liquidity": "209382648",
+        "lowestRate": "210",
+        "highestRate": "211",
+        "marginalRate": "211"
+      },
+      {
+        "liquidity": "210370302",
+        "lowestRate": "211",
+        "highestRate": "212",
+        "marginalRate": "212"
+      },
+      {
+        "liquidity": "211357956",
+        "lowestRate": "212",
+        "highestRate": "213",
+        "marginalRate": "213"
+      },
+      {
+        "liquidity": "212345610",
+        "lowestRate": "213",
+        "highestRate": "214",
+        "marginalRate": "214"
+      },
+      {
+        "liquidity": "213333264",
+        "lowestRate": "214",
+        "highestRate": "215",
+        "marginalRate": "215"
+      },
+      {
+        "liquidity": "214320918",
+        "lowestRate": "215",
+        "highestRate": "216",
+        "marginalRate": "216"
+      },
+      {
+        "liquidity": "215308572",
+        "lowestRate": "216",
+        "highestRate": "217",
+        "marginalRate": "217"
+      },
+      {
+        "liquidity": "216296226",
+        "lowestRate": "217",
+        "highestRate": "218",
+        "marginalRate": "218"
+      },
+      {
+        "liquidity": "217283880",
+        "lowestRate": "218",
+        "highestRate": "219",
+        "marginalRate": "219"
+      },
+      {
+        "liquidity": "218271534",
+        "lowestRate": "219",
+        "highestRate": "220",
+        "marginalRate": "220"
+      },
+      {
+        "liquidity": "38518506",
+        "lowestRate": "37",
+        "highestRate": "38",
+        "marginalRate": "38"
+      },
+      {
+        "liquidity": "220246842",
+        "lowestRate": "221",
+        "highestRate": "222",
+        "marginalRate": "222"
+      },
+      {
+        "liquidity": "221234496",
+        "lowestRate": "222",
+        "highestRate": "223",
+        "marginalRate": "223"
+      },
+      {
+        "liquidity": "222222150",
+        "lowestRate": "223",
+        "highestRate": "224",
+        "marginalRate": "224"
+      },
+      {
+        "liquidity": "223209804",
+        "lowestRate": "224",
+        "highestRate": "225",
+        "marginalRate": "225"
+      },
+      {
+        "liquidity": "224197458",
+        "lowestRate": "225",
+        "highestRate": "226",
+        "marginalRate": "226"
+      },
+      {
+        "liquidity": "225185112",
+        "lowestRate": "226",
+        "highestRate": "227",
+        "marginalRate": "227"
+      },
+      {
+        "liquidity": "226172766",
+        "lowestRate": "227",
+        "highestRate": "228",
+        "marginalRate": "228"
+      },
+      {
+        "liquidity": "30617274",
+        "lowestRate": "29",
+        "highestRate": "30",
+        "marginalRate": "30"
+      },
+      {
+        "liquidity": "228148074",
+        "lowestRate": "229",
+        "highestRate": "230",
+        "marginalRate": "230"
+      },
+      {
+        "liquidity": "229135728",
+        "lowestRate": "230",
+        "highestRate": "231",
+        "marginalRate": "231"
+      },
+      {
+        "liquidity": "230123382",
+        "lowestRate": "231",
+        "highestRate": "232",
+        "marginalRate": "232"
+      },
+      {
+        "liquidity": "26666658",
+        "lowestRate": "25",
+        "highestRate": "26",
+        "marginalRate": "26"
+      },
+      {
+        "liquidity": "232098690",
+        "lowestRate": "233",
+        "highestRate": "234",
+        "marginalRate": "234"
+      },
+      {
+        "liquidity": "233086344",
+        "lowestRate": "234",
+        "highestRate": "235",
+        "marginalRate": "235"
+      },
+      {
+        "liquidity": "23703696",
+        "lowestRate": "22",
+        "highestRate": "23",
+        "marginalRate": "23"
+      },
+      {
+        "liquidity": "235061652",
+        "lowestRate": "236",
+        "highestRate": "237",
+        "marginalRate": "237"
+      },
+      {
+        "liquidity": "236049306",
+        "lowestRate": "237",
+        "highestRate": "238",
+        "marginalRate": "238"
+      },
+      {
+        "liquidity": "237036960",
+        "lowestRate": "238",
+        "highestRate": "239",
+        "marginalRate": "239"
+      },
+      {
+        "liquidity": "238024614",
+        "lowestRate": "239",
+        "highestRate": "240",
+        "marginalRate": "240"
+      },
+      {
+        "liquidity": "239012268",
+        "lowestRate": "240",
+        "highestRate": "241",
+        "marginalRate": "241"
+      },
+      {
+        "liquidity": "17777772",
+        "lowestRate": "16",
+        "highestRate": "17",
+        "marginalRate": "17"
+      },
+      {
+        "liquidity": "240987576",
+        "lowestRate": "242",
+        "highestRate": "243",
+        "marginalRate": "243"
+      },
+      {
+        "liquidity": "241975230",
+        "lowestRate": "243",
+        "highestRate": "244",
+        "marginalRate": "244"
+      },
+      {
+        "liquidity": "242962884",
+        "lowestRate": "244",
+        "highestRate": "245",
+        "marginalRate": "245"
+      },
+      {
+        "liquidity": "243950538",
+        "lowestRate": "245",
+        "highestRate": "246",
+        "marginalRate": "246"
+      },
+      {
+        "liquidity": "12839502",
+        "lowestRate": "11",
+        "highestRate": "12",
+        "marginalRate": "12"
+      },
+      {
+        "liquidity": "245925846",
+        "lowestRate": "247",
+        "highestRate": "248",
+        "marginalRate": "248"
+      },
+      {
+        "liquidity": "246913500",
+        "lowestRate": "248",
+        "highestRate": "249",
+        "marginalRate": "249"
+      },
+      {
+        "liquidity": "247901154",
+        "lowestRate": "249",
+        "highestRate": "250",
+        "marginalRate": "250"
+      },
+      {
+        "liquidity": "8888886",
+        "lowestRate": "7",
+        "highestRate": "8",
+        "marginalRate": "8"
+      },
+      {
+        "liquidity": "249876462",
+        "lowestRate": "251",
+        "highestRate": "252",
+        "marginalRate": "252"
+      },
+      {
+        "liquidity": "250864116",
+        "lowestRate": "252",
+        "highestRate": "253",
+        "marginalRate": "253"
+      },
+      {
+        "liquidity": "5925924",
+        "lowestRate": "4",
+        "highestRate": "5",
+        "marginalRate": "5"
+      },
+      {
+        "liquidity": "4938270",
+        "lowestRate": "3",
+        "highestRate": "4",
+        "marginalRate": "4"
+      },
+      {
+        "liquidity": "3950616",
+        "lowestRate": "2",
+        "highestRate": "3",
+        "marginalRate": "3"
+      },
+      {
+        "liquidity": "2962962",
+        "lowestRate": "1",
+        "highestRate": "2",
+        "marginalRate": "2"
+      }
+    ],
+    "actions": [
+      {
+        "id": "0",
+        "input": "254814732",
+        "output": "993432"
+      },
+      {
+        "id": "1",
+        "input": "253827078",
+        "output": "993455"
+      },
+      {
+        "id": "2",
+        "input": "252839424",
+        "output": "993478"
+      },
+      {
+        "id": "3",
+        "input": "251851770",
+        "output": "993501"
+      },
+      {
+        "id": "251",
+        "input": "250864116",
+        "output": "993524"
+      },
+      {
+        "id": "250",
+        "input": "249876462",
+        "output": "993547"
+      },
+      {
+        "id": "6",
+        "input": "248888808",
+        "output": "993571"
+      },
+      {
+        "id": "248",
+        "input": "247901154",
+        "output": "993594"
+      },
+      {
+        "id": "247",
+        "input": "246913500",
+        "output": "993618"
+      },
+      {
+        "id": "246",
+        "input": "245925846",
+        "output": "993642"
+      },
+      {
+        "id": "10",
+        "input": "15963477",
+        "output": "64638"
+      }
+    ]
+  }
+]
