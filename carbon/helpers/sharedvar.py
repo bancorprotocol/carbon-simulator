@@ -3,8 +3,8 @@ Carbon helper module - variables with shared state
 """
 import math as _math
 
-__VERSION__ = "1.0"
-__DATE__= "26/Jan/2023"
+__VERSION__ = "1.1"
+__DATE__= "28/Feb/2023"
 
 class SharedVar:
     """
@@ -14,6 +14,18 @@ class SharedVar:
     :oid:        disregarded; just for the benefit of __repr__
 
     see https://rszalski.github.io/magicmethods/
+
+    NOTES
+
+    Essentially this class defines a mutable number. For example
+
+    x = y = ShareVar(5)
+    y += 1
+    print(x,y) # 6,6
+    x.setval(-1)
+    print(x,y) # -1,-1
+    y = 2
+    print(x,y) # -1,2 (link is broken!)    
     """
     __VERSION__ = __VERSION__
     __DATE__ = __DATE__
@@ -31,6 +43,11 @@ class SharedVar:
         """the object value"""
         return self._value
 
+    def setval(self, newval):
+        """sets the object value to `newval`"""
+        self._value = newval
+        return self
+        
     # comparison
 
     def __eq__(self, other):
