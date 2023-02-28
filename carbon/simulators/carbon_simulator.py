@@ -23,7 +23,7 @@ from tabulate import tabulate
 from ..order import Order
 from ..pair import CarbonPair
 from ..carbon_order_ui import CarbonOrderUI
-from ..routers import ExactRouterX0Y0N, AlphaRouter, FastRouter
+from ..routers import ExactRouterX0Y0N, FastRouter, AlphaRouter, AlphaRouterX2, AlphaRouterX3
 from decimal import Decimal
 import pandas as pd
 import numpy as np
@@ -74,6 +74,10 @@ class CarbonSimulatorUI:
         self._mm = matching_method
         if matching_method == self.MATCH_ALPHA:
             self.matcher = AlphaRouter(verbose=False)
+        elif matching_method == 'alpha_x2':
+            self.matcher = AlphaRouterX2(verbose=False)
+        elif matching_method == 'alpha_x3':
+            self.matcher = AlphaRouterX3(verbose=False)
         elif matching_method == self.MATCH_EXACT:
             self.matcher = ExactRouterX0Y0N(verbose=False)
         elif matching_method == self.MATCH_FAST:

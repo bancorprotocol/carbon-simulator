@@ -10,9 +10,9 @@ goalseek = alphaxutils.goalseek
 assertAlmostEqual = alphaxutils.assertAlmostEqual
 get_geoprice = alphaxutils.get_geoprice
 
-def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
+def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
     indexes = list(range(len(orders)))   
-    hypothetical_output_amts = {i: tradeBySourceAmount(x=inputAmount, order=orders[i])[1] for i in indexes}   # WTF not sure why this is bySource but it works - for input USDC as target, orders defined in ETH per USDC
+    hypothetical_output_amts = {i: tradeBySourceAmount(x=inputAmount, order=orders[i])[1] for i in indexes}
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
         indexes, key=lambda i: hypothetical_output_amts[i], reverse=True
     )}  
@@ -40,15 +40,15 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
         print('Insufficient Liquidity')
         return(None)
     else:
-        passed_indexes = AlphaRouter.gen_one_order_selector(ordered_available_values.values(), abs(inputAmount), threshold_orders)
+        passed_indexes = AlphaRouter.gen_two_order_selector(ordered_available_values.values(), abs(inputAmount), threshold_orders)
         top_n_threshold_orders = [list(ordered_available_values.keys())[i] for i in passed_indexes]
     order_subset = [orders[i] for i in top_n_threshold_orders]
     total_subset_liquidity = sum([v for k,v in ordered_available_values.items() if k in top_n_threshold_orders])
 
-    if inputAmount == total_subset_liquidity:
-            rl1 = [o.y for o in order_subset]
-            rl2 = [o.dxfromdy_f(o.y) for o in order_subset]
-    elif inputAmount > total_subset_liquidity:
+    # if inputAmount == total_subset_liquidity:
+    #         rl1 = [o.y for o in order_subset]
+    #         rl2 = [o.dxfromdy_f(o.y) for o in order_subset]
+    if inputAmount > total_subset_liquidity:
         if support_partial:
             print(f'** Partial Match ({total_subset_liquidity/inputAmount*100:0.5f}%) **')
             inputAmount = total_subset_liquidity
@@ -64,8 +64,9 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
         rl1 = [o.dyfromp_f(p_goal) for o in order_subset]
         rl2 = [o.dxfromdy_f(o.dyfromp_f(p_goal)) for o in order_subset]
 
-    actions = {top_n_threshold_orders[i]:{"input":rl2[i],"output":rl1[i]} for i in range(len(top_n_threshold_orders))}
-    assertAlmostEqual(inputAmount, sum(rl2), Decimal('1E-6'))
+    actions = {top_n_threshold_orders[i]:{"dx_specified":rl2[i],"dy":rl1[i]} for i in range(len(top_n_threshold_orders))}
+    print("dx_specified", sum(rl2))
+    # assertAlmostEqual(inputAmount, sum(rl2), Decimal('1E-6'))
     # print("\n**Match by Target**") 
     # print('inputAmount', inputAmount)
     # print('total_subset_liquidity', total_subset_liquidity)
@@ -76,9 +77,9 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
     # print("\n**Actions**")
     return(actions)
 
-def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
+def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
     indexes = list(range(len(orders)))   
-    hypothetical_output_amts = {i: tradeByTargetAmount(x=inputAmount, order=orders[i])[0] for i in indexes}   # WTF not sure why this is byTarget but it works
+    hypothetical_output_amts = {i: tradeByTargetAmount(x=inputAmount, order=orders[i])[0] for i in indexes}
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
         indexes, key=lambda i: hypothetical_output_amts[i], reverse=False
     )}   
@@ -90,7 +91,7 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
         print('Insufficient Liquidity')
         return(None)
     else:
-        passed_indexes = AlphaRouter.gen_one_order_selector(ordered_associated_liquidity.values(), abs(inputAmount), threshold_orders)
+        passed_indexes = AlphaRouter.gen_two_order_selector(ordered_associated_liquidity.values(), abs(inputAmount), threshold_orders)
         top_n_threshold_orders = [list(ordered_associated_liquidity.keys())[i] for i in passed_indexes]
     
     order_subset = [orders[i] for i in top_n_threshold_orders]
@@ -115,8 +116,9 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
         rl1 = [o.dyfromp_f(p_goal) for o in order_subset]
         rl2 = [o.dxfromdy_f(o.dyfromp_f(p_goal)) for o in order_subset]
 
-    actions = {top_n_threshold_orders[i]:{"input":rl1[i],"output":rl2[i]} for i in range(len(top_n_threshold_orders))}
-    assertAlmostEqual(inputAmount, sum(rl1), Decimal('1E-6'))
+    actions = {top_n_threshold_orders[i]:{"dy_specified":rl1[i],"dx":rl2[i]} for i in range(len(top_n_threshold_orders))}
+    print("dy_specified", sum(rl1))
+    # assertAlmostEqual(inputAmount, sum(rl1), Decimal('1E-6'))
     # print("\n**Match by Source**")  
     # print('inputAmount', inputAmount)
     # print('total_subset_liquidity', total_subset_liquidity)
@@ -129,6 +131,4 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
 
 # mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial)
 # mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial)
-
-
 

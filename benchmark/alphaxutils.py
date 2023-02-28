@@ -62,11 +62,15 @@ class Order:
         max = Decimal(order['highestRate']).sqrt()
         mid = Decimal(order['marginalRate']).sqrt()
         self.y = liq
-        self.z = liq * (max - min) / (mid - min)
+        if min == max:
+            self.z = max
+        else:    
+            self.z = liq * (max - min) / (mid - min)
         self.A = max - min
         self.B = min
         self.pb = self.B * self.B
         self.pa = (self.A + self.B) ** 2
+        self.pmarg = (self.B + self.A * self.y / self.z) ** 2
     def __iter__(self):
         y = self.y
         z = self.z
@@ -251,6 +255,15 @@ class AlphaRouter:
             return(min_c_list[0])
         else:
             return(min_c_list[0])
+        
+    # returns the last single min value in an enumerated list
+    def min_item_last(lst):
+        min_c = min([c for i,c in lst])
+        min_c_list = [(i,c) for i,c in lst if c == min_c]
+        if len(min_c_list) > 1:
+            return(min_c_list[-1])
+        else:
+            return(min_c_list[0])
 
     # returns the first single max value in an enumerated list
     def max_item(lst):
@@ -350,3 +363,87 @@ class AlphaRouter:
                     return(AlphaRouter.list_indexes(threshold_list))
                 indexed_values = indexed_values[1:]
 
+    def gen_two_order_selector(amounts, requested_trade_amount, threshold_orders):
+        '''
+        GenII is an improvement on GenI both in terms of readability and performance.
+        The performance comes from a minor bug fix where (in GenI) the minimum valued item in the threshold list was preferentially low index value as opposed to high index value.
+        The improvement results in a lower sum_threshold_list_indexes which indicates a better price ranking.
+        GenII results in a better trade rate in approximately 1% of cases.
+
+        Amounts should have been sorted into best-price-first order
+
+        :amounts:                       the input amounts that need to be sorted and optimized
+        :requested_trade_amount:        the minimum requested_trade_amount that need to be met by sorting the amounts
+        :threshold_orders:              the number of amounts that are permitted to be used in order to meet the requested_trade_amount 
+
+
+        ## WHAT IS KNOWN
+        1. The maximum ouput amount is limited by the threshold_orders.
+        2. If the maximum output amount is less than the requested_trade_amount then this is a partial fill
+        3. The maximum number of amounts that make it into the final list is n-1 occuring only when the 
+            requested_trade_amount is the sum of all but the final amount in the amounts list. 
+            Else the process would have finished early with a partial fill
+        4. The process ends if:
+            a) Partial fill is supported and the sum(amounts) < requested_trade_amount
+            b) If the sum(threshold_list) >= requested_trade_amount
+        5. We should not get to the point where:
+            a) We have iterated through every amount and the trade has not been met, as it should have been completed with partial or insufficient liquidity
+
+        
+
+        ### Order of operations
+        1. Check if max_fill >= requested_trade_amount to determine if the request will be fully fulfilled
+        2. For each value added to the threshold list check if trade is met
+        3. When adding a new amount to the list it must be greater than the minimum amount already in the list
+        
+        '''
+        exit_summary = 0
+        count = 0
+        indexed_amounts = list(enumerate(amounts))
+        max_index, max_val = AlphaRouter.max_item(indexed_amounts)
+        threshold_list = indexed_amounts[:threshold_orders]    # set the initial threshold_list as the first orders in the list
+        max_fill = sum(sorted(amounts, reverse=True)[:threshold_orders])  # identify the maximum return possible given the threshold_orders limitation
+        current_sum = AlphaRouter.sum_me(threshold_list)
+
+        # liquidity check to determine partial fill
+        full_fill = True if requested_trade_amount<=max_fill else False
+
+        # you have already populated the threshold_list so you can start counting at the next item in the amounts list
+        for i in range(threshold_orders,len(amounts)):
+            count += 1
+            current_sum = AlphaRouter.sum_me(threshold_list)
+
+            # early exit when a partial fill is met
+            if (not full_fill) & (current_sum==max_fill): # this works because a partial fill requires that the requested_trade_amount is <= max_fill, and max_fill is the n biggest values in the amounts, and thus the current_sum must include the biggest
+                exit_summary = 1
+                AlphaRouter.assertion_checks(full_fill, current_sum, requested_trade_amount, max_fill, threshold_list, threshold_orders)
+                sum_threshold_list_indexes = AlphaRouter.sum_list_indexes(threshold_list)
+                # return(threshold_list, current_sum, requested_trade_amount, sum_threshold_list_indexes, count, exit_summary)#
+                return(AlphaRouter.list_indexes(threshold_list))
+
+            # early exit when we filled the order
+            if current_sum >= requested_trade_amount:
+                exit_summary = 2
+                AlphaRouter.assertion_checks(full_fill, current_sum, requested_trade_amount, max_fill, threshold_list, threshold_orders)
+                sum_threshold_list_indexes = AlphaRouter.sum_list_indexes(threshold_list)
+                # return(threshold_list, current_sum, requested_trade_amount, sum_threshold_list_indexes, count, exit_summary)#
+                return(AlphaRouter.list_indexes(threshold_list))
+            else:
+                min_index, min_val = AlphaRouter.min_item_last(threshold_list)
+                # print(i)
+                # print(indexed_amounts)
+                next_val = AlphaRouter.get_i(indexed_amounts, i)[1]
+
+                # the next value to insert must be greater than the current value
+                if next_val > min_val:
+                    threshold_list.remove(AlphaRouter.min_item_last(threshold_list))
+                    threshold_list.append(AlphaRouter.get_i(indexed_amounts, i))
+                else:
+                    pass
+
+        exit_summary = 4
+        current_sum = AlphaRouter.sum_me(threshold_list)
+        AlphaRouter.assertion_checks(full_fill, current_sum, requested_trade_amount, max_fill, threshold_list, threshold_orders)
+        sum_threshold_list_indexes = AlphaRouter.sum_list_indexes(threshold_list)
+        # return(threshold_list, current_sum, requested_trade_amount, sum_threshold_list_indexes, count, exit_summary)#
+        return(AlphaRouter.list_indexes(threshold_list))
