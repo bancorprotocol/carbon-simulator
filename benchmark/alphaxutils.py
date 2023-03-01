@@ -31,6 +31,12 @@ def encodeOrderDecimal(order):
     L = encodeRate(Decimal(order['lowestRate']) * Decimal('10')**dec_delta)
     H = encodeRate(Decimal(order['highestRate']) * Decimal('10')**dec_delta)
     M = encodeRate(Decimal(order['marginalRate']) * Decimal('10')**dec_delta)
+
+    # *** ENSURING THERE ARE NO CONSTANT PRICE ***
+    if H==L:
+        L -= 1
+        # *** ENSURING THERE ARE NO CONSTANT PRICE ***
+
     return {
         'y' : y,
         'z' : y if H == M else y * (H - L) // (M - L),
@@ -40,27 +46,7 @@ def encodeOrderDecimal(order):
         'dec_x': dec_x,
     }
 
-# def assertAlmostEqual(actual, expected, maxError):
-#     actual, expected, maxError = [Decimal(x) for x in [actual, expected, maxError]]
-#     if actual != expected:
-#         error = abs(actual - expected) / expected
-#         assert error <= maxError, 'error = {:f}'.format(error)
-
-# def tradeBySourceAmount(x, order):
-#     y, z, A, B = [order.y, order.z, order.A, order.B]
-#     n = x * (A * y + B * z) ** 2
-#     d = A * x * (A * y + B * z) + z ** 2
-#     return x, n / d
-
-# def tradeByTargetAmount(x, order):
-#     y, z, A, B = [order.y, order.z, order.A, order.B]
-#     n = x * z ** 2
-#     d = (A * y + B * z) * (A * y + B * z - A * x)
-#     return n / d, x
-
 def get_geoprice(i, orders):
-    # pb = orders[i].pb
-    # pa = (orders[i].A + orders[i].B)**2
     return(((orders[i].pa * orders[i].pb)**Decimal('0.5')))
 
 def goalseek(func, a, b, eps=None):
@@ -106,17 +92,8 @@ class Order:
         self.pmarg = decodeRate(self.B + self.A if self.y == self.z else self.B + self.A * self.y / self.z)
         self.pb = decodeRate(self.B)
         self.pa = decodeRate(self.B + self.A)
-    # def __iter__(self):
-    #     y = self.y
-    #     z = self.z
-    #     A = self.A
-    #     B = self.B
-    #     yield 'liquidity'    , y
-    #     yield 'lowestRate'   , B ** 2
-    #     yield 'highestRate'  , (B + A) ** 2
-    #     yield 'marginalRate' , (B + A * y / z) ** 2
 
-    def dyfromp_f(self, p, byTarget, checkbounds=True, raiseonerror=False):
+    def dyfromp_f(self, p, checkbounds=True, raiseonerror=False):
         """
         returns dy = y_target - y as a function of the target marginal price
 
@@ -130,11 +107,11 @@ class Order:
             if raiseonerror:
                 raise ValueError("Can't determine trade prices from an empty curve", self.B, self.A)
             return 0
-        y = self.yfromp_f(p, byTarget, checkbounds, raiseonerror)
+        y = self.yfromp_f(p, checkbounds, raiseonerror)
         if y is None: return 0
         return self.y-y
 
-    def yfromp_f(self, p, byTarget, checkbounds=True, raiseonerror=False):
+    def yfromp_f(self, p, checkbounds=True, raiseonerror=False):
         """
         returns y as a function of the target marginal price
 
@@ -144,11 +121,8 @@ class Order:
         :returns:       the y value at which the marginal price is achieved
                         if beyond the end it returns 0, if beyond start or current y None
         """
-        # dydx = ((B * yint + S * y) / yint)**2 = (B + S y/yint)**2
-        # y = yint * (sqrt(dydx) - B) / S
-        dydx = p #if self.pair.has_quotetoken(self.tkn) else 1/p
-        #print(f"[yfromp_f] pa={self.pa_raw} dydx={dydx} pb={self.pb_raw}")
-        # print("1/dydx", 1/dydx)
+        dydx = p 
+
         if checkbounds:
             if dydx > self.pa:
                 if raiseonerror:
@@ -158,7 +132,6 @@ class Order:
                 if raiseonerror:
                     raise self.PriceOutOfBoundsErrorBeyondEnd("Price out of bounds (beyond end)", p, self.pb)
                 return 0
-        # y = self.z * ((dydx.sqrt()) - self.B) / self.A
         y = self.z * (dydx.sqrt() - self.pb.sqrt()) / (self.pa.sqrt()-self.pb.sqrt())
         if checkbounds:
             if y > self.y:
