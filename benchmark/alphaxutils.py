@@ -1,28 +1,67 @@
 from benchmark.core import Decimal
+from benchmark.core.trade.impl import *
 Amount = Decimal
 
-def assertAlmostEqual(actual, expected, maxError):
-    actual, expected, maxError = [Decimal(x) for x in [actual, expected, maxError]]
-    if actual != expected:
-        error = abs(actual - expected) / expected
-        assert error <= maxError, 'error = {:f}'.format(error)
+tradeBySourceAmount_impl = tradeBySourceAmount
+tradeByTargetAmount_impl = tradeByTargetAmount
 
-def tradeBySourceAmount(x, order):
-    y, z, A, B = [order.y, order.z, order.A, order.B]
-    n = x * (A * y + B * z) ** 2
-    d = A * x * (A * y + B * z) + z ** 2
-    return x, n / d
+def tradeByTargetAmount(amount, order):
+    repack_order = {}
+    repack_order['y'] = int(order.y)
+    repack_order['z'] = int(order.z)
+    repack_order['A'] = encodeFloat(int(order.A))
+    repack_order['B'] = encodeFloat(int(order.B))
+    return(tradeByTargetAmount_impl(int(amount), repack_order))
 
-def tradeByTargetAmount(x, order):
-    y, z, A, B = [order.y, order.z, order.A, order.B]
-    n = x * z ** 2
-    d = (A * y + B * z) * (A * y + B * z - A * x)
-    return n / d, x
+def tradeBySourceAmount(amount, order):
+    # print("[alphaxutils, tradeBySourceAmount], order details",
+    #       order.y, order.z, order.A, order.B, amount)
+    repack_order = {}
+    repack_order['y'] = int(order.y)
+    repack_order['z'] = int(order.z)
+    repack_order['A'] = encodeFloat(int(order.A))
+    repack_order['B'] = encodeFloat(int(order.B))
+    return(tradeBySourceAmount_impl(int(amount), repack_order))
+
+def encodeOrderDecimal(order):
+    dec_y = Decimal(order['dec_y'])
+    dec_x = Decimal(order['dec_x'])
+    dec_delta = dec_y - dec_x
+    y = int(Decimal(order['liquidity']) * Decimal('10')**dec_y)
+    L = encodeRate(Decimal(order['lowestRate']) * Decimal('10')**dec_delta)
+    H = encodeRate(Decimal(order['highestRate']) * Decimal('10')**dec_delta)
+    M = encodeRate(Decimal(order['marginalRate']) * Decimal('10')**dec_delta)
+    return {
+        'y' : y,
+        'z' : y if H == M else y * (H - L) // (M - L),
+        'A' : encodeFloat(H - L),
+        'B' : encodeFloat(L),
+        'dec_y': dec_y,
+        'dec_x': dec_x,
+    }
+
+# def assertAlmostEqual(actual, expected, maxError):
+#     actual, expected, maxError = [Decimal(x) for x in [actual, expected, maxError]]
+#     if actual != expected:
+#         error = abs(actual - expected) / expected
+#         assert error <= maxError, 'error = {:f}'.format(error)
+
+# def tradeBySourceAmount(x, order):
+#     y, z, A, B = [order.y, order.z, order.A, order.B]
+#     n = x * (A * y + B * z) ** 2
+#     d = A * x * (A * y + B * z) + z ** 2
+#     return x, n / d
+
+# def tradeByTargetAmount(x, order):
+#     y, z, A, B = [order.y, order.z, order.A, order.B]
+#     n = x * z ** 2
+#     d = (A * y + B * z) * (A * y + B * z - A * x)
+#     return n / d, x
 
 def get_geoprice(i, orders):
-    pb = orders[i].B**2
-    pa = (orders[i].A + orders[i].B)**2
-    return(((pa * pb)**Decimal('0.5')))
+    # pb = orders[i].pb
+    # pa = (orders[i].A + orders[i].B)**2
+    return(((orders[i].pa * orders[i].pb)**Decimal('0.5')))
 
 def goalseek(func, a, b, eps=None):
     """
@@ -35,7 +74,7 @@ def goalseek(func, a, b, eps=None):
     :returns: the x value found
     """
     if eps is None:
-        eps = Decimal('0.00000000001')
+        eps = Decimal('1e-20')
     if not a<b:
         raise ValueError("Bracketing value a must be smaller than b", a, b)
     fa = func(a)
@@ -57,31 +96,27 @@ def goalseek(func, a, b, eps=None):
 
 class Order:
     def __init__(self, order):
-        liq = Decimal(order['liquidity'])
-        min = Decimal(order['lowestRate']).sqrt()
-        max = Decimal(order['highestRate']).sqrt()
-        mid = Decimal(order['marginalRate']).sqrt()
-        self.y = liq
-        if min == max:
-            self.z = max
-        else:    
-            self.z = liq * (max - min) / (mid - min)
-        self.A = max - min
-        self.B = min
-        self.pb = self.B * self.B
-        self.pa = (self.A + self.B) ** 2
-        self.pmarg = (self.B + self.A * self.y / self.z) ** 2
-    def __iter__(self):
-        y = self.y
-        z = self.z
-        A = self.A
-        B = self.B
-        yield 'liquidity'    , y
-        yield 'lowestRate'   , B ** 2
-        yield 'highestRate'  , (B + A) ** 2
-        yield 'marginalRate' , (B + A * y / z) ** 2
+        order = encodeOrderDecimal(order)
+        self.y = Decimal(order['y'])
+        self.z = Decimal(order['z'])
+        self.A = Decimal(decodeFloat(order['A']))
+        self.B = Decimal(decodeFloat(order['B']))
+        self.dec_y = Decimal(order['dec_y'])
+        self.dec_x = Decimal(order['dec_x'])
+        self.pmarg = decodeRate(self.B + self.A if self.y == self.z else self.B + self.A * self.y / self.z)
+        self.pb = decodeRate(self.B)
+        self.pa = decodeRate(self.B + self.A)
+    # def __iter__(self):
+    #     y = self.y
+    #     z = self.z
+    #     A = self.A
+    #     B = self.B
+    #     yield 'liquidity'    , y
+    #     yield 'lowestRate'   , B ** 2
+    #     yield 'highestRate'  , (B + A) ** 2
+    #     yield 'marginalRate' , (B + A * y / z) ** 2
 
-    def dyfromp_f(self, p, checkbounds=True, raiseonerror=False):
+    def dyfromp_f(self, p, byTarget, checkbounds=True, raiseonerror=False):
         """
         returns dy = y_target - y as a function of the target marginal price
 
@@ -95,11 +130,11 @@ class Order:
             if raiseonerror:
                 raise ValueError("Can't determine trade prices from an empty curve", self.B, self.A)
             return 0
-        y = self.yfromp_f(p, checkbounds, raiseonerror)
+        y = self.yfromp_f(p, byTarget, checkbounds, raiseonerror)
         if y is None: return 0
         return self.y-y
 
-    def yfromp_f(self, p, checkbounds=True, raiseonerror=False):
+    def yfromp_f(self, p, byTarget, checkbounds=True, raiseonerror=False):
         """
         returns y as a function of the target marginal price
 
@@ -123,7 +158,8 @@ class Order:
                 if raiseonerror:
                     raise self.PriceOutOfBoundsErrorBeyondEnd("Price out of bounds (beyond end)", p, self.pb)
                 return 0
-        y = self.z * ((dydx.sqrt()) - self.B) / self.A
+        # y = self.z * ((dydx.sqrt()) - self.B) / self.A
+        y = self.z * (dydx.sqrt() - self.pb.sqrt()) / (self.pa.sqrt()-self.pb.sqrt())
         if checkbounds:
             if y > self.y:
                 if raiseonerror:
@@ -159,9 +195,16 @@ class Order:
                     raise ValueError("AMM sell amount dy must be within available liquidity", dy, self.y)
                 return None
         
+        # num   =                                   self.z**2
+        # #       ----------------------------------------------------------------------------------
+        # denom = (self.A*self.y+self.B*self.z) * (self.A*self.y+self.B*self.z-self.A*dy)
+
+        newA = self.pa.sqrt()-self.pb.sqrt()
+        newB = self.pb.sqrt()
+
         num   =                                   self.z**2
         #       ----------------------------------------------------------------------------------
-        denom = (self.A*self.y+self.B*self.z) * (self.A*self.y+self.B*self.z-self.A*dy)
+        denom = (newA*self.y+newB*self.z) * (newA*self.y+newB*self.z-newA*dy)
 
         return dy*(num/denom)   
 
@@ -189,9 +232,16 @@ class Order:
                     raise ValueError("The value of y is out of bounds (y<0)", y)
                 return None
 
+        # num =                          self.z * (self.z - y)
+        # #        -----------------------------------------------------------------------------
+        # denom =  self.B**2*self.z + self.B*self.A*y + self.B*self.A*self.z + self.A**2*y
+
+        newA = self.pa.sqrt()-self.pb.sqrt()
+        newB = self.pb.sqrt()
+
         num =                          self.z * (self.z - y)
         #        -----------------------------------------------------------------------------
-        denom =  self.B**2*self.z + self.B*self.A*y + self.B*self.A*self.z + self.A**2*y
+        denom =  newB**2*self.z + newB*newA*y + newB*newA*self.z + newA**2*y
         return num/denom
 
     def dyfromdx_f(self, dx, checkbounds=True, raiseonerror=False):
@@ -222,9 +272,16 @@ class Order:
             #         raise ValueError("AMM sell amount dx must be within available liquidity", dx, self.y)
             #     return None
         
-        num   =               (self.A*self.y + self.B*self.z)**2
+        # num   =               (self.A*self.y + self.B*self.z)**2
+        # #         -------------------------------------------------------------
+        # denom =   self.A*dx * (self.A*self.y + self.B*self.z) + self.z**2
+
+        newA = self.pa.sqrt()-self.pb.sqrt()
+        newB = self.pb.sqrt()
+
+        num   =               (newA*self.y + newB*self.z)**2
         #         -------------------------------------------------------------
-        denom =   self.A*dx * (self.A*self.y + self.B*self.z) + self.z**2
+        denom =   newA*dx * (newA*self.y + newB*self.z) + self.z**2
 
         if checkbounds:
             if num < 0:
