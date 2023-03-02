@@ -1,15 +1,17 @@
 from benchmark import alphaxutils
 from decimal import Decimal
+from math import ceil
 
 tradeBySourceAmount = alphaxutils.tradeBySourceAmount
 tradeByTargetAmount = alphaxutils.tradeByTargetAmount
 AlphaRouter = alphaxutils.AlphaRouter
 goalseek = alphaxutils.goalseek
 get_geoprice = alphaxutils.get_geoprice
+handle_wei_discrepancy = alphaxutils.handle_wei_discrepancy
 
 def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
     indexes = list(range(len(orders)))   
-    hypothetical_output_amts = {i: tradeBySourceAmount(amount=inputAmount, order=orders[i]) for i in indexes}
+    hypothetical_output_amts = {i: Decimal(tradeBySourceAmount(amount=inputAmount, order=orders[i])) for i in indexes}
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
         indexes, key=lambda i: hypothetical_output_amts[i], reverse=True
     )}  
@@ -19,7 +21,7 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
     for k, v in ordered_amts.items():
         if v > orders[k].y:
             price = get_geoprice(k, orders)
-            amount = orders[k].y
+            amount = Decimal(orders[k].y)
             amounts += [amount]
             effective_prices += [price]
             available_values[k] = amount / price
@@ -45,8 +47,8 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
         if support_partial:
             print(f'** Partial Match ({total_subset_liquidity/inputAmount*100:0.5f}%) **')
             inputAmount = total_subset_liquidity
-            rl1 = [int(o.y) for o in order_subset]
-            rl2 = [int(o.dxfromdy_f(o.y)) for o in order_subset]
+            rl1 = [ceil(o.y) for o in order_subset]
+            rl2 = [ceil(o.dxfromdy_f(o.y)) for o in order_subset]
         else:
             print('Insufficient Liquidity with threshold orders')
             return(None)
@@ -54,12 +56,17 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
         dy_f = lambda p: sum(o.dyfromp_f(p) for o in order_subset)
         dx_f = lambda p: sum(o.dxfromdy_f(o.dyfromp_f(p)) for o in order_subset)
         p_goal = goalseek(lambda p: dx_f(p)-inputAmount, Decimal('1e-20'), Decimal('1e48'))
-        rl1 = [int(o.dyfromp_f(p_goal)) for o in order_subset]
-        rl2 = [int(o.dxfromdy_f(o.dyfromp_f(p_goal))) for o in order_subset]
+        rl1 = [ceil(o.dyfromp_f(p_goal)) for o in order_subset]
+        rl2 = [ceil(o.dxfromdy_f(o.dyfromp_f(p_goal))) for o in order_subset]
 
     actions = {top_n_threshold_orders[i]:{"dx_specified":rl2[i],"dy":rl1[i]} for i in range(len(top_n_threshold_orders))}
     actions0 = {k:v for k,v in actions.items() if v['dy'] != 0}
     sorted_actions = dict(sorted(actions0.items()))
+
+    for k,v in sorted_actions.items():
+        # print(orders[k].y)
+        # print(v['dy'])
+        assert(orders[k].y >= v['dy'])
     return(sorted_actions)
 
 def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
@@ -83,14 +90,14 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
     total_subset_liquidity = sum(o.y for o in order_subset)
     
     if inputAmount == total_subset_liquidity:
-            rl1 = [int(o.y) for o in order_subset]
-            rl2 = [int(o.dxfromdy_f(o.y)) for o in order_subset]
+            rl1 = [ceil(o.y) for o in order_subset]
+            rl2 = [ceil(o.dxfromdy_f(o.y)) for o in order_subset]
     elif inputAmount > total_subset_liquidity:
         if support_partial:
             print(f'** Partial Match ({total_subset_liquidity/inputAmount*100:0.5f}%) **')
             inputAmount = total_subset_liquidity
-            rl1 = [int(o.y) for o in order_subset]
-            rl2 = [int(o.dxfromdy_f(o.y)) for o in order_subset]
+            rl1 = [ceil(o.y) for o in order_subset]
+            rl2 = [ceil(o.dxfromdy_f(o.y)) for o in order_subset]
         else:
             print('Insufficient Liquidity with threshold orders')
             return(None)
@@ -98,9 +105,14 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
         dy_f = lambda p: sum(o.dyfromp_f(p) for o in order_subset)
         dx_f = lambda p: sum(o.dxfromdy_f(o.dyfromp_f(p)) for o in order_subset)
         p_goal = goalseek(lambda p: dy_f(p)-inputAmount, Decimal('1e-20'), Decimal('1e48'))
-        rl1 = [int(o.dyfromp_f(p_goal)) for o in order_subset]
-        rl2 = [int(o.dxfromdy_f(o.dyfromp_f(p_goal))) for o in order_subset]
+        rl1 = [ceil(o.dyfromp_f(p_goal)) for o in order_subset]
+        rl2 = [ceil(o.dxfromdy_f(o.dyfromp_f(p_goal))) for o in order_subset]
     actions = {top_n_threshold_orders[i]:{"dy_specified":rl1[i],"dx":rl2[i]} for i in range(len(top_n_threshold_orders))}
-    actions0 = {k:v for k,v in actions.items() if v['dx'] != 0}
+    actions0 = {k:v for k,v in actions.items() if (v['dx'] != 0)}
     sorted_actions = dict(sorted(actions0.items()))
+    print(sorted_actions)
+    resultant_dy_specified = sum([v["dy_specified"] for k,v in sorted_actions.items()])
+    over = resultant_dy_specified - inputAmount
+    sorted_actions = handle_wei_discrepancy(sorted_actions, orders, over, tradeByTarget=True)
+    
     return(sorted_actions)
