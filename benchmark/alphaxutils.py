@@ -32,15 +32,10 @@ def encodeOrderDecimal(order):
     H = encodeRate(Decimal(order['highestRate']) * Decimal('10')**dec_delta)
     M = encodeRate(Decimal(order['marginalRate']) * Decimal('10')**dec_delta)
 
-    # *** ENSURING THERE ARE NO CONSTANT PRICE ***
-    if H==L:
-        L -= 1
-        # *** ENSURING THERE ARE NO CONSTANT PRICE ***
-
     return {
         'y' : y,
         'z' : y if H == M else y * (H - L) // (M - L),
-        'A' : encodeFloat(H - L),
+        'A' : 1 if H == L else encodeFloat(H - L),   # *** ENSURING THERE ARE NO CONSTANT PRICE ***
         'B' : encodeFloat(L),
         'dec_y': dec_y,
         'dec_x': dec_x,
