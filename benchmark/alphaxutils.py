@@ -67,7 +67,6 @@ def handle_wei_discrepancy(sorted_actions, orders, over, tradeByTarget):
                     over += left_over
                     sorted_actions[k]['dy_specified'] = int(v['dy_specified'] + left_over)
             assert(orders[k].y >= sorted_actions[k]['dy_specified'])
-        print(over)
         assert(over <= 10)
         k = list(sorted_actions.keys())[-1]
         sorted_actions[k]['dy_specified'] = int(sorted_actions[k]['dy_specified']-over)
