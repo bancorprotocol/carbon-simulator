@@ -8,6 +8,8 @@ AlphaRouter = alphaxutils.AlphaRouter
 goalseek = alphaxutils.goalseek
 get_geoprice = alphaxutils.get_geoprice
 handle_wei_discrepancy = alphaxutils.handle_wei_discrepancy
+get_equivalent_results = alphaxutils.get_equivalent_results
+rerun_and_reorder = alphaxutils.rerun_and_reorder
 
 def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
     isPartial = False
@@ -16,6 +18,9 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
         indexes, key=lambda i: hypothetical_output_amts[i], reverse=True
     )}  
+    orders_to_rerun = get_equivalent_results(ordered_amts)
+    ordered_amts = rerun_and_reorder(ordered_amts, orders_to_rerun, orders, tradeByTarget=False)
+    
     amounts = []
     effective_prices = []
     available_values = {}
@@ -79,6 +84,9 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
         indexes, key=lambda i: hypothetical_output_amts[i], reverse=False
     )}   
+    orders_to_rerun = get_equivalent_results(ordered_amts)
+    ordered_amts = rerun_and_reorder(ordered_amts, orders_to_rerun, orders, tradeByTarget=True)
+
     max_output_amt = {i: tradeByTargetAmount(amount=orders[i].y, order=orders[i]) for i in indexes}  
     ordered_associated_liquidity = {i:orders[i].y for i in ordered_amts.keys()}
     total_liquidity = sum([v for k,v in ordered_associated_liquidity.items()])

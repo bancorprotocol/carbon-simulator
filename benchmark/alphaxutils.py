@@ -98,6 +98,47 @@ def handle_wei_discrepancy(actions, orders, over, tradeByTarget):
             assert(orders[k].y >= v['dy'])
     return(sorted_actions)
 
+def get_equivalent_results(ordered_amts):
+    rev_dict = {}
+    for key, value in ordered_amts.items():
+        rev_dict.setdefault(value, set()).add(key)
+    orders_to_rerun = filter(lambda x: len(x)>1, rev_dict.values())
+    return(list(orders_to_rerun))
+
+def rerun_and_reorder(ordered_amts, orders_to_rerun, orders, tradeByTarget):
+    if tradeByTarget:
+        keys_list = list(ordered_amts.keys())
+        for set_a in orders_to_rerun:
+            rerun_output_amts = {i: tradeByTargetAmount(amount=1000, order=orders[i]) for i in set_a}
+            rerun_ordered_amts = {j: rerun_output_amts[j] for j in sorted(
+                set_a, key=lambda i: rerun_output_amts[i], reverse=False
+            )}
+            rerun_ordered_amts_indexes = list(rerun_ordered_amts.keys())
+            min_index = min([i for i,c in enumerate(keys_list) if c in rerun_ordered_amts_indexes])
+            max_index = max([i for i,c in enumerate(keys_list) if c in rerun_ordered_amts_indexes])
+            keys_list = keys_list[:min_index] + rerun_ordered_amts_indexes + keys_list[max_index+1:]
+
+        correct_order = {j: ordered_amts[j] for j in sorted(
+            keys_list, key=lambda i: ordered_amts[i], reverse=False
+        )}  
+        return(correct_order)
+    else:
+        keys_list = list(ordered_amts.keys())
+        for set_a in orders_to_rerun:
+            rerun_output_amts = {i: tradeBySourceAmount(amount=1000, order=orders[i]) for i in set_a}
+            rerun_ordered_amts = {j: rerun_output_amts[j] for j in sorted(
+                set_a, key=lambda i: rerun_output_amts[i], reverse=True
+            )}
+            rerun_ordered_amts_indexes = list(rerun_ordered_amts.keys())
+            min_index = min([i for i,c in enumerate(keys_list) if c in rerun_ordered_amts_indexes])
+            max_index = max([i for i,c in enumerate(keys_list) if c in rerun_ordered_amts_indexes])
+            keys_list = keys_list[:min_index] + rerun_ordered_amts_indexes + keys_list[max_index+1:]
+
+        correct_order = {j: ordered_amts[j] for j in sorted(
+            keys_list, key=lambda i: ordered_amts[i], reverse=True
+        )}  
+        return(correct_order)
+
 def goalseek(func, a, b, eps=None):
     """
     helper method: solves for x, a<x<b, such that func(x) == 0
