@@ -1,0 +1,18 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@bancor/carbon-sdk": "latest",
+    "ethers": "^5.7.2",
+    "express": "^4.18.2",
+    "node-metamask": "^1.1.2",
+    "yarn": "latest"
+  }
+}
