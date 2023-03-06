@@ -49,8 +49,11 @@ def encodeOrderDecimal(order):
 def get_geoprice(i, orders):
     return(((orders[i].pa * orders[i].pb)**Decimal('0.5')))
 
-def handle_wei_discrepancy(sorted_actions, orders, over, tradeByTarget):
+def handle_wei_discrepancy(actions, orders, over, tradeByTarget):
     if tradeByTarget:
+        sorted_actions = {j: actions[j] for j in sorted(
+            actions.keys(), key=lambda i: actions[i]['dy_specified'], reverse=True
+        )}  
         for k,v in sorted_actions.items():
             if over > 0:
                 remainder = v['dy_specified'] % 10
@@ -68,11 +71,36 @@ def handle_wei_discrepancy(sorted_actions, orders, over, tradeByTarget):
                     sorted_actions[k]['dy_specified'] = int(v['dy_specified'] + left_over)
             assert(orders[k].y >= sorted_actions[k]['dy_specified'])
         assert(over <= 10)
-        k = list(sorted_actions.keys())[-1]
+        k = list(sorted_actions.keys())[0]
         sorted_actions[k]['dy_specified'] = int(sorted_actions[k]['dy_specified']-over)
 
         for k,v in sorted_actions.items():
             assert(orders[k].y >= sorted_actions[k]['dy_specified'])
+
+    else:
+        sorted_actions = {j: actions[j] for j in sorted(
+            actions.keys(), key=lambda i: actions[i]['dx_specified'], reverse=True
+        )}  
+        for k,v in sorted_actions.items():
+            if over > 0:
+                remainder = v['dx_specified'] % 10
+                if (over - remainder) >= 0:
+                    over -= remainder
+                    sorted_actions[k]['dx_specified'] = int(v['dx_specified'] - remainder)
+
+        for k,v in sorted_actions.items():
+            if over < 0:
+                remainder = v['dx_specified'] % 10
+                left_over = 10 - remainder
+                if (over + left_over) <= 0:
+                    over += left_over
+                    sorted_actions[k]['dx_specified'] = int(v['dx_specified'] + left_over)
+        assert(over <= 10)
+        k = list(sorted_actions.keys())[0]
+        sorted_actions[k]['dx_specified'] = int(sorted_actions[k]['dx_specified']-over)
+
+        for k,v in sorted_actions.items():
+            assert(orders[k].y >= v['dy'])
     return(sorted_actions)
 
 def goalseek(func, a, b, eps=None):

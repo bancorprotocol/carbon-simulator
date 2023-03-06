@@ -10,6 +10,7 @@ get_geoprice = alphaxutils.get_geoprice
 handle_wei_discrepancy = alphaxutils.handle_wei_discrepancy
 
 def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
+    isPartial = False
     indexes = list(range(len(orders)))   
     hypothetical_output_amts = {i: Decimal(tradeBySourceAmount(amount=inputAmount, order=orders[i])) for i in indexes}
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
@@ -49,6 +50,7 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
             inputAmount = total_subset_liquidity
             rl1 = [ceil(o.y) for o in order_subset]
             rl2 = [ceil(o.dxfromdy_f(o.y)) for o in order_subset]
+            isPartial = True
         else:
             print('Insufficient Liquidity with threshold orders')
             return(None)
@@ -61,15 +63,17 @@ def mpr_matchBySource(inputAmount, orders, threshold_orders, support_partial):
 
     actions = {top_n_threshold_orders[i]:{"dx_specified":rl2[i],"dy":rl1[i]} for i in range(len(top_n_threshold_orders))}
     actions0 = {k:v for k,v in actions.items() if v['dy'] != 0}
+    # print("pre", actions0)
+    if not isPartial:
+        resultant_dx_specified = sum([v["dx_specified"] for k,v in actions0.items()])
+        over = resultant_dx_specified - inputAmount
+        actions0 = handle_wei_discrepancy(actions0, orders, over, tradeByTarget=False)
+    # print("post", actions0)
     sorted_actions = dict(sorted(actions0.items()))
-
-    for k,v in sorted_actions.items():
-        # print(orders[k].y)
-        # print(v['dy'])
-        assert(orders[k].y >= v['dy'])
     return(sorted_actions)
 
 def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
+    isPartial = False
     indexes = list(range(len(orders)))   
     hypothetical_output_amts = {i: tradeByTargetAmount(amount=inputAmount, order=orders[i]) for i in indexes}
     ordered_amts = {j: hypothetical_output_amts[j] for j in sorted(
@@ -98,6 +102,7 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
             inputAmount = total_subset_liquidity
             rl1 = [ceil(o.y) for o in order_subset]
             rl2 = [ceil(o.dxfromdy_f(o.y)) for o in order_subset]
+            isPartial = True
         else:
             print('Insufficient Liquidity with threshold orders')
             return(None)
@@ -109,10 +114,11 @@ def mpr_matchByTarget(inputAmount, orders, threshold_orders, support_partial):
         rl2 = [ceil(o.dxfromdy_f(o.dyfromp_f(p_goal))) for o in order_subset]
     actions = {top_n_threshold_orders[i]:{"dy_specified":rl1[i],"dx":rl2[i]} for i in range(len(top_n_threshold_orders))}
     actions0 = {k:v for k,v in actions.items() if (v['dx'] != 0)}
+    # print("pre", actions0)
+    if not isPartial:
+        resultant_dy_specified = sum([v["dy_specified"] for k,v in actions0.items()])
+        over = resultant_dy_specified - inputAmount
+        actions0 = handle_wei_discrepancy(actions0, orders, over, tradeByTarget=True)
+    # print("post", actions0)
     sorted_actions = dict(sorted(actions0.items()))
-    print(sorted_actions)
-    resultant_dy_specified = sum([v["dy_specified"] for k,v in sorted_actions.items()])
-    over = resultant_dy_specified - inputAmount
-    sorted_actions = handle_wei_discrepancy(sorted_actions, orders, over, tradeByTarget=True)
-    
     return(sorted_actions)
