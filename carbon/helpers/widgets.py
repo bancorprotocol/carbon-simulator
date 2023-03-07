@@ -266,8 +266,9 @@ class DropdownManager():
     :options:       tuple/list of dropdown options; alternatively a dict, in which case the 
                     dict keys are the options, and the values are the labels
     :labels:        the labels that are displayed in the dropdown
+    :defaultval:    value of the default option
+    :defaultix:     index of the default option
     :descr:         an option string displayed in front of the dropdown
-    :defaultix:     index of the default option chosen
     """
     __VERSION__ = __VERSION__
     __DATE__ = __DATE__

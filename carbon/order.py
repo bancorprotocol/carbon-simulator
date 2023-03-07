@@ -60,6 +60,7 @@ class Order:
     linked_to_id: int = 0
     _reverseq: bool = False
     verbose: bool = False
+    carbon_id: str = None
 
     @property
     def y(self) -> Decimal:
