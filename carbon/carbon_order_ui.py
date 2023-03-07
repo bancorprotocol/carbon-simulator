@@ -10,10 +10,10 @@ VERSION HISTORY
 - v1.5: linked curves (beta); bidask, curves_by_pair_bidask, checks for B,S=0 (1.4.1)
 - v1.6: linked curves incl trading (final), addliqy, tradeto; minor formula improvement (1.5.1)
 - v1.7: integration with solidity testing (yzABS); bugfix (1.6.1)
-- v1.7.1: prettification
+- v1.8: from_SDK, bn2int, roundsd; some prettification
 """
-__version__ = "1.7.1"
-__date__ = "12/Feb/2023"
+__version__ = "1.8"
+__date__ = "8/Mar/2023"
 
 try:
     from .pair import CarbonPair
@@ -21,8 +21,9 @@ except:
     from pair import CarbonPair
 
 from dataclasses import dataclass
-from math import sqrt
+from math import sqrt, floor, log10
 from collections import namedtuple
+from .sdk import Tokens
 
 @dataclass
 class CarbonOrderUI:
@@ -158,7 +159,7 @@ class CarbonOrderUI:
         )
 
     @classmethod
-    def from_prices(cls, pair, tkn, pa, pb, yint, y):
+    def from_prices(cls, pair, tkn, pa, pb, yint, y, id=None):
         """
         alternative constructor, taking prices pa, pb and curve capacity yint
         
@@ -168,6 +169,7 @@ class CarbonOrderUI:
         :pb:      the price at the x intercept, in quotation corresponding to the pair*
         :yint:    the y-intercept of the curve (also its current maximum capacity)
         :y:       the current y-coordinate on the curve (also current token holdings)
+        :id:      the curve ID (optional)
         
         *in their native quotation, pa, pb = -dy/dx at the y-intercept and x-intercept
         respectively; as the function y(x) is convex we must have pa >= pb; as this can
@@ -199,7 +201,8 @@ class CarbonOrderUI:
             B=B, 
             S=S, 
             yint=yint, 
-            y=y
+            y=y,
+            id=id,
         )
     
     @classmethod
@@ -253,6 +256,71 @@ class CarbonOrderUI:
             y=float(order.y),
             id=order.id,
         )
+
+    @classmethod 
+    def _from_SDK0(cls, encodedorder, pair, tkn, dec, sx=None):
+        """
+        NOTAPI - alternative constructor, from a single order object coming from the SDK
+
+        :encodedorder:    encoded order (AByz) object returned by the SDK, eg calling `getUserStrategies`
+        :pair:            corresponding token pair (specifically, its CarbonPair record)    
+        :tkn:             token that this order is selling
+        :dec:             number of decimals to use for tkn
+        :sx:              the scaling exponent to use (default: 48)
+        :returns:         corresponding CarbonOrderUI object
+        """
+        if not encodedorder.get("encoded") is None:
+            encodedorder = encodedorder["encoded"]
+        AByz = cls.bn2intd(encodedorder)
+        if sx is None: sx=48
+        scalefctr = 2**sx
+        decimalfctr = 10**dec
+        S = AByz['A']/scalefctr  # S = A
+        B = AByz['B']/scalefctr
+        y = AByz['y']/decimalfctr
+        z = AByz['z']/decimalfctr
+        return cls.from_BSy(pair=pair, tkn=tkn, S=S, B=B, y=y, z=z)
+    
+    @classmethod
+    def from_SDK(cls, sdkStrategy, nsd=None):
+        """
+        double constructor, returning two strategies from the SDK
+
+        :sdkStrategy:   SDK strategy dict, eg returned by `getUserStrategies`
+        :nsd:           number of significant decimals to round to (None=no rounding)
+        :returns:       a tuple of two linked CarbonOrderUI objects
+        """
+        s = {k:cls.roundsd(float(sdkStrategy[k]), nsd) 
+            for k in ['buyPriceLow', 'buyPriceHigh', 'buyBudget', 'sellPriceLow', 'sellPriceHigh', 'sellBudget']}
+        sid = cls.bn2int(sdkStrategy["id"])
+        if not {sdkStrategy["baseToken"], sdkStrategy["quoteToken"]} == {sdkStrategy["encoded"]["token0"], sdkStrategy["encoded"]["token1"]}:
+            raise ValueError("tokens do not match encoded tokens", sdkStrategy)
+        if sdkStrategy["baseToken"] == sdkStrategy["encoded"]["token0"]:
+            tknbe = sdkStrategy["encoded"]["order0"]
+            tknqe = sdkStrategy["encoded"]["order1"]
+        else:
+            tknbe = sdkStrategy["encoded"]["order1"]
+            tknqe = sdkStrategy["encoded"]["order0"]
+        tknqa = sdkStrategy["quoteToken"]
+        tknqo = Tokens.byaddr(tknqa, raiseonerror=False,returnnultkn=False)
+        tknq = tknqo.T if not tknqo is None else "TKNQ"
+        tknql = cls.bn2int(tknqe["y"]) / cls.bn2int(tknqe["z"])
+        tknba = sdkStrategy["baseToken"]
+        tknbo = Tokens.byaddr(tknba, raiseonerror=False,returnnultkn=False)
+        tknb = tknbo.T if not tknbo is None else "TKNB"
+        tknbl = cls.bn2int(tknbe["y"]) / cls.bn2int(tknbe["z"])
+        
+        pair = CarbonPair(tknq=tknq, tknb=tknb)
+        # the tkn in the constructor is the one that is being sold
+        o_selltknb = cls.from_prices(pair=pair, tkn=tknb, pa=s["sellPriceLow"], 
+            pb=s["sellPriceHigh"], yint=s["sellBudget"], y=s["sellBudget"]*tknbl, id=f"{sid}-s")
+        o_buytknb  = cls.from_prices(pair=pair, tkn=tknq, pa=s["buyPriceHigh"], 
+            pb=s["buyPriceLow"], yint=s["buyBudget"], y=s["buyBudget"]*tknql, id=f"{sid}-b")
+        o_buytknb.set_linked(o_selltknb)
+        o_selltknb.set_linked(o_buytknb)
+        return o_buytknb, o_selltknb
+
+    
 
     @property 
     def tkny(self):
@@ -1000,6 +1068,45 @@ class CarbonOrderUI:
         
         return yzABS
 
+    @staticmethod
+    def bn2int(item):
+        """
+        converts BigNumber to int (if item is a BND; else returns item)
+
+        :returns: int(item) if bn BigNumber dict, else item
+        """
+        if not isinstance(item, dict): return item
+        if not item.get("type") == 'BigNumber': return item
+        return int(item["hex"], 16) 
+    
+    @classmethod
+    def bn2intd(cls, dct):
+        """
+        applies bn2int to all values in a dict
+
+        :returns: dict with int(item) if bn BigNumber dict, else item
+        """
+        return {k:cls.bn2int(v) for k,v in dct.items()}
+
+    @staticmethod
+    def roundsd(x, nsd=None):
+        """
+        rounds the value to significant decimals (returns x unmodified if not a number or zero)
+        
+        :x:      the value to be rounded
+        :nsd:    number of significant decimals (None: don't round)
+        """
+        if nsd is None: return x
+        try:
+            magnitude = floor(log10(x))
+        except:
+            return x
+        if magnitude <= nsd:
+            return round(x,nsd-magnitude-1)
+        else:
+            shift = 10**(magnitude-nsd)
+            return shift*round(x/shift,0)
+    
     def __repr__(self):
         s1 = f"pair={str(self.pair)}, tkn={self.tkn}, B={self.B}, S={self.S}, yint={self.yint}, y={self.y}, id={self.id}"
         s2 = f"linked=<{self.linked.id}>" if self.linked else "linked=None"
