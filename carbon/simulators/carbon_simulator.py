@@ -11,10 +11,10 @@ v2.2.1 - CarbonOrderUI linked
 v2.3 - added fast router
 v2.4 - limit orders, changed trade_action -> match_by in _trade
 v2.5 - ability to specify y_int
-v2.5.1 - link orderuis 
+v2.6 - add orders from SDK, link orderuis 
 """
-__version__ = "2.5.1"
-__date__ = "12/Feb/2023"
+__version__ = "2.6"
+__date__ = "8/Mar/2023"
 
 import itertools
 from typing import Callable, Any, Tuple, Dict, List
@@ -407,6 +407,28 @@ class CarbonSimulatorUI:
             return {"success": False, "error": str(e), "exception": e}
         return {"success": True, "orders": orders, "orderuis": orderuis, "id": id1, "lid": id2}
 
+    def add_fromsdk(self, sdkStrategy, nsd=None):
+        """
+        adds a strategy returned by the SDK
+
+        :sdkStrategy:   SDK strategy dict, eg returned by `getUserStrategies`
+        :nsd:           number of significant decimals to round to (None=no rounding)
+        :returns:       return value of add_strategy
+        """
+        obuy, osell = CarbonOrderUI.from_SDK(sdkStrategy, nsd)
+        return self.add_strategy(
+            tkn = osell.tkn,
+            amt_sell = osell.y,
+            y_int_sell = osell.yint,
+            psell_start= osell.pa,
+            psell_end = osell.pb,
+            amt_buy = obuy.y,
+            y_int_buy = obuy.yint,
+            pbuy_start = obuy.pa,
+            pbuy_end = obuy.pb,
+            pair=osell.pair,
+        )
+        
     def add_strategy(
             self,
             tkn: str,
