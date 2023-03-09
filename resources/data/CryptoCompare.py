@@ -133,7 +133,20 @@ for item in dltable:
 df = pd.read_pickle("cryptocompare/HOURLY.pickle")
 df
 
+fn = "HOURLY.pickle"
+
+# !ls cryptocompare
+
+# !ls ../../../BinderCarbonSimulator/data
 
 
+# !ls ../../../BinderCarbonSimulator/frozen/data
+
+# !ls ../../../JupyLiteCarbonSim/content/data
+
+if 1:
+    # !cp -v cryptocompare/{fn} ../../../BinderCarbonSimulator/data
+    # !cp -v cryptocompare/{fn} ../../../BinderCarbonSimulator/frozen/data
+    # !cp -v cryptocompare/{fn} ../../../JupyLiteCarbonSim/content/data
 
 
