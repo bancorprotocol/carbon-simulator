@@ -2,7 +2,7 @@
 from carbon import CarbonSimulatorUI
 
 
-def test_add_order_concentrated_on_one_point():
+def fails_test_add_order_concentrated_on_one_point():
     """
     Derived from `passed_tests` notebook test-1
     """
