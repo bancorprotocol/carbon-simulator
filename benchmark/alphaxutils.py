@@ -42,7 +42,7 @@ def encodeOrderDecimal(order):
     }
 
 def get_geoprice(i, orders):
-    return(((orders[i].pa * orders[i].pb)**Decimal('0.5')))
+    return(((orders[i].pmarg * orders[i].pb)**Decimal('0.5')))
 
 def handle_wei_discrepancy(actions, orders, over, tradeByTarget):
     if tradeByTarget:
