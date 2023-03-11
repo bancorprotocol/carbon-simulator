@@ -138,16 +138,20 @@ class SDKBase:
         :method:    self.GET or self.POST
         :sync:      whether to call sync or async
         """
+        #print("\n\n[call]", ep, params, method, sync)
         url = self.join(self.callapi0(sync), ep)
         if sync: 
-            return self.req(url, params, method)
+            #print("\n\n[call] calling req", ep, params, method, sync)
+            retval = self.req(url, params, method)
+            #print("\n\n[call] req returned", retval)
+            return retval
         try:
             r = self.req(url, params, method)
             rj = r.json()
         except:
             raise self.APICallError("Error calling API", r)
 
-        if not rj["success"]:
+        if not rj.get("success"):
             if self.raiseonerror:
                 raise self.AsyncAPICallError("posts", ep, params, rj)
             return False
