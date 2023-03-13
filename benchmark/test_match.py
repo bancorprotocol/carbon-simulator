@@ -31,3 +31,4 @@ def run(fileName):
 run('resources/match/ArbitraryMatch')
 run('resources/match/BigPoolMatch')
 run('resources/match/EthUsdcMatch')
+run('resources/match/SpecialMatch')
