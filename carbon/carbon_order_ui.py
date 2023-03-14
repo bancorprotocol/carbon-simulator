@@ -11,9 +11,10 @@ VERSION HISTORY
 - v1.6: linked curves incl trading (final), addliqy, tradeto; minor formula improvement (1.5.1)
 - v1.7: integration with solidity testing (yzABS); bugfix (1.6.1)
 - v1.8: from_SDK, bn2int, roundsd; some prettification
+- v1.9: various additional properties representing curve parameters; used dataclass for yzABS; as_cpc
 """
-__version__ = "1.8"
-__date__ = "8/Mar/2023"
+__version__ = "1.9"
+__date__ = "15/Mar/2023"
 
 try:
     from .pair import CarbonPair
@@ -24,6 +25,7 @@ from dataclasses import dataclass
 from math import sqrt, floor, log10
 from collections import namedtuple
 from .sdk import Tokens
+from .cpc import ConstantProductCurve as CPC
 
 @dataclass
 class CarbonOrderUI:
@@ -50,6 +52,7 @@ class CarbonOrderUI:
     :pb:       ditto pb
     :pmin:     the min of pa, pb (in the quotation appropriate for the pair)
     :pmax:     the max of pa, pb (in the quotation appropriate for the pair)
+    :reverseq: True if the pair is quoted in reverse order (ie pa_raw = 1/pa etc)
     
     NOTES
     - natively, prices are quoted in the convention dy/dx, where tkn is the quote asset;
@@ -320,8 +323,6 @@ class CarbonOrderUI:
         o_selltknb.set_linked(o_buytknb)
         return o_buytknb, o_selltknb
 
-    
-
     @property 
     def tkny(self):
         """the token on the y-axis (alias for tkn)"""
@@ -334,7 +335,13 @@ class CarbonOrderUI:
 
     @property
     def bidask(self):
-        """returns BID or ASK depending on what type curve it is"""
+        """
+        DONOTUSE -- returns BID or ASK depending on what type curve it is
+        
+        NOTE: BID sells base token, ASK sells quote token; this seems to be the wrong
+        way round; however, if we change this we probably need to update the simulator
+        sheet so we need to be careful -- DONOTUS
+        """
         if self.tkny == self.pair.basetoken:
             return "BID"
         else:
@@ -379,6 +386,94 @@ class CarbonOrderUI:
         """Gamma parameter (also known as n) = 1 - sqrt(Q)"""
         return 1 - sqrt(self.Q)
 
+    @staticmethod
+    def Q_from_Gamma(Gamma):
+        """Q(Gamma) = (1 - Gamma)^2"""
+        return (1 - Gamma)**2
+    
+    @staticmethod
+    def Gamma_from_Q(Q):
+        """Gamma(Q) = 1 - sqrt(Q)"""
+        return 1 - sqrt(Q)
+    
+    @staticmethod
+    def asym_over_0(Gamma):
+        """xasym/x0 or yasym/y0 = 1-1/Gamma < 0"""
+        return 1 - 1/Gamma
+    
+    @staticmethod
+    def int_over_0(Gamma):
+        """xint/x0 or yint/y0 = (2-Gamma)/(1-Gamma) > 0"""
+        return (2-Gamma)/(1-Gamma)
+    
+    @property
+    def x0(self):
+        """
+        x0 alternative parameter (x0 y0 = p0)
+        
+        x0 = xint * (1-Gamma)/(2-Gamma)
+        """
+        return self.xint * (1-self.Gamma)/(2-self.Gamma)
+    
+    @property
+    def y0(self):
+        """
+        alternative parameter (x0 y0 = p0)
+        
+        y0 = xint * (1-Gamma)/(2-Gamma)
+        """
+        return self.yint * (1-self.Gamma)/(2-self.Gamma)
+    
+    @property
+    def p0_raw(self):
+        """
+        alternative parameter (x0 y0 = p0)
+        """
+        return self.y0 / self.x0
+    
+    @property
+    def xasym(self):
+        """
+        alternative parameter (x asymptote); it is < 0
+        """
+        return self.x0 * (1-1/self.Gamma)
+
+    @property
+    def yasym(self):
+        """
+        alternative parameter (y asymptote); it is < 0
+        """
+        return self.y0 * (1-1/self.Gamma)
+    
+    @property
+    def kappa(self):
+        """
+        alternative parameter x0 y0 / Gamma^2; see also kappa_bar
+
+        Note: the invariant equation can be written as
+
+        (x-xasym)*(y-yasym) = kappa
+        """
+        return self.x0*self.y0/(self.Gamma**2)
+    
+    @property
+    def kappa_bar(self):
+        """
+        alternative parameter sqrt(x0 y0) / Gamma
+
+        Note: the properly scaling invariant equation can be written as
+
+        sqrt((x-xasym)*(y-yasym)) = kappa_bar
+        """
+        return sqrt(self.x0*self.y0)/self.Gamma
+    
+    @property
+    def leverage_fctr(self):
+        """
+        leverage_fctr = 1/Gamma (see definition of kappa_bar)
+        """
+        return 1/self.Gamma
+    
     @property
     def widthr(self):
         """the width ratio of the range, widthr = pmax/pmin"""
@@ -420,7 +515,6 @@ class CarbonOrderUI:
         the current marginal price of the range (alias for p_margf)
         """
         return self.p_marg_f(0)
-
 
     def p_marg_f(self, dy=0, fullcurve=False, checkbounds=True, raiseonerror=False):
         """
@@ -600,7 +694,6 @@ class CarbonOrderUI:
 
         return dx * (num/denom) 
 
-
     def dxfromdy_f(self, dy, checkbounds=True, raiseonerror=False):
         """
         calculates the amount dx RECEIVED for a trade of dy
@@ -671,7 +764,6 @@ class CarbonOrderUI:
         """
         return self.xfromy_f(self.y)
     
-
     def yfromx_f(self, x, checkbounds=True, raiseonerror=False):
         """
         the invariant function, expressed as y=f(x)
@@ -708,7 +800,6 @@ class CarbonOrderUI:
                 return None 
         return y
 
-    
     @property
     def total_liquidity(self):
         """
@@ -999,7 +1090,7 @@ class CarbonOrderUI:
     @staticmethod
     def curves_by_pair_bidask(curves):
         """
-        sorts curves by pair, and then by bid/ask
+        DONOTUSE - sorts curves by pair, and then by bid/ask
 
         :curves:        an iterable of CarbonOrderUI curves
         :returns:       dict {
@@ -1010,11 +1101,16 @@ class CarbonOrderUI:
                             }
                             ...
                         }
+        
+        NOTE: apparently bidask is the wrong way round, but this is the way how currently
+        the simulator expects it so we need to be careful changing it
         """
         pairs = set(r.pair.slashpair for r in curves.values())
         result = {
             pair:{ 
                 "ALL": [v for v in curves.values() if v.pair.slashpair == pair],
+                # NOTE THAT ASK AND BID HERE ARE EXCHANGED, SO IN PRINCIPLE WE COULD JUST CORRECT 
+                # THE BIDASK FUNCTION AND CHANGE THEM BACK HERE...
                 "ASK": [v for v in curves.values() if v.pair.slashpair == pair and v.bidask=="BID"],
                 "BID": [v for v in curves.values() if v.pair.slashpair == pair and v.bidask=="ASK"],
             }
@@ -1022,13 +1118,42 @@ class CarbonOrderUI:
         }            
         return result
     
+    @property
+    def as_cpc(self):
+        """
+        returns an equivalent constant product / virtual liquidity curve
+
+        :returns:       a ConstantProductCurve object
+        """
+        p = self.p_marg
+        if self.pair.has_basetoken(self.tkn): # we could also use self.bidask but this is broken at the moment TODO
+            # selling the base token [ask curve?], therefore p=p_min and range ends add p_max
+            p_min = p
+            p_max = self.p_end
+            #print("[as_cpc: ask curve]")
+        else:
+            # buying the base token [bid curve?], therefore p=p_max and range ends at p_min
+            p_max = p
+            p_min = self.p_end
+            #print("[as_cpc: bid curve]")
+    
+        #print(p, p_min, p_max)
+
+        return CPC.from_pkpp(
+            p=p,
+            k=self.kappa,
+            p_min=p_min,
+            p_max=p_max,
+            pair=self.pair.slashpair
+        )
+
     def yzABS(self, sx=0, verbose=False):
         """
         returns the parameters y,z,A,B,S needed for the smart contract*
 
         :sx:        the scaling exponent, scaling factor = 2**sx
         :verbose:   if True, prints detailed description of the calculation for audit
-        :returns:   tuple of ints (y,z,A,B,S)
+        :returns:   dataclass of ints (y,z,A,B,S)
                         :y:     y * 10**decy
                         :z:     yint * 10**decy
                         :A:     sqrt(10**(dec-dec)) * S * A
@@ -1053,7 +1178,7 @@ class CarbonOrderUI:
         z_wei = self.yint*10**decy
         B_ns = self.B * 10 ** ( (decy-decx)/2)
         A_ns = self.S * 10 ** ( (decy-decx)/2)
-        yzABS = yzABS_nt(y_wei, z_wei, int(A_ns*scale), int(B_ns*scale), scale)
+        yzABS = yzABSdata(y_wei, z_wei, int(A_ns*scale), int(B_ns*scale), scale)
 
         if verbose:
             print(f"[yzABS] pair={self.pair}, y={tkny}({decy}), x={tknx}({decx})")
@@ -1112,5 +1237,21 @@ class CarbonOrderUI:
         s2 = f"linked=<{self.linked.id}>" if self.linked else "linked=None"
         return f"{self.__class__.__name__}({s1}, {s2})"
 
-# return type for yzABS method
-yzABS_nt = namedtuple("r", "y,z,A,B,S")
+@dataclass
+class yzABSdata():
+    """
+    dataclass for yzABS data
+    """
+    y: int
+    z: int
+    A: int
+    B: int
+    S: int
+
+    @property
+    def astuple(self):
+        return (self.y, self.z, self.A, self.B, self.S)
+    
+    @property
+    def asdict(self):
+        return dict(y=self.y, z=self.z, A=self.A, B=self.B, S=self.S)
