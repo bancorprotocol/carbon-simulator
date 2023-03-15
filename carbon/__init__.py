@@ -14,6 +14,7 @@ from .pair import CarbonPair
 from .carbon_order_ui import CarbonOrderUI
 from .simulators import CarbonSimulatorUI
 from .simulators import sim_analytics as analytics
+from .cpc import ConstantProductCurve
 
 P = CarbonPair
 
