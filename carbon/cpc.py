@@ -1,11 +1,22 @@
 """
 Carbon -- representing a levered constant product curve
-"""
-__VERSION__ = "1.0"
-__DATE__ = "15/Mar/2023"
 
-from dataclasses import dataclass
+(c) Copyright Bprotocol foundation 2022. 
+Licensed under MIT
+
+NOTE: this class is not part of the API of the Carbon protocol, and you must expect breaking
+changes even in minor version updates. Use at your own risk.
+
+v1.0: ConstantProductCurve class
+v1.1: added CPCContainer class
+"""
+__VERSION__ = "1.1"
+__DATE__ = "16/Mar/2023"
+
+from dataclasses import dataclass, field
+import random
 from math import sqrt
+import numpy as np
 
 try:
     dataclass_ = dataclass(frozen=True, kw_only=True)
@@ -221,3 +232,108 @@ class ConstantProductCurve():
             if v > maxv:
                 return False
         return True
+    
+
+@dataclass
+class CPCContainer():
+    """
+    container for ConstantProductCurve objects (use += to add items)
+    """
+    __VERSION__ = __VERSION__
+    __DATE__ = __DATE__
+
+    curves: list = field(default_factory=list, repr=False)
+        
+    def __post_init__(self):
+        pass
+    
+    def add(self, item):
+        """adds a single ConstantProductCurve item to the container"""
+        assert isinstance(item, ConstantProductCurve)
+        if item.cid is None:
+            item.setcid(len(self))
+        self.curves += [item]
+        return self
+    
+    def __iadd__(self, other):
+        """alias for either add"""
+        return self.add(other)
+    
+    def __iter__(self):
+        return iter(self.curves)
+    
+    def __len__(self):
+        return len(self.curves)
+    
+    @property
+    def tknys(self):
+        """returns set of all base tokens used by the curves"""
+        return {c.tknb for c in self.curves}
+    
+    @property
+    def tknxs(self):
+        """returns set of all quote tokens used by the curves"""
+        return {c.tknq for c in self.curves}
+    
+    @property
+    def tkns(self):
+        """returns set of all tokens used by the curves"""
+        return self.tknxs.union(self.tknys)
+    
+    @property
+    def pairs(self):
+        """returns set of all pairs"""
+        return {c.pair for c in self}
+    
+    def bypair(self, pair):
+        """returns all curves by (directed!) pair"""
+        return tuple(c for c in self if c.pair==pair)
+    
+    def bytknx(self, tknx):
+        """returns all curves by quote token tknx"""
+        return tuple(c for c in self if c.tknq==tknx)
+    
+    def bytkny(self, tkny):
+        """returns all curves by base token tkny"""
+        return tuple(c for c in self if c.tknb==tkny)
+    
+    @staticmethod                      
+    def u(minx, maxx):
+        """helper: returns uniform random var"""
+        return random.uniform(minx, maxx)
+    
+    @property                      
+    def u1(self):
+        """helper: returns uniform [0,1] random var"""
+        return random.uniform(0, 1)
+    
+    @dataclass
+    class xystatsd():
+        mean: any
+        minv: any
+        maxv: any
+        sdev: any
+            
+    def xystats(self, curves=None):
+        """calculates mean, min, max, stdev of x and y"""
+        if curves is None:
+            curves = self.curves
+        tknx = {c.tknq for c in curves}
+        tkny = {c.tknb for c in curves}
+        assert len(tknx)==1 and len(tkny)==1, "all curves must have same tknq and tknb"
+        x = [c.x for c in curves]
+        y = [c.y for c in curves]
+        return (
+            self.xystatsd(np.mean(x), np.min(x), np.max(x), np.std(x)), 
+            self.xystatsd(np.mean(y), np.min(y), np.max(y), np.std(y))
+        )
+    
+    @property
+    def tokentable(self):
+        """returns dict associating tokens with the curves on which they appeay"""
+        return {tkn: {
+            "x": [i for i,c in enumerate(self) if c.tknq == tkn], 
+            "y": [i for i,c in enumerate(self) if c.tknb == tkn]
+            }
+            for tkn in self.tkns
+        }
