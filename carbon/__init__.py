@@ -18,6 +18,6 @@ from .cpc import ConstantProductCurve, CPCContainer
 
 P = CarbonPair
 
-__version__ = "2.4"
-__date__ = "16/Mar/2023"
+__version__ = "2.4.1"
+__date__ = "31/Mar/2023"
 
