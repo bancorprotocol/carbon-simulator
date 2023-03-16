@@ -11,7 +11,10 @@
 [![Binder main](https://img.shields.io/badge/binder-main-blue)](https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator/main?labpath=CarbonSim-LitepaperExamples.ipynb)
 [![Binder beta](https://img.shields.io/badge/binder-beta-blue)](https://mybinder.org/v2/gh/bancorprotocol/carbon-simulator/beta?labpath=CarbonSim-LitepaperExamples.ipynb)
 
-**Warning**
+**DISCLAIMER**
+
+**THIS SIMULATOR IS PROVIDED TO STUDY AND EXAMINE THE CARBON SMART CONTRACT SYSTEM. IT SHOULD
+NOT BE RELIED UPON TO TAKE PART IN EXECUTION CHAIN OF SOME ACTUAL TRANSACTIONS**
 
 _The simulator is a work in progress with potentially broken features, unfinished sections, and a non-exhaustive overview of commands and example usage. Moreover, the entirety of the codebase and documentation is subject to change without warning. Having said this -- we will make an effort to keep the interface backwards compatible so that existing code will not break._
 
@@ -24,7 +27,7 @@ Carbon is decentralized exchange infrastructure that gives users the ability to 
 
 This simulator has been developed by **Bancor Research** to assist in the design, testing, and validation of Carbon strategies. It can be run interactively in a Jupyter notebook environment, or via Python scripting.
 
-The permament Github URL for this repo is [`bancorprotocol/carbon-simulator`][repo]. There is a second repo that is optimised for [Binder][binderdoc] and that is located at [`bancorprotocol/carbon-simulator-binder`][repob]. The latter uses the version of the library in the [PyPi package][pypi], so it may be a week or two behind. The Carbon project website is at [carbondefi.xyz][carbon]. On this site you will find in particular the [litepaper][litepaper], [whitepaper][whitepaper], and [information disclosure][patent] for the patent application. 
+The permament Github URL for this repo is [`bancorprotocol/carbon-simulator`][repo]. There is a second repo that is optimised for [Binder][binderdoc] and that is located at [`bancorprotocol/carbon-simulator-binder`][repob]. The latter uses the version of the library in the [PyPi package][pypi], so it may be a week or two behind. The Carbon project website is at [carbondefi.xyz][carbon]. On this site you will find in particular the [litepaper][litepaper], [whitepaper][whitepaper], and [information disclosure][patent] for the patent application. The simulator in its latest released version can also be accessed as JupyterLite version at [`simulator.bancordefi.xyz`][jupylite]. The associated repo is at [`bancorprotocol/carbon-simulator-jupylite`][jlrepo].
 
 [carbon]:https://carbondefi.xyz
 [litepaper]:https://carbondefi.xyz/litepaper
@@ -35,6 +38,8 @@ The permament Github URL for this repo is [`bancorprotocol/carbon-simulator`][re
 [pypi]:https://pypi.org/project/carbon-simulator/
 [binder]:https://mybinder.org
 [binderdoc]:https://mybinder.readthedocs.io/en/latest/
+[jupylite]:https://simulator.bancordefi.xyz
+[jlrepo]:https://github.com/bancorprotocol/carbon-simulator-jupylite
 
 ## Getting started
 
@@ -160,7 +165,7 @@ This repo contains two key branches, `main`, and `beta`. Their respective proper
 
 ## Versioning
 
-We use [semantic versioning][semver] (`major.minor.patch`), so the major number is changed on backward incompatible API changes, the minor number on compatible changes, and the patch number for minor patches.
+We use [semantic versioning][semver] (`major.minor.patch`), so the major number is changed on backward incompatible API changes, the minor number on compatible changes, and the patch number for patches and incremental changes that do not merit an increase in the minor version number.
 
 The API in this respect is defined as _"all public methods in the `SimulationUI`"_ object, as well as those in the objects it returns (currently `CarbonPair` and `CarbonOrderUI`). 
 
@@ -173,19 +178,15 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 [semver]:https://semver.org/
 
 # Change log
-- **v2.3.2.1** bug fix
+- **v2.4** README; CarbonOrderUI prettification; precision analysis; BaseRouter parameters as dict; benchmarks; SDK; HOURLY data set; SharedVar; ConstantProductCurve with reference NB063; additional parameters for CarbonOrderUI and as_cpc and reference book NB062; iseq; matching method test; CPCContainer
 - **v2.3.2** CarbonPair display, decimals; strategy from_dct improvements; sim-related helpers including soltest, floatint; CarbonOrderUI yzABS
 - **v2.3.1** cryptocompare; run_shift parameter fix; sim: colors and local use; ubuy/sell; various sim improvements; cryprocompare aggregate query; routing and benchmarking; workflows
 - **v2.3** consolidation and benchmark release with minor fixes (including for uni v3 style strategies) to the features introduced since v2.2
-- **v2.2.5, 2.2.6** pdcompare allows inversion; dealing with numeric issues; params improvements; path interpolation; removed yaml; print_version, plt_style; numeric bugfix
+- **v2.2.5-6** pdcompare allows inversion; dealing with numeric issues; params improvements; path interpolation; removed yaml; print_version, plt_style; numeric bugfix
 - **v2.2.4** marginal price at init; also yint, but still issues; added HODL and better legend to sim; strategy object; SharedVar; NBTest bugfix; adding PathGenerator to helpers; adding StartConditions to simulation; adding uniswap constructor to strategy; adding CryptoCompare to data and helpers; updated various helpers for market data, including scaling  
-- **v2.2.1, 2.2.2, 2.2.3** - created Demo 7-3 (key sim); created carbon.helpers module; widgets (for Demo 7-4 which is 7-3 with widgets); Binder optimizations
+- **v2.2.1-3** - created Demo 7-3 (key sim); created carbon.helpers module; widgets (for Demo 7-4 which is 7-3 with widgets); Binder optimizations
 - **v2.2** - benchmarks, alpha optimizer, fls, fast router, ob test, partial fill, limit amounts, CarbonOrderUI v1.6, notes folder; NBTest 46-51; Demo 3-8, 4-2, 4-3, 5-8, 7-1, 7-2
 - **v2.1** - new order book methodology, improved NBTest, added functionality to CarbonOrderUY, added CarbonCurves notebook, updated demo 3-2 to the new order book code
 - **v2.0** - slash notation for pair (breaking); disabled curves; remove aliases; order book functions and marginal price routing in CarbonOrderUI
-- **v1.5** - match constants, exclude future, move demos
-- **v1.4** - analytics, routers, examples and demos, binder badges
-- **v1.3** - more order books, alpha router, thresholds; demo 3-2 and 4-1
-- **v1.2** - order books
-- **v1.1** - more advanced analytics
+- **v1.1-5** - order books; alpha router and other routers; thresholds; analytics; more examples and demoes; binder links; match constant; exclude future
 - **v1.0** - initial release
