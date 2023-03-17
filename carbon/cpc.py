@@ -9,9 +9,10 @@ changes even in minor version updates. Use at your own risk.
 
 v1.0: ConstantProductCurve class
 v1.1: added CPCContainer class
+v1.1.1: bugfix
 """
-__VERSION__ = "1.1"
-__DATE__ = "16/Mar/2023"
+__VERSION__ = "1.1.1"
+__DATE__ = "17/Mar/2023"
 
 from dataclasses import dataclass, field
 import random
@@ -265,6 +266,9 @@ class CPCContainer():
     def __len__(self):
         return len(self.curves)
     
+    def __getitem__(self, key):
+        return self.curves[key]
+    
     @property
     def tknys(self):
         """returns set of all base tokens used by the curves"""
@@ -332,8 +336,8 @@ class CPCContainer():
     def tokentable(self):
         """returns dict associating tokens with the curves on which they appeay"""
         return {tkn: {
-            "x": [i for i,c in enumerate(self) if c.tknq == tkn], 
-            "y": [i for i,c in enumerate(self) if c.tknb == tkn]
+            "x": [i for i,c in enumerate(self) if c.tknb == tkn], 
+            "y": [i for i,c in enumerate(self) if c.tknq == tkn]
             }
             for tkn in self.tkns
         }
