@@ -178,7 +178,7 @@ Modules may have version numbers of their own. Those are mostly for use of the d
 [semver]:https://semver.org/
 
 # Change log
-- **v2.4.1** (b0)
+- **v2.4.1** (b0) added resources/routing area; cleaned up resources; (b1)
 - **v2.4** README; CarbonOrderUI prettification; precision analysis; BaseRouter parameters as dict; benchmarks; SDK; HOURLY data set; SharedVar; ConstantProductCurve with reference NB063; additional parameters for CarbonOrderUI and as_cpc and reference book NB062; iseq; matching method test; CPCContainer
 - **v2.3.2** CarbonPair display, decimals; strategy from_dct improvements; sim-related helpers including soltest, floatint; CarbonOrderUI yzABS
 - **v2.3.1** cryptocompare; run_shift parameter fix; sim: colors and local use; ubuy/sell; various sim improvements; cryprocompare aggregate query; routing and benchmarking; workflows
