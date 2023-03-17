@@ -1,7 +1,7 @@
 """
 Carbon -- representing a levered constant product curve
 
-(c) Copyright Bprotocol foundation 2022. 
+(c) Copyright Bprotocol foundation 2023. 
 Licensed under MIT
 
 NOTE: this class is not part of the API of the Carbon protocol, and you must expect breaking
@@ -9,14 +9,17 @@ changes even in minor version updates. Use at your own risk.
 
 v1.0: ConstantProductCurve class
 v1.1: added CPCContainer class
+v1.1.1: bugfix
+v1.2: UniV2, UniV3, and Carbon constructors; serialization
 """
-__VERSION__ = "1.1"
-__DATE__ = "16/Mar/2023"
+__VERSION__ = "1.2"
+__DATE__ = "31/Mar/2023"
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 import random
 from math import sqrt
 import numpy as np
+import pandas as pd
 
 try:
     dataclass_ = dataclass(frozen=True, kw_only=True)
@@ -32,8 +35,10 @@ class ConstantProductCurve():
     :x:        (virtual) pool state x (virtual number of base tokens for sale)
     :x_act:    actual pool state x (actual number of base tokens for sale)
     :y_act:    actual pool state y (actual number of quote tokens for sale)
-    :pair:     token pair in slash notation ("TKNB/TKNQ")
+    :pair:     token pair in slash notation ("TKNB/TKNQ"); TKNB is on the x-axis, TKNQ on the y-axis
     :cid:      unique id (optional)
+    :fee:      fee (optional); eg 0.01 for 1%
+    :descr:    description (optional; eg. "UniV3 0.1%")
     
     NOTE: use the alternative constructors `from_xx` rather then the canonical one 
     """
@@ -46,6 +51,8 @@ class ConstantProductCurve():
     y_act: float = None
     pair: str = None
     cid: any=None
+    fee: float=None
+    descr: str=None
         
     def __post_init__(self):
         
@@ -65,6 +72,15 @@ class ConstantProductCurve():
             
         if self.y_act > self.y:
             print("[ConstantProductCurve] y_act > y:", self.y_act, self.y)
+    
+    def asdict(self):
+        "returns a dict representation of the curve"
+        return asdict(self)
+    
+    @classmethod
+    def from_dict(cls, d):
+        "returns a curve from a dict representation"
+        return cls(**d)
     
     def setcid(self, cid):
         """sets the curve id [can only be done once]"""
@@ -103,7 +119,7 @@ class ConstantProductCurve():
         return cls(k=y*y/p, x=y/p, x_act=x_act, y_act=y_act, pair=pair)
     
     @classmethod
-    def from_pkpp(cls, p, k, p_min=None, p_max=None, pair=None):
+    def from_pkpp(cls, p, k, p_min=None, p_max=None, pair=None, cid=None, fee=None, descr=None):
         "constructor: from k, p, p_min, p_max (default for last two is p)"
         if p_min is None: p_min = p
         if p_max is None: p_max = p
@@ -111,8 +127,150 @@ class ConstantProductCurve():
         y0 = sqrt(k*p)
         xa = x0 - sqrt(k/p_max)
         ya = y0 - sqrt(k*p_min)
-        return cls(k=k, x=x0, x_act=xa, y_act=ya, pair=pair)
+        return cls(k=k, x=x0, x_act=xa, y_act=ya, pair=pair, cid=cid, fee=fee, descr=descr)
     
+    @classmethod
+    def from_univ2(cls, x_tknb=None, y_tknq=None, k=None, pair=None, fee=None, cid=None, descr=None):
+        """
+        constructor: from Uniswap V2 pool (see class docstring for other parameters)
+        
+        :x_tknb:    current pool liquidity in token x (base token of the pair)*
+        :y_tknq:    current pool liquidity in token y (quote token of the pair)*
+        :k:         uniswap liquidity parameter (k = xy)*
+        
+        *exactly one of k,x,y must be None; all other parameters must not be None;
+        a reminder that x is TKNB and y is TKNQ
+        """
+        x = x_tknb
+        y = y_tknq
+
+        assert not pair is None, "pair must not be None"
+        assert not cid is None, "cid must not be None"
+        assert not descr is None, "descr must not be None"
+        assert not fee is None, "fee must not be None"
+
+        if k is None:
+            assert x is not None and y is not None, "k is None, so x,y must not"
+            k = x * y
+        elif x is None:
+            assert y is not None, "x is None, so y must not"
+            x = k/y
+        elif y is None:
+            y = k/x
+        else:
+            assert False, "exactly one of k,x,y must be None"
+        
+        return cls(k=k, x=x, x_act=x, y_act=y, pair=pair, cid=cid, fee=fee, descr=descr)
+    
+    @classmethod
+    def from_univ3(cls, Pmarg, uniL, uniPa, uniPb, pair, cid, fee, descr):
+        """
+        constructor: from Uniswap V3 pool (see class docstring for other parameters)
+        
+        :Pmarg:     current pool marginal price
+        :uniL:      uniswap liquidity parameter (L**2 == k)
+        :uniPa:     uniswap price range lower bound Pa (Pa < P < Pb)
+        :uniPb:     uniswap price range upper bound Pb (Pa < P < Pb)
+        """
+
+        P = Pmarg
+        assert uniPa < uniPb, f"uniPa < uniPb required ({uniPa}, {uniPb})"
+        assert uniPa < P < uniPb, f"uniPa < Pmarg < uniPb required ({uniPa}, {P}, {uniPb})"
+        k = uniL * uniL
+        return cls.from_pkpp(p=P, k=k, p_min=uniPa, p_max=uniPb, pair=pair, cid=cid, fee=fee, descr=descr)
+    
+    @classmethod
+    def from_carbon(cls, yint=None, y=None, pa=None, pb=None, A=None, B=None, pair=None, tkny=None, fee=None, cid=None, descr=None, isdydx=True):
+        """
+        constructor: from a single Carbon order (see class docstring for other parameters)*
+        
+        :yint:      current pool y-intercept**
+        :y:         current pool liquidity in token y
+        :pa:        carbon price range left bound (higher price in dy/dx)
+        :pb:        carbon price range right bound (lower price in dy/dx)
+        :A:         alternative to pa, pb: A = sqrt(pa) - sqrt(pb) in dy/dy
+        :B:         alternative to pa, pb: B = sqrt(pb) in dy/dy
+        :tkny:      token y
+        :isdydx:    if True prices in dy/dx, if False in quote direction of the pair
+
+        *Note that ALL parameters are mandatory, except that EITHER pa, bp OR A, B 
+        must be given but not both; we do not correct for incorrect assignment of
+        pa and pb, so if pa <= pb IN THE DY/DX DIRECTION, MEANING THAT THE NUMBERS
+        ENTERED MAY SHOW THE OPPOSITE RELATIONSHIP, then an exception will be raised
+
+        **note that the result does not depend on yint, and for the time being we
+        allow to omit yint (in which case it is set to y, but this does not make
+        a difference for the result)
+        """
+        assert not y is None, "y must not be None"
+        assert not pair is None, "pair must not be None"
+        assert not tkny is None, "tkny must not be None"
+        assert not fee is None, "fee must not be None"
+        assert not cid is None, "cid must not be None"
+        assert not descr is None, "descr must not be None"
+
+        if yint is None:
+            yint = y
+        assert y <= yint, "y must be <= yint"
+        assert y >= 0, "y must be >= 0"
+
+        if A is None or B is None:
+            # A,B is None, so we look at prices and isdydx  
+            #print("[from_carbon] A, B:", A, B, pa, pb)
+            assert A is None and B is None, "A or B is None, so both must be None"
+            assert pa is not None and pb is not None, "A,B is None, so pa,pb must not"
+            
+        if pa is None or pb is None:
+            # pa,pb is None, so we look at A,B and isdydx must be True
+            #print("[from_carbon] pa, pb:", A, B, pa, pb)
+            assert pa is None and pb is None, "pa or pb is None, so both must be None"
+            assert A is not None and B is not None, "pa,pb is None, so A,B must not"
+            assert isdydx is True, "we look at A,B so isdydx must be True"
+            assert A >= 0, "A must be non-negative" # we only check for this one as it is a difference
+
+        assert not (A is not None and B is not None and pa is not None and pb is not None), "either A,B or pa,pb must be None"
+            
+        tknb, tknq = pair.split("/")
+        assert tkny in (tknb, tknq), f"tkny must be in pair ({tkny}, {pair})"
+        tknx = tknb if tkny == tknq else tknq
+        
+        if A is None or B is None:
+            # A,B is None, so we look at prices and isdydx  
+            
+            # pair quote direction is tknq per tknb; dy/dx is tkny per tknx
+            # therefore, dy/dx equals pair quote direction if tkny == tknq, otherwise reverse
+            if not isdydx:
+                if not tkny == tknq:
+                    pa, pb = 1/pa, 1/pb
+
+            # zero-width ranges are somewhat extended for numerical stability
+            if pa == pb:
+                pa *= 1.0000001
+                pb /= 1.0000001
+            
+            # validation
+            assert pa > pb, f"pa > pb required ({pa}, {pb})"
+
+            # finally set A, B
+            A = sqrt(pa) - sqrt(pb)
+            B = sqrt(pb)
+        
+        # set some intermediate parameters (see handwritten notes in repo)
+        yasym = yint * B/A
+        kappa = yint**2 / A**2
+
+        # finally instantiate the pool
+        return cls(
+            k = kappa,
+            x = kappa/(y + yasym),
+            x_act = 0,
+            y_act = y,
+            pair = f"{tknx}/{tkny}",
+            cid = cid,
+            fee = fee,
+            descr = descr,
+        )
+
     @property
     def tknb(self):
         "base token"
@@ -126,12 +284,13 @@ class ConstantProductCurve():
     tkny = tknq
 
     @property
-    def descr(self):
+    def description(self):
         "description of the pool"
-        s1 = f"tknx = {self.x_act} [virtual: {self.x}] {self.tknx}\n"
-        s2 = f"tkny = {self.y_act} [virtual: {self.y}] {self.tkny}\n"
+        s1 = f"tknx = {self.x_act} [virtual: {self.x}] {self.tknx}"
+        s2 = f"tkny = {self.y_act} [virtual: {self.y}] {self.tkny}"
         s3 = f"p    = {self.p} [min={self.p_min}, max={self.p_max}] {self.tknq} per {self.tknb}"
-        return s1+s2+s3
+        s4 = f"fee  = {self.fee}, cid = {self.cid}, descr = {self.descr}"
+        return "\n".join([s1,s2,s3,s4])
     
     @property
     def y(self):
@@ -242,14 +401,36 @@ class CPCContainer():
     __VERSION__ = __VERSION__
     __DATE__ = __DATE__
 
-    curves: list = field(default_factory=list, repr=False)
-        
+    curves: list = field(default_factory=list)
+
     def __post_init__(self):
-        pass
+        for i, c in enumerate(self.curves):
+            if c.cid is None:
+                c.setcid(i)
+        
+    def asdicts(self):
+        """returns list of dictionaries representing the curves"""
+        return [c.asdict() for c in self.curves]
+    
+    def asdf(self):
+        """returns pandas dataframe representing the curves"""
+        return pd.DataFrame.from_dict(self.asdicts()).set_index("cid")
+    
+    @classmethod
+    def from_dicts(cls, dicts):
+        """creates a container from a list of dictionaries"""
+        return cls([ConstantProductCurve.from_dict(d) for d in dicts])
+       
+    @classmethod
+    def from_df(cls, df):
+        "creates a container from a dataframe representation"
+        if "cid" in df.columns:
+            df = df.set_index("cid")
+        return cls.from_dicts(df.reset_index().to_dict("records"))
     
     def add(self, item):
         """adds a single ConstantProductCurve item to the container"""
-        assert isinstance(item, ConstantProductCurve)
+        assert isinstance(item, ConstantProductCurve), f"item must be a ConstantProductCurve object {item}"
         if item.cid is None:
             item.setcid(len(self))
         self.curves += [item]
@@ -264,6 +445,9 @@ class CPCContainer():
     
     def __len__(self):
         return len(self.curves)
+    
+    def __getitem__(self, key):
+        return self.curves[key]
     
     @property
     def tknys(self):
@@ -332,8 +516,8 @@ class CPCContainer():
     def tokentable(self):
         """returns dict associating tokens with the curves on which they appeay"""
         return {tkn: {
-            "x": [i for i,c in enumerate(self) if c.tknq == tkn], 
-            "y": [i for i,c in enumerate(self) if c.tknb == tkn]
+            "x": [i for i,c in enumerate(self) if c.tknb == tkn], 
+            "y": [i for i,c in enumerate(self) if c.tknq == tkn]
             }
             for tkn in self.tkns
         }
