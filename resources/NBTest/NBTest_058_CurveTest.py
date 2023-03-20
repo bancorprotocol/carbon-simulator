@@ -98,7 +98,7 @@ assert oui.p_end == oui.pb
 assert oui.py == oui.py
 assert abs(oui.yint/1100-1) < 1e-10
 assert abs(oui.y/790-1) < 1e-10
-assert oui.y == oui.z
+assert oui.yint == oui.z
 assert oui.total_liquidity == (790, 'USDC')
 assert oui.price_convention == 'USDC per ETH'
 assert oui.price_convention == oui.pair.price_convention
@@ -134,7 +134,7 @@ assert oui2.p_end == oui2.pb
 assert oui2.py == oui2.py
 assert abs(oui2.yint/2-1) < 1e-10
 assert abs(oui2.y/1-1) < 1e-10
-assert oui2.y == oui2.z
+assert oui2.yint == oui2.z
 assert oui2.total_liquidity == (1, 'ETH')
 assert oui2.price_convention == 'USDC per ETH'
 assert oui2.price_convention == oui2.pair.price_convention
@@ -175,7 +175,7 @@ mulDivC = lambda x, y, z: (x * y + z - 1) // z
 def trade_by_source_dy_from_dx(params, C):
 
     dx = params[0]
-    y,z,A,B,s = params[1]
+    y,z,A,B,s = params[1].astuple
     print(params)
     ONE = s
     temp1 = C(y * A + z * B, "temp1")               # 177 bits at most; cannot overflow
@@ -202,9 +202,9 @@ def trade_by_source_dy_from_dx(params, C):
 
 def trade_by_target_dx_from_dy(params, C):
 
-    dy = params[0]
-    y,z,A,B,s = params[1]
     print(params)
+    dy = params[0]
+    y,z,A,B,s = params[1].astuple
     ONE = s
     temp1 = C(z * ONE, "temp1")                  
     temp2 = C(y * A + z * B, "temp2")         
@@ -242,7 +242,7 @@ def trade_by_target_dx_from_dy(params, C):
 def trade_by_target_dx_from_dy_old(params, C):
 
     dy = params[0]
-    y,z,A,B,s = params[1]
+    y,z,A,B,s = params[1].astuple
     ONE = s
     temp1 = C(z * ONE, "temp1")                  
     temp2 = C(y * A + z * B, "temp2")         
