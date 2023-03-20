@@ -23,7 +23,7 @@ def rateBySourceAmount(sourceAmount, order):
     if output > order['y']:
         input = tradeByTargetAmount(order['y'], order)
         output = tradeBySourceAmount(input, order)
-        if output > order['y']:
+        while output > order['y']:
             input = input - 1
             output = tradeBySourceAmount(input, order)
     return Rate(input, output)
