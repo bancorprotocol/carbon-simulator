@@ -183,9 +183,9 @@ class CarbonSimulatorUI:
             p_marginal: Any = None,
             y_int: Any = None,
             carbon_id: str = None,
-            interpret_decimals: bool = False,
-            tkn_decimals: Any = None,
-            tkn_other_decimals: Any = None,
+            # interpret_decimals: bool = False,
+            # tkn_decimals: Any = None,
+            # tkn_other_decimals: Any = None,
     ) -> int:
         """
         PRIVATE - adds a position for sale of tkn
@@ -271,8 +271,11 @@ class CarbonSimulatorUI:
         else:
             order_params["y_int"] = amt
 
-        if interpret_decimals:
-            
+        # if interpret_decimals:
+        #     dec_delta = tkn_decimals - tkn_other_decimals
+        #     order_params["p_low"] = Decimal(str(p_lo)) * Decimal('10')**dec_delta
+        #     order_params["p_high"] = Decimal(str(p_hi)) * Decimal('10')**dec_delta
+        #     order_params["p_marginal"] = Decimal(str(p_marginal)) * Decimal('10')**dec_delta
 
         self.orders[id1] = Order(**order_params)
         #print("[_add_order_sell_tkn] params", order_params )
@@ -456,9 +459,9 @@ class CarbonSimulatorUI:
             y_int_sell: Any = None,
             y_int_buy: Any = None,
             carbon_id: str = None,
-            interpret_decimals: bool = False,
-            tkn_decimals: Any = None,
-            tkn_other_decimals: Any = None,
+            # interpret_decimals: bool = False,
+            # tkn_decimals: Any = None,
+            # tkn_other_decimals: Any = None,
             
     ) -> Dict[str, Any]:
         """
@@ -513,8 +516,8 @@ class CarbonSimulatorUI:
             pbuy_start_c = carbon_pair.convert_price(pbuy_start, tkn2)
             pbuy_end_c = carbon_pair.convert_price(pbuy_end, tkn2)
             pbuy_marginal_c = carbon_pair.convert_price(pbuy_marginal, tkn2)
-            tkn_decimals = Decimal(str(tkn_decimals))
-            tkn_other_decimals = Decimal(str(tkn_other_decimals))
+            # tkn_decimals = Decimal(str(tkn_decimals))
+            # tkn_other_decimals = Decimal(str(tkn_other_decimals))
 
             # ugly hack but the 1/2 range boundaries are in the wrong order
             # we want the closer boundary first
@@ -529,9 +532,9 @@ class CarbonSimulatorUI:
                 p_marginal = psell_marginal_c,
                 y_int = y_int_sell,
                 carbon_id = carbon_id,
-                interpret_decimals = interpret_decimals,
-                tkn_decimals = tkn_decimals,
-                tkn_other_decimals = tkn_other_decimals,
+                # interpret_decimals = interpret_decimals,
+                # tkn_decimals = tkn_decimals,
+                # tkn_other_decimals = tkn_other_decimals,
             )
             self._add_order_sell_tkn(
                 tkn = tkn2,
@@ -544,9 +547,9 @@ class CarbonSimulatorUI:
                 p_marginal = pbuy_marginal_c,
                 y_int = y_int_buy,
                 carbon_id = carbon_id,
-                interpret_decimals = interpret_decimals,
-                tkn_decimals = tkn_other_decimals,
-                tkn_other_decimals = tkn_decimals,
+                # interpret_decimals = interpret_decimals,
+                # tkn_decimals = tkn_other_decimals,
+                # tkn_other_decimals = tkn_decimals,
             )
 
             if self.verbose:
