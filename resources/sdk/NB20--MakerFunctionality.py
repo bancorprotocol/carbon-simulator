@@ -105,11 +105,33 @@ r
 
 # ## Review strategies
 
+data = SDK.getUserStrategies(user=sdkaddr)
+data
+
 # + tags=[]
 data = SDK.mGetUserStrategies(user=sdkaddr)
 print("retrieved strategies", len(data))
-data[0]
+s=data[0]
+s
 # -
+
+print(s.encoded.raw_json)
+s.encoded.raw
+
+update = SDK.StrategyUpdate(buyPriceLow=1000, buyPriceHigh=1100, buyBudget=2000, sellPriceLow=3000, sellPriceHigh=3100, sellBudget=2)
+
+r = SDK.updateStrategy(s.sid, s.encoded.raw_json, s.baseToken, s.quoteToken, update, sync=True)
+r.json()
+
+SDK.StrategyUpdate(buyPriceLow=1000).asdict()
+
+
+
+
+
+
+
+raise
 
 d, de=data[0], data[0].encoded
 print(de.order1.descr)
@@ -159,6 +181,14 @@ for cid, ds in zip(stratids, delete_w.values):
             delete_w = None
         else:
             print(f"Would delete strategy {cid} if box was ticked ")
+
+import json
+dct = {
+    1:"1",
+    2:"2",
+    "encoded": {1:1, 2:2}
+}
+dct
 
 
 
