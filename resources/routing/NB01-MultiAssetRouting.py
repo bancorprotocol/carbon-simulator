@@ -163,7 +163,7 @@ constraints = []
 for i, c in enumerate(CC):
     constraints += [gmean([c.x+dx[i], c.y+dy[i]]) >= c.kbar]
     
-# range constraints
+# leverage constraints
 for i, c in enumerate(CC):
     #print(i, c.pair, c.x_act, c.y_act)
     constraints += [
@@ -186,9 +186,10 @@ objective = cp.Minimize(
      sum([dy[i] for i in tt[prtkn]["y"]])+sum([dx[i] for i in tt[prtkn]["x"]])
 )
 
+# run the optimization
 problem = cp.Problem(objective, constraints)
-result = problem.solve(verbose=False)  # Returns the optimal value.
-print(f"r={result:.2f}, dy={sum(dy.value):.2f}, dx={sum(dx.value):.2f}")
+result = problem.solve(verbose=False)  
+print(f"r={result:.2f}")
 
 
 # -
@@ -228,6 +229,7 @@ for pair in CC.pairs:
     plt.xlabel(f"{c.tknx}")
     plt.ylabel(f"{c.tkny}")
     plt.legend()
+    plt.grid()
     plt.show()
 
 # ### Data
@@ -253,5 +255,11 @@ dfa
 
 df = pd.concat([df, dfa]).fillna("")
 df
+
+from decimal import *
+
+getcontext().prec = 10_000
+
+Decimal(2).sqrt()
 
 
