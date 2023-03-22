@@ -2,6 +2,7 @@ from .sdktoken import Tokens
 from .sdkbase import SDKBase
 
 n = SDKBase.c2s
+from dataclasses import dataclass, asdict
 
 class CarbonSDK0(SDKBase):
     """
@@ -443,21 +444,67 @@ class CarbonSDK0(SDKBase):
             }, sync=True)
         return self._checkresult(r)
 
-    def updateStrategy(self, strategyId, encoded, baseToken, quoteToken, update, buyMarginalPrice, sellMarginalPrice, overrides=None, sync=None):
+    @dataclass
+    class StrategyUpdate:
+        """
+        strategy update object (used by updateStrategy)
+        
+        :buyPriceLow:       low buy price*
+        :buyPriceHigh:      high buy price*
+        :buyBudget:         buy budget (in quote token)
+        :sellPriceLow:      low sell price*
+        :sellPriceHigh:     high sell price*
+        :sellBudget:        sell budget (in base token)
+        :buyMarginalPrice:  buy marginal price* **
+        :sellMarginalPrice: sell marginal price* **
+
+        *all prices are in quote token per base token
+        **optional; the marginal price to which the strategy will be set in the update
+        """
+        buyPriceLow: float = None
+        buyPriceHigh: float = None
+        buyBudget: float = None
+        sellPriceLow: float = None
+        sellPriceHigh: float = None
+        sellBudget: float = None
+        buyMarginalPrice: float = None
+        sellMarginalPrice: float = None
+
+        def asdict(self, omitMarginalPrices=True, omitNone=True):
+            """returns the object as a dict, possibly omitting the marginal prices and None fields"""
+            dct =  asdict(self)
+            if omitMarginalPrices:
+                del dct["buyMarginalPrice"]
+                del dct["sellMarginalPrice"]
+            if omitNone:
+                dct = {k: v for k, v in dct.items() if not v is None}
+            dct = {k: str(v) if not v is None else None for k, v in dct.items()}
+            return dct
+
+        @property
+        def buyMarginalPriceStr(self):
+            """returns the buy marginal price as a string (or None)"""
+            return str(self.buyMarginalPrice) if not self.buyMarginalPrice is None else None
+        
+        @property
+        def sellMarginalPriceStr(self):
+            """returns the sell marginal price as a string (or None)"""
+            return str(self.sellMarginalPrice) if not self.sellMarginalPrice is None else None
+    
+    def updateStrategy(self, strategyId, encoded, baseToken, quoteToken, update, buyMarginalPrice=None, sellMarginalPrice=None, overrides=None, sync=None):
         """
         updates an existing strategy
 
         :strategyId:            strategy id
-        :encoded:               encoded strategy ??? TODO
+        :encoded:               encoded strategy (as str)
         :baseToken:             base token (as address)
         :quoteToken:            quote token (as address)
-        :update:                update to apply to the strategy
-        :buyMarginalPrice:      buy marginal price (in quote token per base token)
-        :sellMarginalPrice:     sell marginal price (ditto)
+        :update:                update to apply to the strategy (as StrategyUpdate object)
         :overrides:             overrides to apply to the transaction
         :sync:                  whether to call sync or async
         :returns:               ??? TODO
         """
+        assert isinstance(update, self.StrategyUpdate), "update must be of type StrategyUpdate"     
         if overrides is None: overrides = dict()
         if not overrides.get("gasLimit"): overrides["gasLimit"] = 999999999
         return self.call(n("updateStrategy"), params={
@@ -465,9 +512,9 @@ class CarbonSDK0(SDKBase):
                 "encoded": encoded, 
                 "baseToken": str(baseToken), 
                 "quoteToken": str(quoteToken), 
-                "update": bool(update), 
-                "buyMarginalPrice": str(buyMarginalPrice), 
-                "sellMarginalPrice": str(sellMarginalPrice), 
+                "update": update.asdict(omitMarginalPrices=True), 
+                "buyMarginalPrice": update.buyMarginalPriceStr,
+                "sellMarginalPrice": update.sellMarginalPriceStr, 
                 "overrides": overrides
             }, sync=sync)
     
@@ -565,11 +612,15 @@ class CarbonSDK0(SDKBase):
             s2[f] = float(strat[f]) if nsd is None else self.roundsd(float(strat[f]), nsd)
         s2["id"] = s2["encoded"]["id"] = self.bn2int(strat["id"])
         for f in ("baseToken", "quoteToken"):
-            s2[f] = self.Tokens.byaddr1(strat[f], tknonly=True)
+            s2[f+"Name"] = self.Tokens.byaddr1(strat[f], tknonly=True)
+            s2[f] = strat[f].lower()
         for f in ("token0", "token1"):
-            s2["encoded"][f] = self.Tokens.byaddr1(strat["encoded"][f], tknonly=True)
+            #s2["encoded"][f] = self.Tokens.byaddr1(strat["encoded"][f], tknonly=True)
+            s2["encoded"][f] = strat["encoded"][f]
         for o in ("order0", "order1"):
             s2["encoded"][o] = dict()
             for f in ("y", "z", "A", "B"):
                 s2["encoded"][o][f] = self.bn2int(strat["encoded"][o][f])
+        # s2["raw"] = strat
+        # print("[reformatStrategy]", s2)
         return s2

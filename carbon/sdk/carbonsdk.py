@@ -1,8 +1,9 @@
 from .sdktoken import SDKToken, Tokens
 from ..pair import CarbonPair
 from .carbonsdk0 import CarbonSDK0
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from math import sqrt
+import json
 
 
 #########################################################################################################
@@ -198,16 +199,21 @@ class TradeData:
     def cttargs(self):
         """args for mComposeTradeTransaction"""
         return tuple(self.cttkwargs.values())
-    
+
+# see https://github.com/bancorprotocol/carbon-simulator/blob/beta/benchmark/core/trade/impl.py
+
+
+
 @dataclass
 class EncodedOrder():
     """
     a single curve as encoded by the SDK
 
+    :token:      token address
     :y:          number of token wei to sell on the curve
     :z:          curve capacity in number of token wei
-    :A:          curve parameter A, multiplied by 2**48
-    :B:          curve parameter B, multiplied by 2**48
+    :A:          curve parameter A, multiplied by 2**48, encoded
+    :B:          curve parameter B, multiplied by 2**48, encoded
     ----
     :A_:         curve parameter A in proper units
     :B_:         curve parameter B in proper units
@@ -297,6 +303,41 @@ class EncodedOrder():
             token=token
         )
     
+    @classmethod
+    def encode_yzAB(cls, y, z, A, B, token=None):
+        """
+        encode A,B into the SDK format
+
+        :y:    number of token wei currently available to sell on the curve (loading; as int)
+        :z:    curve capacity in number of token wei (as int)
+        :A:    curve parameter A (as float)
+        :B:    curve parameter B (as float)
+        """
+        return cls(
+            y=int(y), 
+            z=int(z), 
+            A=cls.encodeFloat(A), 
+            B=cls.encodeFloat(B),
+            token=str(token)
+        )
+        
+    @dataclass
+    class DecodedOrder():
+        """
+        a single curve with the values of A,B decoded and as floats
+        """
+        y: int
+        z: int
+        A: float
+        B: float
+
+    @property
+    def decoded(self):
+        """
+        returns a the order with A, B decoded as floats
+        """
+        return self.DecodedOrder(y=self.y, z=self.z, A=self.A_, B=self.B_)
+    
     @property
     def A_(self):
         return self.decode(self.A)
@@ -338,12 +379,13 @@ class EncodedStrategy():
     sid: int
     order0: EncodedOrder
     order1: EncodedOrder
-    
+    raw: dict = field(repr=False, default=None)
+
     @classmethod
     def from_sdk(cls, dct):
         order0 = CarbonSDK.EncodedOrder.from_sdk(dct["token0"], dct["order0"])
         order1 = CarbonSDK.EncodedOrder.from_sdk(dct["token1"], dct["order1"])
-        return cls(sid=dct["id"], order0=order0, order1=order1)
+        return cls(sid=dct["id"], order0=order0, order1=order1, raw=dct)
 
     @property
     def token0(self):
@@ -352,6 +394,16 @@ class EncodedStrategy():
     @property
     def token1(self):
         return self.order1.token
+    
+    @property
+    def raw_json(self):
+        """returns the raw field as a json string"""
+        raw = self.raw
+        raw["id"] = str(raw["id"])
+        for dk in ["order0", "order1"]:
+            for k in raw[dk]:
+                raw[dk][k] = str(raw[dk][k])
+        return json.dumps(self.raw, indent=4)
     
     @property
     def descr(self):
@@ -376,7 +428,9 @@ class Strategy():
     """
     sid: int
     baseToken: str
+    baseTokenName: str
     quoteToken: str
+    quoteTokenName: str
     buyPriceLow: float
     buyPriceHigh: float
     buyBudget: float
@@ -384,11 +438,11 @@ class Strategy():
     sellPriceHigh: float
     sellBudget: float
     encoded: EncodedStrategy
-
+    
     def __post_init__(self):
-        assert self.baseToken == self.encoded.order0.token, "base token not equal to token0"
-        assert self.quoteToken == self.encoded.order1.token, "quote token not equal to token1"
-
+        assert self.baseToken.lower() == self.encoded.order0.token.lower(), "base token not equal to token0"
+        assert self.quoteToken.lower() == self.encoded.order1.token.lower(), "quote token not equal to token1"
+        pass
     @property
     def descr(self):
         d = self
@@ -398,11 +452,15 @@ class Strategy():
     
     @classmethod
     def from_sdk(cls, dct):
+        """
+        alternative constructor: from the dict obtained from the SDK
+        """
+        #print("[Strategy.from_sdk] dct:", dct)
         encoded = CarbonSDK.EncodedStrategy.from_sdk(dct["encoded"])
         sid = dct["id"]
-        dct1 = {k:v for k,v in dct.items() if not k in ["id", "encoded"]}
+        dct1 = {k:v for k,v in dct.items() if not k in ["id", "encoded", "raw"]}
         return cls(sid=sid, encoded=encoded, **dct1)
-    
+        
     def __getitem__(self, item):
         if item == "id": 
             return self.sid 
