@@ -18,8 +18,14 @@ class Action:
         self.output = output
 
 def rateBySourceAmount(sourceAmount, order):
-    output = min(tradeBySourceAmount(sourceAmount, order), order['y'])
-    input = tradeByTargetAmount(output, order)
+    input = sourceAmount
+    output = tradeBySourceAmount(input, order)
+    if output > order['y']:
+        input = tradeByTargetAmount(order['y'], order)
+        output = tradeBySourceAmount(input, order)
+        while output > order['y']:
+            input = input - 1
+            output = tradeBySourceAmount(input, order)
     return Rate(input, output)
 
 def rateByTargetAmount(targetAmount, order):
