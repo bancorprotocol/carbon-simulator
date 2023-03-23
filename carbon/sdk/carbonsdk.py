@@ -228,6 +228,10 @@ class EncodedOrder():
 
     ONE = 2**48
 
+    @property
+    def astuple(self):
+        return(self.y, self.z, self.A, self.B)
+
     @classmethod
     def from_sdk(cls, token, order):
         return cls(token=token, **order)
@@ -304,7 +308,7 @@ class EncodedOrder():
         )
     
     @classmethod
-    def encode_yzAB(cls, y, z, A, B, token=None):
+    def encode_yzAB(cls, yzAB_tuple, token=None):
         """
         encode A,B into the SDK format
 
@@ -313,6 +317,7 @@ class EncodedOrder():
         :A:    curve parameter A (as float)
         :B:    curve parameter B (as float)
         """
+        y, z, A, B = yzAB_tuple
         return cls(
             y=int(y), 
             z=int(z), 
