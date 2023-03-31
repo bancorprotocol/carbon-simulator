@@ -11,8 +11,9 @@ v1.0: ConstantProductCurve class
 v1.1: added CPCContainer class
 v1.1.1: bugfix
 v1.2: UniV2, UniV3, and Carbon constructors; serialization
+v1.3: plot
 """
-__VERSION__ = "1.2"
+__VERSION__ = "1.3"
 __DATE__ = "31/Mar/2023"
 
 from dataclasses import dataclass, field, asdict
@@ -20,12 +21,24 @@ import random
 from math import sqrt
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+from carbon.tools.params import Params
 
 try:
     dataclass_ = dataclass(frozen=True, kw_only=True)
 except:
     dataclass_ = dataclass(frozen=True)
+
+class AttrDict(dict):
+    """
+    A dictionary that allows for attribute-style access
     
+    see https://stackoverflow.com/questions/4984647/accessing-dict-keys-like-an-attribute
+    """
+    def __init__(self, *args, **kwargs):
+        super(AttrDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
+
 @dataclass_
 class ConstantProductCurve():
     """
@@ -39,6 +52,7 @@ class ConstantProductCurve():
     :cid:      unique id (optional)
     :fee:      fee (optional); eg 0.01 for 1%
     :descr:    description (optional; eg. "UniV3 0.1%")
+    :params:   additional parameters (optional)
     
     NOTE: use the alternative constructors `from_xx` rather then the canonical one 
     """
@@ -53,6 +67,7 @@ class ConstantProductCurve():
     cid: any=None
     fee: float=None
     descr: str=None
+    params: AttrDict = field(default_factory=lambda: AttrDict())
         
     def __post_init__(self):
         
@@ -177,7 +192,17 @@ class ConstantProductCurve():
         assert uniPa < uniPb, f"uniPa < uniPb required ({uniPa}, {uniPb})"
         assert uniPa < P < uniPb, f"uniPa < Pmarg < uniPb required ({uniPa}, {P}, {uniPb})"
         k = uniL * uniL
-        return cls.from_pkpp(p=P, k=k, p_min=uniPa, p_max=uniPb, pair=pair, cid=cid, fee=fee, descr=descr)
+        return cls.from_pkpp(
+            p=P, 
+            k=k, 
+            p_min=uniPa, 
+            p_max=uniPb, 
+            pair=pair, 
+            cid=cid, 
+            fee=fee, 
+            descr=descr,
+            params = AttrDict(L=uniL),
+            )
     
     @classmethod
     def from_carbon(cls, yint=None, y=None, pa=None, pb=None, A=None, B=None, pair=None, tkny=None, fee=None, cid=None, descr=None, isdydx=True):
@@ -202,15 +227,16 @@ class ConstantProductCurve():
         allow to omit yint (in which case it is set to y, but this does not make
         a difference for the result)
         """
+        assert not yint is None, "yint must not be None"
         assert not y is None, "y must not be None"
         assert not pair is None, "pair must not be None"
         assert not tkny is None, "tkny must not be None"
-        assert not fee is None, "fee must not be None"
-        assert not cid is None, "cid must not be None"
-        assert not descr is None, "descr must not be None"
+        #assert not fee is None, "fee must not be None"
+        #assert not cid is None, "cid must not be None"
+        #assert not descr is None, "descr must not be None"
 
-        if yint is None:
-            yint = y
+        # if yint is None:
+        #     yint = y
         assert y <= yint, "y must be <= yint"
         assert y >= 0, "y must be >= 0"
 
@@ -269,6 +295,7 @@ class ConstantProductCurve():
             cid = cid,
             fee = fee,
             descr = descr,
+            params = AttrDict(y=y, yint=yint, A=A, B=B),
         )
 
     @property
@@ -392,7 +419,6 @@ class ConstantProductCurve():
                 return False
         return True
     
-
 @dataclass
 class CPCContainer():
     """
@@ -521,3 +547,55 @@ class CPCContainer():
             }
             for tkn in self.tkns
         }
+    
+    Params = Params
+    PLOTPARAMS = Params(
+        printline = "pair = {pair}",                                            # print line before plotting; {pair} is replaced
+        title = "{pair}",                                                       # plot title; {pair} and {c} are replaced
+        xlabel = "{c.tknx}",                                                    # x axis label; ditto
+        ylabel = "{c.tkny}",                                                    # y axis label; ditto
+        label =  "[{c.cid}-{c.descr}]: p={c.p:.1f}, k={c.k:.1f}",               # label for legend; ditto
+        grid = True,                                                            # plot grid if True
+        legend = True,                                                          # plot legend if True
+        show = True,                                                            # finish with plt.show() if True
+    )
+
+    def plot(self, pairs=None, curves=None, params=None):
+        """
+        plots the curves in curvelist or all curves if None
+
+        :pairs:      list of pairs to plot
+        :curves:     list of curves to plot
+        :params:     plot parameters, as params struct (see PLOTPARAMS)
+        """
+        p = Params.construct(params, defaults=self.PLOTPARAMS.params)
+        
+        if pairs is None:
+            pairs = self.pairs
+
+        assert curves is None, "restricting curves not implemented yet"
+
+        for pair in pairs:
+            print(p.printline.format(pair=pair))
+            curves = self.bypair(pair)
+            statx, staty = self.xystats(curves)
+            xr = np.linspace(0.0000001, statx.maxv*1.2,500)
+            for i, c in enumerate(curves):
+                plt.plot(xr, [c.yfromx_f(x_, ignorebounds=True) for x_ in xr], color="lightgrey", linestyle="dotted")
+                plt.plot(xr, [c.yfromx_f(x_) for x_ in xr], color="grey")
+
+            for c in curves:
+                plt.plot(c.x, c.y, marker="*", label=p.label.format(pair=pair, c=c))  
+
+            plt.title(p.title.format(pair=pair, c=c))
+            plt.ylim((0, staty.maxv*2))
+            plt.xlabel(p.xlabel.format(pair=pair, c=c))
+            plt.ylabel(p.ylabel.format(pair=pair, c=c))
+            if p.legend:
+                plt.legend()
+            if p.grid:
+                plt.grid()
+            
+            if p.show:
+                plt.show()
+        
