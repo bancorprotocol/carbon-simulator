@@ -14,10 +14,10 @@ from .pair import CarbonPair
 from .carbon_order_ui import CarbonOrderUI
 from .simulators import CarbonSimulatorUI
 from .simulators import sim_analytics as analytics
-from .cpc import ConstantProductCurve, CPCContainer
+#from .tools.cpc import ConstantProductCurve, CPCContainer
 
 P = CarbonPair
 
-__version__ = "2.4.1"
-__date__ = "31/Mar/2023"
+__version__ = "2.5"
+__date__ = "20/Apr/2023"
 
