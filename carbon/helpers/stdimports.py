@@ -49,3 +49,16 @@ def iseq(arg0, *args, eps=1e-6):
                 return False
         return True
 
+def raises(func, *args, **kwargs):
+    """
+    returns exception message if func(*args, **kwargs) raises, else False
+
+    USAGE
+
+        assert raises(func, 1, 3, three=3), "func(1, 2, three=3) should raise"
+    """
+    try:
+        func(*args, **kwargs)
+        return False
+    except Exception as e:
+        return str(e)
