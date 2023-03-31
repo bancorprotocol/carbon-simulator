@@ -1,5 +1,4 @@
 from .fls import fload, fsave
-from .params import Params
 from .pdread import pdread, pathtime, pathtime_yrs, pathtime_days, pdcols, j
 from .sharedvar import SharedVar
 from .strategym import strategy

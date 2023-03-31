@@ -11,15 +11,15 @@ from math import sqrt
 from matplotlib import pyplot as _plt
 import pickle as _pickle
 from dataclasses import dataclass as _dataclass
-
+from carbon.tools.params import Params
 
 try:
     from .. import CarbonSimulatorUI as _CarbonSimulatorUI
-    from .params import Params
     from .strategym import strategy as _strategy
 except:
     from carbon import CarbonSimulatorUI as _CarbonSimulatorUI
-    from carbon.helpers import Params, strategy as _strategy
+    from carbon.helpers import strategy as _strategy
+    
 
 pair_nt = namedtuple("pair", "tknb, tknq")
 

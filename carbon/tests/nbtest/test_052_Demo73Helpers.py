@@ -17,11 +17,11 @@ from carbon.helpers.simulation import run_sim, plot_sim
 from carbon.helpers.widgets import CheckboxManager, DropdownManager, PcSliderManager
 
 from carbon.helpers import fload, fsave
-from carbon.helpers import Params
 from carbon.helpers import pdread, pathtime, pathtime_yrs, pathtime_days, pdcols, j
 from carbon.helpers import strategy
 from carbon.helpers import require_version
 from carbon.helpers import print_version
+from carbon.tools.params import Params
 
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
