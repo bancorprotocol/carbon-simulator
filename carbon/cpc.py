@@ -15,8 +15,8 @@ v1.3: plot
 v1.3.1: params
 v2.0: container allows curve selection; analytics; trade execution
 """
-__VERSION__ = "2.0.1"
-__DATE__ = "2/Apr/2023"
+__VERSION__ = "2.1"
+__DATE__ = "3/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, InitVar
 import random
@@ -615,17 +615,19 @@ class CPCContainer():
     curves: list = field(default_factory=list)
 
     def __post_init__(self):
+        if not isinstance(self.curves, list):
+            self.curves = list(self.curves)
         for i, c in enumerate(self.curves):
             if c.cid is None:
                 c.setcid(i)
         self.curves_by_cid = {c.cid: c for c in self.curves}
         self.curveix_by_curve = {c: i for i, c in enumerate(self.curves)}
-        self.curves_by_primary_pair = dict()
-        for c in self.curves:
-            try:
-                self.curves_by_primary_pair[c.pairo.primary].append(c)
-            except KeyError:
-                self.curves_by_primary_pair[c.pairo.primary] = [c]
+        self.curves_by_primary_pair = {c.pairo.primary: c for c in self.curves}
+        # for c in self.curves:
+        #     try:
+        #         self.curves_by_primary_pair[c.pairo.primary].append(c)
+        #     except KeyError:
+        #         self.curves_by_primary_pair[c.pairo.primary] = [c]
     
     def asdicts(self):
         """returns list of dictionaries representing the curves"""
@@ -669,14 +671,6 @@ class CPCContainer():
             return None
         pp = sum(c.pp for c in curves) / len(curves)
         return pp if pairo.isprimary else 1/pp
-    
-    def curveix(self, curve):
-        """returns index of curve in container"""
-        return self.curveix_by_curve.get(curve, None)
-    
-    def curve_by_cid(self, cid):
-        """returns curve by cid"""
-        return self.curves_by_cid.get(cid, None)
     
     def __iadd__(self, other):
         """alias for either add"""
@@ -952,53 +946,78 @@ class CPCContainer():
         
         raise ValueError(f"unknown target {target}")
 
-    def bypair(self, pair, directed=True, asgenerator=False):
-        """returns all curves by (usually directed) pair"""
+    def _convert(self, generator, asgenerator, ascc):
+        """takes a generator and returns a tuple, generator or CC object"""
+        if asgenerator: return generator
+        if ascc: return self.__class__(generator)
+        return tuple(generator)
+    
+    def curveix(self, curve):
+        """returns index of curve in container"""
+        return self.curveix_by_curve.get(curve, None)
+    
+    def bycid(self, cid):
+        """returns curve by cid"""
+        return self.curves_by_cid.get(cid, None)
+    
+    def bycids(self, cids, asgenerator=False, ascc=False):
+        """returns curves by cids (as tuple, generator or CC object)"""
+        result = (self.curves_by_cid[cid] for cid in cids)
+        return self._convert(result, asgenerator, ascc)
+    
+    def bypair(self, pair, directed=True, asgenerator=False, ascc=False):
+        """returns all curves by (usually directed) pair (as tuple, genator or CC object)"""
         result = (c for c in self if c.pair==pair)
         if not directed:
             pairr = "/".join(pair.split("/")[::-1])
             result = itertools.chain(result, (c for c in self if c.pair==pairr))
-        if asgenerator: return result
-        return tuple(result)
+        return self._convert(result, asgenerator, ascc)
     
-    def bp(self, pair, directed=False, asgenerator=False):
+    def bp(self, pair, directed=False, asgenerator=False, ascc=False):
         """alias for bypair by with directed=False for interactive use"""
-        return self.bypair(pair, directed=directed, asgenerator=asgenerator)
+        return self.bypair(pair, directed=directed, asgenerator=asgenerator, ascc=ascc)
 
-    def bypairs(self, pairs=None, directed=True, asgenerator=True):
-        """returns all curves by (usually directed) pairs"""
+    def bypairs(self, pairs=None, directed=True, asgenerator=False, ascc=False):
+        """returns all curves by (usually directed) pairs (as tuple, generator or CC object)"""
         if pairs is None:
             return self.curves
         assert directed, "undirected pairs not implemented"
         pairs = set(pairs)
         result = (c for c in self if c.pair in pairs)
-        if asgenerator: return result
-        return tuple(result)
+        return self._convert(result, asgenerator, ascc)
     
-    def bytknx(self, tknx):
-        """returns all curves by quote token tknx (tknq)"""
-        return tuple(c for c in self if c.tknx==tknx)
+    def bytknx(self, tknx, asgenerator=False, ascc=False):
+        """returns all curves by quote token tknx (tknq) (as tuple, generator or CC object)"""
+        result = (c for c in self if c.tknx==tknx)
+        return self._convert(result, asgenerator, ascc)
     bytknq = bytknx
     
-    def bytknxs(self, tknxs=None):
-        """returns all curves by quote token tknx (tknq)"""
+    def bytknxs(self, tknxs=None, asgenerator=False, ascc=False):
+        """returns all curves by quote token tknx (tknq) (as tuple, generator or CC object)"""
         if tknxs is None:
             return self.curves
+        if isinstance(tknxs, str):
+            tknxs = set(t.strip() for t in tknxs.split(","))
         tknxs = set(tknxs)
-        return tuple(c for c in self if c.tknx==tknxs)
+        result = (c for c in self if c.tknx in tknxs)
+        return self._convert(result, asgenerator, ascc)
     bytknxs = bytknxs
     
-    def bytkny(self, tkny):
-        """returns all curves by base token tkny (tknb)"""
-        return tuple(c for c in self if c.tkny==tkny)
+    def bytkny(self, tkny, asgenerator=False, ascc=False):
+        """returns all curves by base token tkny (tknb) (as tuple, generator or CC object)"""
+        result = (c for c in self if c.tkny==tkny)
+        return self._convert(result, asgenerator, ascc)
     bytknb = bytkny
 
-    def bytknys(self, tknys=None):
-        """returns all curves by quote token tkny (tknb)"""
+    def bytknys(self, tknys=None, asgenerator=False, ascc=False):
+        """returns all curves by quote token tkny (tknb) (as tuple, generator or CC object)"""
         if tknys is None:
             return self.curves
+        if isinstance(tknys, str):
+            tknys = set(t.strip() for t in tknys.split(","))
         tknys = set(tknys)
-        return tuple(c for c in self if c.tkny==tknys)
+        result = (c for c in self if c.tkny in tknys)
+        return self._convert(result, asgenerator, ascc)
     bytknys = bytknys
     
     @staticmethod                      
