@@ -1,5 +1,5 @@
 """
-Carbon -- representing a levered constant product curve
+representing a levered constant product curve
 
 (c) Copyright Bprotocol foundation 2023. 
 Licensed under MIT
@@ -16,9 +16,10 @@ v1.3.1: params
 v2.0: container allows curve selection; analytics; trade execution
 """
 __VERSION__ = "2.1"
-__DATE__ = "3/Apr/2023"
+__DATE__ = "4/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, InitVar
+from .simplepair import SimplePair as Pair
 import random
 from math import sqrt
 import numpy as np
@@ -622,12 +623,13 @@ class CPCContainer():
                 c.setcid(i)
         self.curves_by_cid = {c.cid: c for c in self.curves}
         self.curveix_by_curve = {c: i for i, c in enumerate(self.curves)}
-        self.curves_by_primary_pair = {c.pairo.primary: c for c in self.curves}
-        # for c in self.curves:
-        #     try:
-        #         self.curves_by_primary_pair[c.pairo.primary].append(c)
-        #     except KeyError:
-        #         self.curves_by_primary_pair[c.pairo.primary] = [c]
+        #self.curves_by_primary_pair = {c.pairo.primary: c for c in self.curves}
+        self.curves_by_primary_pair = {}
+        for c in self.curves:
+            try:
+                self.curves_by_primary_pair[c.pairo.primary].append(c)
+            except KeyError:
+                self.curves_by_primary_pair[c.pairo.primary] = [c]
     
     def asdicts(self):
         """returns list of dictionaries representing the curves"""
@@ -657,6 +659,7 @@ class CPCContainer():
         self.curves_by_cid[item.cid] = item
         self.curveix_by_curve[item] = len(self)
         self.curves += [item]
+        #print("[add] qqq", self.curves_by_primary_pair)
         try:
             self.curves_by_primary_pair[item.pairo.primary].append(item)
         except KeyError:
