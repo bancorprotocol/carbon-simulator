@@ -6,20 +6,13 @@ Licensed under MIT
 
 NOTE: this class is not part of the API of the Carbon protocol, and you must expect breaking
 changes even in minor version updates. Use at your own risk.
-
-v1.0: ConstantProductCurve class
-v1.1: added CPCContainer class
-v1.1.1: bugfix
-v1.2: UniV2, UniV3, and Carbon constructors; serialization
-v1.3: plot
-v1.3.1: params
-v2.0: container allows curve selection; analytics; trade execution
 """
-__VERSION__ = "2.1"
-__DATE__ = "4/Apr/2023"
+__VERSION__ = "2.3.1"
+__DATE__ = "9/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, InitVar
 from .simplepair import SimplePair as Pair
+from . import tokenscale as ts
 import random
 from math import sqrt
 import numpy as np
@@ -28,6 +21,7 @@ import json
 from matplotlib import pyplot as plt
 from carbon.tools.params import Params
 import itertools
+from sys import float_info
 
 try:
     dataclass_ = dataclass(frozen=True, kw_only=True)
@@ -200,6 +194,32 @@ class ConstantProductCurve():
             
         if self.isbigger(big=self.y_act, small=self.y):
             print("[ConstantProductCurve] y_act > y:", self.y_act, self.y)
+
+        self.set_tokenscale(self.TOKENSCALE)
+    
+    TOKENSCALE = ts.TokenScale1Data 
+        # default token scale object is the trivial scale (everything one)
+        # change this to a different scale object be creating a derived class
+    
+    def set_tokenscale(self, tokenscale):
+        """sets the tokenscale object (returns self)"""
+        #print("setting tokenscale", self.cid, tokenscale)
+        super().__setattr__('tokenscale', tokenscale)
+        return self
+    
+    @property
+    def scalex(self):
+        """returns the scale of the x-axis token"""
+        return self.tokenscale.scale(self.tknx)
+    
+    @property
+    def scaley(self):
+        """returns the scale of the y-axis token"""
+        return self.tokenscale.scale(self.tkny)
+    
+    def scale(self, tkn):
+        """returns the scale of tkn"""
+        return self.tokenscale.scale(tkn)
     
     def asdict(self):
         "returns a dict representation of the curve"
@@ -217,34 +237,34 @@ class ConstantProductCurve():
         return self
 
     @classmethod
-    def from_kx(cls, k, x, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None):
+    def from_kx(cls, k, x, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None, params=None):
         "constructor: from k,x (and x_act, y_act)"
-        return cls(k=k, x=x, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr)
+        return cls(k=k, x=x, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr, params=params)
    
     @classmethod
-    def from_ky(cls, k, y, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None):
+    def from_ky(cls, k, y, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None, params=None):
         "constructor: from k,y (and x_act, y_act)"
-        return cls(k=k, x=k/y, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr) 
+        return cls(k=k, x=k/y, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr, params=params) 
     
     @classmethod
-    def from_xy(cls, x, y, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None):
+    def from_xy(cls, x, y, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None, params=None):
         "constructor: from x,y (and x_act, y_act)"
-        return cls(k=x*y, x=x, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr)
+        return cls(k=x*y, x=x, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr, params=params)
     
     @classmethod
-    def from_pk(cls, p, k, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None):
+    def from_pk(cls, p, k, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None, params=None):
         "constructor: from k,p (and x_act, y_act)"
-        return cls(k=k, x=sqrt(k/p), x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr)
+        return cls(k=k, x=sqrt(k/p), x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr, params=params)
     
     @classmethod
-    def from_px(cls, p, x, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None):
+    def from_px(cls, p, x, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None, params=None):
         "constructor: from x,p (and x_act, y_act)"
-        return cls(k=x*x*p, x=x, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr)
+        return cls(k=x*x*p, x=x, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr, params=params)
     
     @classmethod
-    def from_py(cls, p, y, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None):
+    def from_py(cls, p, y, x_act=None, y_act=None, pair=None, cid=None, fee=None, descr=None, params=None):
         "constructor: from y,p (and x_act, y_act)"
-        return cls(k=y*y/p, x=y/p, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr)
+        return cls(k=y*y/p, x=y/p, x_act=x_act, y_act=y_act, pair=pair, cid=cid, fee=fee, descr=descr, params=params)
     
     @classmethod
     def from_pkpp(cls, p, k, p_min=None, p_max=None, pair=None, cid=None, fee=None, descr=None, params=None):
@@ -421,44 +441,49 @@ class ConstantProductCurve():
             params = params,
         )
 
-    def execute(self, dx=None, dy=None, verbose=False):
+    def execute(self, dx=None, dy=None, ignorebounds=False, verbose=False):
         """
         executes a transaction in the pool, returning a new curve object
 
-        :dx:        amount of token x to be +added to/-removed from the pool*
-        :dy:        amount of token y to be +added to/-removed from the pool*
+        :dx:                amount of token x to be +added to/-removed from the pool*
+        :dy:                amount of token y to be +added to/-removed from the pool*
+        :ignorebounds:      if True, ignore bounds on x_act, y_act
         :returns:   new curve object
 
         *at least one of dx, dy must be None
         """
         if not dx is None and not dy is None:
-            raise ValueError(f"either dx or dy must be None {dx} {dy}")
+            raise ValueError(f"either dx or dy must be None dx={dx} dy={dy}")
         
         if dx is None and dy is None:
             dx = 0
         
         if not dx is None:
             if not dx >= -self.x_act:
-                raise ValueError(f"dx must be >= -x_act ({dx}, {self.x_act})")
+                if not ignorebounds:
+                    raise ValueError(f"dx must be >= -x_act (dx={dx}, x_act={self.x_act} {self.tknx} [{self.cid}: {self.pair}])")
             newx = self.x + dx
             newy = self.k / newx
 
         else:
             if not dy >= -self.y_act:
-                raise ValueError(f"dy must be >= -y_act ({dy}, {self.y_act})")
+                if not ignorebounds:
+                    raise ValueError(f"dy must be >= -y_act (dy={dy}, y_act={self.y_act} {self.tkny} [{self.cid}: {self.pair}])")
             newy = self.y + dy
             newx = self.k / newy
+        
         if verbose:
             if dx is None: dx=newx-self.x
             if dy is None: dy=newy-self.y
             print(f"{self.pair} dx={dx:.2f} {self.tknx} dy={dy:.2f} {self.tkny} | x:{self.x:.1f}->{newx:.1f} xa:{self.x_act:.1f}->{self.x_act+newx-self.x:.1f} ya:{self.y_act:.1f}->{self.y_act+newy-self.y:.1f} k={self.k:.1f}")
+        
         return self.__class__(
             k = self.k,
             x = newx,
             x_act = self.x_act + newx - self.x,
             y_act = self.y_act + newy - self.y,
             pair = self.pair,
-            cid = None,
+            cid = f"{self.cid}-x",
             fee = self.fee,
             descr = f"{self.descr} [dx={dx}]",
             params = {**self.params, "traded": {"dx": dx, "dy": dy}},
@@ -579,6 +604,32 @@ class ConstantProductCurve():
             return None
         return x-self.x
     
+    @property
+    def dy_min(self):
+        """minimum (=max negative) possible dy value of this pool (=-y_act)"""
+        return -self.y_act
+    
+    @property
+    def dx_min(self):
+        """minimum (=max negative) possible dx value of this pool (=-x_act)"""
+        return -self.x_act
+    
+    @property
+    def dy_max(self):
+        """maximum dy value of this pool (=dy(dx_min))"""
+        if self.x_act < self.x:
+            return self.dyfromdx_f(self.dx_min)
+        else:
+            return None
+    
+    @property
+    def dx_max(self):
+        """maximum dx value of this pool (=dx(dy_min))"""
+        if self.y_act < self.y:
+            return self.dxfromdy_f(self.dy_min)
+        else:
+            return None
+    
     @staticmethod
     def inrange(v, minv=None, maxv=None):
         "True if minv <= v <= maxv; None means no boundary"
@@ -591,7 +642,7 @@ class ConstantProductCurve():
         return True
     
     EPS = 1e-6
-    def isequal(self, x,y):
+    def isequal(self, x, y):
         "returns True if x and y are equal within EPS"
         if x == 0:
             return abs(y) < self.EPS
@@ -603,7 +654,6 @@ class ConstantProductCurve():
             return big > self.EPS
         return big/small > 1+self.EPS
     
-    
 @dataclass
 class CPCContainer():
     """
@@ -614,13 +664,22 @@ class CPCContainer():
     Pair = Pair
     
     curves: list = field(default_factory=list)
+    tokenscale: ts.TokenScaleBase = field(default=None, repr=False)
 
     def __post_init__(self):
+        
+        if self.tokenscale is None:
+            self.tokenscale = self.TOKENSCALE
+        #print("[CPCContainer] tokenscale =", self.tokenscale)
+        
         if not isinstance(self.curves, list):
             self.curves = list(self.curves)
+        
         for i, c in enumerate(self.curves):
             if c.cid is None:
                 c.setcid(i)
+            c.set_tokenscale(self.tokenscale)
+
         self.curves_by_cid = {c.cid: c for c in self.curves}
         self.curveix_by_curve = {c: i for i, c in enumerate(self.curves)}
         #self.curves_by_primary_pair = {c.pairo.primary: c for c in self.curves}
@@ -630,6 +689,14 @@ class CPCContainer():
                 self.curves_by_primary_pair[c.pairo.primary].append(c)
             except KeyError:
                 self.curves_by_primary_pair[c.pairo.primary] = [c]
+
+    TOKENSCALE = ts.TokenScale1Data 
+        # default token scale object is the trivial scale (everything one)
+        # change this to a different scale object be creating a derived class
+
+    def scale(self, tkn):
+        """returns the scale of tkn"""
+        return self.tokenscale.scale(tkn)
     
     def asdicts(self):
         """returns list of dictionaries representing the curves"""
@@ -640,19 +707,23 @@ class CPCContainer():
         return pd.DataFrame.from_dict(self.asdicts()).set_index("cid")
     
     @classmethod
-    def from_dicts(cls, dicts):
-        """creates a container from a list of dictionaries"""
-        return cls([ConstantProductCurve.from_dict(d) for d in dicts])
+    def from_dicts(cls, dicts, tokenscale=None):
+        """alternative constructor: creates a container from a list of dictionaries"""
+        return cls([ConstantProductCurve.from_dict(d) for d in dicts], tokenscale=tokenscale)
        
     @classmethod
-    def from_df(cls, df):
-        "creates a container from a dataframe representation"
+    def from_df(cls, df, tokenscale=None):
+        "alternative constructor: creates a container from a dataframe representation"
         if "cid" in df.columns:
             df = df.set_index("cid")
-        return cls.from_dicts(df.reset_index().to_dict("records"))
+        return cls.from_dicts(df.reset_index().to_dict("records"), tokenscale=tokenscale)
     
     def add(self, item):
-        """adds a single ConstantProductCurve item to the container"""
+        """adds a single ConstantProductCurve item or all items from another container to the container"""
+        if isinstance(item, CPCContainer):
+            for c in item:
+                self.add(c)
+            return self
         assert isinstance(item, ConstantProductCurve), f"item must be a ConstantProductCurve object {item}"
         if item.cid is None:
             item.setcid(len(self))
@@ -676,7 +747,7 @@ class CPCContainer():
         return pp if pairo.isprimary else 1/pp
     
     def __iadd__(self, other):
-        """alias for either add"""
+        """alias for  self.add"""
         return self.add(other)
     
     def __iter__(self):
@@ -692,16 +763,28 @@ class CPCContainer():
         return curve in self.curveix_by_curve
     
     def tknys(self, curves=None):
-        """returns set of all base tokens used by the curves"""
+        """returns set of all base tokens (tkny) used by the curves"""
         if curves is None:
             curves = self.curves
-        return {c.tknb for c in curves}
+        return {c.tkny for c in curves}
+    
+    def tknyl(self, curves=None):
+        """returns list of all base tokens (tkny) used by the curves"""
+        if curves is None:
+            curves = self.curves
+        return [c.tkny for c in curves]
     
     def tknxs(self, curves=None):
-        """returns set of all quote tokens used by the curves"""
+        """returns set of all quote tokens (tknx) used by the curves"""
         if curves is None:
             curves = self.curves
-        return {c.tknq for c in curves}
+        return {c.tknx for c in curves}
+    
+    def tknxl(self, curves=None):
+        """returns set of all quote tokens (tknx) used by the curves"""
+        if curves is None:
+            curves = self.curves
+        return [c.tknx for c in curves]
     
     def tkns(self, curves=None):
         """returns set of all tokens used by the curves"""
@@ -712,9 +795,18 @@ class CPCContainer():
         """returns set of all tokens used by the curves as a string"""
         return ",".join(sorted(self.tokens(curves)))
     
-    def pairs(self):
-        """returns set of all pairs"""
-        return {c.pair for c in self}
+    def pairs(self, standardize=True):
+        """
+        returns set of all pairs used by the curves
+        
+        :standardize:   if False, the pairs are returned as they are in the curves; eg if we have curves
+                        for both ETH/USDT and USDT/ETH, both pairs will be returned; if True, only the 
+                        canonical pair will be returned
+        """
+        if standardize:
+            return {c.pairo.primary for c in self}
+        else:
+            return {c.pair for c in self}
     
     @staticmethod
     def pairset(pairs):
@@ -951,8 +1043,10 @@ class CPCContainer():
 
     def _convert(self, generator, asgenerator, ascc):
         """takes a generator and returns a tuple, generator or CC object"""
+        if asgenerator is None: asgenerator = False
+        if ascc is None: ascc = True
         if asgenerator: return generator
-        if ascc: return self.__class__(generator)
+        if ascc: return self.__class__(generator, tokenscale=self.tokenscale)
         return tuple(generator)
     
     def curveix(self, curve):
@@ -963,39 +1057,67 @@ class CPCContainer():
         """returns curve by cid"""
         return self.curves_by_cid.get(cid, None)
     
-    def bycids(self, cids, asgenerator=False, ascc=False):
-        """returns curves by cids (as tuple, generator or CC object)"""
-        result = (self.curves_by_cid[cid] for cid in cids)
+    def bycids(self, include=None, exclude=None, asgenerator=None, ascc=None):
+        """
+        returns curves by cids (as tuple, generator or CC object)
+        
+        :include:   list of cids to include, if None all cids are included
+        :exclude:   list of cids to exclude, if None no cids are excluded
+                    exclude beats include
+        :returns:   tuple, generator or container object (default)
+        """
+        if exclude is None: exclude = set()
+        if include is None: 
+            result = (c for c in self if not c.cid in exclude)
+        else:
+            result = (self.curves_by_cid[cid] for cid in include if not cid in exclude)
         return self._convert(result, asgenerator, ascc)
     
-    def bypair(self, pair, directed=True, asgenerator=False, ascc=False):
-        """returns all curves by (usually directed) pair (as tuple, genator or CC object)"""
+    def bypair(self, pair, directed=False, asgenerator=None, ascc=None):
+        """returns all curves by (possibly directed) pair (as tuple, genator or CC object)"""
         result = (c for c in self if c.pair==pair)
         if not directed:
             pairr = "/".join(pair.split("/")[::-1])
             result = itertools.chain(result, (c for c in self if c.pair==pairr))
         return self._convert(result, asgenerator, ascc)
     
-    def bp(self, pair, directed=False, asgenerator=False, ascc=False):
+    def bp(self, pair, directed=False, asgenerator=None, ascc=None):
         """alias for bypair by with directed=False for interactive use"""
         return self.bypair(pair, directed=directed, asgenerator=asgenerator, ascc=ascc)
 
-    def bypairs(self, pairs=None, directed=True, asgenerator=False, ascc=False):
-        """returns all curves by (usually directed) pairs (as tuple, generator or CC object)"""
+    def bypairs(self, pairs=None, directed=False, asgenerator=None, ascc=None):
+        """
+        returns all curves by (possibly directed) pairs (as tuple, generator or CC object)
+        
+        :pairs:     set, list or comma-separated string of pairs; if None all pairs are included
+        :directed:  if True, pair direction is important (eg ETH/USDC will not return USDC/ETH
+                    pairs); if False, pair direction is ignored and both will be returned
+        :returns:   tuple, generator or container object (default)
+        """
+        if isinstance(pairs, str):
+            pairs = set(pairs.split(","))
         if pairs is None:
-            return self.curves
-        assert directed, "undirected pairs not implemented"
-        pairs = set(pairs)
-        result = (c for c in self if c.pair in pairs)
+            result = (c for c in self)
+        else:
+            pairs = set(pairs)
+            if not directed:
+                rpairs = set(f"{q}/{b}" for b, q in (p.split("/") for p in pairs))
+                #print("[CC] bypairs: adding reverse pairs", rpairs)
+                pairs = pairs.union(rpairs)
+            result = (c for c in self if c.pair in pairs)
         return self._convert(result, asgenerator, ascc)
     
-    def bytknx(self, tknx, asgenerator=False, ascc=False):
+    def copy(self):
+        """returns a copy of the container"""
+        return self.bypairs(ascc=True)
+    
+    def bytknx(self, tknx, asgenerator=None, ascc=None):
         """returns all curves by quote token tknx (tknq) (as tuple, generator or CC object)"""
         result = (c for c in self if c.tknx==tknx)
         return self._convert(result, asgenerator, ascc)
     bytknq = bytknx
     
-    def bytknxs(self, tknxs=None, asgenerator=False, ascc=False):
+    def bytknxs(self, tknxs=None, asgenerator=None, ascc=None):
         """returns all curves by quote token tknx (tknq) (as tuple, generator or CC object)"""
         if tknxs is None:
             return self.curves
@@ -1006,13 +1128,13 @@ class CPCContainer():
         return self._convert(result, asgenerator, ascc)
     bytknxs = bytknxs
     
-    def bytkny(self, tkny, asgenerator=False, ascc=False):
+    def bytkny(self, tkny, asgenerator=None, ascc=None):
         """returns all curves by base token tkny (tknb) (as tuple, generator or CC object)"""
         result = (c for c in self if c.tkny==tkny)
         return self._convert(result, asgenerator, ascc)
     bytknb = bytkny
 
-    def bytknys(self, tknys=None, asgenerator=False, ascc=False):
+    def bytknys(self, tknys=None, asgenerator=None, ascc=None):
         """returns all curves by quote token tkny (tknb) (as tuple, generator or CC object)"""
         if tknys is None:
             return self.curves
@@ -1028,8 +1150,8 @@ class CPCContainer():
         """helper: returns uniform random var"""
         return random.uniform(minx, maxx)
     
-    @property                      
-    def u1(self):
+    @staticmethod                      
+    def u1():
         """helper: returns uniform [0,1] random var"""
         return random.uniform(0, 1)
     
@@ -1046,7 +1168,8 @@ class CPCContainer():
             curves = self.curves
         tknx = {c.tknq for c in curves}
         tkny = {c.tknb for c in curves}
-        assert len(tknx)==1 and len(tkny)==1, "all curves must have same tknq and tknb"
+        assert len(tknx) != 0 and len(tkny) != 0, f"no curves found {tknx} {tkny}"
+        assert len(tknx)==1 and len(tkny)==1, f"all curves must have same tknq and tknb {tknx} {tkny}"
         x = [c.x for c in curves]
         y = [c.y for c in curves]
         return (
@@ -1056,6 +1179,9 @@ class CPCContainer():
     
     @dataclass
     class TokenTableEntry():
+        """
+        associates a single token with the curves on which they appear
+        """
         x: list
         y: list
 
@@ -1082,27 +1208,28 @@ class CPCContainer():
     
     Params = Params
     PLOTPARAMS = Params(
-        printline = "pair = {pair}",                                            # print line before plotting; {pair} is replaced
-        title = "{pair}",                                                       # plot title; {pair} and {c} are replaced
-        xlabel = "{c.tknx}",                                                    # x axis label; ditto
-        ylabel = "{c.tkny}",                                                    # y axis label; ditto
-        label =  "[{c.cid}-{c.descr}]: p={c.p:.1f}, k={c.k:.1f}",               # label for legend; ditto
-        marker = "*",                                                           # marker for plot
-        plotf = dict(color="lightgrey", linestyle="dotted"),                    # additional kwargs for plot of the _f_ull curve
-        plotr = dict(color="grey"),                                             # ditto for the _r_ange
-        plotm = dict(),                                                         # dittto for the _m_arker
-        grid = True,                                                            # plot grid if True
-        legend = True,                                                          # plot legend if True
-        show = True,                                                            # finish with plt.show() if True
+        printline = "pair = {pair}",                                                    # print line before plotting; {pair} is replaced
+        title = "{pair}",                                                               # plot title; {pair} and {c} are replaced
+        xlabel = "{c.tknx}",                                                            # x axis label; ditto
+        ylabel = "{c.tkny}",                                                            # y axis label; ditto
+        label =  "[{c.cid}-{c.descr}]: p={c.p:.1f}, 1/p={pinv:.1f}, k={c.k:.1f}",       # label for legend; ditto
+        marker = "*",                                                                   # marker for plot
+        plotf = dict(color="lightgrey", linestyle="dotted"),                            # additional kwargs for plot of the _f_ull curve
+        plotr = dict(color="grey"),                                                     # ditto for the _r_ange
+        plotm = dict(),                                                                 # dittto for the _m_arker
+        grid = True,                                                                    # plot grid if True
+        legend = True,                                                                  # plot legend if True
+        show = True,                                                                    # finish with plt.show() if True
     )
 
-    def plot(self, pairs=None, curves=None, params=None):
+    def plot(self, pairs=None, directed=False, curves=None, params=None):
         """
         plots the curves in curvelist or all curves if None
 
-        :pairs:      list of pairs to plot
-        :curves:     list of curves to plot
-        :params:     plot parameters, as params struct (see PLOTPARAMS)
+        :pairs:     list of pairs to plot
+        :curves:    list of curves to plot
+        :directed:  if True, only plot pairs provided; otherwise plot reverse pairs as well
+        :params:    plot parameters, as params struct (see PLOTPARAMS)
         """
         p = Params.construct(params, defaults=self.PLOTPARAMS.params)
         
@@ -1112,12 +1239,20 @@ class CPCContainer():
         if pairs is None:
             pairs = self.pairs()
 
+        if not directed:
+            rpairs = set(f"{q}/{b}" for b, q in (p.split("/") for p in pairs))
+            #print("[CC] plot: adding reverse pairs", rpairs)
+            pairs = pairs.union(rpairs)
+        
         assert curves is None, "restricting curves not implemented yet"
 
         for pair in pairs:
+            curves = self.bypair(pair, directed=True, ascc=False)
+            #print("plot", pair, [c.pair for c in curves])
+            if len(curves) == 0:
+                continue
             if p.printline:
                 print(p.printline.format(pair=pair))
-            curves = self.bypair(pair)
             statx, staty = self.xystats(curves)
             xr = np.linspace(0.0000001, statx.maxv*1.2,500)
             for i, c in enumerate(curves):
@@ -1129,7 +1264,7 @@ class CPCContainer():
             plt.gca().set_prop_cycle(None)
             for c in curves:
                 # plotm are the markers
-                label = None if not p.label else p.label.format(pair=pair, c=c)
+                label = None if not p.label else p.label.format(pair=pair, c=c, pinv=1/c.p)
                 plt.plot(c.x, c.y, marker=p.marker, label=label, **p.plotm) 
 
             plt.title(p.title.format(pair=pair, c=c))
@@ -1192,3 +1327,17 @@ class AF():
     @classmethod
     def herfindahlN(cls, x):
         return 1/cls.herfindahl(x)
+    
+
+TOKENIDS = AttrDict(
+    ETH = "WETH(3735)",
+    BTC = "WBTC(1990)",
+    USDC = "USDC(2288)",
+    USDT = "USDT(3336)",
+    DAI = "DAI(1678)",
+    LINK = "LINK(3230)",
+    MKR = "MKR(3648)",
+    BNT = "BNT(914)",
+    UNI = "UNI(3225)",
+    SUSHI = "SUSHI(1359)",
+)
