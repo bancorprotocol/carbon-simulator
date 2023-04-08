@@ -4,8 +4,8 @@ simple representation of a pair of tokens, used by cpc and arbgraph
 (c) Copyright Bprotocol foundation 2023. 
 Licensed under MIT
 """
-__version__ = "1.0.1"
-__date__ = "07/Apr/2022"
+__version__ = "1.1"
+__date__ = "09/Apr/2022"
 
 from dataclasses import dataclass, field, asdict, InitVar
 
@@ -76,11 +76,31 @@ class SimplePair:
         tkn:i for i, tkn in enumerate(["USDC", "USDT", "DAI", "TUSD", "BUSD", "PAX", "GUSD", 
             "USDS", "sUSD", "mUSD", "HUSD", "USDN", "USDP", "USDQ", "ETH", "WETH", "WBTC", "BTC"])}
 
+    def n(self, tkn):
+        """normalize the token name (remove the id, if any)"""
+        return tkn.split("-")[0].split("(")[0]
+    
+    @property
+    def tknb_n(self):
+        return self.n(self.tknb)
+    
+    @property
+    def tknq_n(self):
+        return self.n(self.tknq)
+    
+    @property
+    def tknx_n(self):
+        return self.n(self.tknx)
+    
+    @property
+    def tkny_n(self):
+        return self.n(self.tkny)
+    
     @property
     def isprimary(self):
         """whether the representation is primary or secondary"""
-        tknqix = self.NUMERAIRE_TOKENS.get(self.tknq, 1e10)
-        tknbix = self.NUMERAIRE_TOKENS.get(self.tknb, 1e10)
+        tknqix = self.NUMERAIRE_TOKENS.get(self.tknq_n, 1e10)
+        tknbix = self.NUMERAIRE_TOKENS.get(self.tknb_n, 1e10)
         if tknqix == tknbix:
             return self.tknb < self.tknq
         return tknqix < tknbix
