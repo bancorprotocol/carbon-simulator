@@ -1,6 +1,6 @@
 from util import read, write
-from core.match import impl as match_impl
 from core.trade import impl as trade_impl
+from core.match import impl as match_impl
 
 def run(fileName):
     tests = read(__file__, fileName)
