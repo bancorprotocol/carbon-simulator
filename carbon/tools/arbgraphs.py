@@ -11,7 +11,7 @@ __VERSION__ = "1.1"
 __DATE__ = "09/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, astuple, InitVar
-from carbon.simplepair import SimplePair as Pair
+from .simplepair import SimplePair as Pair
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt

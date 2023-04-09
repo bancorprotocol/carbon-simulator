@@ -11,7 +11,7 @@
 
 
 from carbon.helpers.stdimports import *
-from carbon import ConstantProductCurve as CPC, CPCContainer
+from carbon.tools.cpc import ConstantProductCurve as CPC, CPCContainer
 
 import json
 import time

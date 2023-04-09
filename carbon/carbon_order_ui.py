@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from math import sqrt, floor, log10
 from collections import namedtuple
 from .sdk import Tokens
-from .cpc import ConstantProductCurve as CPC
+from .tools.cpc import ConstantProductCurve as CPC
 
 @dataclass
 class CarbonOrderUI:

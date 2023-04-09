@@ -19,7 +19,7 @@ from carbon.helpers.stdimports import *
 #from carbon import CarbonOrderUI
 import carbon.tools.arbgraphs as ag
 from carbon.tools.arbgraphs import np, pd, plt # convenience imports
-from carbon import ConstantProductCurve as CPC, CPCContainer
+from carbon.tools.cpc import ConstantProductCurve as CPC, CPCContainer
 import math
 
 plt.style.use('seaborn-dark')

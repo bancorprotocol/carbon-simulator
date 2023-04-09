@@ -11,8 +11,9 @@
 
 
 from carbon.helpers.stdimports import *
-from carbon import ConstantProductCurve as CPC, CPCContainer, CarbonOrderUI
-import carbon.tokenscale as ts
+from carbon import CarbonOrderUI
+from carbon.tools.cpc import ConstantProductCurve as CPC, CPCContainer
+import carbon.tools.tokenscale as ts
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
 print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CPC))
