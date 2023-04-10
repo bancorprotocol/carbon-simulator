@@ -723,7 +723,6 @@
         }
       ]
     }
-<<<<<<< HEAD
   },
   {
     "method": "matchBySourceAmount",
@@ -872,7 +871,5 @@
         }
       ]
     }
-=======
->>>>>>> c7ad9f14205e4c0b0bd725c78f6b4ccddfd50f25
   }
 ]
