@@ -107,7 +107,7 @@ def tradeFunc(amount, order, func, fallback):
     B = decodeFloat(order['B'])
     try:
         return uint128(func(x, y, z, A, B))
-    except AssertionError:
+    except:
         return fallback
 
 def tradeBySourceAmount(amount, order):
