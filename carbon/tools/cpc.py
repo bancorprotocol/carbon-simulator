@@ -7,8 +7,8 @@ Licensed under MIT
 NOTE: this class is not part of the API of the Carbon protocol, and you must expect breaking
 changes even in minor version updates. Use at your own risk.
 """
-__VERSION__ = "2.3.1"
-__DATE__ = "9/Apr/2023"
+__VERSION__ = "2.3.2"
+__DATE__ = "10/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, InitVar
 from .simplepair import SimplePair as Pair
@@ -92,6 +92,16 @@ class Pair:
         """tuple representation of the reverse pair"""
         return (self.tknq, self.tknb)
     
+    @staticmethod
+    def prettify_tkn(tkn):
+        """returns a prettified token name"""
+        return tkn.split("-")[0]
+    
+    @staticmethod
+    def prettify_pair(pair):
+        """returns a prettified pair name"""
+        return "/".join(Pair.prettify_tkn(tkn) for tkn in pair.split("/"))
+    
     @property
     def tknx(self):
         return self.tknb
@@ -99,6 +109,22 @@ class Pair:
     @property
     def tkny(self):
         return self.tknq
+    
+    @property
+    def tknbp(self):
+        return self.prettify_tkn(self.tknb)
+    
+    @property
+    def tknqp(self):
+        return self.prettify_tkn(self.tknq)
+    
+    @property
+    def tknxp(self):
+        return self.prettify_tkn(self.tknx)
+    
+    @property
+    def tknyp(self):
+        return self.prettify_tkn(self.tkny)
     
     NUMERAIRE_TOKENS = {
         tkn:i for i, tkn in enumerate(["USDC", "USDT", "DAI", "TUSD", "BUSD", "PAX", "GUSD", 
@@ -174,7 +200,8 @@ class ConstantProductCurve():
         if self.params is None:
             super().__setattr__('params', AttrDict())
         elif isinstance(self.params, str):
-            super().__setattr__('params', AttrDict(json.loads(self.params)))
+            data = json.loads(self.params.replace("'", '"'))
+            super().__setattr__('params', AttrDict(data))
         elif isinstance(self.params, dict):
             super().__setattr__('params', AttrDict(self.params))
         
@@ -500,6 +527,18 @@ class ConstantProductCurve():
         "quote token"
         return self.pair.split("/")[1]
     tkny = tknq
+
+    @property
+    def tknbp(self):
+        """prettified base token"""
+        return Pair.prettify_tkn(self.tknb)
+    tknxp = tknbp
+
+    @property
+    def tknqp(self):
+        """prettified quote token"""
+        return Pair.prettify_tkn(self.tknq)
+    tknyp = tknqp
 
     @property
     def description(self):
@@ -972,7 +1011,7 @@ class CPCContainer():
                 values=["amtv", "amt", "n"], 
                 aggfunc={"amtv":["sum", AF.herfindahl, AF.herfindahlN], "amt":["sum", AF.herfindahl, AF.herfindahlN], "n":"count"}
                 )
-            price_eth = (self.price(tknb=t, tknq="WETH") if t != "WETH" else 1 for t in df1.index)
+            price_eth = (self.price(tknb=t, tknq=T.ETH) if t != T.ETH else 1 for t in df1.index)
             df1["price_eth"] = tuple(price_eth)
             df1["amtv_eth"] = df1[("amtv", "sum")]*df1["price_eth"]
             df1["amt_eth"] = df1[("amt", "sum")]*df1["price_eth"]
@@ -1208,10 +1247,10 @@ class CPCContainer():
     
     Params = Params
     PLOTPARAMS = Params(
-        printline = "pair = {pair}",                                                    # print line before plotting; {pair} is replaced
-        title = "{pair}",                                                               # plot title; {pair} and {c} are replaced
-        xlabel = "{c.tknx}",                                                            # x axis label; ditto
-        ylabel = "{c.tkny}",                                                            # y axis label; ditto
+        printline = "pair = {pairp}",                                                   # print line before plotting; {pair} is replaced
+        title = "{pairp}",                                                              # plot title; {pair} and {c} are replaced
+        xlabel = "{c.tknxp}",                                                           # x axis label; ditto
+        ylabel = "{c.tknyp}",                                                           # y axis label; ditto
         label =  "[{c.cid}-{c.descr}]: p={c.p:.1f}, 1/p={pinv:.1f}, k={c.k:.1f}",       # label for legend; ditto
         marker = "*",                                                                   # marker for plot
         plotf = dict(color="lightgrey", linestyle="dotted"),                            # additional kwargs for plot of the _f_ull curve
@@ -1233,11 +1272,13 @@ class CPCContainer():
         """
         p = Params.construct(params, defaults=self.PLOTPARAMS.params)
         
-        if isinstance(pairs, str):
-            pairs = [pairs]
-
         if pairs is None:
             pairs = self.pairs()
+
+        if isinstance(pairs, str):
+            pairs = [pairs] # necessary, lest we get a set of chars
+
+        pairs = set(pairs)
 
         if not directed:
             rpairs = set(f"{q}/{b}" for b, q in (p.split("/") for p in pairs))
@@ -1247,12 +1288,13 @@ class CPCContainer():
         assert curves is None, "restricting curves not implemented yet"
 
         for pair in pairs:
+            pairp = Pair.prettify_pair(pair)
             curves = self.bypair(pair, directed=True, ascc=False)
             #print("plot", pair, [c.pair for c in curves])
             if len(curves) == 0:
                 continue
             if p.printline:
-                print(p.printline.format(pair=pair))
+                print(p.printline.format(pair=pair, pairp=pairp))
             statx, staty = self.xystats(curves)
             xr = np.linspace(0.0000001, statx.maxv*1.2,500)
             for i, c in enumerate(curves):
@@ -1264,13 +1306,13 @@ class CPCContainer():
             plt.gca().set_prop_cycle(None)
             for c in curves:
                 # plotm are the markers
-                label = None if not p.label else p.label.format(pair=pair, c=c, pinv=1/c.p)
+                label = None if not p.label else p.label.format(pair=pair, pairp=pairp, c=c, pinv=1/c.p)
                 plt.plot(c.x, c.y, marker=p.marker, label=label, **p.plotm) 
 
-            plt.title(p.title.format(pair=pair, c=c))
+            plt.title(p.title.format(pair=pair, pairp=pairp, c=c))
             plt.ylim((0, staty.maxv*2))
-            plt.xlabel(p.xlabel.format(pair=pair, c=c))
-            plt.ylabel(p.ylabel.format(pair=pair, c=c))
+            plt.xlabel(p.xlabel.format(pair=pair, pairp=pairp, c=c))
+            plt.ylabel(p.ylabel.format(pair=pair, pairp=pairp, c=c))
             
             if p.legend:
                 if isinstance(p.legend, dict):
@@ -1328,16 +1370,32 @@ class AF():
     def herfindahlN(cls, x):
         return 1/cls.herfindahl(x)
     
+# tp = {t.split("-")[0]:t for t in CC.tokens()}
+# {t:tp[t] for t in TOKENIDS}
+# for k,v in {t:tp[t] for t in TOKENIDS}.items():
+#     print(f"""{k} = "{v}",  """)
 
 TOKENIDS = AttrDict(
-    ETH = "WETH(3735)",
-    BTC = "WBTC(1990)",
-    USDC = "USDC(2288)",
-    USDT = "USDT(3336)",
-    DAI = "DAI(1678)",
-    LINK = "LINK(3230)",
-    MKR = "MKR(3648)",
-    BNT = "BNT(914)",
-    UNI = "UNI(3225)",
-    SUSHI = "SUSHI(1359)",
+    WETH = "WETH-6Cc2",  
+    ETH = "WETH-6Cc2",  
+    WBTC = "WBTC-C599",  
+    BTC = "WBTC-C599",  
+    USDC = "USDC-eB48",  
+    USDT = "USDT-1ec7",  
+    DAI = "DAI-1d0F",  
+    LINK = "LINK-86CA",  
+    MKR = "MKR-79A2",  
+    BNT = "BNT-FF1C",  
+    UNI = "UNI-F984",  
+    SUSHI = "SUSHI-0fE2",  
+    CRV = "CRV-cd52",
+    FRAX = "FRAX-b99e",
+    HEX = "HEX-eb39",
+    MATIC = "MATIC-eBB0",
+    HDRN = "HDRN-5e06",
+    SHIB = "SHIB-C4cE",
+    ICHI = "ICHI-C4d6",
+
 )
+T = TOKENIDS
+
