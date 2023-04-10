@@ -7,8 +7,8 @@ Licensed under MIT
 NOTE: this class is not part of the API of the Carbon protocol, and you must expect breaking
 changes even in minor version updates. Use at your own risk.
 """
-__VERSION__ = "1.1"
-__DATE__ = "09/Apr/2023"
+__VERSION__ = "1.1.1" 
+__DATE__ = "10/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, astuple, InitVar
 from .simplepair import SimplePair as Pair
@@ -1245,6 +1245,8 @@ class ArbGraph(_DCBase):
         """
         assert not self.is_amounttype, "cannot get price on amount-type graphs"
         if node_tknb != node_tknq:
+            node_tknb = self.node_by_tkn(node_tknb)
+            node_tknq = self.node_by_tkn(node_tknq)
             price = self.ptransport(self.shortest_path(node_tknb, node_tknq)).multiplier
         else:
             price = 1
