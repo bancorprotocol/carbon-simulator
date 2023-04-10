@@ -7,8 +7,8 @@ Licensed under MIT
 NOTE: this class is not part of the API of the Carbon protocol, and you must expect breaking
 changes even in minor version updates. Use at your own risk.
 """
-__VERSION__ = "1.0"
-__DATE__ = "09/Apr/2023"
+__VERSION__ = "1.0.1"
+__DATE__ = "10/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, astuple, InitVar
 import pandas as pd
@@ -17,7 +17,7 @@ import cvxpy as cp
 import time
 import math
 import numbers
-from carbon import ConstantProductCurve as CPC, CPCContainer 
+from .cpc import ConstantProductCurve as CPC, CPCContainer 
 from sys import float_info
 
 
