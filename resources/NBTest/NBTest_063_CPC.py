@@ -16,13 +16,15 @@
 
 from carbon.helpers.stdimports import *
 from carbon import CarbonOrderUI
-from carbon.tools.cpc import ConstantProductCurve as CPC, CPCContainer
+from carbon.tools.cpc import ConstantProductCurve as CPC, CPCContainer, T, CPCInverter
+from carbon.tools.optimizer import CPCArbOptimizer, F
 import carbon.tools.tokenscale as ts
 plt.style.use('seaborn-dark')
 plt.rcParams['figure.figsize'] = [12,6]
 print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CPC))
 print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CarbonOrderUI))
 print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(ts.TokenScaleBase))
+print("{0.__name__} v{0.__VERSION__} ({0.__DATE__})".format(CPCArbOptimizer))
 print_version(require="2.4.2")
 
 # # Constant product curve [NBTest063]
@@ -320,6 +322,466 @@ assert cc.dy_min == -cc.y_act
 assert iseq( (cc.x + cc.dx_max)*(cc.y + cc.dy_min), cc.k)
 assert iseq( (cc.y + cc.dy_max)*(cc.x + cc.dx_min), cc.k)
 
+# ## xyfromp_f and dxdyfromp_f
+
+# +
+c = CPC.from_pkpp(p=100, k=100*10000, p_min=90, p_max=110, pair=f"{T.ETH}/{T.USDC}")
+
+assert c.pair == 'WETH-6Cc2/USDC-eB48'
+assert c.pairp == 'WETH/USDC'
+assert c.p == 100
+assert iseq(c.x_act, 4.653741075440777)
+assert iseq(c.y_act, 513.167019494862)
+assert c.tknx == T.ETH
+assert c.tkny == T.USDC
+assert c.tknxp == "WETH"
+assert c.tknyp == "USDC"
+assert c.xyfromp_f() == (c.x, c.y, c.p)
+assert c.xyfromp_f(withunits=True) == (100.0, 10000.0, 100.0, 'WETH', 'USDC', 'WETH/USDC')
+
+x,y,p = c.xyfromp_f(p=85, ignorebounds=True)
+assert p == 85
+assert iseq(x*y, c.k)
+assert iseq(y/x,85)
+
+x,y,p = c.xyfromp_f(p=115, ignorebounds=True)
+assert p == 115
+assert iseq(x*y, c.k)
+assert iseq(y/x,115)
+
+x,y,p = c.xyfromp_f(p=95)
+assert p == 95
+assert iseq(x*y, c.k)
+assert iseq(y/x,p)
+
+x,y,p = c.xyfromp_f(p=105)
+assert p == 105
+assert iseq(x*y, c.k)
+assert iseq(y/x,p)
+
+x,y,p = c.xyfromp_f(p=85)
+assert p == 85
+assert iseq(x*y, c.k)
+assert iseq(y/x,90)
+
+x,y,p = c.xyfromp_f(p=115)
+assert p == 115
+assert iseq(x*y, c.k)
+assert iseq(y/x,110)
+
+# +
+assert c.dxdyfromp_f(withunits=True) == (0.0, 0.0, 100.0, 'WETH', 'USDC', 'WETH/USDC')
+
+dx,dy,p = c.dxdyfromp_f(p=85, ignorebounds=True)
+assert p == 85
+assert iseq((c.x+dx)*(c.y+dy), c.k)
+assert iseq((c.y+dy)/(c.x+dx),p)
+
+dx,dy,p = c.dxdyfromp_f(p=115, ignorebounds=True)
+assert p == 115
+assert iseq((c.x+dx)*(c.y+dy), c.k)
+assert iseq((c.y+dy)/(c.x+dx),p)
+
+dx,dy,p = c.dxdyfromp_f(p=95)
+assert p == 95
+assert iseq((c.x+dx)*(c.y+dy), c.k)
+assert iseq((c.y+dy)/(c.x+dx),p)
+
+dx,dy,p = c.dxdyfromp_f(p=105)
+assert p == 105
+assert iseq((c.x+dx)*(c.y+dy), c.k)
+assert iseq((c.y+dy)/(c.x+dx),p)
+
+dx,dy,p = c.dxdyfromp_f(p=85)
+assert p == 85
+assert iseq((c.x+dx)*(c.y+dy), c.k)
+assert iseq((c.y+dy)/(c.x+dx), 90)
+assert iseq(dy, -c.y_act)
+
+dx,dy,p = c.dxdyfromp_f(p=115)
+assert p == 115
+assert iseq((c.x+dx)*(c.y+dy), c.k)
+assert iseq((c.y+dy)/(c.x+dx), 110)
+assert iseq(dx, -c.x_act)
+
+assert iseq(c.x_min*c.y_max, c.k)
+assert iseq(c.x_max*c.y_min, c.k)
+assert iseq(c.y_max/c.x_min, c.p_max)
+assert iseq(c.y_min/c.x_max, c.p_min)
+# -
+
+# ## CPCInverter
+
+c   = CPC.from_pkpp(p=2000,   k=10*20000, p_min=1800,   p_max=2200,   pair=f"{T.ETH}/{T.USDC}")
+c2  = CPC.from_pkpp(p=1/2000, k=10*20000, p_max=1/1800, p_min=1/2200, pair=f"{T.USDC}/{T.ETH}")
+ci  = CPCInverter(c)
+c2i = CPCInverter(c2)
+curves = CPCInverter.wrap([c,c2])
+assert c.pairo == c2i.pairo
+assert ci.pairo == c2.pairo
+
+#print("x_act", c.x_act, c2i.x_act)
+assert iseq(c.x_act, c2i.x_act)
+xact = c.x_act
+dx = -0.1*xact
+c_ex = c.execute(dx=dx)
+assert isinstance(c_ex, CPC)
+assert iseq(c_ex.x_act, xact+dx)
+assert iseq(c_ex.x, c.x+dx)
+c2i_ex = c2i.execute(dx=dx)
+assert iseq(c2i_ex.x_act, xact+dx)
+assert iseq(c2i_ex.x, c.x+dx)
+assert isinstance(c2i_ex, CPCInverter)
+
+assert len(curves) == 2
+assert set(c.pair for c in curves) == {'WETH-6Cc2/USDC-eB48'}
+assert len(set(c.pair for c in curves)) == 1
+assert len(set(c.tknx for c in curves)) == 1
+assert len(set(c.tkny for c in curves)) == 1
+
+assert c.tknx == ci.tkny
+assert c.tkny == ci.tknx
+assert c.tknxp == ci.tknyp
+assert c.tknyp == ci.tknxp
+assert c.tknb == ci.tknq
+assert c.tknq == ci.tknb
+assert c.tknbp == ci.tknqp
+assert c.tknqp == ci.tknbp
+assert f"{c.tknq}/{c.tknb}" == ci.pair
+assert f"{c.tknqp}/{c.tknbp}" == ci.pairp
+assert c.x == ci.y
+assert c.y == ci.x
+assert c.x_act == ci.y_act
+assert c.y_act == ci.x_act
+assert c.x_min == ci.y_min
+assert c.x_max == ci.y_max
+assert c.y_min == ci.x_min
+assert c.y_max == ci.x_max
+assert c.k == ci.k
+assert iseq(c.p, 1/ci.p)
+assert iseq(c.p_min, 1/ci.p_max)
+assert iseq(c.p_max, 1/ci.p_min)
+
+
+assert c.pair == c2i.pair
+assert c.tknx == c2i.tknx
+assert c.tkny == c2i.tkny
+assert c.tknxp == c2i.tknxp
+assert c.tknyp == c2i.tknyp
+assert c.tknb == c2i.tknb
+assert c.tknq == c2i.tknq
+assert c.tknbp == c2i.tknbp
+assert c.tknqp == c2i.tknqp
+assert iseq(c.p, c2i.p)
+assert iseq(c.p_min, c2i.p_min)
+assert iseq(c.p_max, c2i.p_max)
+assert c.x == c2i.x
+assert c.y == c2i.y
+assert c.x_act == c2i.x_act
+assert c.y_act == c2i.y_act
+assert c.x_min == c2i.x_min
+assert c.x_max == c2i.x_max
+assert c.y_min == c2i.y_min
+assert c.y_max == c2i.y_max
+assert c.k == c2i.k
+
+assert iseq(c.xfromy_f(c.y), c2i.xfromy_f(c2i.y))
+assert iseq(c.yfromx_f(c.x), c2i.yfromx_f(c2i.x))
+assert iseq(c.xfromy_f(c.y*1.05), c2i.xfromy_f(c2i.y*1.05))
+assert iseq(c.yfromx_f(c.x*1.05), c2i.yfromx_f(c2i.x*1.05))
+assert iseq(c.dxfromdy_f(1), c2i.dxfromdy_f(1))
+assert iseq(c.dyfromdx_f(1), c2i.dyfromdx_f(1))
+
+assert c.xyfromp_f() == c2i.xyfromp_f()
+assert c.dxdyfromp_f() == c2i.dxdyfromp_f()
+assert c.xyfromp_f(withunits=True) == c2i.xyfromp_f(withunits=True)
+assert c.dxdyfromp_f(withunits=True) == c2i.dxdyfromp_f(withunits=True)
+assert iseq(c.p, c2i.p)
+x,y,p    = c.xyfromp_f(c.p*1.05)
+x2,y2,p2 = c2i.xyfromp_f(c2i.p*1.05)
+assert iseq(x,x2)
+assert iseq(y,y2)
+assert iseq(p,p2)
+dx,dy,p    = c.dxdyfromp_f(c.p*1.05)
+dx2,dy2,p2 = c2i.dxdyfromp_f(c2i.p*1.05)
+assert iseq(dx,dx2)
+assert iseq(dy,dy2)
+assert iseq(p,p2)
+
+
+# ## simple_optimizer
+
+CC = CPCContainer(CPC.from_pk(p=2000+i*10, k=10*20000, pair=f"{T.ETH}/{T.USDC}") for i in range(11))
+c0 = CC.curves[0]
+c1 = CC.curves[-1]
+CC0 = CPCContainer([c0])
+assert len(CC) == 11
+assert iseq([c.p for c in CC][-1], 2100)
+assert len(CC0) == 1
+assert iseq([c.p for c in CC0][-1], 2000)
+
+# +
+O = CPCArbOptimizer(CC)
+O0 = CPCArbOptimizer(CC0)
+func = O.simple_optimizer(result=O.SO_DXDYVECFUNC)
+func0 = O0.simple_optimizer(result=O.SO_DXDYVECFUNC)
+funcs = O.simple_optimizer(result=O.SO_DXDYSUMFUNC)
+funcvx = O.simple_optimizer(result=O.SO_DXDYVALXFUNC)
+funcvy = O.simple_optimizer(result=O.SO_DXDYVALYFUNC)
+x,y = func0(2100)[0]
+xb, yb, _ = c0.dxdyfromp_f(2100)
+assert x == xb
+assert y == yb
+x,y = func(2100)[-1]
+xb, yb, _ = c1.dxdyfromp_f(2100)
+assert x == xb
+assert y == yb
+assert np.all(sum(func(2100)) == funcs(2100))
+
+p = 2100
+dx, dy = funcs(p)
+assert iseq(dy + p*dx, funcvy(p))
+assert iseq(dy/p + dx, funcvx(p))
+
+p = 1500
+dx, dy = funcs(p)
+assert iseq(dy + p*dx, funcvy(p))
+assert iseq(dy/p + dx, funcvx(p))
+
+assert iseq(float(O0.simple_optimizer(result=O.SO_PMAX)), c0.p)
+assert iseq(float(O.simple_optimizer(result=O.SO_PMAX)), 2049.6451720862074, eps=1e-3)
+# -
+
+O.simple_optimizer(result=O.SO_PMAX)
+
+r = O.simple_optimizer()
+assert len(r.curves) == len(CC)
+assert np.all(r.dxdy_sum == sum(r.dxdy_vec))
+dx, dy = r.dxdy_vecs
+assert tuple(tuple(_) for _ in r.dxdy_vec) == tuple(zip(dx,dy))
+assert r.result == r.dxdy_valx
+for dp in np.linspace(-500,500,100):
+    assert r.dxdyfromp_valx_f(p) < r.dxdy_valx
+    assert r.dxdyfromp_valy_f(p) < r.dxdy_valy
+
+CC_ex = CPCContainer(c.execute(dx=dx) for c, dx in zip(r.curves, r.dxvalues))
+# CC.plot()
+# CC_ex.plot()
+prices = [c.p for c in CC]
+prices_ex = [c.p for c in CC_ex]
+assert iseq(np.std(prices), 31.622776601683707)
+assert iseq(np.std(prices_ex), 4.547473508864641e-13)
+#prices, prices_ex
+
+# ## optimizer plus inverted curves
+
+CCr = CPCContainer(CPC.from_pk(p=2000+i*100, k=10*(20000+10000*i), pair=f"{T.ETH}/{T.USDC}") for i in range(11))
+CCi = CPCContainer(CPC.from_pk(p=1/(2050+i*100), k=10*(20000+10000*i), pair=f"{T.USDC}/{T.ETH}") for i in range(11))
+CC  = CCr.bycids()
+assert len(CC) == len(CCr)
+CC += CCi
+assert len(CC) == len(CCr) + len(CCi)
+
+# +
+# CC.plot()
+# -
+
+O = CPCArbOptimizer(CC)
+r = O.simple_optimizer()
+print(f"Arbitrage gains: {-r.valx:.4f} {r.tknxp} [time={r.time:.4f}s]")
+assert iseq(r.result, -1.3194573866437527)
+
+CC_ex = CPCContainer(c.execute(dx=dx) for c, dx in zip(r.curves, r.dxvalues))
+# CC.plot()
+# CC_ex.plot()
+
+prices_ex = [c.pairo.primary_price(c.p) for c in CC_ex]
+assert iseq(np.std(prices_ex), 5.130242014436283e-13)
+
+# ## posx and negx
+
+O = CPCArbOptimizer
+a = O.a
+
+assert O.posx([0,-1,2]) == (0, 0, 2)
+assert O.posx((-1,-2, 3)) == (0, 0, 3)
+assert O.negx([0,-1,2]) == (0, -1, 0)
+assert O.negx((-1,-2, 3)) == (-1, -2, 0)
+assert np.all(O.posx(a([0,-1,2])) == a((0, 0, 2)))
+assert O.t(a((-1,-2))) == (-1,-2)
+
+for v in ((1,2,3), (1,-1,5-10,0), (-10.5,8,2.34,-17)):
+    assert np.all(O.posx(a(v))+O.negx(a(v)) == v)
+
+# ## simple_optimizer demo [NOTEST]
+
+CC = CPCContainer(CPC.from_pk(p=2000+i*100, k=10*(20000+i*10000), pair=f"{T.ETH}/{T.USDC}") for i in range(11))
+O = CPCArbOptimizer(CC)
+c0 = CC.curves[0]
+CC0 = CPCContainer([c0])
+O = CPCArbOptimizer(CC)
+O0 = CPCArbOptimizer(CC0)
+funcvx = O.simple_optimizer(result=O.SO_DXDYVALXFUNC)
+funcvy = O.simple_optimizer(result=O.SO_DXDYVALYFUNC)
+funcvx0 = O0.simple_optimizer(result=O.SO_DXDYVALXFUNC)
+funcvy0 = O0.simple_optimizer(result=O.SO_DXDYVALYFUNC)
+#CC.plot()
+
+xr = np.linspace(1500, 3000, 50)
+plt.plot(xr, [funcvx(x)/len(CC) for x in xr], label="all curves [scaled]")
+plt.plot(xr, [funcvx0(x) for x in xr], label="curve 0 only")
+plt.xlabel(f"price [{c0.pairp}]")
+plt.ylabel(f"value [{c0.tknxp}]")
+plt.grid()
+plt.show()
+plt.plot(xr, [funcvy(x)/len(CC) for x in xr], label="all curves [scaled]")
+plt.plot(xr, [funcvy0(x) for x in xr], label="curve 0 only")
+plt.xlabel(f"price [{c0.pairp}]")
+plt.ylabel(f"value [{c0.tknyp}]")
+plt.grid()
+plt.show()
+
+r = O.simple_optimizer()
+print(f"Arbitrage gains: {-r.valx:.4f} {r.tknxp} [time={r.time:.4f}s]")
+
+CC_ex = CPCContainer(c.execute(dx=dx) for c, dx in zip(r.curves, r.dxvalues))
+CC.plot()
+CC_ex.plot()
+
+# ## Optimizer plus inverted curves [NOTEST]
+
+CCr = CPCContainer(CPC.from_pk(p=2000+i*100, k=10*(20000+10000*i), pair=f"{T.ETH}/{T.USDC}") for i in range(11))
+CCi = CPCContainer(CPC.from_pk(p=1/(2050+i*100), k=10*(20000+10000*i), pair=f"{T.USDC}/{T.ETH}") for i in range(11))
+CC  = CCr.bycids()
+assert len(CC) == len(CCr)
+CC += CCi
+assert len(CC) == len(CCr) + len(CCi)
+CC.plot()
+
+O = CPCArbOptimizer(CC)
+r = O.simple_optimizer()
+print(f"Arbitrage gains: {-r.valx:.4f} {r.tknxp} [time={r.time:.4f}s]")
+CC_ex = CPCContainer(c.execute(dx=dx) for c, dx in zip(r.curves, r.dxvalues))
+prices_ex = [c.pairo.primary_price(c.p) for c in CC_ex]
+print("prices post arb:", prices_ex)
+print("stdev", np.std(prices_ex))
+#CC.plot()
+CC_ex.plot()
+
+# ## Operating on leverage ranges [NOTEST]
+
+N = 10
+
+# +
+CCc, CCm, ctr = CPCContainer(), CPCContainer(), 0
+U, U1 = CPCContainer.u, CPCContainer.u1
+tknb, tknq = T.ETH, T.USDC
+pb, pq = 2000, 1
+pair = f"{tknb}/{tknq}"
+pp = pb/pq
+k = 100000**2/(pb*pq)
+CCm += CPC.from_pk(p=pp, k=k, pair=pair, cid = f"mkt-{pair}", params=dict(xc="market"))
+#print("\n***PAIR:", tknb, pb, tknq, pq, pair, pp)
+for i in range(N):
+    p = pp * (1+0.2*U(-0.5, 0.5))
+    p_min, p_max = (p, U(1.001, 1.5)*p) if U1()>0.5 else (U(0.8, 0.999)*p, p)
+    amtusdc = U(10000, 200000)
+    k = amtusdc**2/(pb*pq)
+    #print("*curve", int(amtusdc), p, p_min, p_max, int(k))
+    CCc += CPC.from_pkpp(p=p, k=k, p_min=p_min, p_max=p_max, 
+                         pair=pair, cid = f"carb-{ctr}", params=dict(xc="carbon"))
+    ctr += 1
+    
+CC = CCc.bycids().add(CCm)
+CC.plot()
+# -
+
+O = CPCArbOptimizer(CC)
+r = O.simple_optimizer()
+print(f"Arbitrage gains: {-r.valx:.4f} {r.tknxp} [time={r.time:.4f}s]")
+CC_ex = CPCContainer(c.execute(dx=dx) for c, dx in zip(r.curves, r.dxvalues))
+prices_ex = [c.pairo.primary_price(c.p) for c in CC_ex]
+print("prices post arb:", prices_ex)
+print("stdev", np.std(prices_ex))
+#CC.plot()
+CC_ex.plot()
+
+r.dxvalues
+
+# ## Arbitrage testing [NOTEST]
+
+c1 = CPC.from_pkpp(p=95, k=100*10000, p_min=90, p_max=110, pair=f"{T.ETH}/{T.USDC}")
+c2 = CPC.from_pkpp(p=105, k=90*10000, p_min=90, p_max=110, pair=f"{T.ETH}/{T.USDC}")
+CC = CPCContainer([c1,c2])
+CC.plot()
+
+a = lambda x: np.array(x)
+pr = np.linspace(70,130,200)
+dx1, dy1, p = zip(*(c1.dxdyfromp_f(p) for p in pr))
+assert np.all(p == pr)
+dx2, dy2, p = zip(*(c2.dxdyfromp_f(p) for p in pr))
+assert np.all(p == pr)
+v1 = a(dy1)+a(p)*a(dx1)
+v2 = a(dy2)+a(p)*a(dx2)
+plt.plot(p, v1, label="Value curve c1")
+plt.plot(p, v2, label="Value curve c2")
+plt.plot(p, v1+v2, label="Value combined curves")
+plt.legend()
+plt.grid()
+
+
+def vfunc(p):
+    
+    dx1, dy1, _ = c1.dxdyfromp_f(p)
+    dx2, dy2, _ = c2.dxdyfromp_f(p)
+    v1 = dy1 + p*dx1
+    v2 = dy2 + p*dx2
+    v = v1+v2
+    #print(f"[v] v({p}) = {v}")
+    return -v
+
+
+O = CPCArbOptimizer
+O.findmin(vfunc, 100, N=100)
+
+func1 = lambda x: (x-2)**2
+O.findmin(func1, 1)
+
+func2 = lambda x: 1-(x-3)**2
+O.findmax(func2, 2.5)
+
+val = tuple(float(O.findmin(func1, 100, N=n)) for n in range(100))
+val = tuple(abs(v-val[-1]) for v in val)
+val = tuple(v for v in val if v > 0)
+plt.plot(val)
+plt.yscale('log')
+plt.grid()
+
+val = tuple(float(O.findmin(func2, 100, N=n)) for n in range(100))
+val = tuple(abs(v-val[-1]) for v in val)
+val = tuple(v for v in val if v > 0)
+plt.plot(val)
+plt.yscale('log')
+plt.grid()
+
+val0 = tuple(float(O.findmin(vfunc, 99, N=n)) for n in range(100))
+val = tuple(abs(v-val0[-1]) for v in val0)
+val = tuple(v for v in val if v > 0)
+print(val0[-1])
+plt.plot(val)
+plt.yscale('log')
+plt.grid()
+
+val0 = tuple(float(O.findmin_gd(vfunc, 99, N=n)) for n in range(100))
+val = tuple(abs(v-val0[-1]) for v in val0)
+val = tuple(v for v in val if v > 0)
+print(val0[-1])
+plt.plot(val)
+plt.yscale('log')
+plt.grid()
+
+O.findmin(vfunc, 99, N=700)
+
 # ## Charts [NOTEST]
 
 # ### Chars (x,y)
@@ -458,6 +920,7 @@ for c in curves:
 # plt.xlim((-50,50))
 plt.grid()
 # -
+
 
 
 
