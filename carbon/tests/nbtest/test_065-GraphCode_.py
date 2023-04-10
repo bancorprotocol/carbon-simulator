@@ -424,6 +424,8 @@ def test_transport_3_and_prices():
     assert AG.price(node_tknb=WETH, node_tknq=USDC) == AG.price(WETH, USDC)
     assert AG.price(WETH, USDC, with_units=True) == (2000.0, 'USDC per WETH [WETH/USDC]')
     assert AG.price(WETH, WETH, with_units=True) == (1, 'WETH per WETH [WETH/WETH]')
+    assert AG.price("WETH", "USDC", True) == AG.price(WETH, USDC, True)
+    assert raises(AG.price, "ETH", "USDC")
     for n1 in AG.nodes:
         for n2 in AG.nodes:
             if n1 != n2:
