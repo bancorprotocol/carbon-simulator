@@ -1,5 +1,5 @@
 """
-object encapsulating a convex optimization
+object encapsulating various optimization methods, including convex optimization
 
 (c) Copyright Bprotocol foundation 2023. 
 Licensed under MIT
@@ -7,7 +7,7 @@ Licensed under MIT
 NOTE: this class is not part of the API of the Carbon protocol, and you must expect breaking
 changes even in minor version updates. Use at your own risk.
 """
-__VERSION__ = "1.0.1"
+__VERSION__ = "2.0"
 __DATE__ = "10/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, astuple, InitVar
@@ -17,7 +17,7 @@ import cvxpy as cp
 import time
 import math
 import numbers
-from .cpc import ConstantProductCurve as CPC, CPCContainer 
+from .cpc import ConstantProductCurve as CPC, CPCInverter, CPCContainer 
 from sys import float_info
 
 
@@ -90,14 +90,196 @@ class OptimizerBase:
     :result:    the return value of problem.solve
     :time:      the time it took to solve this problem (optional)
     """
-    pass
+    __VERSION__ = __VERSION__
+    __DATE__ = __DATE__
+
+    @dataclass
+    class OptimizerResult(_DCBase):
+        result: float
+        time: float
+        method: str = None
+
+        def __post_init__(self):
+            #print("[OptimizerResult] post_init")
+            pass
+            
+        @property
+        def status(self):
+            """problem status"""
+            raise NotImplementedError("must be implemented in derived class")
+        
+        @property
+        def is_error(self):
+            """True if problem status is not OPTIMAL"""
+            raise NotImplementedError("must be implemented in derived class")
+        
+        def detailed_error(self):
+            """detailed error analysis"""
+            raise NotImplementedError("must be implemented in derived class")
+        
+        @property
+        def error(self):
+            """problem error"""
+            if not self.is_error:
+                return None
+            return self.detailed_error()
+
+    @dataclass
+    class SimpleResult(_DCBase):
+        result: float
+        method: str = None
+        errormsg: str = None
+        context_dct: dict = None
+
+        def __float__(self):
+            if self.is_error:
+                raise ValueError("cannot convert error result to float")
+            return float(self.result)
+
+        @property
+        def is_error(self):
+            return not self.errormsg is None
+        
+        @property
+        def context(self):
+            return self.context_dct if not self.context_dct is None else {}
+
+    
+    DERIVEPS = 1e-6
+    @classmethod
+    def deriv(cls, func, x):
+        """
+        computes the derivative of `func` at point `x`
+        """
+        h = cls.DERIVEPS
+        return (func(x + h) - func(x - h)) / (2 * h)
+    
+    @classmethod
+    def deriv2(cls, func, x):
+        """
+        computes the second derivative of `func` at point `x`
+        """
+        h = cls.DERIVEPS
+        return (func(x + h) - 2 * func(x) + func(x - h)) / (h * h)
+    
+    @classmethod
+    def findmin_gd(cls, func, x0, learning_rate=0.1, N=100):
+        """
+        finds the minimum of `func` using gradient descent starting at `x0`
+        """
+        x = x0
+        for _ in range(N):
+            x -= learning_rate * cls.deriv(func, x)
+        return cls.SimpleResult(result=x, method="findmin_gd")
+    
+    @classmethod
+    def findmax_gd(cls, func, x0, learning_rate=0.1, N=100):
+        """
+        finds the maximum of `func` using gradient descent, starting at `x0`
+        """
+        x = x0
+        for _ in range(N):
+            x += learning_rate * cls.deriv(func, x)
+        return cls.SimpleResult(result=x, method="findmax_gd")
+    
+    @classmethod
+    def findminmax_nr(cls, func, x0, N=20):
+        """
+        finds the minimum or maximum of func using Newton Raphson, starting at x0
+        """
+        x = x0
+        for _ in range(N):
+            #print("[NR]", x, func(x), cls.deriv(func, x), cls.deriv2(func, x))
+            try:
+                x -= cls.deriv(func, x) / cls.deriv2(func, x)
+            except Exception as e:
+                return cls.SimpleResult(
+                        result=None, 
+                        errormsg=f"Newton Raphson failed: {e} [x={x}, x0={x0}]",
+                        method="findminmax_nr"
+                    )
+        return cls.SimpleResult(result=x, method="findminmax_nr")
+    findmin = findminmax_nr
+    findmax = findminmax_nr
+    
+    GOALSEEKEPS = 1e-6
+    @classmethod
+    def goalseek(cls, func, a, b):
+        """
+        finds the value of `x` where `func(x)` x is zero, using binary search between a,b
+        """
+        if func(a) * func(b) > 0:
+            cls.SimpleResult(
+                result=None, 
+                errormsg=f"function must have different signs at a,b [{a}, {b}, {func(a)} {func(b)}]",
+                method="findminmax_nr"
+                )
+            raise ValueError("function must have different signs at a,b")
+        while (b - a) > cls.GOALSEEKEPS:
+            c = (a + b) / 2
+            if func(c) == 0:
+                return c
+            elif func(a) * func(c) < 0:
+                b = c
+            else:
+                a = c
+        return cls.SimpleResult(result=(a + b) / 2, method="findminmax_nr")
+
+    @staticmethod
+    def posx(vector):
+        """
+        returns the positive elements of the vector, zeroes elsewhere
+        """
+        if isinstance(vector, np.ndarray):
+            return np.maximum(0, vector)
+        return tuple(max(0, x) for x in vector)
+    
+    @staticmethod
+    def negx(vector):
+        """
+        returns the negative elements of the vector, zeroes elsewhere
+        """
+        if isinstance(vector, np.ndarray):
+            return np.minimum(0, vector)
+        return tuple(min(0, x) for x in vector)
+    
+    @staticmethod
+    def a(vector):
+        """returns vector as np.array"""
+        return np.array(vector)
+    
+    @staticmethod
+    def t(vector):
+        """returns vector as tuple"""
+        return tuple(vector)
+
+FORMATTER = lambda x: '' if ((abs(x) < 1e-10) or math.isnan(x)) else f'{x:,.2f}'
+
+class CPCArbOptimizer(OptimizerBase):
+    """
+    main optimizer class for CPC arbitrage optimzisation
+    """
+
+    def __init__(self, curve_container):
+        if not isinstance(curve_container, CPCContainer):
+            curve_container = CPCContainer(curve_container)
+        self.curve_container = curve_container
+
+    @property
+    def tokens(self):
+        return self.curve_container.tokens
 
     @dataclass 
-    class OptimizerResult(_DCBase):
-        problem: cp.Problem = field(repr=False)
-        result: any
-        time: float
+    class ConvexOptimizerResult(OptimizerBase.OptimizerResult):
+        problem: cp.Problem = field(repr=False, default=None)
 
+        def __post_init__(self):
+            super().__post_init__()
+            #print("[ConvexOptimizerResult] post_init")
+            assert not self.problem is None, "problem must be set"
+            if self.method is None:
+                self.method = "convex"
+        
         @property
         def status(self):
             """problem status"""
@@ -117,33 +299,28 @@ class OptimizerBase:
                 return f"{self.result} [{self.status}]"
             return f"{self.status}"
 
-FORMATTER = lambda x: '' if ((abs(x) < 1e-10) or math.isnan(x)) else f'{x:,.2f}'
-
-class CPCArbOptimizer(OptimizerBase):
-    """
-    main optimizer class for CPC arbitrage optimzisation
-    """
-    __VERSION__ = __VERSION__
-    __DATE__ = __DATE__
-
-    def __init__(self, curve_container):
-        if not isinstance(curve_container, CPCContainer):
-            curve_container = CPCContainer(curve_container)
-        self.curve_container = curve_container
-
-    @property
-    def tokens(self):
-        return self.curve_container.tokens
-
     @dataclass
-    class NofeesOptimizerResult(OptimizerBase.OptimizerResult):
-        token_table: dict
-        sfc: any = field(repr=False) # SelfFinancingConstraints
-        curves: CPCContainer = field(repr=False)
-        curves_new: CPCContainer = field(repr=False)
-        dx: cp.Variable = field(repr=False)
-        dy: cp.Variable = field(repr=False)
+    class NofeesOptimizerResult(ConvexOptimizerResult):
+        """
+        results of the nofees optimizer
+        """
+        token_table: dict = None
+        sfc: any = field(repr=False, default=None) # SelfFinancingConstraints
+        curves: CPCContainer = field(repr=False, default=None)
+        curves_new: CPCContainer = field(repr=False,  default=None)
+        dx: cp.Variable = field(repr=False, default=None)
+        dy: cp.Variable = field(repr=False, default=None)
 
+        def __post_init__(self):
+            super().__post_init__()
+            #print("[NofeesOptimizerResult] post_init")
+            assert not self.token_table is None, "token_table must be set"
+            assert not self.sfc is None, "sfc must be set"
+            assert not self.curves is None, "curves must be set"
+            #assert not self.curves_new is None, "curves_new must be set"
+            assert not self.dx is None, "dx must be set"
+            assert not self.dy is None, "dy must be set"
+  
         def dxdydf(self, asdict=False, pretty=True, inclk=False):
             """returns dataframe with dx, dy per curve"""
             if inclk:
@@ -462,6 +639,192 @@ class CPCArbOptimizer(OptimizerBase):
             curves_new=self.adjust_curves(dxvals = dx_.value),
         )
     
+    SO_DXDYVECFUNC = "dxdyvecfunc"
+    SO_DXDYSUMFUNC = "dxdysumfunc"
+    SO_DXDYVALXFUNC = "dxdyvalxfunc"
+    SO_DXDYVALYFUNC = "dxdyvalyfunc"
+    SO_PMAX = "pmax"
+
+    @dataclass
+    class SimpleOptimizerResult(OptimizerBase.OptimizerResult):
+        """
+        results of the simple optimizer
+        
+        :curves:            list of curves used in the optimization, possibly wrapped in CPCInverter objects*
+        :dxdyfromp_vec_f:   vector of tuples (dx, dy), as a function of p
+        :dxdyfromp_sum_f:   sum of the above, also as a function of p
+        :dxdyfromp_valx_f:  valx = dy/p + dx, also as a function of p
+        :dxdyfromp_valy_f:  valy = dy + p*dx/p, also as a function of p
+        :p_optimal:         optimal p value
+
+        *the CPCInverter object ensures that all curves in the list correspond to the same quote
+        conventions, according to the primary direction of the pair (as determined by the Pair
+        object). Accordingly, tknx and tkny are always the same for all curves in the list, regardless
+        of the quote direction of the pair. The CPCInverter object abstracts this away, but of course
+        only for functions that are accessible through it.
+        """
+        NONEFUNC = lambda x: None
+
+        curves: list = field(repr=False, default=None)
+        dxdyfromp_vec_f: any = field(repr=False, default=NONEFUNC)
+        dxdyfromp_sum_f: any = field(repr=False, default=NONEFUNC)
+        dxdyfromp_valx_f: any = field(repr=False, default=NONEFUNC)
+        dxdyfromp_valy_f: any = field(repr=False, default=NONEFUNC)
+        p_optimal: float = field(repr=False, default=None)
+        errormsg: str = field(repr=False, default=None)
+
+        def __post_init__(self):
+            super().__post_init__()
+            #print("[SimpleOptimizerResult] post_init")
+            assert self.p_optimal is not None or self.errormsg is not None, "p_optimal must be set unless errormsg is set"
+            if self.method is None:
+                self.method = "simple"
+
+        @property
+        def is_error(self):
+            return self.errormsg is not None
+        
+        def detailed_error(self):
+            return self.errormsg
+        
+        def status(self):
+            return "error" if self.is_error else "converged"
+
+        def dxdyfromp_vecs_f(self, p):
+            """returns dx, dy as separate vectors instead as a vector of tuples"""
+            return tuple(zip(*self.dxdyfromp_vec_f(p)))
+
+        @property
+        def tknx(self):
+            return self.curves[0].tknx
+        
+        @property
+        def tkny(self):
+            return self.curves[0].tkny
+        
+        @property
+        def tknxp(self):
+            return self.curves[0].tknxp
+        
+        @property
+        def tknyp(self):
+            return self.curves[0].tknyp
+        
+        @property
+        def pair(self):
+            return self.curves[0].pair
+        
+        @property
+        def pairp(self):
+            return self.curves[0].pairp
+
+        @property
+        def dxdy_vecs(self):
+            return self.dxdyfromp_vecs_f(self.p_optimal)
+        
+        @property
+        def dxvalues(self):
+            return self.dxdy_vecs[0]
+        dxv = dxvalues
+
+        @property
+        def dyvalues(self):
+            return self.dxdy_vecs[1]
+        dyv = dyvalues
+        
+        @property
+        def dxdy_vec(self):
+            return self.dxdyfromp_vec_f(self.p_optimal)
+        
+        @property
+        def dxdy_sum(self):
+            return self.dxdyfromp_sum_f(self.p_optimal)
+        
+        @property
+        def dxdy_valx(self):
+            return self.dxdyfromp_valx_f(self.p_optimal)
+        valx = dxdy_valx
+        
+        @property
+        def dxdy_valy(self):
+            return self.dxdyfromp_valy_f(self.p_optimal)
+        valy = dxdy_valy
+        
+        @property
+        def status(self):
+            return "converged"
+
+        @property
+        def is_error(self):
+            return False
+
+        @property
+        def error(self):
+            return None
+
+    
+    def simple_optimizer(self, result=None, params=None):
+        """
+        a simple optimizer that does not use cvxpy and the works only on curves on one pair
+
+        :result:            determines what to return
+                            :SO_DXDYVECFUNC:    function of p returning vector of dx,dy values 
+                            :SO_DXDYSUMFUNC:    function of p returning sum of dx,dy values
+                            :SO_DXDYVALXFUNC:   function of p returning value of dx,dy sum in units of tknx
+                            :SO_DXDYVALYFUNC:   ditto tkny
+        :params:            dict of parameters (not currently used)
+        """
+        start_time = time.time()
+        curves_t = CPCInverter.wrap(self.curve_container)
+        pairs = set(c.pair for c in curves_t)
+        assert len(pairs)!=0, f"no pairs found, probably empty curves [{curves_t}]"
+        assert len(pairs)==1, f"simple_optimizer only works on curves of one pair [{pairs}]"
+        
+        dxdy = lambda r: (np.array(r[0:2]))
+        
+        dxdyfromp_vec_f = lambda p: tuple(dxdy(c.dxdyfromp_f(p)) for c in curves_t)
+        if result == self.SO_DXDYVECFUNC:
+            return dxdyfromp_vec_f
+        
+        dxdyfromp_sum_f = lambda p: sum(dxdy(c.dxdyfromp_f(p)) for c in curves_t)
+        if result == self.SO_DXDYSUMFUNC:
+            return dxdyfromp_sum_f
+        
+        dxdyfromp_valy_f = lambda p: np.dot(dxdyfromp_sum_f(p), np.array([p,1]))
+        if result == self.SO_DXDYVALYFUNC:
+            return dxdyfromp_valy_f
+        
+        dxdyfromp_valx_f = lambda p: dxdyfromp_valy_f(p)/p
+        if result == self.SO_DXDYVALXFUNC:
+            return dxdyfromp_valx_f
+        
+        p_avg = np.mean([c.p for c in curves_t])
+        p_optimal = self.findmax(dxdyfromp_valx_f, p_avg)
+        if result == self.SO_PMAX:
+            return p_optimal
+        
+        if p_optimal.is_error:
+            return self.SimpleOptimizerResult(
+                result = None,
+                time=time.time()-start_time,
+                curves=curves_t,
+                dxdyfromp_vec_f=dxdyfromp_vec_f,
+                dxdyfromp_sum_f=dxdyfromp_sum_f,
+                dxdyfromp_valx_f=dxdyfromp_valx_f,
+                dxdyfromp_valy_f=dxdyfromp_valy_f,
+                p_optimal=None,
+                errormsg = p_optimal.errormsg,
+        )
+        return self.SimpleOptimizerResult(
+            result = dxdyfromp_valx_f(float(p_optimal)),
+            time=time.time()-start_time,
+            curves=curves_t,
+            dxdyfromp_vec_f=dxdyfromp_vec_f,
+            dxdyfromp_sum_f=dxdyfromp_sum_f,
+            dxdyfromp_valx_f=dxdyfromp_valx_f,
+            dxdyfromp_valy_f=dxdyfromp_valy_f,
+            p_optimal=float(p_optimal),
+        )
 
     def adjust_curves(self, dxvals, verbose=False, raiseonerror=False):
         """
@@ -485,5 +848,10 @@ class CPCArbOptimizer(OptimizerBase):
                 print(f"Error in adjust_curves: {e}")
                 #raise e
                 return None
-        
+    
+def F(func, rg):
+    """helper: returns list of [func(x) for x in rg]"""
+    return [func(x) for x in rg]
+    
+
     
