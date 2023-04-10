@@ -7,8 +7,8 @@ Licensed under MIT
 NOTE: this class is not part of the API of the Carbon protocol, and you must expect breaking
 changes even in minor version updates. Use at your own risk.
 """
-__VERSION__ = "2.3.2"
-__DATE__ = "10/Apr/2023"
+__VERSION__ = "2.4"
+__DATE__ = "11/Apr/2023"
 
 from dataclasses import dataclass, field, asdict, InitVar
 from .simplepair import SimplePair as Pair
@@ -37,6 +37,15 @@ class AttrDict(dict):
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
+
+@dataclass_
+class DAttrDict():
+    """attribute-style access to a dictionary with default value"""
+    dct: dict = field(default_factory=dict)
+    default: any = None
+    def __getattr__(self, name):
+        return self.dct.get(name, self.default)
+AD = DAttrDict
 
 @dataclass
 class Pair:
@@ -133,8 +142,8 @@ class Pair:
     @property
     def isprimary(self):
         """whether the representation is primary or secondary"""
-        tknqix = self.NUMERAIRE_TOKENS.get(self.tknq, 1e10)
-        tknbix = self.NUMERAIRE_TOKENS.get(self.tknb, 1e10)
+        tknqix = self.NUMERAIRE_TOKENS.get(self.tknqp, 1e10)
+        tknbix = self.NUMERAIRE_TOKENS.get(self.tknbp, 1e10)
         if tknqix == tknbix:
             return self.tknb < self.tknq
         return tknqix < tknbix
@@ -541,6 +550,11 @@ class ConstantProductCurve():
     tknyp = tknqp
 
     @property
+    def pairp(self):
+        """prettified pair"""
+        return f"{self.tknbp}/{self.tknqp}"
+
+    @property
     def description(self):
         "description of the pool"
         s1 = f"tknx = {self.x_act} [virtual: {self.x}] {self.tknx}"
@@ -611,6 +625,50 @@ class ConstantProductCurve():
         else:
             return None
         
+    def xyfromp_f(self, p=None, ignorebounds=False, withunits=False):
+        """
+        returns x,y for a given marginal price p (stuck at the boundaries if ignorebounds=False)
+        
+        :p:                 marginal price (in dy/dx)
+        :ignorebounds:      if True, ignore x_act and y_act; if False, return the x,y values where
+                            x_act and y_act are at zero (i.e. the pool is empty in this direction)
+        :withunits:         if False, return x,y,p; if True, also return tknx, tkny, pair
+        """
+        if p is None:
+            p = self.p
+        sqrt_p = sqrt(p)
+        sqrt_k = self.kbar
+        x = sqrt_k / sqrt_p
+        y = sqrt_k * sqrt_p
+        if not ignorebounds:
+            if not self.x_min is None:
+                if x < self.x_min:
+                    x = self.x_min
+            if not self.x_max is None:
+                if x > self.x_max:
+                    x = self.x_max
+            if not self.y_min is None:
+                if y < self.y_min:
+                    y = self.y_min
+            if not self.y_max is None:
+                if y > self.y_max:
+                    y = self.y_max
+        
+        if withunits:
+            return x, y, p, self.tknxp, self.tknyp, self.pairp
+    
+        return x, y, p
+
+    def dxdyfromp_f(self, p=None, ignorebounds=False, withunits=False):
+        """like xyfromp_f, but returns dx,dy instead of x,y"""
+        x, y, p = self.xyfromp_f(p, ignorebounds=ignorebounds)
+        dx = x - self.x
+        dy = y - self.y
+        if withunits:
+            return dx, dy, p, self.tknxp, self.tknyp, self.pairp
+        return dx, dy, p
+
+    
     def yfromx_f(self, x, ignorebounds=False):
         "y value for given x value (if in range; None otherwise)"
         y = self.k/x
@@ -642,7 +700,7 @@ class ConstantProductCurve():
         if x is None:
             return None
         return x-self.x
-    
+
     @property
     def dy_min(self):
         """minimum (=max negative) possible dy value of this pool (=-y_act)"""
@@ -769,7 +827,7 @@ class CPCContainer():
         self.curves_by_cid[item.cid] = item
         self.curveix_by_curve[item] = len(self)
         self.curves += [item]
-        #print("[add] qqq", self.curves_by_primary_pair)
+        #print("[add] ", self.curves_by_primary_pair)
         try:
             self.curves_by_primary_pair[item.pairo.primary].append(item)
         except KeyError:
@@ -1247,11 +1305,11 @@ class CPCContainer():
     
     Params = Params
     PLOTPARAMS = Params(
-        printline = "pair = {pairp}",                                                   # print line before plotting; {pair} is replaced
-        title = "{pairp}",                                                              # plot title; {pair} and {c} are replaced
+        printline = "pair = {c.pairp}",                                                 # print line before plotting; {pair} is replaced
+        title = "{c.pairp}",                                                            # plot title; {pair} and {c} are replaced
         xlabel = "{c.tknxp}",                                                           # x axis label; ditto
         ylabel = "{c.tknyp}",                                                           # y axis label; ditto
-        label =  "[{c.cid}-{c.descr}]: p={c.p:.1f}, 1/p={pinv:.1f}, k={c.k:.1f}",       # label for legend; ditto
+        label =  "[{c.cid}-{p.exchange}]: p={c.p:.1f}, 1/p={pinv:.1f}, k={c.k:.1f}",    # label for legend; ditto
         marker = "*",                                                                   # marker for plot
         plotf = dict(color="lightgrey", linestyle="dotted"),                            # additional kwargs for plot of the _f_ull curve
         plotr = dict(color="grey"),                                                     # ditto for the _r_ange
@@ -1288,13 +1346,13 @@ class CPCContainer():
         assert curves is None, "restricting curves not implemented yet"
 
         for pair in pairs:
-            pairp = Pair.prettify_pair(pair)
+            #pairp = Pair.prettify_pair(pair)
             curves = self.bypair(pair, directed=True, ascc=False)
             #print("plot", pair, [c.pair for c in curves])
             if len(curves) == 0:
                 continue
             if p.printline:
-                print(p.printline.format(pair=pair, pairp=pairp))
+                print(p.printline.format(c=curves[0], p=curves[0].params))        
             statx, staty = self.xystats(curves)
             xr = np.linspace(0.0000001, statx.maxv*1.2,500)
             for i, c in enumerate(curves):
@@ -1306,13 +1364,13 @@ class CPCContainer():
             plt.gca().set_prop_cycle(None)
             for c in curves:
                 # plotm are the markers
-                label = None if not p.label else p.label.format(pair=pair, pairp=pairp, c=c, pinv=1/c.p)
+                label = None if not p.label else p.label.format(c=c, p=AD(c.params), pinv=1/c.p)
                 plt.plot(c.x, c.y, marker=p.marker, label=label, **p.plotm) 
 
-            plt.title(p.title.format(pair=pair, pairp=pairp, c=c))
+            plt.title(p.title.format(c=c, p=c.params))
             plt.ylim((0, staty.maxv*2))
-            plt.xlabel(p.xlabel.format(pair=pair, pairp=pairp, c=c))
-            plt.ylabel(p.ylabel.format(pair=pair, pairp=pairp, c=c))
+            plt.xlabel(p.xlabel.format(c=c, p=c.params))
+            plt.ylabel(p.ylabel.format(c=c, p=c.params))
             
             if p.legend:
                 if isinstance(p.legend, dict):
@@ -1369,7 +1427,151 @@ class AF():
     @classmethod
     def herfindahlN(cls, x):
         return 1/cls.herfindahl(x)
+
+
+     
+@dataclass
+class CPCInverter():
+    """
+    adaptor class the allows for reverse-pair functions to be used as if they were of the same pair
+    """
+    curve: ConstantProductCurve
+
+    @classmethod
+    def wrap(cls, curves, asgenerator=False):
+        """
+        wraps an iterable of curves in CPCInverters if needed and returns a tuple (or generator)
+
+        NOTE: only curves with c.pairo.isprimary == False are wrapped, the other ones are included
+        as they are; this ensures that for all returned curves that correspond to the same actual 
+        pair, the primary pair is the same
+        """
+        result = (cls(c) if not c.pairo.isprimary else c for c in curves)
+        if asgenerator:
+            return result
+        return tuple(result)
+
+    @property
+    def tknxp(self):
+        return self.curve.tknyp
     
+    @property
+    def tknyp(self):
+        return self.curve.tknxp
+    
+    @property
+    def tknx(self):
+        return self.curve.tkny
+    
+    @property
+    def tkny(self):
+        return self.curve.tknx
+    
+    @property
+    def tknb(self):
+        return self.curve.tknq
+    
+    @property
+    def tknq(self):
+        return self.curve.tknb
+    
+    @property
+    def tknbp(self):
+        return self.curve.tknqp
+    
+    @property
+    def tknqp(self):
+        return self.curve.tknbp
+    
+    @property
+    def p(self):
+        return 1/self.curve.p
+    
+    @property
+    def x(self):
+        return self.curve.y
+    
+    @property
+    def y(self):
+        return self.curve.x
+    
+    @property
+    def k(self):
+        return self.curve.k
+    
+    @property
+    def pair(self):
+        return f"{self.tknb}/{self.tknq}"
+    
+    @property
+    def pairp(self):
+        return f"{self.tknbp}/{self.tknqp}"
+    
+    @property
+    def x_min(self):
+        return self.curve.y_min
+    
+    @property
+    def x_max(self):
+        return self.curve.y_max
+    
+    @property
+    def y_min(self):
+        return self.curve.x_min
+    
+    @property
+    def y_max(self):
+        return self.curve.x_max
+    
+    @property
+    def x_act(self):
+        return self.curve.y_act
+    
+    @property
+    def p_min(self):
+        return 1/self.curve.p_max
+    
+    @property
+    def p_max(self):
+        return 1/self.curve.p_min
+    
+    @property
+    def y_act(self):
+        return self.curve.x_act
+    
+    @property
+    def pairo(self):
+        return Pair.from_tokens(tknb=self.tknb, tknq=self.tknq)
+    
+    def yfromx_f(self, x, ignorebounds=False):
+        return self.curve.xfromy_f(x, ignorebounds=ignorebounds)
+    
+    def xfromy_f(self, y, ignorebounds=False):
+        return self.curve.yfromx_f(y, ignorebounds=ignorebounds)
+    
+    def dyfromdx_f(self, dx, ignorebounds=False):
+        return self.curve.dxfromdy_f(dx, ignorebounds=ignorebounds)
+    
+    def dxfromdy_f(self, dy, ignorebounds=False):
+        return self.curve.dyfromdx_f(dy, ignorebounds=ignorebounds)
+    
+    def xyfromp_f(self, p=None, ignorebounds=False, withunits=False):
+        r = self.curve.xyfromp_f(1/p if not p is None else None, ignorebounds=ignorebounds, withunits=False)
+        if withunits:
+            return (r[1], r[0], 1/r[2], self.tknxp, self.tknyp, self.pairp)
+        return (r[1], r[0], 1/r[2])
+    
+    def dxdyfromp_f(self, p=None, ignorebounds=False, withunits=False):
+        r = self.curve.dxdyfromp_f(1/p if not p is None else None, ignorebounds=ignorebounds, withunits=False)
+        if withunits:
+            return (r[1], r[0], 1/r[2], self.tknxp, self.tknyp, self.pairp)
+        return (r[1], r[0], 1/r[2])
+    
+    def execute(self, dx=None, dy=None, ignorebounds=False, verbose=False):
+        """returns a new curve object that is then again wrapped in a CPCInverter"""
+        curve = self.curve.execute(dx=dy, dy=dx, ignorebounds=ignorebounds, verbose=verbose)
+        return CPCInverter(curve)
+
 # tp = {t.split("-")[0]:t for t in CC.tokens()}
 # {t:tp[t] for t in TOKENIDS}
 # for k,v in {t:tp[t] for t in TOKENIDS}.items():
