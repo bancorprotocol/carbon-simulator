@@ -755,6 +755,14 @@ class ConstantProductCurve():
 class CPCContainer():
     """
     container for ConstantProductCurve objects (use += to add items)
+
+    :curves:        an iterable of CPC curves, possibly wrapped in CPCInverter objects
+                    CPCInverter objects are unwrapped automatically, the resulting
+                    list will ALWAYS be curves, possibly with inverted=True
+    :tokenscale:    a TokenScaleBase object (or None, in which case the default)
+                    this object contains indicative prices for the tokens which are
+                    sometimes useful for numerical stability reasons; the default token
+                    scale is unity across all tokens
     """
     __VERSION__ = __VERSION__
     __DATE__ = __DATE__
@@ -764,13 +772,15 @@ class CPCContainer():
     tokenscale: ts.TokenScaleBase = field(default=None, repr=False)
 
     def __post_init__(self):
-        
+
         if self.tokenscale is None:
             self.tokenscale = self.TOKENSCALE
         #print("[CPCContainer] tokenscale =", self.tokenscale)
         
-        if not isinstance(self.curves, list):
-            self.curves = list(self.curves)
+        # ensure that the curves are in a list (they can be provided as any
+        # iterable, e.g. a generator); also unwraps CPCInverter objects
+        # if need be
+        self.curves = [c for c in CPCInverter.unwrap(self.curves)]
         
         for i, c in enumerate(self.curves):
             if c.cid is None:
@@ -816,12 +826,30 @@ class CPCContainer():
         return cls.from_dicts(df.reset_index().to_dict("records"), tokenscale=tokenscale)
     
     def add(self, item):
-        """adds a single ConstantProductCurve item or all items from another container to the container"""
-        if isinstance(item, CPCContainer):
+        """
+        adds one or multiple ConstantProductCurves (+= operator is also supported)
+
+        :item:      item can be the following types:
+                    :ConstantProductCurve:  a single curve is added
+                    :CPCInverter:           the curve underlying the inverter is added
+                    :Iterable:              all items in the iterable are added one by one
+        """
+
+        # unwrap iterables...
+        try:
             for c in item:
                 self.add(c)
             return self
+        except TypeError:
+            pass
+
+        # ...and CPCInverter objects
+        if isinstance(item, CPCInverter):
+            item = item.curve
+        
+        # at this point, item must be a ConstantProductCurve object
         assert isinstance(item, ConstantProductCurve), f"item must be a ConstantProductCurve object {item}"
+        
         if item.cid is None:
             item.setcid(len(self))
         self.curves_by_cid[item.cid] = item
@@ -1427,8 +1455,6 @@ class AF():
     @classmethod
     def herfindahlN(cls, x):
         return 1/cls.herfindahl(x)
-
-
      
 @dataclass
 class CPCInverter():
@@ -1447,6 +1473,16 @@ class CPCInverter():
         pair, the primary pair is the same
         """
         result = (cls(c) if not c.pairo.isprimary else c for c in curves)
+        if asgenerator:
+            return result
+        return tuple(result)
+    
+    @classmethod
+    def unwrap(cls, wrapped_curves, asgenerator=False):
+        """
+        unwraps an iterable of curves from CPCInverters if needed and returns a tuple (or generator)
+        """
+        result = (c.curve if isinstance(c, cls) else c for c in wrapped_curves)
         if asgenerator:
             return result
         return tuple(result)
