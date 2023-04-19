@@ -3,5 +3,11 @@ resources/demo/carbon
 resources/examples/carbon
 resources/data/charts
 resources/data/carbon
+resources/sdk/carbon
+resources/routing/carbon
 __pycache__/*
 __pycache__
+node_modules
+package-lock.json
+yarn.lock
+*.pickle

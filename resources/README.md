@@ -14,7 +14,27 @@ _various Carbon related resources and code_
 - `sdk/server`: the NodeJS code for wrapping the Carbon SDK into an http server
 - `whitepaper`: resources related to the Carbon whitepaper
 
+## Using latest Carbon in resources
 
+To use the latest Carbon code in the resources, run the following command from the root of the repository:
+
+```bash
+cp gitignore .gitignore
+cd resources
+cd NBTest
+ln -s ../../carbon carbon
+cd ../sdk
+ln -s ../../carbon carbon
+cd ../demo  
+ln -s ../../carbon carbon
+cd ../examples
+ln -s ../../carbon carbon
+cd ../data
+ln -s ../../carbon carbon
+cd ../..
+```
+
+```bash
 ## Links to other resources
 
 - [carbondefi.xyz][site] CarbonCalculations
