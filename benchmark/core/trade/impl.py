@@ -76,7 +76,9 @@ def tradeBySourceAmountFunc(x, y, z, A, B):
 
     temp4 = mulDivC(temp1, temp1, factor)
     temp5 = mulDivC(temp3, A, factor)
-    return mulDivF(temp2, temp3 // factor, add(temp4, temp5))
+    if temp4 + temp5 <= MAX_UINT256:
+        return mulDivF(temp2, temp3 // factor, temp4 + temp5)
+    return temp2 // add(A, mulDivC(temp1, temp1, temp3))
 
 #
 #                  x * z ^ 2
