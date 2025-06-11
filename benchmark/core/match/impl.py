@@ -75,8 +75,7 @@ def equalizeBySourceAmount(order, limit):
  *   - If the rates are identical, then the one with a better value of `y` prevails
 '''
 def sortedQuotes(amount, orders, trade, sort):
-    quotes = [Quote(id, trade(amount, orders[id])) for id in orders]
-    return sorted([quote for quote in quotes], key=cmp_to_key(sort))
+    return sorted([Quote(id, trade(amount, orders[id])) for id in orders], key=cmp_to_key(sort))
 
 '''
  * Compute a list of {order id, trade amount} tuples:
