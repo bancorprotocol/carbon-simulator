@@ -83,25 +83,19 @@ def sortedQuotes(amount, orders, trade, sort):
  * - Iterate the orders from best rate to worst rate:
  *   - Let `m` denote the maximum tradable amount not larger than `n`
  *   - Add the id of the order along with `m` to the output matching
- *   - If `m < n` then subtract `m` from `n` and continue, otherwise break
+ *   - Subtract `m` from `n` and repeat the process until `n` is zero
 '''
 def matchFast(amount, orders, quotes, filter, trade):
     actions = []
 
     for quote in quotes:
-        if amount > quote.rate.input:
-            if filter(quote.rate):
-                actions.append(Action(quote.id, quote.rate.input, quote.rate.output))
-                amount -= quote.rate.input
-        elif amount == quote.rate.input:
-            if filter(quote.rate):
-                actions.append(Action(quote.id, quote.rate.input, quote.rate.output))
-            break
-        else: # amount < quote.rate.input
-            quote.rate = Rate(amount, trade(amount, orders[quote.id]).output)
-            if filter(quote.rate):
-                actions.append(Action(quote.id, quote.rate.input, quote.rate.output))
-            break
+        input = min(quote.rate.input, amount)
+        output = trade(input, orders[quote.id]).output
+        if filter(Rate(input, output)):
+            actions.append(Action(quote.id, input, output))
+            amount -= input
+            if amount == 0:
+                break
 
     return actions
 
