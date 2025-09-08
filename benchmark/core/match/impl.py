@@ -67,7 +67,7 @@ def sortedQuotes(amount, orders, trade, sort):
  *   - Add the id of the order along with `m` to the output matching
  *   - Subtract `m` from `n` and repeat the process until `n` is zero
 '''
-def match(amount, orders, filter, trade, sort):
+def matchBy(amount, orders, filter, trade, sort):
     actions = []
 
     for quote in sortedQuotes(amount, orders, trade, sort):
@@ -82,10 +82,10 @@ def match(amount, orders, filter, trade, sort):
     return actions
 
 def matchBySourceAmount(amount, orders, filter):
-    return match(amount, orders, filter, rateBySourceAmount, sortByMinRate)
+    return matchBy(amount, orders, filter, rateBySourceAmount, sortByMinRate)
 
 def matchByTargetAmount(amount, orders, filter):
-    return match(amount, orders, filter, rateByTargetAmount, sortByMaxRate)
+    return matchBy(amount, orders, filter, rateByTargetAmount, sortByMaxRate)
 
 def execute(method, amount, orders, filter = lambda rate : rate.input > 0 and rate.output > 0):
     return globals()[method](int(amount), {id: encodeOrder(orders[id]) for id in range(len(orders))}, filter)
