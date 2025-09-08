@@ -20,14 +20,14 @@ def run(fileName):
             print(formatString.format(action.id, action.input, action.output))
 
         [method, attribute] = {
-            'matchBySourceAmount': ['tradeBySourceAmount', lambda action: action.output],
-            'matchByTargetAmount': ['tradeByTargetAmount', lambda action: action.input ],
+            'matchBySourceAmount': ['tradeBySourceAmount', 'output'],
+            'matchByTargetAmount': ['tradeByTargetAmount', 'input' ],
         }   [test['method']]
 
         assert sum(action.input for action in actions) <= int(test['amount'])
         for action in actions:
             order = test['orders'][action.id]
-            assert attribute(action) <= int(order['liquidity'])
+            assert getattr(action, attribute) <= int(order['liquidity'])
             assert action.output == trade_impl.execute(method, action.input, order)
 
         test['actions'] = [
