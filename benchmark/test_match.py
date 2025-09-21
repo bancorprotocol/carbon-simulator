@@ -10,50 +10,34 @@ def run(fileName):
 
         print(fileName.split('/')[-1], test['method'], test['amount'] + ':')
 
-        for type in actions:
-            print('-', type + ':')
+        formatString = '- order {{:>{}}}: input = {{:>{}}}, output = {{:>{}}}'.format(
+            max([len(str(action.id)) for action in actions]),
+            max([len(str(action.input)) for action in actions]),
+            max([len(str(action.output)) for action in actions]),
+        )
 
-            formatString = '  - order {{:>{}}}: input = {{:>{}}}, output = {{:>{}}}'.format(
-                max([len(str(action.id)) for action in actions[type]]),
-                max([len(str(action.input)) for action in actions[type]]),
-                max([len(str(action.output)) for action in actions[type]]),
-            )
+        for action in actions:
+            print(formatString.format(action.id, action.input, action.output))
 
-            for action in actions[type]:
-                print(formatString.format(action.id, action.input, action.output))
-
-        [method, attribute, compare_input, compare_output] = {
-            'matchBySourceAmount': ['tradeBySourceAmount', 'output', int.__le__, int.__ge__],
-            'matchByTargetAmount': ['tradeByTargetAmount', 'input' , int.__ge__, int.__le__],
+        [method, attribute] = {
+            'matchBySourceAmount': ['tradeBySourceAmount', 'output'],
+            'matchByTargetAmount': ['tradeByTargetAmount', 'input' ],
         }   [test['method']]
 
-        for type in actions:
-            assert sum(action.input for action in actions[type]) <= int(test['amount'])
-            for action in actions[type]:
-                assert getattr(action, attribute) <= int(test['orders'][action.id]['liquidity'])
-                assert action.output == trade_impl.execute(method, action.input, test['orders'][action.id])
+        assert sum(action.input for action in actions) <= int(test['amount'])
+        for action in actions:
+            order = test['orders'][action.id]
+            assert getattr(action, attribute) <= int(order['liquidity'])
+            assert action.output == trade_impl.execute(method, action.input, order)
 
-        assert compare_input(
-            sum(action.input for action in actions[match_impl.Best]),
-            sum(action.input for action in actions[match_impl.Fast])
-        )
-
-        assert compare_output(
-            sum(action.output for action in actions[match_impl.Best]),
-            sum(action.output for action in actions[match_impl.Fast])
-        )
-
-        test['actions'] = {
-            type: [
-                {
-                    'id': str(action.id),
-                    'input': str(action.input),
-                    'output': str(action.output),
-                }
-                for action in actions[type]
-            ]
-            for type in actions
-        }
+        test['actions'] = [
+            {
+                'id': str(action.id),
+                'input': str(action.input),
+                'output': str(action.output),
+            }
+            for action in actions
+        ]
 
     write(__file__, fileName, tests)
 
